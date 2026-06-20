@@ -1,38 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="author" content="Thaddeus">
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thaddeus Loh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <title>
-    Thaddeus Loh
-  </title>
+    :root {
+      --bg:       #070B17;
+      --surface:  #0E1628;
+      --border:   #1C2A45;
+      --accent:   #00C8F0;
+      --accent2:  #7B61FF;
+      --text:     #E8EDF5;
+      --muted:    #8496B0;
+      --dim:      #3D506A;
+      --white:    #FFFFFF;
+    }
 
-  <link href="css/main.css" rel="stylesheet">
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2.5rem;
+      background: rgba(7, 11, 23, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(28, 42, 69, 0.6);
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .nav-logo span { color: var(--accent); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.25rem;
+    }
+    nav ul a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--accent); }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #neural-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0.35;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 880px;
+      padding: 0 2.5rem;
+      margin: 0 auto;
+      padding-top: 6rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 2.5rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.8rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 2rem;
+    }
+    .hero-headline .highlight {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 2.75rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.85rem 2rem;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-ghost {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--accent);
+      background: transparent;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { background: rgba(0,200,240,0.08); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 3rem;
+      background: linear-gradient(to bottom, var(--dim), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ─── SECTIONS ────────────────────────────────────── */
+    section { padding: 6rem 2.5rem; }
+    .container { max-width: 880px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 2.5rem;
+      line-height: 1.15;
+    }
+
+    /* ─── ABOUT ───────────────────────────────────────── */
+    #about { background: var(--surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      font-size: 1.025rem;
+      line-height: 1.8;
+    }
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── EXPERTISE ───────────────────────────────────── */
+    #expertise { background: var(--bg); }
+
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .expertise-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem 1.75rem;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s;
+      overflow: hidden;
+    }
+    .expertise-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .expertise-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .expertise-card:hover::after { opacity: 1; }
+
+    .card-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--accent);
+    }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── EXPERIENCE ──────────────────────────────────── */
+    #experience { background: var(--surface); }
+
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 9rem 1fr;
+      gap: 2rem;
+      padding: 2.25rem 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .timeline-item:last-child { border-bottom: none; }
+
+    .timeline-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+      text-transform: uppercase;
+      padding-top: 0.25rem;
+    }
+
+    .timeline-role {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+    .timeline-org {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ─── TECH STACK ──────────────────────────────────── */
+    #stack { background: var(--bg); }
+
+    .stack-groups { display: flex; flex-direction: column; gap: 2rem; }
+    .stack-group-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem;
+      letter-spacing: 0.04em;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── CONTACT ─────────────────────────────────────── */
+    #contact {
+      background: var(--surface);
+      text-align: center;
+    }
+    #contact .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #contact .section-label { justify-content: center; }
+    #contact .section-label::before { display: none; }
+    .contact-tagline {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+    }
+    .contact-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+    .footer-location {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .footer-location::before {
+      content: '◈';
+      color: var(--accent);
+    }
+
+    /* ─── DIVIDER ─────────────────────────────────────── */
+    .h-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 760px) {
+      nav ul { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .expertise-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.4rem; }
+      .timeline-date { padding-top: 0; }
+      section { padding: 4rem 1.5rem; }
+    }
+
+    /* ─── REDUCED MOTION ──────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      #neural-canvas { display: none; }
+      .scroll-line { animation: none; }
+    }
+  </style>
 </head>
-
 <body>
-    <div id="header"></div>
-    <div class="column">
-    <h1>Hello.</h1>
-        <p>
-          I am <a href="https://www.linkedin.com/in/thaddeusloh/">Thaddeus</a>. 
-        </p>
-        <p>
-          I am a <b>software engineer</b> by training, focusing mostly on backend API and data engineering for <b>big data platforms</b>. I've previously worked on <b>core banking, compliance, wealth and multi-asset class trade execution platforms/applications.</b>
-        </p>  
-        <p>
-          Currently, I spend most of my time looking into strategic data initiatives for digital advisory in the financial world with a focus on <b>Artificial Intelligence & Machine Learning</b>.
-        </p> 
-        <p>
-          Here's a drawing of my cat.
-        </p>
-        <p>
-          <i>Enjoy!</i>
-        </p>
-        <p>
-            <img src="lohki_megan.jpg" alt="Lohki by Megan" width="300" height="450">
-        </p>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">T<span>.</span>Loh</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#expertise">Expertise</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <canvas id="neural-canvas"></canvas>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Thaddeus Loh &nbsp;·&nbsp; Singapore</div>
+      <h1 class="hero-headline">
+        Where <span class="highlight">financial intelligence</span><br>
+        meets machine learning.
+      </h1>
+      <p class="hero-sub">
+        Engineer turned strategist. I build and shape AI systems that power the next generation of digital wealth advisory — bridging deep technical foundations with real-world capital markets.
+      </p>
+      <div class="hero-ctas">
+        <a href="https://www.linkedin.com/in/thaddeusloh/" target="_blank" rel="noopener" class="btn-primary">Connect on LinkedIn</a>
+        <a href="#about" class="btn-ghost">Learn more</a>
+      </div>
     </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <div class="section-label">About</div>
+          <h2 class="section-title">A technologist with a financial-world worldview.</h2>
+          <p>I began as a <strong>software engineer</strong>, specialising in backend API architecture and data engineering for large-scale platforms. My early career took me deep into the infrastructure of finance — <strong>core banking, trade execution, compliance, and multi-asset-class wealth platforms</strong>.</p>
+          <p>Over time, my focus shifted upstream: from building systems to shaping strategy. Today, I work at the intersection of <strong>AI, machine learning, and digital advisory</strong> — designing intelligent capabilities that help institutions understand, serve, and grow their clients.</p>
+          <p>My conviction is simple: <strong>the best AI applications in finance are not about automation, but augmentation</strong> — giving relationship managers, advisors, and clients sharper insight, faster.</p>
+        </div>
+        <div class="about-aside">
+          <div class="stat-card">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Years in fintech & banking platforms</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">AI/ML</div>
+            <div class="stat-label">Strategy &amp; digital advisory focus</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">SG</div>
+            <div class="stat-label">Based in Singapore · APAC markets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERTISE -->
+  <section id="expertise">
+    <div class="container">
+      <div class="section-label">Expertise</div>
+      <h2 class="section-title">What I do well.</h2>
+      <div class="expertise-grid">
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+          <div class="card-title">AI Strategy in Wealth Management</div>
+          <div class="card-body">Designing AI-powered advisory capabilities — from nudge engines and recommendation systems to agentic workflows — that translate into measurable client outcomes.</div>
+        </div>
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+          <div class="card-title">Machine Learning for Finance</div>
+          <div class="card-body">Applying ML at scale to financial data — portfolio analytics, client segmentation, behavioural modelling, and predictive signals — with rigorous attention to model governance.</div>
+        </div>
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          <div class="card-title">Data Platform Architecture</div>
+          <div class="card-body">Engineering big data infrastructure that supports real-time analytics, O2O client journeys, and content personalisation at institutional scale.</div>
+        </div>
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+          <div class="card-title">Digital Advisory Products</div>
+          <div class="card-body">Conceiving and shipping digital advisory tools — intelligent chatbots, relationship manager copilots, and personalised content platforms — that bridge technology and client trust.</div>
+        </div>
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <div class="card-title">Core Banking & Compliance Systems</div>
+          <div class="card-body">Deep hands-on experience with the regulatory and operational backbone of financial services — trade execution, compliance platforms, and settlement infrastructure.</div>
+        </div>
+
+        <div class="expertise-card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/>
+          </svg>
+          <div class="card-title">Strategic Roadmapping</div>
+          <div class="card-body">Translating complex AI and data ambitions into actionable product roadmaps — aligning engineering, business stakeholders, and senior leadership around a coherent vision.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-label">Experience</div>
+      <h2 class="section-title">Career trajectory.</h2>
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-date">Present</div>
+          <div>
+            <div class="timeline-role">Head of AI & Data Strategy</div>
+            <div class="timeline-org">Wealth Management · Singapore</div>
+            <div class="timeline-desc">Leading strategic data initiatives for digital advisory — AI nudge engines, content personalisation platforms, and agentic advisory capabilities for a major financial institution.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Prior</div>
+          <div>
+            <div class="timeline-role">Senior Software Engineer — Data &amp; Platform</div>
+            <div class="timeline-org">Financial Services · Singapore</div>
+            <div class="timeline-desc">Built backend APIs and data engineering infrastructure for multi-asset trade execution and portfolio analytics at institutional scale.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Early career</div>
+          <div>
+            <div class="timeline-role">Software Engineer — Core Banking</div>
+            <div class="timeline-org">Banking Technology</div>
+            <div class="timeline-desc">Worked on compliance systems and core banking platforms, developing expertise in the operational fabric of large financial institutions.</div>
+          </div>
+        </div>
+
+      </div>
+      <p style="font-size:0.8rem; color: var(--dim); margin-top: 1.5rem; font-family: 'JetBrains Mono', monospace;">* Employer details withheld for professional reasons. Full history available on LinkedIn.</p>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="container">
+      <div class="section-label">Stack</div>
+      <h2 class="section-title">Tools of the trade.</h2>
+      <div class="stack-groups">
+
+        <div>
+          <div class="stack-group-label">AI &amp; Machine Learning</div>
+          <div class="stack-tags">
+            <span class="tag">Python</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">TensorFlow</span>
+            <span class="tag">scikit-learn</span>
+            <span class="tag">LLM Fine-tuning</span>
+            <span class="tag">RAG Architectures</span>
+            <span class="tag">LangChain</span>
+            <span class="tag">Agentic AI</span>
+            <span class="tag">Hugging Face</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="stack-group-label">Data Engineering</div>
+          <div class="stack-tags">
+            <span class="tag">Apache Spark</span>
+            <span class="tag">Kafka</span>
+            <span class="tag">dbt</span>
+            <span class="tag">Airflow</span>
+            <span class="tag">Snowflake</span>
+            <span class="tag">BigQuery</span>
+            <span class="tag">Flink</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="stack-group-label">Backend &amp; APIs</div>
+          <div class="stack-tags">
+            <span class="tag">Java</span>
+            <span class="tag">Golang</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">REST</span>
+            <span class="tag">gRPC</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Redis</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="stack-group-label">Cloud &amp; Infrastructure</div>
+          <div class="stack-tags">
+            <span class="tag">AWS</span>
+            <span class="tag">GCP</span>
+            <span class="tag">Azure</span>
+            <span class="tag">Kubernetes</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Terraform</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Let's build something important.</h2>
+      <p class="contact-tagline">I'm open to conversations about AI strategy, advisory technology, or the intersection of machine intelligence and financial services.</p>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/thaddeusloh/" target="_blank" rel="noopener" class="btn-primary">LinkedIn</a>
+        <a href="mailto:hello@ted.sg" class="btn-ghost">Email</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-copy">© 2026 Thaddeus Loh · ted.sg</div>
+    <div class="footer-location">Singapore</div>
+  </footer>
+
+  <!-- ─── NEURAL MESH ANIMATION ─────────────────────── -->
+  <script>
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+
+    const ACCENT = '#00C8F0';
+    const ACCENT2 = '#7B61FF';
+    const NODE_COUNT = 55;
+    const CONNECT_DIST = 160;
+    const PULSE_SPEED = 0.0006;
+
+    let W, H, nodes;
+
+    function resize() {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W * devicePixelRatio;
+      canvas.height = H * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+
+    function makeNode() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: Math.random() * 1.5 + 0.8,
+        phase: Math.random() * Math.PI * 2
+      };
+    }
+
+    function init() {
+      resize();
+      nodes = Array.from({ length: NODE_COUNT }, makeNode);
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+
+      // Update
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      }
+
+      // Edges
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            const alpha = (1 - dist / CONNECT_DIST) * 0.4;
+            const pct = (i + j) / (NODE_COUNT * 2);
+            // Interpolate between accent colors
+            const r1 = parseInt(ACCENT.slice(1,3), 16);
+            const g1 = parseInt(ACCENT.slice(3,5), 16);
+            const b1 = parseInt(ACCENT.slice(5,7), 16);
+            const r2 = parseInt(ACCENT2.slice(1,3), 16);
+            const g2 = parseInt(ACCENT2.slice(3,5), 16);
+            const b2 = parseInt(ACCENT2.slice(5,7), 16);
+            const r = Math.round(r1 + (r2-r1) * pct);
+            const g = Math.round(g1 + (g2-g1) * pct);
+            const b = Math.round(b1 + (b2-b1) * pct);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+            ctx.lineWidth = 0.6;
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Nodes
+      for (const n of nodes) {
+        const pulse = 0.5 + 0.5 * Math.sin(t * PULSE_SPEED + n.phase);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * (0.8 + 0.4 * pulse), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 200, 240, ${0.4 + 0.4 * pulse})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); });
+    init();
+    requestAnimationFrame(draw);
+  </script>
+
 </body>
+</html>
