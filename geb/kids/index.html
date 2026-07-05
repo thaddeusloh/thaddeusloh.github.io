@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gödel, Escher, Bach — The Picture-Book Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F1E3;
+    --paper-2:#FBF7EC;
+    --ink:#1E2A3A;
+    --ink-soft:#3C4A5C;
+    --gold:#E0A82E;
+    --gold-deep:#C6871A;
+    --teal:#2E8B8B;
+    --coral:#E8734A;
+    --lilac:#8E7CC3;
+    --line:#D8CBA8;
+    --shadow:rgba(30,42,58,.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:18px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.display{font-family:"Fredoka",system-ui,sans-serif;font-weight:600;line-height:1.15;}
+  .mono{font-family:"Space Mono",monospace;}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px;}
+  section{padding:38px 0;border-bottom:2px dashed var(--line);}
+  section:last-child{border-bottom:none;}
+
+  /* ---------- hero ---------- */
+  header.hero{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(224,168,46,.18), transparent 45%),
+      radial-gradient(circle at 85% 75%, rgba(46,139,139,.16), transparent 45%),
+      var(--paper-2);
+    border-bottom:4px solid var(--ink);
+    padding:54px 0 46px;
+    text-align:center;
+  }
+  .hero h1{font-size:clamp(2.3rem,6vw,3.8rem);font-weight:700;margin:.2em 0 .1em;letter-spacing:-.5px;}
+  .hero .sub{font-family:"Fredoka";font-size:clamp(1rem,2.6vw,1.35rem);color:var(--ink-soft);font-weight:500;}
+  .hero .tag{
+    display:inline-block;margin-top:18px;padding:7px 18px;border-radius:999px;
+    background:var(--ink);color:var(--paper);font-family:"Fredoka";font-size:.95rem;
+  }
+  .three{display:flex;justify-content:center;gap:22px;margin:26px 0 6px;flex-wrap:wrap;}
+  .three .face{text-align:center;font-family:"Fredoka";font-weight:500;color:var(--ink-soft);font-size:.95rem;}
+  .three .face .big{display:block;font-size:2rem;margin-bottom:2px;}
+
+  /* ---------- big idea box ---------- */
+  .bigidea{
+    background:var(--ink);color:var(--paper-2);border-radius:22px;
+    padding:30px 30px;margin:10px 0 4px;box-shadow:0 10px 30px var(--shadow);
+  }
+  .bigidea h2{color:var(--gold);margin-top:0;font-size:1.5rem;}
+  .bigidea p{margin:.5em 0;}
+  .bigidea .loopword{color:var(--gold);font-weight:600;}
+
+  /* ---------- kid box ---------- */
+  .kid{
+    background:linear-gradient(180deg,#FFF9E8,#FFF3D4);
+    border:2px solid var(--gold);border-left:8px solid var(--gold);
+    border-radius:14px;padding:16px 20px;margin:20px 0;
+  }
+  .kid .lab{font-family:"Fredoka";font-weight:600;color:var(--gold-deep);font-size:.95rem;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;}
+  .kid p{margin:0;}
+
+  /* ---------- chapter cards ---------- */
+  .chap{background:var(--paper-2);border:2px solid var(--line);border-radius:18px;padding:26px 26px 22px;margin:24px 0;box-shadow:0 4px 0 var(--line);}
+  .chap-h{display:flex;align-items:center;gap:14px;margin-bottom:6px;}
+  .chap-num{
+    flex:0 0 auto;width:52px;height:52px;border-radius:14px;background:var(--teal);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Fredoka";font-weight:700;font-size:1.35rem;
+    box-shadow:0 4px 0 #216a6a;
+  }
+  .chap-h h3{margin:0;font-size:1.35rem;}
+  .chap-h .dia{display:block;font-family:"Space Mono";font-size:.72rem;color:var(--teal);margin-top:2px;letter-spacing:.3px;}
+  .carry{background:#EAF4F1;border-radius:12px;padding:12px 16px;margin-top:14px;border:1px dashed var(--teal);}
+  .carry .lab{font-family:"Fredoka";font-weight:600;color:var(--teal);font-size:.85rem;text-transform:uppercase;letter-spacing:.4px;}
+  .carry ul{margin:6px 0 0;padding-left:20px;}
+  .carry li{margin:3px 0;}
+
+  /* ---------- part banner ---------- */
+  .part{
+    text-align:center;margin:14px 0 0;padding:22px;border-radius:18px;
+    background:repeating-linear-gradient(45deg,var(--paper-2),var(--paper-2) 12px,#F2E9CF 12px,#F2E9CF 24px);
+    border:3px solid var(--ink);
+  }
+  .part h2{margin:0;font-size:1.6rem;color:var(--ink);}
+  .part p{margin:6px 0 0;color:var(--ink-soft);font-family:"Fredoka";}
+
+  /* ---------- figures ---------- */
+  figure{margin:22px 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 6px 18px var(--shadow);}
+  figcaption{font-family:"Fredoka";font-size:.92rem;color:var(--ink-soft);margin-top:10px;font-weight:500;}
+
+  p{margin:.7em 0;}
+  strong{color:var(--coral);}
+  .analogy{background:#FBEEE7;border-radius:12px;padding:14px 18px;margin:16px 0;border-left:6px solid var(--coral);}
+  .analogy .lab{font-family:"Fredoka";font-weight:600;color:var(--coral);font-size:.9rem;display:block;margin-bottom:3px;}
+
+  h2.sec{font-size:1.9rem;margin:0 0 4px;}
+  .sec-eyebrow{font-family:"Fredoka";font-weight:600;color:var(--teal);letter-spacing:1px;text-transform:uppercase;font-size:.82rem;}
+
+  /* ---------- glossary ---------- */
+  .gloss{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;}
+  .gterm{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;}
+  .gterm b{font-family:"Fredoka";color:var(--teal);}
+
+  /* ---------- table of contents ---------- */
+  .toc{background:var(--paper-2);border:2px solid var(--line);border-radius:16px;padding:18px 22px;margin-top:24px;}
+  .toc h3{margin:.2em 0 .5em;color:var(--gold-deep);}
+  .toc ol{margin:0;padding-left:22px;columns:2;column-gap:26px;}
+  .toc a{color:var(--ink-soft);text-decoration:none;font-family:"Fredoka";font-size:.92rem;}
+  .toc a:hover{color:var(--coral);text-decoration:underline;}
+  @media(max-width:560px){.toc ol{columns:1;}}
+
+  footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-family:"Fredoka";font-size:.9rem;}
+  a.top{color:var(--teal);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="sub">Thaddeus' Picture-Book Guide to</div>
+    <h1>Gödel, Escher, Bach</h1>
+    <div class="sub">One big idea, explained so simply a curious kid gets it.</div>
+    <div class="three">
+      <div class="face"><span class="big">🔢</span>Gödel<br><span style="font-size:.8rem">(numbers)</span></div>
+      <div class="face"><span class="big">🎨</span>Escher<br><span style="font-size:.8rem">(pictures)</span></div>
+      <div class="face"><span class="big">🎵</span>Bach<br><span style="font-size:.8rem">(music)</span></div>
+    </div>
+    <div class="tag">Three geniuses • One secret shape • The Strange Loop</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ BIG PICTURE ============ -->
+<section id="big">
+  <div class="sec-eyebrow">Start here</div>
+  <h2 class="sec">The whole book in one breath</h2>
+  <p>Imagine you climb a staircase. Up, up, up... and somehow you end up back at the bottom step you started on. That impossible staircase is the secret shape hiding inside this whole book. Hofstadter calls it a <strong>Strange Loop</strong>.</p>
+
+  <p>He found this same magic loop in three places that seem to have nothing to do with each other:</p>
+  <ul>
+    <li>🔢 <b>Gödel</b>, a mathematician, wrote a math sentence that talks about <em>itself</em>.</li>
+    <li>🎨 <b>Escher</b>, an artist, drew two hands where each hand is drawing the <em>other</em> hand.</li>
+    <li>🎵 <b>Bach</b>, a composer, wrote music that climbs higher and higher... and lands right where it began.</li>
+  </ul>
+
+  <figure>
+    <!-- Strange loop staircase -->
+    <svg viewBox="0 0 440 260" role="img" aria-label="An impossible staircase that loops back to itself">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#E8734A"/>
+        </marker>
+      </defs>
+      <!-- four steps rising -->
+      <g stroke="#1E2A3A" stroke-width="2" fill="#2E8B8B">
+        <rect x="40" y="180" width="70" height="40"/>
+        <rect x="110" y="150" width="70" height="40" fill="#38a0a0"/>
+        <rect x="180" y="120" width="70" height="40" fill="#2E8B8B"/>
+        <rect x="250" y="90" width="70" height="40" fill="#38a0a0"/>
+        <rect x="320" y="60" width="70" height="40" fill="#2E8B8B"/>
+      </g>
+      <!-- looping arrow from top back to bottom -->
+      <path d="M390,70 C430,20 120,10 60,175" fill="none" stroke="#E8734A" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+      <text x="200" y="30" font-family="Fredoka" font-size="15" fill="#E8734A" text-anchor="middle">"keep going up..."</text>
+      <text x="150" y="245" font-family="Fredoka" font-size="15" fill="#1E2A3A" text-anchor="middle">...and you're back at the start!</text>
+    </svg>
+    <figcaption>A Strange Loop: go “up” far enough and you arrive back where you began.</figcaption>
+  </figure>
+
+  <p>But the book is really asking one deep question: <strong>How does a bunch of lifeless parts — symbols, cells, brain cells — ever add up to a thinking “me”?</strong> Hofstadter’s answer is that <b>you</b> — your feeling of being a “self” — are a Strange Loop too. Your brain got clever enough to make a picture of <em>itself</em>, and that loop is what we call “I.”</p>
+
+  <div class="kid">
+    <span class="lab">🧒 Kid version</span>
+    <p>The book is about things that point back at themselves — like a camera pointing at its own screen, or you saying “I am thinking about me thinking.” That loopy trick, the author says, is the secret of how brains become minds.</p>
+  </div>
+
+  <div class="toc">
+    <h3>The 20 chapters (tap to jump)</h3>
+    <ol>
+      <li><a href="#c1">The MU Puzzle</a></li>
+      <li><a href="#c2">Meaning & Form</a></li>
+      <li><a href="#c3">Figure & Ground</a></li>
+      <li><a href="#c4">Consistency & Geometry</a></li>
+      <li><a href="#c5">Recursion</a></li>
+      <li><a href="#c6">Where Meaning Lives</a></li>
+      <li><a href="#c7">Logic & Meta-levels</a></li>
+      <li><a href="#c8">TNT & Gödel Numbers</a></li>
+      <li><a href="#c9">Gödel’s Theorem</a></li>
+      <li><a href="#c10">Levels & Ant Colonies</a></li>
+      <li><a href="#c11">Brains & Thoughts</a></li>
+      <li><a href="#c12">Minds & Patterns</a></li>
+      <li><a href="#c13">BlooP & FlooP</a></li>
+      <li><a href="#c14">Un-patchable Holes</a></li>
+      <li><a href="#c15">Jumping Out</a></li>
+      <li><a href="#c16">Self-Copy (DNA)</a></li>
+      <li><a href="#c17">Church, Turing, Tarski</a></li>
+      <li><a href="#c18">AI Looking Back</a></li>
+      <li><a href="#c19">AI Looking Forward</a></li>
+      <li><a href="#c20">The Strange Loop</a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ PART I ============ -->
+<section>
+  <div class="part">
+    <h2>Part 1 · The Rules Game</h2>
+    <p>Chapters 1–9: how symbol games grow up into Gödel’s big surprise</p>
+  </div>
+</section>
+
+<!-- C1 -->
+<section id="c1">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">1</div><div><h3>The MU Puzzle</h3><span class="dia">Dialogue: Three-Part Invention</span></div></div>
+    <p>Hofstadter invents the world’s simplest game. You start with the “word” <span class="mono">MI</span>, and you have a few rules for changing letters around (like “if it ends in I, you may add a U”). <b>Question:</b> can you ever turn <span class="mono">MI</span> into <span class="mono">MU</span>?</p>
+    <p>You can shuffle letters forever and never find out. The trick is that you have to <strong>step outside the game</strong> and think <em>about</em> the rules (it turns out a hidden number pattern makes MU impossible). Playing inside the game isn’t enough to answer a question about the game.</p>
+    <figure>
+      <svg viewBox="0 0 420 170" role="img" aria-label="A machine turning MI into longer strings but never MU">
+        <rect x="20" y="60" width="70" height="46" rx="8" fill="#2E8B8B" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="55" y="89" text-anchor="middle" font-family="Space Mono" font-size="18" fill="#fff">MI</text>
+        <path d="M95,83 L150,83" stroke="#1E2A3A" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="155" y="40" width="110" height="46" rx="8" fill="#FBF7EC" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="210" y="69" text-anchor="middle" font-family="Space Mono" font-size="15">MIU, MIIU...</text>
+        <rect x="155" y="100" width="110" height="46" rx="8" fill="#FBF7EC" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="210" y="129" text-anchor="middle" font-family="Space Mono" font-size="15">MUIIU...</text>
+        <path d="M270,83 L330,83" stroke="#E8734A" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="335" y="60" width="70" height="46" rx="8" fill="#F7F1E3" stroke="#E8734A" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="370" y="83" text-anchor="middle" font-family="Space Mono" font-size="18" fill="#E8734A">MU?</text>
+        <text x="370" y="99" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#E8734A">never!</text>
+      </svg>
+      <figcaption>You can make endless words — but MU stays locked away. You only see why from <em>outside</em>.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>It’s like a board game. Sometimes you can’t tell if a move is possible just by playing — you have to float above the board and look at the whole thing.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 2</span>
+      <ul><li>A <b>formal system</b> = starting piece + rules → new pieces.</li><li>Being <b>inside</b> a game is different from thinking <b>about</b> the game.</li></ul></div>
+  </div>
+</section>
+
+<!-- C2 -->
+<section id="c2">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">2</div><div><h3>Meaning and Form</h3><span class="dia">Dialogue: Two-Part Invention</span></div></div>
+    <p>Now a new symbol game — but this time, if you read the symbols a certain way, they magically match real adding! The symbols didn’t <em>have</em> a meaning. We <strong>gave</strong> them one, and it fit perfectly. That perfect fit is called an <b>isomorphism</b> — a fancy word for “same shape underneath.”</p>
+    <figure>
+      <svg viewBox="0 0 420 150" role="img" aria-label="Symbol string mapped onto a real addition fact">
+        <rect x="20" y="45" width="170" height="60" rx="10" fill="#FBF7EC" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="105" y="70" text-anchor="middle" font-family="Space Mono" font-size="16">-p-q--</text>
+        <text x="105" y="92" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#8E7CC3">(just symbols)</text>
+        <path d="M195,75 L235,75" stroke="#E0A82E" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="215" y="65" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#C6871A">means</text>
+        <rect x="240" y="45" width="160" height="60" rx="10" fill="#EAF4F1" stroke="#2E8B8B" stroke-width="2"/>
+        <text x="320" y="80" text-anchor="middle" font-family="Fredoka" font-size="20" fill="#2E8B8B">1 + 2 = 3</text>
+      </svg>
+      <figcaption>Same shape underneath: the symbol string and the sum are secret twins.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Squiggles mean nothing by themselves. But if the squiggles line up perfectly with something real (like adding), meaning “clicks” into place.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 3</span>
+      <ul><li>Symbols are meaningless until you <b>interpret</b> them.</li><li><b>Isomorphism</b>: two different things sharing one hidden pattern.</li></ul></div>
+  </div>
+</section>
+
+<!-- C3 -->
+<section id="c3">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">3</div><div><h3>Figure and Ground</h3><span class="dia">Dialogue: Sonata for Unaccompanied Achilles</span></div></div>
+    <p>Look at a drawing of a vase — or is it two faces? The <b>figure</b> is the thing; the <b>ground</b> is everything around it. Hofstadter asks: if you can make a list of all the “things,” can you also make a list of all the “gaps”? Surprisingly, sometimes <strong>no</strong>. Some lists can be written out, but their opposite can never be fully written out.</p>
+    <figure>
+      <svg viewBox="0 0 300 170" role="img" aria-label="Faces-or-vase optical illusion">
+        <rect x="60" y="15" width="180" height="140" rx="10" fill="#2E8B8B"/>
+        <path d="M150,20 C120,55 165,70 130,100 C110,120 140,140 150,150 C160,140 190,120 170,100 C135,70 180,55 150,20 Z" fill="#FBF7EC"/>
+        <text x="150" y="167" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#1E2A3A">a vase? …or two faces looking at each other?</text>
+      </svg>
+      <figcaption>Figure vs. ground: the thing, and the not-thing, are both “there.”</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Sometimes you can count all the toys in a box, but you could <em>never</em> finish counting everything that is “not a toy.” Some opposites are endless.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 4</span>
+      <ul><li>Some sets you can fully <b>list out</b>; their opposite you can’t.</li><li>A rule-game can make “yes” answers but not always “no” answers.</li></ul></div>
+  </div>
+</section>
+
+<!-- C4 -->
+<section id="c4">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">4</div><div><h3>Consistency & Geometry</h3><span class="dia">Dialogue: Little Harmonic Labyrinth</span></div></div>
+    <p>For 2,000 years everyone thought there was only <em>one</em> true geometry (Euclid’s). Then people invented other geometries that break Euclid’s rules — and they work fine, with no contradictions! Two rulebooks that disagree can <strong>both</strong> be perfectly consistent.</p>
+    <p>This splits two ideas apart that sound the same:</p>
+    <ul>
+      <li><b>Consistent</b> = never contradicts itself (never says yes and no to the same thing).</li>
+      <li><b>Complete</b> = can prove every true thing.</li>
+    </ul>
+    <p>Gödel’s bombshell (coming in Ch. 9) is that for number-math, you <em>can’t</em> have both.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>You can invent different rulebooks for different games, and each can be totally fair (no cheating), even if they disagree with each other. “Fair” and “can-explain-everything” are two different things.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 5</span>
+      <ul><li><b>Consistent ≠ complete</b> — two separate ideas.</li><li>A rulebook can be flawless without being about the “real” world.</li></ul></div>
+  </div>
+</section>
+
+<!-- C5 -->
+<section id="c5">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">5</div><div><h3>Recursion</h3><span class="dia">Dialogue: Canon by Intervallic Augmentation</span></div></div>
+    <p><b>Recursion</b> means “a thing made of smaller copies of itself.” A tree branch splits into smaller branches that split into smaller branches. A story can have a story inside it, which has a story inside it. Simple rules, repeated, make endless richness.</p>
+    <figure>
+      <svg viewBox="0 0 300 200" role="img" aria-label="A branching fractal tree">
+        <g stroke="#7a5230" stroke-width="2" fill="none" stroke-linecap="round">
+          <line x1="150" y1="195" x2="150" y2="150"/>
+          <line x1="150" y1="150" x2="115" y2="120"/><line x1="150" y1="150" x2="185" y2="120"/>
+          <line x1="115" y1="120" x2="93" y2="98"/><line x1="115" y1="120" x2="132" y2="98"/>
+          <line x1="185" y1="120" x2="168" y2="98"/><line x1="185" y1="120" x2="207" y2="98"/>
+          <line x1="93" y1="98" x2="80" y2="82"/><line x1="93" y1="98" x2="103" y2="82"/>
+          <line x1="132" y1="98" x2="122" y2="82"/><line x1="132" y1="98" x2="143" y2="82"/>
+          <line x1="168" y1="98" x2="157" y2="82"/><line x1="168" y1="98" x2="179" y2="82"/>
+          <line x1="207" y1="98" x2="197" y2="82"/><line x1="207" y1="98" x2="220" y2="82"/>
+        </g>
+        <g fill="#2E8B8B"><circle cx="80" cy="80" r="6"/><circle cx="103" cy="80" r="6"/><circle cx="122" cy="80" r="6"/><circle cx="143" cy="80" r="6"/><circle cx="157" cy="80" r="6"/><circle cx="179" cy="80" r="6"/><circle cx="197" cy="80" r="6"/><circle cx="220" cy="80" r="6"/></g>
+        <text x="150" y="18" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#1E2A3A">one rule (“split in two”) repeated forever</text>
+      </svg>
+      <figcaption>Recursion: the same little rule, nested inside itself, grows a whole tree.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Think of Russian nesting dolls, or a mirror facing a mirror. A small rule that repeats inside itself can build something huge.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 6</span>
+      <ul><li><b>Recursion</b> = self-nesting; simple rules → giant complexity.</li><li>This is how a few brain rules might build a whole mind.</li></ul></div>
+  </div>
+</section>
+
+<!-- C6 -->
+<section id="c6">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">6</div><div><h3>Where Meaning Lives</h3><span class="dia">Dialogue: Crab Canon</span></div></div>
+    <p>Where is the “meaning” of a message — in the paper, or in your head? Hofstadter says: <strong>both, plus the world around you.</strong> A message doesn’t carry meaning like a box carries a toy; it <em>triggers</em> meaning in a reader who already knows a lot.</p>
+    <div class="analogy"><span class="lab">🦀 Fun fact</span>The “Crab Canon” dialogue reads the <em>same forwards and backwards</em> — just like Bach’s music of the same name. The chapter’s shape <em>is</em> its lesson.</div>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>A secret note only means something if the reader knows the code. The meaning isn’t hiding in the ink — it wakes up inside the reader.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 7</span>
+      <ul><li>Meaning is a <b>team effort</b>: message + reader + world.</li><li>A message <b>triggers</b> meaning; it doesn’t contain it.</li></ul></div>
+  </div>
+</section>
+
+<!-- C7 -->
+<section id="c7">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">7</div><div><h3>Logic & Meta-levels</h3><span class="dia">Dialogue: Crab Canon (reprise)</span></div></div>
+    <p>Hofstadter teaches basic logic (and, or, not, if-then). The <strong>most important idea</strong> here is two levels of talking:</p>
+    <ul>
+      <li>The <b>object language</b> = talking <em>in</em> the game (“1 + 1 = 2”).</li>
+      <li>The <b>meta-language</b> = talking <em>about</em> the game (“that sentence has five symbols”).</li>
+    </ul>
+    <p>Normally these stay separate. Gödel’s whole trick will be to <strong>fold them together</strong> so the game starts talking about itself. Remember this one!</p>
+    <figure>
+      <svg viewBox="0 0 420 150" role="img" aria-label="Two stacked levels: talking in the game vs about the game">
+        <rect x="40" y="20" width="340" height="45" rx="10" fill="#EAF4F1" stroke="#2E8B8B" stroke-width="2"/>
+        <text x="210" y="42" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#2E8B8B">META: “this sentence has 5 symbols”</text>
+        <text x="210" y="58" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#2E8B8B">(talking ABOUT the game)</text>
+        <path d="M210,68 L210,85" stroke="#E8734A" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="40" y="88" width="340" height="45" rx="10" fill="#FBF7EC" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="210" y="110" text-anchor="middle" font-family="Fredoka" font-size="14">OBJECT: “1 + 1 = 2”</text>
+        <text x="210" y="126" text-anchor="middle" font-family="Fredoka" font-size="11">(talking IN the game)</text>
+      </svg>
+      <figcaption>Two floors. Gödel’s magic is building an elevator between them.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>There’s a difference between <em>playing</em> checkers and <em>talking about</em> checkers. Keep those two apart — until a magician makes them touch.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 8</span>
+      <ul><li><b>Object-level</b> (in the game) vs <b>meta-level</b> (about the game).</li><li>Gödel will smash these two levels together.</li></ul></div>
+  </div>
+</section>
+
+<!-- C8 -->
+<section id="c8">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">8</div><div><h3>TNT & Gödel Numbers</h3><span class="dia">Dialogue: A Mu Offering</span></div></div>
+    <p>Hofstadter builds a serious game called <b>TNT</b> that can say true things about numbers (“every number has a next one”). Then comes the <strong>master trick of the whole book</strong>: <b>Gödel numbering</b>. Give every symbol a number. Then every <em>sentence</em> becomes one big number, and even every <em>proof</em> becomes a number.</p>
+    <p>Now something wild happens. Since TNT talks about numbers, and sentences <em>are</em> numbers now, TNT can secretly talk about <strong>its own sentences</strong>. The game learned to talk about itself.</p>
+    <figure>
+      <svg viewBox="0 0 420 175" role="img" aria-label="A math sentence being turned into a single code number">
+        <rect x="30" y="30" width="150" height="46" rx="10" fill="#FBF7EC" stroke="#1E2A3A" stroke-width="2"/>
+        <text x="105" y="59" text-anchor="middle" font-family="Space Mono" font-size="16">0 = 0</text>
+        <path d="M185,53 L225,53" stroke="#E0A82E" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="205" y="43" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#C6871A">encode</text>
+        <rect x="230" y="30" width="160" height="46" rx="10" fill="#FFF3D4" stroke="#E0A82E" stroke-width="2"/>
+        <text x="310" y="59" text-anchor="middle" font-family="Space Mono" font-size="16" fill="#C6871A">666,111,666</text>
+        <text x="210" y="115" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#1E2A3A">Every sentence becomes a number…</text>
+        <text x="210" y="140" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#E8734A">…so number-talk becomes sentence-talk!</text>
+      </svg>
+      <figcaption>Gödel numbering: turn language into numbers, and suddenly math can gossip about itself.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Give every letter a number (A=1, B=2…). Now any sentence is just a big number. Since our math game already loves numbers, it can now “read” sentences — including its own!</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 9</span>
+      <ul><li><b>TNT</b>: a game strong enough to do real number-math.</li><li><b>Gödel numbering</b>: sentences and proofs become numbers, so the game can talk about itself.</li></ul></div>
+  </div>
+</section>
+
+<!-- C9 -->
+<section id="c9">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">9</div><div><h3>Gödel’s Big Surprise</h3><span class="dia">Dialogue: Mumon &amp; Gödel</span></div></div>
+    <p>Here’s the mountaintop of Part 1. Using the self-talking trick, Gödel builds one special sentence, call it <b>G</b>, that says:</p>
+    <p style="text-align:center;font-family:Fredoka;font-size:1.25rem;color:var(--coral);">“G cannot be proven in this system.”</p>
+    <p>Now think it through, like a riddle:</p>
+    <ul>
+      <li>If the system <b>proves</b> G, then G is false → the system proved a lie → it’s broken (<b>inconsistent</b>). 😬</li>
+      <li>If the system <b>can’t prove</b> G, then G is telling the truth → there’s a true sentence it can’t reach (<b>incomplete</b>). 😮</li>
+    </ul>
+    <p>So any honest math system big enough to count is <strong>missing some true things it can never prove.</strong> That’s <b>Gödel’s Incompleteness Theorem</b>. A second one adds: such a system can’t even prove that it itself is trustworthy.</p>
+    <figure>
+      <svg viewBox="0 0 430 165" role="img" aria-label="The self-referential Gödel sentence loop">
+        <ellipse cx="215" cy="55" rx="150" ry="40" fill="#FFF3D4" stroke="#E0A82E" stroke-width="2"/>
+        <text x="215" y="52" text-anchor="middle" font-family="Fredoka" font-size="15" fill="#1E2A3A">“I cannot be proven”</text>
+        <text x="215" y="72" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#C6871A">— says sentence G, about itself</text>
+        <path d="M70,70 C40,120 390,120 360,70" fill="none" stroke="#E8734A" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+        <text x="215" y="140" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#E8734A">True… but unprovable. The loop closes.</text>
+      </svg>
+      <figcaption>The sentence that ties the system in a knot — true, yet forever out of reach.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Imagine a sentence that says “You can never prove me.” If you prove it, it was lying — oops. If you can’t, then it was telling the truth all along. Either way, there are true things no rulebook can ever fully catch.</p></div>
+    <div class="carry"><span class="lab">Carry into Part 2</span>
+      <ul><li><b>Gödel’s Theorem</b>: honest + powerful ⇒ incomplete.</li><li>The only way to “see” G is true is to step <b>outside</b> the system.</li><li>Big question ahead: is a <b>mind</b> just a system like this?</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ PART II ============ -->
+<section>
+  <div class="part">
+    <h2>Part 2 · From Rules to Minds</h2>
+    <p>Chapters 10–20: how loops of self-reference might become a thinking “you”</p>
+  </div>
+</section>
+
+<!-- C10 -->
+<section id="c10">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">10</div><div><h3>Levels & Ant Colonies</h3><span class="dia">Dialogue: Ant Fugue</span></div></div>
+    <p>One ant is dumb. But a whole colony finds food, builds bridges, and acts almost <em>smart</em> — even though no single ant is in charge. Clever behavior <b>emerges</b> at the colony level that isn’t in any one ant. Same with you: no single brain cell is “you,” but together they make a mind.</p>
+    <figure>
+      <svg viewBox="0 0 400 150" role="img" aria-label="Many ants forming a smart-looking colony arrow">
+        <g fill="#5a3a2a">
+          <circle cx="60" cy="110" r="4"/><circle cx="80" cy="118" r="4"/><circle cx="100" cy="104" r="4"/><circle cx="120" cy="120" r="4"/><circle cx="140" cy="108" r="4"/><circle cx="95" cy="90" r="4"/><circle cx="130" cy="94" r="4"/><circle cx="70" cy="96" r="4"/>
+        </g>
+        <text x="100" y="145" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#1E2A3A">many simple ants…</text>
+        <path d="M175,105 L215,105" stroke="#E0A82E" stroke-width="3" marker-end="url(#arrow)"/>
+        <rect x="225" y="70" width="150" height="66" rx="12" fill="#EAF4F1" stroke="#2E8B8B" stroke-width="2"/>
+        <text x="300" y="100" text-anchor="middle" font-family="Fredoka" font-size="15" fill="#2E8B8B">one smart</text>
+        <text x="300" y="120" text-anchor="middle" font-family="Fredoka" font-size="15" fill="#2E8B8B">colony “mind”</text>
+      </svg>
+      <figcaption>Emergence: cleverness appears at the top that’s in none of the pieces below.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>One raindrop can’t make a river. Lots of them together can. “Smart” can appear from many not-smart parts working together.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 11</span>
+      <ul><li><b>Emergence</b>: higher levels have brand-new powers.</li><li>Ask: at which level does “thinking” show up?</li></ul></div>
+  </div>
+</section>
+
+<!-- C11 -->
+<section id="c11">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">11</div><div><h3>Brains & Thoughts</h3><span class="dia">Dialogue: English French German Suite</span></div></div>
+    <p>The brain is the <b>hardware</b>; thoughts are the <b>software</b> running on it. A thought is a pattern of many brain-symbols lighting up together. And meaning comes from how those symbols <em>connect</em> to each other — not from any single one alone.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Your brain is like a computer made of meat, and your thoughts are the “apps” running on it. One idea is really lots of tiny pieces holding hands.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 12</span>
+      <ul><li>Thought = high-level <b>pattern</b> over brain cells.</li><li>Meaning lives in the <b>connections</b> between symbols.</li></ul></div>
+  </div>
+</section>
+
+<!-- C12 -->
+<section id="c12">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">12</div><div><h3>Minds & Patterns</h3><span class="dia">Dialogue: Aria with Diverse Variations</span></div></div>
+    <p>If your mind is a <em>pattern</em>, then maybe the <strong>stuff</strong> it’s made of doesn’t matter — only the pattern does. This is called <b>substrate independence</b>. A song is the same song whether it’s sung, played on piano, or streamed — because it’s the pattern that counts, not the material.</p>
+    <div class="analogy"><span class="lab">🎵 Picture it</span>“Happy Birthday” on a kazoo and on a violin is still the same tune. Copy the pattern and you copy the song — maybe minds are like that too.</div>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>What makes “you” you might be your <em>pattern</em>, not your exact atoms — like how a story is the same whether it’s in a book or read aloud.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 13</span>
+      <ul><li><b>Substrate independence</b>: pattern matters, material doesn’t.</li><li>So a machine with the right pattern might really think.</li></ul></div>
+  </div>
+</section>
+
+<!-- C13 -->
+<section id="c13">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">13</div><div><h3>BlooP & FlooP</h3><span class="dia">Dialogue: Air on G’s String</span></div></div>
+    <p>Two pretend computer languages. <b>BlooP</b> always finishes its job (it counts its loops). <b>FlooP</b> is allowed to loop forever if it needs to. The shocking part: some questions can <strong>never</strong> be answered by any program at all — not because computers are too slow, but because it’s truly impossible.</p>
+    <p>The famous example is the <b>Halting Problem</b>: no program can look at every other program and always say “this one will finish” or “this one loops forever.” It’s Gödel’s surprise, wearing a computer costume.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Some puzzles have <em>no</em> possible cheat-sheet — ever. Not “we haven’t found it,” but “it can’t exist.”</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 14</span>
+      <ul><li>Some things are <b>uncomputable</b> — impossible for any machine.</li><li>The <b>Halting Problem</b> is Gödel’s idea in computer form.</li></ul></div>
+  </div>
+</section>
+
+<!-- C14 -->
+<section id="c14">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">14</div><div><h3>Un-patchable Holes</h3><span class="dia">Dialogue: Birthday Cantatatata…</span></div></div>
+    <p>“Fine,” you say, “if sentence G is true, let’s just add it as a new rule!” But then the system builds a <em>brand-new</em> unprovable sentence. Patch that too, and yet another appears. The holes <strong>can never all be filled</strong>. Incompleteness is forever.</p>
+    <figure>
+      <svg viewBox="0 0 400 120" role="img" aria-label="Patching one hole makes a new hole appear">
+        <circle cx="70" cy="60" r="24" fill="none" stroke="#E8734A" stroke-width="3" stroke-dasharray="5 4"/>
+        <text x="70" y="65" text-anchor="middle" font-family="Fredoka" font-size="12" fill="#E8734A">hole</text>
+        <path d="M100,60 L145,60" stroke="#1E2A3A" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="122" y="50" text-anchor="middle" font-family="Fredoka" font-size="11">patch</text>
+        <circle cx="185" cy="60" r="24" fill="#2E8B8B"/>
+        <text x="185" y="65" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#fff">fixed</text>
+        <path d="M215,60 L260,60" stroke="#1E2A3A" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="238" y="50" text-anchor="middle" font-family="Fredoka" font-size="11">but…</text>
+        <circle cx="305" cy="60" r="24" fill="none" stroke="#E8734A" stroke-width="3" stroke-dasharray="5 4"/>
+        <text x="305" y="65" text-anchor="middle" font-family="Fredoka" font-size="11" fill="#E8734A">new hole!</text>
+      </svg>
+      <figcaption>Whack-a-mole with truth: fix one gap, a fresh one pops up.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>It’s like patching a leaky boat where every patch springs a new leak. You can never seal them all.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 15</span>
+      <ul><li>You can’t “fix” incompleteness by adding rules.</li><li>Escape means stepping <b>outside</b> — but there’s always a bigger outside.</li></ul></div>
+  </div>
+</section>
+
+<!-- C15 -->
+<section id="c15">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">15</div><div><h3>Jumping Out</h3><span class="dia">Dialogue: Edifying Thoughts of a Tobacco Smoker</span></div></div>
+    <p>Some people say: “Humans can <em>see</em> that G is true, but a machine can’t — so minds beat machines!” Hofstadter gently says: <strong>not so fast.</strong> To be sure G is true, you first have to be sure the system never lies — and we can’t be certain our own minds never trip up either. So Gödel does <em>not</em> prove humans are magic. It stays an open question.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>It <em>feels</em> like people can leap over the rules that trap machines. But maybe we just can’t see our own hidden rules. The jury’s still out.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 16</span>
+      <ul><li>“Jumping out” = zooming to a <b>meta</b> view.</li><li>Gödel does <b>not</b> prove minds are non-machines.</li></ul></div>
+  </div>
+</section>
+
+<!-- C16 -->
+<section id="c16">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">16</div><div><h3>Self-Copy (DNA!)</h3><span class="dia">Dialogue: The Magnificrab, Indeed</span></div></div>
+    <p>Here’s the beautiful twist: <b>DNA</b> is a real-life Gödel sentence! DNA is a recipe that builds the very machine that reads DNA — it describes and copies <em>itself</em>. To make a copy of yourself, you need a description of yourself <em>inside</em> yourself. Life is self-reference made flesh.</p>
+    <figure>
+      <svg viewBox="0 0 400 140" role="img" aria-label="DNA loop that builds the machine that reads DNA">
+        <ellipse cx="200" cy="70" rx="150" ry="46" fill="none" stroke="#8E7CC3" stroke-width="3"/>
+        <text x="200" y="55" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#1E2A3A">DNA = recipe</text>
+        <text x="200" y="80" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#1E2A3A">↓ builds the machine that…</text>
+        <text x="200" y="100" text-anchor="middle" font-family="Fredoka" font-size="14" fill="#8E7CC3">…reads & copies the DNA ↺</text>
+      </svg>
+      <figcaption>A recipe that cooks the cook that reads the recipe — the loop of life.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>DNA is an instruction sheet that builds the little robot whose job is to read that same instruction sheet. It makes copies of itself — the ultimate loop.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 17</span>
+      <ul><li>To copy yourself, you must <b>contain a description of yourself</b>.</li><li>Self-reference isn’t just math — it’s how life works.</li></ul></div>
+  </div>
+</section>
+
+<!-- C17 -->
+<section id="c17">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">17</div><div><h3>Church, Turing, Tarski</h3><span class="dia">Dialogue: SHRDLU</span></div></div>
+    <p>Three more great thinkers found three more “you-can’t-do-it” walls — and they’re all cousins of Gödel’s. The neatest is <b>Tarski’s</b>: a language can’t fully define its own word “true.” Whenever a system gets strong enough to talk about itself, it bumps into things it can’t settle.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Lots of smart people, in lots of areas, kept hitting the same wall: once a system can talk about itself, it can’t answer everything about itself.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 18</span>
+      <ul><li>Self-reference ⇒ built-in limits, everywhere.</li><li>Early AI (like SHRDLU) only “understood” a tiny toy world.</li></ul></div>
+  </div>
+</section>
+
+<!-- C18 -->
+<section id="c18">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">18</div><div><h3>AI Looking Back</h3><span class="dia">Dialogue: Contracrostipunctus</span></div></div>
+    <p>Early AI could play in narrow, tidy worlds but fell apart in the messy real one — it was <b>brittle</b>. It followed rules without really <em>understanding</em>. Real thinking seems to need common sense, flexibility, and knowing what you <em>don’t</em> know.</p>
+    <div class="analogy"><span class="lab">✍️ Sneaky detail</span>The dialogue title hides an acrostic — the first letters spell a secret message. Once again, the form performs the idea.</div>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Old robots were like students who memorized answers but panicked at any new question. Following rules isn’t the same as understanding.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 19</span>
+      <ul><li><b>Brittle</b> = works in the toy world, breaks in the real one.</li><li>Acting smart ≠ being smart.</li></ul></div>
+  </div>
+</section>
+
+<!-- C19 -->
+<section id="c19">
+  <div class="chap">
+    <div class="chap-h"><div class="chap-num">19</div><div><h3>AI Looking Forward</h3><span class="dia">Dialogue: Sloth Canon</span></div></div>
+    <p>What would <em>real</em> machine thinking need? Hofstadter’s bet: <b>analogy</b> — the knack for seeing that one thing is “like” another. And a true mind must build a little model of <em>itself</em>. Intelligence probably <b>emerges</b> from lots of small flexible pieces, not from one giant rulebook typed in at the top.</p>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>Being smart is mostly about spotting “oh, this is like that!” A really smart machine would also need to understand <em>itself</em>.</p></div>
+    <div class="carry"><span class="lab">Carry into Ch. 20</span>
+      <ul><li><b>Analogy</b> = the heart of thinking.</li><li>A real mind <b>models itself</b> — hello again, Strange Loop.</li></ul></div>
+  </div>
+</section>
+
+<!-- C20 -->
+<section id="c20">
+  <div class="chap" style="border-color:var(--gold);box-shadow:0 4px 0 var(--gold);">
+    <div class="chap-h"><div class="chap-num" style="background:var(--gold);box-shadow:0 4px 0 var(--gold-deep);">20</div><div><h3>The Strange Loop</h3><span class="dia">Dialogue: Six-Part Ricercar</span></div></div>
+    <p>The grand finish. Everything folds together. A <b>Strange Loop</b> is when you move through levels that seem to head one way — and you pop out back at the start. Gödel’s sentence does it. Escher’s hands do it. Bach’s rising music does it. And here’s the punchline:</p>
+    <p style="text-align:center;font-family:Fredoka;font-size:1.35rem;color:var(--coral);margin:18px 0;">Your sense of “I” is a Strange Loop.</p>
+    <p>Your brain got complex enough to make a picture of itself, and to watch itself thinking. That loop — the system becoming its own subject — is what we <em>feel</em> as a self. Not a magic spark added on top, but a pattern that curls back on itself.</p>
+    <figure>
+      <svg viewBox="0 0 360 200" role="img" aria-label="Two hands drawing each other, Escher style">
+        <g stroke="#1E2A3A" stroke-width="2.5" fill="#F7D9B0">
+          <path d="M60,120 q30,-40 90,-30 q30,5 40,20 l-8,14 q-20,-16 -44,-16 q-40,0 -60,26 Z"/>
+          <path d="M300,80 q-30,40 -90,30 q-30,-5 -40,-20 l8,-14 q20,16 44,16 q40,0 60,-26 Z"/>
+        </g>
+        <circle cx="182" cy="124" r="4" fill="#E8734A"/>
+        <circle cx="178" cy="76" r="4" fill="#E8734A"/>
+        <text x="180" y="180" text-anchor="middle" font-family="Fredoka" font-size="13" fill="#1E2A3A">each hand draws the other — who started?</text>
+      </svg>
+      <figcaption>Escher’s looping hands: cause and effect chase each other in a circle — just like the self.</figcaption>
+    </figure>
+    <div class="kid"><span class="lab">🧒 Kid version</span><p>“You” are like a drawing that draws itself. When something gets clever enough to think about its own thinking, a little “me” pops into being. That loop is the whole secret of the book. 🎉</p></div>
+  </div>
+</section>
+
+<!-- ============ CHAIN ============ -->
+<section id="chain">
+  <div class="sec-eyebrow">The through-line</div>
+  <h2 class="sec">How each idea hands off to the next</h2>
+  <div class="bigidea">
+    <p><span class="loopword">1→2→3→4</span> &nbsp;Games have rules → symbols get meaning → some “opposites” can’t be listed → fair ≠ complete.</p>
+    <p><span class="loopword">5→6→7</span> &nbsp;Small rules build big things → meaning needs a reader → keep “in the game” and “about the game” apart.</p>
+    <p><span class="loopword">8→9</span> &nbsp;Turn sentences into numbers → the game talks about itself → <b>Gödel:</b> true things it can’t prove.</p>
+    <p><span class="loopword">10→11→12</span> &nbsp;Smart wholes from dumb parts → thoughts run on brains → the pattern matters, not the stuff.</p>
+    <p><span class="loopword">13→14→15</span> &nbsp;Some things no machine can do → the holes can’t be patched → but that doesn’t make minds magic.</p>
+    <p><span class="loopword">16→17→18→19</span> &nbsp;DNA copies itself → limits appear everywhere → old AI was brittle → real thinking needs analogy + self-models.</p>
+    <p><span class="loopword">20</span> &nbsp;<b>All roads lead to the Strange Loop — and the loop is you.</b></p>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="gloss">
+  <div class="sec-eyebrow">Cheat sheet</div>
+  <h2 class="sec">Big words, tiny meanings</h2>
+  <div class="gloss">
+    <div class="gterm"><b>Formal system</b> — a game: starting pieces + rules → new pieces.</div>
+    <div class="gterm"><b>Strange Loop</b> — go up the levels and end up back at the start.</div>
+    <div class="gterm"><b>Isomorphism</b> — two things with the exact same shape underneath.</div>
+    <div class="gterm"><b>Recursion</b> — a thing made of smaller copies of itself.</div>
+    <div class="gterm"><b>Meta-level</b> — talking <em>about</em> the game instead of <em>in</em> it.</div>
+    <div class="gterm"><b>Gödel numbering</b> — turning sentences into numbers so math can talk about itself.</div>
+    <div class="gterm"><b>Consistent</b> — never says yes and no to the same thing.</div>
+    <div class="gterm"><b>Complete</b> — can prove every true thing (Gödel: math can’t be both!).</div>
+    <div class="gterm"><b>Emergence</b> — new powers that appear only when parts team up.</div>
+    <div class="gterm"><b>Substrate independence</b> — it’s the pattern that counts, not the material.</div>
+    <div class="gterm"><b>Halting Problem</b> — no program can always tell if another program will stop.</div>
+    <div class="gterm"><b>Self-reference</b> — something that points at itself (G, DNA, and… you).</div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>A picture-book walkthrough of all 20 chapters of <em>Gödel, Escher, Bach</em> by Douglas Hofstadter.</p>
+  <p><a class="top" href="#big">↑ back to the top of the loop</a></p>
+</footer>
+
+</body>
+</html>
