@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gödel, Escher, Bach — A Chapter-by-Chapter Illustrated Summary</title>
+<meta name="description" content="A plain-language, illustrated chapter-by-chapter summary of Douglas Hofstadter's Gödel, Escher, Bach: An Eternal Golden Braid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Spectral:ital,wght@0,300;0,400;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEAE2;
+  --paper-deep:#E2DFD5;
+  --ink:#17181D;
+  --ink-soft:#4B4C53;
+  --gold:#A9822B;
+  --gold-bright:#C9A64B;
+  --slate:#2E3A50;
+  --slate-soft:#EAECEF;
+  --line:#C6C3B6;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Spectral',Georgia,serif;
+  font-weight:300;
+  font-size:17px;
+  line-height:1.72;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+a{color:var(--gold);text-decoration:none}
+a:hover,a:focus-visible{text-decoration:underline;text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+strong{font-weight:600}
+em{font-style:italic}
+code{font-family:var(--mono);font-size:.86em;background:var(--paper-deep);padding:1px 5px;border-radius:3px}
+
+/* ---------- hero ---------- */
+.hero{padding:84px 0 56px;text-align:center;border-bottom:1px solid var(--line)}
+.hero .braid{margin:0 auto 30px;display:block}
+.hero .eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--gold);
+}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:clamp(42px,7vw,78px);line-height:1.04;
+  margin:14px 0 6px;letter-spacing:-.01em;
+}
+.hero h1 .amp{font-style:italic;color:var(--gold);font-weight:500}
+.hero .sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+  font-size:clamp(19px,2.6vw,26px);color:var(--ink-soft);
+}
+.hero .byline{margin-top:22px;font-size:15px;color:var(--ink-soft)}
+.hero .byline b{font-weight:600;color:var(--ink)}
+
+/* ---------- intro ---------- */
+.intro{padding:56px 0;border-bottom:1px solid var(--line)}
+.intro .grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.intro h2,.part-title{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:32px;line-height:1.15;margin-bottom:14px;
+}
+.intro p+p{margin-top:14px}
+.pillars{list-style:none;margin-top:6px}
+.pillars li{
+  border-top:1px solid var(--line);padding:14px 0 14px 0;
+  display:grid;grid-template-columns:118px 1fr;gap:16px;align-items:baseline;
+}
+.pillars li:last-child{border-bottom:1px solid var(--line)}
+.pillars .who{
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:21px;
+}
+.pillars .what{font-size:15.5px;color:var(--ink-soft)}
+
+/* ---------- toc ---------- */
+.toc{padding:52px 0;border-bottom:1px solid var(--line)}
+.toc h2{font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.toc ol{
+  list-style:none;column-count:2;column-gap:56px;
+  font-size:15.5px;
+}
+.toc li{padding:7px 0;border-bottom:1px dotted var(--line);break-inside:avoid;display:flex;gap:12px;align-items:baseline}
+.toc .n{font-family:var(--mono);font-size:12px;color:var(--gold);min-width:26px}
+.toc a{color:var(--ink)}
+.toc a:hover{color:var(--gold)}
+
+/* ---------- parts ---------- */
+.part{padding:64px 0 8px}
+.part .part-kicker{font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.part .part-title{font-size:clamp(30px,4.5vw,44px);margin:8px 0 4px}
+.part .part-note{color:var(--ink-soft);max-width:640px}
+
+/* ---------- dialogues ---------- */
+.dialogue{
+  margin:44px 0 0;
+  background:var(--slate);color:var(--slate-soft);
+  border-radius:6px;padding:22px 26px;
+  display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:baseline;
+}
+.dialogue .d-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold-bright);
+}
+.dialogue h4{
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;
+  font-size:22px;margin-bottom:4px;color:#fff;
+}
+.dialogue p{font-size:15px;line-height:1.65;color:#C8CDD8}
+
+/* ---------- chapters ---------- */
+.chapter{padding:40px 0 56px;border-bottom:1px solid var(--line)}
+.ch-head{display:flex;align-items:baseline;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+.ch-num{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.ch-head h3{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  font-size:clamp(26px,3.6vw,36px);line-height:1.12;
+}
+.ch-body{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
+.ch-text p+p{margin-top:13px}
+.key{
+  margin-top:20px;border-left:3px solid var(--gold);
+  padding:4px 0 4px 16px;font-size:15.5px;
+}
+.key .k-label{
+  display:block;font-family:var(--mono);font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;
+}
+.ch-fig{position:sticky;top:32px}
+.ch-fig svg{width:100%;height:auto;display:block;background:#F4F2EB;border:1px solid var(--line);border-radius:6px}
+.ch-fig figcaption{
+  margin-top:10px;font-size:13.5px;color:var(--ink-soft);
+  font-style:italic;line-height:1.5;
+}
+/* svg shared strokes */
+.s-ink{stroke:#17181D;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.s-gold{stroke:#A9822B;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.f-ink{fill:#17181D}
+.f-gold{fill:#A9822B}
+.f-soft{fill:#4B4C53}
+.t-mono{font-family:'IBM Plex Mono',monospace}
+.t-serif{font-family:'Cormorant Garamond',serif}
+
+/* ---------- footer ---------- */
+.footer{padding:56px 0 72px;text-align:center;color:var(--ink-soft);font-size:14.5px}
+.footer .braid-sm{margin:0 auto 18px;display:block;opacity:.85}
+
+@media (max-width:860px){
+  .intro .grid{grid-template-columns:1fr;gap:28px}
+  .ch-body{grid-template-columns:1fr;gap:26px}
+  .ch-fig{position:static}
+  .toc ol{column-count:1}
+  .dialogue{grid-template-columns:1fr;gap:8px}
+  .hero{padding:56px 0 42px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <svg class="braid" width="190" height="120" viewBox="0 0 190 120" role="img" aria-label="Three interwoven golden loops">
+      <path class="s-gold" d="M40 60 C40 26 78 26 95 48 C112 70 150 70 150 60" opacity=".9"/>
+      <path class="s-gold" d="M150 60 C150 94 112 94 95 72 C78 50 40 50 40 60"/>
+      <path class="s-ink" d="M95 18 C122 18 132 44 118 60 C104 76 66 76 60 98" opacity=".85"/>
+      <path class="s-ink" d="M95 102 C68 102 58 76 72 60 C86 44 124 44 130 22" opacity=".85"/>
+      <circle class="f-gold" cx="40" cy="60" r="3.4"/>
+      <circle class="f-gold" cx="150" cy="60" r="3.4"/>
+      <circle class="f-ink" cx="95" cy="18" r="3.4"/>
+    </svg>
+    <p class="eyebrow">A chapter-by-chapter illustrated summary</p>
+    <h1>Gödel, Escher, Bach</h1>
+    <p class="sub">an Eternal Golden Braid — Douglas R. Hofstadter, 1979</p>
+    <p class="byline">One question, asked twenty ways: <b>how can a system made of meaningless parts come to refer to — and know — itself?</b></p>
+  </div>
+</header>
+
+<!-- ================= INTRO ================= -->
+<section class="intro">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <h2>What the book is really about</h2>
+        <p><em>GEB</em> looks like a book about a logician, an artist, and a composer. It isn't, quite. Hofstadter uses all three as lenses on a single idea he calls the <strong>strange loop</strong>: a system that climbs through levels of a hierarchy and unexpectedly arrives back where it started — and in doing so, comes to point at itself.</p>
+        <p>His thesis: consciousness itself is a strange loop. Neurons know nothing, yet out of their meaningless firing emerges a symbol — "I" — that refers to the very system producing it. The book spends 20 chapters building the machinery needed to make that claim precise, alternating each chapter with a playful Achilles-and-Tortoise <em>dialogue</em> that acts out the coming idea in miniature, the way a fugue states its theme in different voices.</p>
+      </div>
+      <div>
+        <ul class="pillars">
+          <li><span class="who">Gödel</span><span class="what">proved that any formal system rich enough to do arithmetic can build a true statement about itself that it cannot prove — self-reference from pure symbols.</span></li>
+          <li><span class="who">Escher</span><span class="what">drew the same loop visually: staircases that rise forever, hands that draw each other, pictures containing themselves.</span></li>
+          <li><span class="who">Bach</span><span class="what">composed it musically: canons and fugues whose voices copy, invert, and stack the same theme — including one that rises through keys and lands home.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOC ================= -->
+<nav class="toc" aria-label="Table of contents">
+  <div class="wrap">
+    <h2>The twenty chapters</h2>
+    <ol>
+      <li><span class="n">01</span><a href="#ch1">The MU-puzzle</a></li>
+      <li><span class="n">02</span><a href="#ch2">Meaning and Form in Mathematics</a></li>
+      <li><span class="n">03</span><a href="#ch3">Figure and Ground</a></li>
+      <li><span class="n">04</span><a href="#ch4">Consistency, Completeness, and Geometry</a></li>
+      <li><span class="n">05</span><a href="#ch5">Recursive Structures and Processes</a></li>
+      <li><span class="n">06</span><a href="#ch6">The Location of Meaning</a></li>
+      <li><span class="n">07</span><a href="#ch7">The Propositional Calculus</a></li>
+      <li><span class="n">08</span><a href="#ch8">Typographical Number Theory</a></li>
+      <li><span class="n">09</span><a href="#ch9">Mumon and Gödel</a></li>
+      <li><span class="n">10</span><a href="#ch10">Levels of Description, and Computer Systems</a></li>
+      <li><span class="n">11</span><a href="#ch11">Brains and Thoughts</a></li>
+      <li><span class="n">12</span><a href="#ch12">Minds and Thoughts</a></li>
+      <li><span class="n">13</span><a href="#ch13">BlooP and FlooP and GlooP</a></li>
+      <li><span class="n">14</span><a href="#ch14">On Formally Undecidable Propositions</a></li>
+      <li><span class="n">15</span><a href="#ch15">Jumping out of the System</a></li>
+      <li><span class="n">16</span><a href="#ch16">Self-Ref and Self-Rep</a></li>
+      <li><span class="n">17</span><a href="#ch17">Church, Turing, Tarski, and Others</a></li>
+      <li><span class="n">18</span><a href="#ch18">Artificial Intelligence: Retrospects</a></li>
+      <li><span class="n">19</span><a href="#ch19">Artificial Intelligence: Prospects</a></li>
+      <li><span class="n">20</span><a href="#ch20">Strange Loops, or Tangled Hierarchies</a></li>
+    </ol>
+  </div>
+</nav>
+
+<!-- ================= PART I ================= -->
+<section class="part">
+  <div class="wrap">
+    <p class="part-kicker">Part I · GEB</p>
+    <h2 class="part-title">Building the machinery</h2>
+    <p class="part-note">Part I teaches you, from scratch, what a formal system is — and smuggles in every ingredient Gödel will need: rules, meaning, recursion, and self-reference.</p>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Three-Part Invention</h4><p>Zeno invents Achilles and the Tortoise, the two characters who will act out every chapter's idea before you meet it — a paradox about motion that never quite gets where it's going.</p></div></aside>
+
+    <article class="chapter" id="ch1">
+      <div class="ch-head"><span class="ch-num">Chapter I</span><h3>The MU-puzzle</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Hofstadter opens with a game. You get one string, <code>MI</code>, and four rules for transforming strings (e.g. "you may double everything after the M", "you may replace <code>III</code> with <code>U</code>"). The challenge: can you ever produce the string <code>MU</code>?</p>
+          <p>This is a <strong>formal system</strong> — symbols manipulated by rules, with no meaning anywhere. Playing it, you notice two ways of operating: working <em>inside</em> the system (mechanically applying rules) and stepping <em>outside</em> it (noticing patterns <em>about</em> the system). A machine grinds inside; a human almost immediately jumps out and asks "wait, is this even possible?" That jump is the book's first hint of intelligence.</p>
+          <p>The answer, provable only from outside: <code>MU</code> is unreachable, because the number of <code>I</code>s is never divisible by 3 — a fact no amount of rule-following inside the system will ever tell you.</p>
+          <div class="key"><span class="k-label">Key idea</span>Some truths about a system can only be seen from outside the system. Machines follow rules; minds also observe the rules.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Tree of MIU strings branching from MI, with MU floating unreachable outside">
+            <text x="180" y="34" text-anchor="middle" class="t-mono f-ink" font-size="18" font-weight="500">MI</text>
+            <path class="s-ink" d="M180 44 L110 80 M180 44 L250 80" opacity=".6"/>
+            <text x="110" y="100" text-anchor="middle" class="t-mono f-ink" font-size="15">MII</text>
+            <text x="250" y="100" text-anchor="middle" class="t-mono f-ink" font-size="15">MIU</text>
+            <path class="s-ink" d="M110 110 L60 146 M110 110 L160 146 M250 110 L250 146" opacity=".6"/>
+            <text x="60" y="166" text-anchor="middle" class="t-mono f-ink" font-size="14">MIIII</text>
+            <text x="160" y="166" text-anchor="middle" class="t-mono f-ink" font-size="14">MIIU</text>
+            <text x="250" y="166" text-anchor="middle" class="t-mono f-ink" font-size="14">MIUIU</text>
+            <path class="s-ink" d="M60 176 L40 210 M60 176 L100 210 M160 176 L160 210" opacity=".6"/>
+            <text x="40" y="230" text-anchor="middle" class="t-mono f-soft" font-size="13">MUI</text>
+            <text x="100" y="230" text-anchor="middle" class="t-mono f-soft" font-size="13">MIIIIU</text>
+            <text x="160" y="230" text-anchor="middle" class="t-mono f-soft" font-size="13">MIIUIIU</text>
+            <text x="60" y="258" text-anchor="middle" class="t-mono f-soft" font-size="12" opacity=".6">… forever …</text>
+            <circle class="s-gold" cx="295" cy="236" r="26" stroke-dasharray="5 5"/>
+            <text x="295" y="242" text-anchor="middle" class="t-mono f-gold" font-size="16" font-weight="500">MU</text>
+            <text x="295" y="284" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">never reached</text>
+          </svg>
+          <figcaption>The tree of everything the rules can produce grows forever — and MU is on no branch of it. Only a bird's-eye view proves that.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Two-Part Invention</h4><p>Lewis Carroll's classic: the Tortoise refuses to accept a conclusion until every rule of inference is written down as another premise — an infinite regress showing rules can't justify themselves.</p></div></aside>
+
+    <article class="chapter" id="ch2">
+      <div class="ch-head"><span class="ch-num">Chapter II</span><h3>Meaning and Form in Mathematics</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>A second toy system, the <strong>pq- system</strong>, whose theorems are strings like <code>--p---q-----</code>. It looks like more meaningless typography — until you notice that every theorem fits the pattern of true additions: 2 plus 3 equals 5. The hyphens behave like numbers; <code>p</code> behaves like "plus"; <code>q</code> like "equals".</p>
+          <p>Meaning wasn't put into the system. It <strong>emerged</strong>, because the system's form happens to mirror a piece of reality. This is an <em>isomorphism</em>: a structure-preserving correspondence between two worlds. When one exists, symbols passively acquire meaning — and this, Hofstadter argues, is where all meaning comes from.</p>
+          <p>The warning attached: once symbols mean something, you're tempted to add "obviously true" statements to the system by hand. But a formal system only stays trustworthy if theorems come from its rules, not from your interpretation.</p>
+          <div class="key"><span class="k-label">Key idea</span>Meaning is an isomorphism — a mapping between meaningless form and the world. Symbols don't contain meaning; correspondences create it.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="The string dash dash p dash dash dash q dash dash dash dash dash mapped down to two plus three equals five">
+            <rect x="30" y="46" width="300" height="60" rx="6" fill="none" class="s-ink" opacity=".5"/>
+            <text x="180" y="84" text-anchor="middle" class="t-mono f-ink" font-size="19">--p---q-----</text>
+            <text x="180" y="32" text-anchor="middle" class="t-mono f-soft" font-size="12" letter-spacing="2">FORM</text>
+            <path class="s-gold" d="M105 120 L105 168 M180 120 L180 168 M255 120 L255 168" marker-end="none"/>
+            <path class="f-gold" d="M100 164 L105 176 L110 164 Z"/>
+            <path class="f-gold" d="M175 164 L180 176 L185 164 Z"/>
+            <path class="f-gold" d="M250 164 L255 176 L260 164 Z"/>
+            <text x="292" y="150" class="t-serif f-gold" font-size="15" font-style="italic">isomorphism</text>
+            <rect x="30" y="192" width="300" height="60" rx="6" fill="#17181D"/>
+            <text x="180" y="230" text-anchor="middle" class="t-mono" font-size="20" fill="#ECEAE2">2 + 3 = 5</text>
+            <text x="180" y="282" text-anchor="middle" class="t-mono f-soft" font-size="12" letter-spacing="2">MEANING</text>
+          </svg>
+          <figcaption>Nothing inside the string means anything — until its structure is found to run parallel to arithmetic.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Sonata for Unaccompanied Achilles</h4><p>You hear only Achilles' half of a phone call — and reconstruct the Tortoise's half from the gaps. The ground implies the figure.</p></div></aside>
+
+    <article class="chapter" id="ch3">
+      <div class="ch-head"><span class="ch-num">Chapter III</span><h3>Figure and Ground</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>In Escher's prints, the background is often a second picture: draw black birds and the white space between them becomes fish. Hofstadter asks the mathematical version of this question: if you "draw" all the theorems of a system (the figure), is the leftover space (the non-theorems) also drawable by some system?</p>
+          <p>Surprisingly, no. There exist sets of strings that are <strong>recursively enumerable</strong> (a machine can list them one by one) whose complement is not. Some "grounds" are not the figure of any possible system. Primes turn out to be tractable — the chapter builds a system that captures them — but the general lesson stands.</p>
+          <p>This is the first concrete crack in the dream that formal rules can capture everything: negative space can hold truths no positive procedure generates.</p>
+          <div class="key"><span class="k-label">Key idea</span>Figure and ground are not symmetric. Being able to list what's IN a set doesn't mean anything can list what's OUT of it.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A row of black shapes whose gaps form gold shapes, illustrating figure and ground">
+            <rect x="30" y="60" width="300" height="130" fill="#F4F2EB"/>
+            <path class="f-ink" d="M30 60 L80 60 Q70 95 90 125 Q75 160 85 190 L30 190 Z"/>
+            <path class="f-ink" d="M140 60 L190 60 Q180 95 200 125 Q185 160 195 190 L145 190 Q155 160 145 125 Q160 95 140 60 Z" opacity=".92"/>
+            <path class="f-ink" d="M250 60 L300 60 Q295 95 310 125 Q298 160 305 190 L255 190 Q265 160 255 125 Q270 95 250 60 Z" opacity=".92"/>
+            <path class="f-gold" d="M85 62 Q100 95 92 124 Q105 158 90 188 L140 188 Q152 158 142 124 Q158 94 138 62 Z" opacity=".85"/>
+            <text x="95" y="230" text-anchor="middle" class="t-mono f-ink" font-size="12" letter-spacing="1">FIGURE</text>
+            <text x="95" y="248" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">theorems: listable</text>
+            <text x="265" y="230" text-anchor="middle" class="t-mono f-gold" font-size="12" letter-spacing="1">GROUND</text>
+            <text x="265" y="248" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">the rest: maybe not</text>
+          </svg>
+          <figcaption>Sometimes the space between the shapes is a shape. Sometimes it's something no pen can trace.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Contracrostipunctus</h4><p>The Tortoise builds record players; the Crab builds records that shatter them by playing their own resonant frequency. Every "perfect" system carries the seed of its own undoing — Gödel's proof, staged as slapstick.</p></div></aside>
+
+    <article class="chapter" id="ch4">
+      <div class="ch-head"><span class="ch-num">Chapter IV</span><h3>Consistency, Completeness, and Geometry</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>For two thousand years Euclid's fifth postulate (about parallel lines) seemed obviously true. Then mathematicians tried denying it — and instead of contradiction, got perfectly consistent <strong>non-Euclidean geometries</strong> describing curved space. The "meaning" of words like <em>point</em> and <em>line</em> turned out to be negotiable.</p>
+          <p>This forces sharp definitions. A system is <strong>consistent</strong> if it never proves both a statement and its negation. It's <strong>complete</strong> if every true statement (under the intended interpretation) is provable. Consistency turns out to be relative to interpretation: a system is consistent if <em>some</em> imaginable world fits it.</p>
+          <p>The chapter also plants a crucial question: which parts of an interpretation are core, and which are flexible? Undefined terms are like Escher's <em>Relativity</em> — multiple gravities, all locally valid.</p>
+          <div class="key"><span class="k-label">Key idea</span>Consistency = "at least one possible world fits". Completeness = "every truth of that world is provable". The book will show you can't have both.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="An impossible triangle, each corner locally consistent but globally contradictory">
+            <path class="f-ink" d="M180 48 L262 190 L234 190 L180 96 Z" opacity=".95"/>
+            <path class="f-soft" d="M180 48 L98 190 L126 190 L166 120 L180 96 Z" opacity=".8"/>
+            <path class="f-gold" d="M98 190 L262 190 L248 214 L112 214 Z" opacity=".9"/>
+            <path class="f-ink" d="M262 190 L248 214 L234 190 Z"/>
+            <path class="f-soft" d="M98 190 L126 190 L112 214 Z" opacity=".8"/>
+            <text x="180" y="262" text-anchor="middle" class="t-serif f-soft" font-size="14" font-style="italic">each corner is fine — the whole cannot exist</text>
+          </svg>
+          <figcaption>Local consistency, global impossibility: the geometry of Escher's worlds, and a preview of what happens when interpretations collide.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Little Harmonic Labyrinth</h4><p>Stories nest inside stories inside stories — and one level is quietly never popped, leaving the heroes stranded a layer deep without knowing it.</p></div></aside>
+
+    <article class="chapter" id="ch5">
+      <div class="ch-head"><span class="ch-num">Chapter V</span><h3>Recursive Structures and Processes</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p><strong>Recursion</strong> is nesting: things defined in terms of smaller versions of themselves, plus a bottom floor so the nesting ends. Stories within stories, functions that call themselves, grammar rules that embed clauses within clauses, a chess program exploring trees of moves within moves.</p>
+          <p>Hofstadter shows recursion everywhere: in Bach's endlessly modulating keys, in the physics of particles (whose properties involve clouds of virtual particles, whose properties involve...), and in whimsical mathematical objects like the sequence <code>G(n) = n − G(G(n−1))</code>, whose structure literally draws its own family tree.</p>
+          <p>The crucial reassurance: recursion is <em>not</em> paradox. A definition that uses itself is fine as long as it grounds out. But it's the closest safe cousin of self-reference — the training wheels for the strange loops ahead.</p>
+          <div class="key"><span class="k-label">Key idea</span>Recursion = self-similarity with a bottom. It gives infinite structure from finite rules — the engine behind grammar, music, and thought.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Nested frames shrinking toward a golden center, like a story within a story">
+            <rect x="30" y="30" width="300" height="240" class="s-ink" rx="4"/>
+            <rect x="58" y="52" width="244" height="196" class="s-ink" rx="4" opacity=".8"/>
+            <rect x="86" y="74" width="188" height="152" class="s-ink" rx="4" opacity=".65"/>
+            <rect x="114" y="96" width="132" height="108" class="s-ink" rx="4" opacity=".5"/>
+            <rect x="142" y="118" width="76" height="64" class="s-gold" rx="4"/>
+            <text x="180" y="155" text-anchor="middle" class="t-serif f-gold" font-size="15" font-style="italic">base case</text>
+            <text x="46" y="47" class="t-mono f-ink" font-size="11">story()</text>
+            <text x="74" y="69" class="t-mono f-ink" font-size="11" opacity=".8">story()</text>
+            <text x="102" y="91" class="t-mono f-ink" font-size="11" opacity=".65">story()</text>
+            <text x="130" y="113" class="t-mono f-ink" font-size="11" opacity=".5">story()</text>
+            <text x="180" y="290" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">push, push, push … then pop your way home</text>
+          </svg>
+          <figcaption>Safe self-reference: each level contains a smaller copy of itself, and the nesting ends.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Chromatic Fantasy, and Feud</h4><p>A brisk logical duel about whether sentences can be broken apart and recombined — propositional reasoning, previewed at high speed.</p></div></aside>
+
+    <article class="chapter" id="ch6">
+      <div class="ch-head"><span class="ch-num">Chapter VI</span><h3>The Location of Meaning</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Where does meaning live — in a message, or in the mind that reads it? Consider a record: the grooves (bare information) mean nothing without a record player (the decoder). So is the music "in" the vinyl?</p>
+          <p>Hofstadter splits any message into three layers: the <strong>frame message</strong> ("I am a message — decode me"), the <strong>outer message</strong> (clues about <em>how</em> to decode, like the layout of the Rosetta Stone), and the <strong>inner message</strong> (the content itself). DNA is his star example: its "meaning" — an organism — only unfolds inside a chemical context that knows how to read it. Yet DNA's structure so strongly <em>calls for</em> that reading that the meaning feels intrinsic.</p>
+          <p>His resolution: meaning is intrinsic exactly to the degree that the decoding mechanism is universal — discoverable by any sufficiently intelligent reader, anywhere.</p>
+          <div class="key"><span class="k-label">Key idea</span>Information sits in the message; meaning is completed by the reader. The more universal the decoding, the more the meaning belongs to the message itself.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A bottle-borne message with three labeled layers: frame, outer, inner">
+            <path class="s-ink" d="M120 60 L240 60 L240 250 L120 250 Z" opacity=".55"/>
+            <path class="s-ink" d="M138 82 L222 82 L222 228 L138 228 Z" opacity=".8"/>
+            <rect x="156" y="104" width="48" height="102" class="s-gold"/>
+            <path class="s-gold" d="M162 122 h36 M162 138 h36 M162 154 h24 M162 170 h36 M162 186 h18"/>
+            <text x="262" y="70 " class="t-mono f-soft" font-size="11" letter-spacing="1">FRAME</text>
+            <text x="262" y="86" class="t-serif f-soft" font-size="12" font-style="italic">"decode me"</text>
+            <text x="262" y="126" class="t-mono f-soft" font-size="11" letter-spacing="1">OUTER</text>
+            <text x="262" y="142" class="t-serif f-soft" font-size="12" font-style="italic">"here's how"</text>
+            <text x="262" y="182" class="t-mono f-gold" font-size="11" letter-spacing="1">INNER</text>
+            <text x="262" y="198" class="t-serif f-soft" font-size="12" font-style="italic">the content</text>
+            <path class="s-ink" d="M254 66 L242 66 M254 122 L226 122 M254 178 L208 178" opacity=".5"/>
+            <text x="180" y="284" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">a message is three messages deep</text>
+          </svg>
+          <figcaption>Frame, outer, inner: even "raw" DNA carries instructions about how to read its instructions.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Crab Canon</h4><p>The dialogue reads identically forwards and backwards — Achilles' lines become the Tortoise's when the page is reversed — a literary copy of Bach's crab canon, which plays the same melody against its own retrograde.</p></div></aside>
+
+    <article class="chapter" id="ch7">
+      <div class="ch-head"><span class="ch-num">Chapter VII</span><h3>The Propositional Calculus</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Now a serious formal system: one that captures the logic of <em>and</em>, <em>or</em>, <em>not</em>, and <em>if–then</em>. Its rules are honest formalizations of everyday reasoning moves — from <code>P</code> and <code>P→Q</code>, derive <code>Q</code>; to prove <code>P→Q</code>, assume <code>P</code> in a "fantasy" and derive <code>Q</code> inside it.</p>
+          <p>The system is elegant, consistent, and complete for its little world. But it's also brittle and shallow: it can't look inside sentences (it treats "2 is even" as an unanalyzable blob <code>P</code>), and if you feed it one contradiction it will cheerfully prove <em>everything</em>.</p>
+          <p>The philosophical point: watching reasoning run as pure typography makes you ask whether the symbols "really" mean and/or/not — or whether we merely can't help reading them that way. Rigor and meaning begin to pull apart.</p>
+          <div class="key"><span class="k-label">Key idea</span>Everyday logic can be mechanized completely — and doing so reveals how much of "reasoning" is pattern-matching on form, not thought about content.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A fantasy box: assume P, derive Q inside, conclude P implies Q outside">
+            <text x="70" y="56" class="t-mono f-ink" font-size="15">P</text>
+            <text x="70" y="88" class="t-mono f-ink" font-size="15">P → Q</text>
+            <path class="s-ink" d="M60 104 h120" opacity=".6"/>
+            <text x="70" y="132" class="t-mono f-gold" font-size="15">∴ Q</text>
+            <text x="216" y="94" class="t-serif f-soft" font-size="13" font-style="italic">detachment</text>
+            <rect x="52" y="160" width="256" height="96" rx="6" class="s-ink" stroke-dasharray="6 5"/>
+            <text x="66" y="152" class="t-mono f-soft" font-size="11" letter-spacing="1">FANTASY</text>
+            <text x="72" y="192" class="t-mono f-ink" font-size="14">assume P …</text>
+            <text x="72" y="222" class="t-mono f-ink" font-size="14">… reach Q</text>
+            <text x="72" y="286" class="t-mono f-gold" font-size="15">pop out with:  P → Q</text>
+          </svg>
+          <figcaption>The "fantasy rule": pretend, see what follows, then step out carrying an if–then. Reasoning as pure typography.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>A Mu Offering</h4><p>Zen koans, genuine and fake, and the question of whether any procedure can tell them apart — meaning versus mechanism, again.</p></div></aside>
+
+    <article class="chapter" id="ch8">
+      <div class="ch-head"><span class="ch-num">Chapter VIII</span><h3>Typographical Number Theory</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>The book's workhorse arrives: <strong>TNT</strong>, a formal system rich enough to express all of number theory. Statements like "5 is prime" or "there are infinitely many even numbers" become exact strings of symbols — <code>∀a:∃b:(a+a)=b</code> and kin — derived by explicit typographical rules.</p>
+          <p>Why does this matter so much? Because number theory is the minimal arena where Gödel's trick becomes possible. TNT is expressive enough to talk about <em>any</em> pattern of whole numbers. And, as the next chapters reveal, strings of symbols can themselves be encoded <em>as</em> whole numbers…</p>
+          <p>Hofstadter closes by asking whether TNT could prove every true number-theoretic statement while proving no false ones. The dream of Russell and Whitehead's <em>Principia Mathematica</em> was exactly that. The dream is about to die.</p>
+          <div class="key"><span class="k-label">Key idea</span>All of arithmetic can be turned into typography. Once truths about numbers are strings, the stage is set for strings to talk about strings.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="An English sentence about numbers translated into TNT symbols">
+            <rect x="36" y="44" width="288" height="58" rx="6" fill="#17181D"/>
+            <text x="180" y="72" text-anchor="middle" class="t-serif" font-size="15" font-style="italic" fill="#ECEAE2">"every number has a successor"</text>
+            <text x="180" y="92" text-anchor="middle" class="t-mono" font-size="11" fill="#8B8F9A" letter-spacing="2">ENGLISH</text>
+            <path class="s-gold" d="M180 116 L180 152"/>
+            <path class="f-gold" d="M175 148 L180 160 L185 148 Z"/>
+            <rect x="36" y="176" width="288" height="58" rx="6" class="s-gold" fill="#F4F2EB"/>
+            <text x="180" y="206" text-anchor="middle" class="t-mono f-ink" font-size="17">∀a:∃b: b = Sa</text>
+            <text x="180" y="224" text-anchor="middle" class="t-mono f-gold" font-size="11" letter-spacing="2">TNT</text>
+            <text x="180" y="274" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">truth, respelled as strings a machine can check</text>
+          </svg>
+          <figcaption>TNT: number theory with all the meaning drained out — every proof a chain of legal typography.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Prelude…</h4><p>The Crab receives a gift of Bach records, and the friends debate whether beauty lives in the notes or in the listener — holism and reductionism tuning up for the fugue.</p></div></aside>
+
+    <article class="chapter" id="ch9">
+      <div class="ch-head"><span class="ch-num">Chapter IX</span><h3>Mumon and Gödel</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>A deliberately double chapter. First, Zen: koans like "does a dog have Buddha-nature? — <em>Mu</em>" are designed to break logical thinking, to <em>unask</em> questions whose framing is broken. Zen mistrusts words, systems, and the subject–object split — it is the anti-formal-system.</p>
+          <p>Then, the pivot of the entire book: <strong>Gödel numbering</strong>. Assign every TNT symbol a number; every string becomes one enormous number; every rule of typography becomes a rule of arithmetic. Suddenly TNT — a system <em>about numbers</em> — can be encoded <em>in numbers</em>, which means TNT statements can indirectly be statements about TNT itself.</p>
+          <p>The mirror has been built. A system rich enough to describe arithmetic is rich enough to describe itself.</p>
+          <div class="key"><span class="k-label">Key idea</span>Gödel numbering turns statements into numbers — so a system about numbers becomes, through the back door, a system about itself.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="TNT symbols mapping to code numbers and looping back into TNT">
+            <text x="90" y="66" text-anchor="middle" class="t-mono f-ink" font-size="16">∀</text>
+            <text x="90" y="104" text-anchor="middle" class="t-mono f-ink" font-size="16">a</text>
+            <text x="90" y="142" text-anchor="middle" class="t-mono f-ink" font-size="16">:</text>
+            <text x="90" y="180" text-anchor="middle" class="t-mono f-ink" font-size="16">~</text>
+            <path class="s-gold" d="M112 60 h60 M112 98 h60 M112 136 h60 M112 174 h60" opacity=".85"/>
+            <text x="228" y="66" text-anchor="middle" class="t-mono f-gold" font-size="15">626</text>
+            <text x="228" y="104" text-anchor="middle" class="t-mono f-gold" font-size="15">262</text>
+            <text x="228" y="142" text-anchor="middle" class="t-mono f-gold" font-size="15">636</text>
+            <text x="228" y="180" text-anchor="middle" class="t-mono f-gold" font-size="15">223</text>
+            <path class="s-ink" d="M268 120 C330 120 330 226 240 236 C160 245 120 232 104 208" stroke-dasharray="6 5"/>
+            <path class="f-ink" d="M112 214 L98 202 L102 220 Z"/>
+            <text x="196" y="270" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">strings become numbers — which strings talk about</text>
+          </svg>
+          <figcaption>The Gödel coding: typography becomes arithmetic, and the system swallows its own tail.</figcaption>
+        </figure>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= PART II ================= -->
+<section class="part">
+  <div class="wrap">
+    <p class="part-kicker">Part II · EGB</p>
+    <h2 class="part-title">Cashing it in</h2>
+    <p class="part-note">Part II detonates Gödel's proof, then follows the fallout upward — through brains, meaning, computability, and finally the strange loop Hofstadter believes is the self.</p>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>…Ant Fugue</h4><p>An ant colony named Aunt Hillary thinks, though no single ant does. Meaning lives at the colony level, invisible at the ant level — a fugue on holism, reductionism, and where "you" actually are.</p></div></aside>
+
+    <article class="chapter" id="ch10">
+      <div class="ch-head"><span class="ch-num">Chapter X</span><h3>Levels of Description, and Computer Systems</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Complex things can be described at many levels, each real, each leaving out the others. A computer is voltages, or machine code, or a chess program, depending on where you stand. You can't see the chess strategy in the transistors, and you can't debug the transistors from the strategy.</p>
+          <p>Hofstadter's claim is that the interesting levels are the high ones — and that a high level can have its own causal life ("she castled because the position demanded it") that doesn't <em>compete</em> with the low-level story, it rides on top of it. Software is the everyday proof that abstraction is not illusion.</p>
+          <p>This sets up the mind: thoughts may be a genuine high level running on neurons, with their own laws, no more reducible to neurochemistry than a novel's plot is reducible to ink chemistry.</p>
+          <div class="key"><span class="k-label">Key idea</span>Reality is layered. Higher levels are not fictions — they carry real explanatory power the lower levels can't express.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A stack of description levels from hardware up to strategy">
+            <rect x="60" y="42" width="240" height="42" rx="4" class="s-gold" fill="#F4F2EB"/>
+            <text x="180" y="68" text-anchor="middle" class="t-serif f-gold" font-size="17" font-style="italic">strategy / mind</text>
+            <rect x="60" y="96" width="240" height="42" rx="4" class="s-ink" opacity=".85"/>
+            <text x="180" y="122" text-anchor="middle" class="t-mono f-ink" font-size="14">program</text>
+            <rect x="60" y="150" width="240" height="42" rx="4" class="s-ink" opacity=".7"/>
+            <text x="180" y="176" text-anchor="middle" class="t-mono f-ink" font-size="14">machine code</text>
+            <rect x="60" y="204" width="240" height="42" rx="4" class="s-ink" opacity=".55"/>
+            <text x="180" y="230" text-anchor="middle" class="t-mono f-ink" font-size="14">voltages</text>
+            <path class="s-gold" d="M320 225 C344 180 344 108 320 63" opacity=".8"/>
+            <path class="f-gold" d="M316 66 L322 55 L326 70 Z"/>
+            <text x="352" y="150" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic" transform="rotate(90 352 150)">emerges upward</text>
+          </svg>
+          <figcaption>Each layer is a true story about the same object — and the top layer isn't any less real than the bottom.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Aria with Diverse Variations</h4><p>Variations on a sleepless-night theme spiral through number puzzles, mirroring Bach's Goldberg Variations and the endless transformations of a single idea.</p></div></aside>
+
+    <article class="chapter" id="ch11">
+      <div class="ch-head"><span class="ch-num">Chapter XI</span><h3>Brains and Thoughts</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>How does the layered picture apply to real brains? Hofstadter surveys neurons, then argues thoughts correspond not to single cells but to <strong>symbols</strong> — large, active, self-stabilizing patterns of neural activity that stand for concepts and can trigger one another.</p>
+          <p>Symbols are the brain's high level. They can represent things in the world, other symbols, and even the whole self. Crucially, the mapping from a concept to its neural pattern is flexible and distributed — which is why thinking is robust, associative, and nothing like looking up a table.</p>
+          <p>This chapter is where the book quietly changes target: from mathematics to mind. The same "meaning emerges from meaningless parts through the right structure" refrain now plays in a cortex.</p>
+          <div class="key"><span class="k-label">Key idea</span>Concepts live as active symbols — patterns over many neurons — not in single cells. Mind is a high level running on neural hardware.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A cloud of neurons with a highlighted pattern forming one active symbol">
+            <g class="f-soft" opacity=".5">
+              <circle cx="70" cy="70" r="4"/><circle cx="120" cy="60" r="4"/><circle cx="300" cy="90" r="4"/>
+              <circle cx="290" cy="180" r="4"/><circle cx="80" cy="200" r="4"/><circle cx="60" cy="140" r="4"/>
+              <circle cx="320" cy="140" r="4"/><circle cx="150" cy="250" r="4"/><circle cx="250" cy="250" r="4"/>
+            </g>
+            <path class="s-ink" d="M70 70 L60 140 M300 90 L320 140 M80 200 L150 250" opacity=".25"/>
+            <g>
+              <circle class="f-gold" cx="150" cy="110" r="6"/><circle class="f-gold" cx="210" cy="95" r="6"/>
+              <circle class="f-gold" cx="245" cy="150" r="6"/><circle class="f-gold" cx="195" cy="185" r="6"/>
+              <circle class="f-gold" cx="140" cy="165" r="6"/>
+              <path class="s-gold" d="M150 110 L210 95 L245 150 L195 185 L140 165 Z"/>
+            </g>
+            <text x="192" y="145" text-anchor="middle" class="t-serif f-gold" font-size="14" font-style="italic">one symbol</text>
+            <text x="180" y="288" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">a concept = a lit-up constellation, not a single cell</text>
+          </svg>
+          <figcaption>A thought is a pattern that many neurons light up together — able to point at other patterns, and at itself.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>English French German Suite</h4><p>A short poem and its translations show how meaning survives — or doesn't — across radically different symbol systems.</p></div></aside>
+
+    <article class="chapter" id="ch12">
+      <div class="ch-head"><span class="ch-num">Chapter XII</span><h3>Minds and Thoughts</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>If two brains never share a single neuron, how can they share a thought? Because what matters is the <em>software</em> level — the network of symbols and their relationships — not the hardware it runs on. Two very different brains can support isomorphic-enough symbol networks to genuinely communicate.</p>
+          <p>This raises the possibility of substrate independence: a mind might be a pattern that could, in principle, run on something other than neurons. It also explains partial understanding, translation, and why some ideas feel untranslatable — the symbol networks only partly overlap.</p>
+          <p>The self, on this view, is just the most elaborate and self-involved knot in your personal symbol network — a subsystem that models the whole system it belongs to.</p>
+          <div class="key"><span class="k-label">Key idea</span>Minds are defined at the level of symbols and their relations, not neurons — so understanding is shared structure, and mind may be substrate-independent.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Two differently shaped networks with a matching sub-pattern highlighted between them">
+            <g class="s-ink" opacity=".55"><circle cx="70" cy="90" r="16"/><circle cx="60" cy="160" r="16"/><circle cx="120" cy="210" r="16"/><circle cx="130" cy="120" r="16"/>
+            <path d="M70 90 L130 120 M60 160 L120 210 M130 120 L120 210 M70 90 L60 160"/></g>
+            <g class="s-ink" opacity=".55"><circle cx="290" cy="80" r="16"/><circle cx="300" cy="150" r="16"/><circle cx="245" cy="120" r="16"/><circle cx="285" cy="215" r="16"/>
+            <path d="M290 80 L245 120 M290 80 L300 150 M300 150 L285 215 M245 120 L300 150"/></g>
+            <g class="s-gold"><circle cx="130" cy="120" r="16" fill="none"/><circle cx="120" cy="210" r="16" fill="none"/>
+            <circle cx="245" cy="120" r="16" fill="none"/><circle cx="285" cy="215" r="16" fill="none"/></g>
+            <path class="s-gold" d="M146 122 C200 110 195 116 229 120 M136 208 C200 230 205 222 269 216" stroke-dasharray="5 4"/>
+            <text x="180" y="278" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">different wiring, shared sub-structure = shared understanding</text>
+          </svg>
+          <figcaption>Two minds meet not by sharing parts but by sharing a pattern of relationships between parts.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Aria with Diverse Variations / Air on G's String</h4><p>Wordplay on "G" — for Gödel's G, for the G string, for the self-referential — teeing up the machinery of the proof.</p></div></aside>
+
+    <article class="chapter" id="ch13">
+      <div class="ch-head"><span class="ch-num">Chapter XIII</span><h3>BlooP and FlooP and GlooP</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>To make "computable" precise, Hofstadter invents toy programming languages. <strong>BlooP</strong> allows only loops with a known upper bound — it always finishes (these are the <em>primitive recursive</em> functions). <strong>FlooP</strong> adds open-ended loops that may run forever, capturing everything computable at all. <strong>GlooP</strong> would be something even more powerful — and he argues it doesn't exist.</p>
+          <p>The payoff: some perfectly well-defined functions are not BlooP-computable — they need FlooP's unbounded search, and so may never halt. Predictability and computability come apart.</p>
+          <p>This is the computational shadow of Gödel: there are true things no always-halting procedure can deliver. Terminating certainty is strictly weaker than truth.</p>
+          <div class="key"><span class="k-label">Key idea</span>Guaranteed-to-finish computation (BlooP) is strictly weaker than computation in general (FlooP). Some truths require searches that might never end.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Two loops: a bounded BlooP loop that exits, and an unbounded FlooP loop that may spin forever">
+            <text x="98" y="46" text-anchor="middle" class="t-mono f-ink" font-size="13" letter-spacing="1">BlooP</text>
+            <circle class="s-ink" cx="98" cy="120" r="46"/>
+            <path class="f-ink" d="M98 74 L92 86 L104 86 Z"/>
+            <text x="98" y="118" text-anchor="middle" class="t-mono f-soft" font-size="11">≤ N times</text>
+            <path class="s-gold" d="M144 120 h40"/><path class="f-gold" d="M180 114 l12 6 l-12 6 Z"/>
+            <text x="150" y="185" text-anchor="middle" class="t-serif f-gold" font-size="12" font-style="italic">always exits</text>
+            <text x="262" y="46" text-anchor="middle" class="t-mono f-ink" font-size="13" letter-spacing="1">FlooP</text>
+            <circle class="s-ink" cx="262" cy="120" r="46"/>
+            <circle class="s-ink" cx="262" cy="120" r="30" opacity=".5"/>
+            <path class="f-ink" d="M262 74 L256 86 L268 86 Z"/>
+            <text x="262" y="124" text-anchor="middle" class="t-mono f-soft" font-size="10">until…?</text>
+            <text x="262" y="200" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic">may never exit</text>
+            <text x="180" y="266" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">bounded ≠ everything computable</text>
+          </svg>
+          <figcaption>BlooP loops always stop; FlooP loops can run forever. That gap is where uncomputable truths hide.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Air on G's String</h4><p>A tiny, tight dialogue whose own structure quotes itself — the last breath before the proof lands.</p></div></aside>
+
+    <article class="chapter" id="ch14">
+      <div class="ch-head"><span class="ch-num">Chapter XIV</span><h3>On Formally Undecidable Propositions</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>The summit. Using Gödel numbering, Hofstadter builds a specific TNT string — call it <strong>G</strong> — that, decoded, says: <em>"This very string is not a theorem of TNT."</em> A sentence in arithmetic that talks about its own unprovability.</p>
+          <p>Now watch the trap close. If TNT could prove G, then G (which says it's unprovable) would be false — so TNT proves a falsehood and is unsound. If TNT proves not-G, it proves a falsehood too. So if TNT is consistent, it can prove <em>neither</em> — G is <strong>undecidable</strong>. Yet, standing outside, we can see G is <em>true</em>: it really is unprovable, exactly as it says.</p>
+          <p>That is Gödel's Incompleteness Theorem: any consistent system rich enough for arithmetic contains true statements it cannot prove. Completeness and consistency cannot coexist. And you can't fix it by adding G as an axiom — the new system just breeds a fresh G′.</p>
+          <div class="key"><span class="k-label">Key idea</span>Every consistent, sufficiently rich formal system has a true sentence it can't prove — one that says, from inside the system, "I am not provable here."</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="The self-referential Gödel sentence looping back on itself with the true-but-unprovable verdict">
+            <rect x="46" y="70" width="268" height="72" rx="8" class="s-gold" fill="#F4F2EB"/>
+            <text x="180" y="100" text-anchor="middle" class="t-serif f-ink" font-size="15" font-style="italic">"G is not provable</text>
+            <text x="180" y="122" text-anchor="middle" class="t-serif f-ink" font-size="15" font-style="italic">in this system."</text>
+            <path class="s-ink" d="M46 106 C14 106 14 200 100 214 C150 222 150 150 92 143" stroke-dasharray="6 5"/>
+            <path class="f-ink" d="M100 138 L86 140 L96 152 Z"/>
+            <text x="60" y="250" text-anchor="middle" class="t-mono f-ink" font-size="12">provable?</text>
+            <text x="60" y="268" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic">→ contradiction</text>
+            <text x="285" y="250" text-anchor="middle" class="t-mono f-gold" font-size="12">true?</text>
+            <text x="285" y="268" text-anchor="middle" class="t-serif f-gold" font-size="12" font-style="italic">→ yes, but unprovable</text>
+          </svg>
+          <figcaption>G points at itself and says "you can't prove me." The system can't — which is exactly why it's true.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Birthday Cantatatata…</h4><p>Achilles tries to wish the Tortoise a happy birthday and gets caught in an endless regress of "but is today really the day?" — recursion as comedy.</p></div></aside>
+
+    <article class="chapter" id="ch15">
+      <div class="ch-head"><span class="ch-num">Chapter XV</span><h3>Jumping out of the System</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>When we saw G was true, we did something the system couldn't: we <em>jumped out</em> and judged it from above. Does that make human minds superior to any formal system — the popular anti-AI reading of Gödel?</p>
+          <p>Hofstadter says no, and this is one of the book's most important turns. Every time you jump out of a system, you land in a <em>larger</em> system — a new vantage point with its own blind spot, its own G′ you can't see from within. There is no final outside. The ability to jump is itself mechanizable; it doesn't put us beyond machinery, it just relocates the boundary.</p>
+          <p>The lesson isn't "minds beat machines." It's that <em>no</em> system, mind or machine, gets a view from nowhere. We are always inside some system, jumping to the next.</p>
+          <div class="key"><span class="k-label">Key idea</span>You can always jump out of a system — but only into a bigger one. There's no final vantage point, for minds or machines alike.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Nested boxes each with a figure stepping out into the next larger box">
+            <rect x="40" y="40" width="280" height="220" class="s-ink" rx="6" opacity=".4"/>
+            <rect x="80" y="80" width="200" height="150" class="s-ink" rx="6" opacity=".6"/>
+            <rect x="120" y="120" width="120" height="80" class="s-ink" rx="6" opacity=".85"/>
+            <circle class="f-gold" cx="160" cy="160" r="8"/>
+            <path class="s-gold" d="M170 158 C205 150 210 120 235 118"/>
+            <path class="f-gold" d="M231 113 L240 116 L233 123 Z"/>
+            <path class="s-gold" d="M255 116 C290 108 292 78 300 74" opacity=".7"/>
+            <path class="f-gold" d="M296 70 L305 72 L299 79 Z" opacity=".7"/>
+            <text x="180" y="288" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">out of one box, into a bigger box — forever</text>
+          </svg>
+          <figcaption>Each escape lands inside a wider frame. No jump ever reaches the outermost outside.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Edifying Thoughts of a Tobacco Smoker</h4><p>Records, genes, and self-copying machines swirl together, prepping the twin ideas of self-reference and self-replication.</p></div></aside>
+
+    <article class="chapter" id="ch16">
+      <div class="ch-head"><span class="ch-num">Chapter XVI</span><h3>Self-Ref and Self-Rep</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Self-<em>reference</em> (a thing describing itself) and self-<em>replication</em> (a thing copying itself) turn out to be the same trick in two costumes. A <strong>quine</strong> — a program that prints its own source code — does it in software. <strong>DNA</strong> does it in chemistry: a molecule that encodes the machinery for copying the molecule.</p>
+          <p>The common mechanism is a description that, placed in the right interpreting context, causes itself to be built or invoked. Gödel's G, a quine, and a living cell are cousins: each carries a coded version of itself that "wakes up" when read by the right reader.</p>
+          <p>Life, then, is self-reference made physical. The same loop that let arithmetic talk about itself lets molecules build copies of themselves — and, Hofstadter hints, lets brains build a model of themselves.</p>
+          <div class="key"><span class="k-label">Key idea</span>Referring to yourself and copying yourself are one mechanism: a coded self-description that springs to life in the right context. Gödel, quines, and DNA all share it.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A program box containing a smaller copy of itself, beside a DNA double helix">
+            <rect x="34" y="70" width="150" height="150" rx="6" class="s-ink"/>
+            <text x="109" y="60" text-anchor="middle" class="t-mono f-soft" font-size="11">quine</text>
+            <rect x="64" y="104" width="90" height="90" rx="4" class="s-ink" opacity=".7"/>
+            <rect x="88" y="130" width="42" height="42" rx="3" class="s-gold"/>
+            <text x="109" y="156" text-anchor="middle" class="t-mono f-gold" font-size="10">self</text>
+            <g class="s-gold"><path d="M250 66 C284 92 216 118 250 144 C284 170 216 196 250 222"/>
+            <path d="M290 66 C256 92 324 118 290 144 C256 170 324 196 290 222"/>
+            <path d="M255 82 h30 M258 108 h24 M255 134 h30 M258 160 h24 M255 186 h30"/></g>
+            <text x="270" y="60" text-anchor="middle" class="t-mono f-soft" font-size="11">DNA</text>
+            <text x="180" y="266" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">code that builds the thing that reads the code</text>
+          </svg>
+          <figcaption>A quine and a strand of DNA solve the same puzzle: carry a copy of yourself that comes alive when read.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>The Magnificrab, Indeed</h4><p>The Crab has a curious gift: he perceives truth directly, as music — dramatizing Tarski's point that "truth" can't be captured inside the system that seeks it.</p></div></aside>
+
+    <article class="chapter" id="ch17">
+      <div class="ch-head"><span class="ch-num">Chapter XVII</span><h3>Church, Turing, Tarski, and Others</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Gödel wasn't alone. Turing showed no program can decide in general whether an arbitrary program halts (the <strong>halting problem</strong>). Church proved kindred limits with his lambda calculus. Tarski showed that "truth" for a language cannot be defined <em>within</em> that language. Different doors, same locked room.</p>
+          <p>Hofstadter also lays out the <strong>Church–Turing thesis</strong> — that anything effectively computable at all is computable by a Turing machine — and takes it seriously as a claim about minds: if thinking is a physical process, it too is, at bottom, computation.</p>
+          <p>He confronts the Lucas argument (Gödel proves minds aren't machines) head-on and rejects it: a mind is a system too, with its own horizon it cannot see past. The limits are universal, not a human privilege.</p>
+          <div class="key"><span class="k-label">Key idea</span>Gödel, Turing, Church, and Tarski found the same wall from four sides: no rich enough system can fully capture its own truth, proof, or halting. The limits bind minds too.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Four arrows from four names all pointing at one central locked limit">
+            <circle class="s-gold" cx="180" cy="150" r="40" fill="#F4F2EB"/>
+            <text x="180" y="146" text-anchor="middle" class="t-serif f-gold" font-size="14" font-style="italic">the</text>
+            <text x="180" y="164" text-anchor="middle" class="t-serif f-gold" font-size="14" font-style="italic">limit</text>
+            <text x="70" y="60" text-anchor="middle" class="t-mono f-ink" font-size="12">Gödel</text>
+            <text x="292" y="60" text-anchor="middle" class="t-mono f-ink" font-size="12">Turing</text>
+            <text x="66" y="252" text-anchor="middle" class="t-mono f-ink" font-size="12">Church</text>
+            <text x="296" y="252" text-anchor="middle" class="t-mono f-ink" font-size="12">Tarski</text>
+            <path class="s-ink" d="M84 72 L150 128 M280 72 L212 128 M82 236 L150 176 M290 236 L212 174" opacity=".55"/>
+            <path class="f-ink" d="M150 128 l-13 -1 l6 11 Z M212 128 l13 -1 l-6 11 Z M150 176 l-13 1 l6 -11 Z M212 174 l13 1 l-6 -11 Z"/>
+            <text x="180" y="288" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">four proofs, one wall</text>
+          </svg>
+          <figcaption>Provability, computability, and truth each hit the same boundary — from four independent directions.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>SHRDLU, Toy of Man's Designing</h4><p>A real 1970s program that chatted about a world of blocks — impressive yet brittle, showing both the promise and the shallowness of early AI.</p></div></aside>
+
+    <article class="chapter" id="ch18">
+      <div class="ch-head"><span class="ch-num">Chapter XVIII</span><h3>Artificial Intelligence: Retrospects</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Hofstadter reviews AI's first decades: the Turing test, chess programs, theorem provers, block-world talkers like SHRDLU. His verdict is affectionate but sober — early AI succeeded at narrow, formalizable tasks and stumbled on the very thing that seems effortless to us: flexible, context-sensitive, common-sense understanding.</p>
+          <p>The recurring diagnosis is that real intelligence needs the ability to shift levels, bend its own rules, and perceive by analogy — to see the sameness under surface difference. Intelligence isn't more rules; it's the capacity to step partly outside your rules.</p>
+          <p>He predicts (in 1979) that meaning and fluid concepts, not raw speed, will be AI's hard problem. It's a strikingly durable forecast.</p>
+          <div class="key"><span class="k-label">Key idea</span>Early AI mastered the formal and failed at the fluid. True intelligence needs flexibility, analogy, and the ability to bend its own rules.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A rigid grid of rules beside a flexible web, contrasting brittle and fluid intelligence">
+            <g class="s-ink" opacity=".7">
+              <path d="M40 70 h110 M40 110 h110 M40 150 h110 M40 190 h110"/>
+              <path d="M40 70 v120 M80 70 v120 M120 70 v120 M150 70 v120"/>
+            </g>
+            <text x="95" y="222" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic">rigid rules</text>
+            <text x="95" y="240" text-anchor="middle" class="t-mono f-soft" font-size="10">brittle</text>
+            <g class="s-gold">
+              <circle cx="230" cy="90" r="7"/><circle cx="300" cy="80" r="7"/><circle cx="270" cy="140" r="7"/>
+              <circle cx="215" cy="160" r="7"/><circle cx="315" cy="170" r="7"/><circle cx="255" cy="195" r="7"/>
+              <path d="M230 90 L270 140 L300 80 M270 140 L215 160 M270 140 L315 170 M215 160 L255 195 M255 195 L315 170"/>
+            </g>
+            <text x="265" y="228" text-anchor="middle" class="t-serif f-gold" font-size="12" font-style="italic">fluid concepts</text>
+            <text x="265" y="246" text-anchor="middle" class="t-mono f-soft" font-size="10">flexible</text>
+            <text x="180" y="284" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">intelligence bends where rules break</text>
+          </svg>
+          <figcaption>Rules are rigid; understanding flexes. AI's hard part was never the grid — it was the web.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Contrafactus</h4><p>A machine for imagining "what if" scenarios reveals how thought casually builds and roams counterfactual worlds — the core of flexible cognition.</p></div></aside>
+
+    <article class="chapter" id="ch19">
+      <div class="ch-head"><span class="ch-num">Chapter XIX</span><h3>Artificial Intelligence: Prospects</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Looking forward, Hofstadter sketches what a real thinking machine would need: not a giant rulebook but the capacity for <strong>fluid concepts and analogy</strong> — to slip between levels of description, to notice that two unlike things share a hidden essence, to make and recover from "creative mistakes."</p>
+          <p>He speculates that a genuine AI would have emergent, symbol-level activity its own designers couldn't fully predict from the code — much as your thoughts aren't predictable from your neurons. Intelligence would be a high-level phenomenon riding on, but not reducible to, its substrate.</p>
+          <p>Notably, he argues such a mind would inherit our quirks: it might be unable to do huge arithmetic instantly, might get bored, might need to <em>want</em> things. Meaning and motivation, not calculation, are the frontier.</p>
+          <div class="key"><span class="k-label">Key idea</span>Real AI will come from fluid concepts and analogy-making, with genuine emergent behavior — a mind is grown, not fully programmed.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Two unlike shapes bridged by an analogy arc revealing a shared core">
+            <circle class="s-ink" cx="90" cy="130" r="42"/>
+            <path class="f-gold" d="M90 112 l6 12 l13 1 l-10 9 l3 13 l-12 -7 l-12 7 l3 -13 l-10 -9 l13 -1 Z"/>
+            <rect x="228" y="88" width="84" height="84" rx="6" class="s-ink"/>
+            <path class="f-gold" d="M270 106 l6 12 l13 1 l-10 9 l3 13 l-12 -7 l-12 7 l3 -13 l-10 -9 l13 -1 Z"/>
+            <path class="s-gold" d="M132 118 C180 92 190 92 226 116" stroke-dasharray="6 4"/>
+            <text x="180" y="104" text-anchor="middle" class="t-serif f-gold" font-size="13" font-style="italic">analogy</text>
+            <text x="90" y="196" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic">different surface</text>
+            <text x="270" y="196" text-anchor="middle" class="t-serif f-soft" font-size="12" font-style="italic">different surface</text>
+            <text x="180" y="240" text-anchor="middle" class="t-serif f-ink" font-size="13" font-style="italic">…same hidden core</text>
+            <text x="180" y="278" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">seeing the sameness is the whole game</text>
+          </svg>
+          <figcaption>Analogy — spotting the shared essence under different surfaces — is Hofstadter's candidate for the heart of thought.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <aside class="dialogue"><span class="d-label">Dialogue</span><div><h4>Sloth Canon</h4><p>A canon where one voice plays the theme upside-down and far slower — form imitating the tangled, multi-speed layering the final chapter describes.</p></div></aside>
+
+    <article class="chapter" id="ch20">
+      <div class="ch-head"><span class="ch-num">Chapter XX</span><h3>Strange Loops, or Tangled Hierarchies</h3></div>
+      <div class="ch-body">
+        <div class="ch-text">
+          <p>Everything converges. A <strong>strange loop</strong> is what you get when moving through the levels of a hierarchy unexpectedly brings you back to the start — and a <strong>tangled hierarchy</strong> is a system where levels that should stay separate reach through and touch each other. Escher's hands drawing each other; Gödel's arithmetic describing arithmetic; Bach's canon rising a key until it lands home an octave up.</p>
+          <p>Hofstadter's grand claim: <strong>the self is a strange loop</strong>. The brain, building ever richer symbols, eventually builds a symbol for the whole symbol-system — a model of itself — and identifies with it. Meaningless neurons, through enough self-representation, produce an "I" that seems to look down on and steer the very system it's made of. Consciousness is that tangled reach between levels.</p>
+          <p>It's not proven; it's offered as the most beautiful available guess. The braid closes: Gödel's self-referential truth, Escher's self-drawing hands, and Bach's self-returning music were three renderings of one idea — how a system, folding meaning back onto itself, wakes up.</p>
+          <div class="key"><span class="k-label">Key idea</span>The self is a strange loop: a brain that models itself so thoroughly that a self-referential "I" emerges — meaning looping back on its own meaningless substrate.</div>
+        </div>
+        <figure class="ch-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Two hands drawing each other in a closed loop, the emblem of the strange loop">
+            <path class="s-ink" d="M70 110 C70 90 96 84 120 92 L165 108 C180 113 188 120 188 132" />
+            <path class="s-ink" d="M120 92 L128 78 M136 96 L146 82 M152 102 L162 90 M166 110 L177 100"/>
+            <path class="s-gold" d="M290 190 C290 210 264 216 240 208 L195 192 C180 187 172 180 172 168"/>
+            <path class="s-gold" d="M240 208 L232 222 M224 204 L214 218 M208 198 L198 210 M194 190 L183 200"/>
+            <path class="s-ink" d="M188 132 C188 150 180 160 172 168" opacity=".5"/>
+            <path class="s-gold" d="M172 168 C172 150 180 140 188 132" opacity=".5"/>
+            <circle class="f-gold" cx="180" cy="150" r="4"/>
+            <text x="180" y="266" text-anchor="middle" class="t-serif f-soft" font-size="13" font-style="italic">each hand draws the hand that draws it</text>
+          </svg>
+          <figcaption>The book's final emblem: a level reaching back to create the level that created it — and, Hofstadter says, that's you.</figcaption>
+        </figure>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="wrap">
+    <svg class="braid-sm" width="120" height="70" viewBox="0 0 120 70" role="img" aria-label="Small closing braid">
+      <path class="s-gold" d="M24 35 C24 16 50 16 60 28 C70 40 96 40 96 35"/>
+      <path class="s-gold" d="M96 35 C96 54 70 54 60 42 C50 30 24 30 24 35"/>
+      <path class="s-ink" d="M60 10 C78 10 84 27 74 35 C64 43 40 43 36 58" opacity=".8"/>
+    </svg>
+    <p>A study companion to <em>Gödel, Escher, Bach: an Eternal Golden Braid</em> by Douglas R. Hofstadter (Basic Books, 1979).<br>Summaries and illustrations are original explanatory paraphrase for study and discussion — not a substitute for the book itself.</p>
+  </div>
+</footer>
+
+</body>
+</html>
