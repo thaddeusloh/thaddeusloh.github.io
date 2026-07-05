@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Cat and the Golden Braid — a GEB game</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -127,6 +127,44 @@
   }
   .keys-help b{color:var(--gold);font-weight:500}
   @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+
+  /* ---------- On-screen controls ---------- */
+  #touchControls{position:fixed;inset:0;pointer-events:none;z-index:6}
+  .dpad{
+    position:absolute;left:18px;bottom:64px;width:150px;height:150px;
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:4px;
+  }
+  .dpad button{
+    pointer-events:auto;touch-action:none;-webkit-user-select:none;user-select:none;
+    background:rgba(30,26,43,.78);border:1px solid #3a3450;border-radius:6px;
+    color:var(--paper-dim);font-size:20px;line-height:1;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;
+  }
+  .dpad button:active,.dpad button.held{background:rgba(212,165,49,.28);border-color:var(--gold-soft);color:var(--gold)}
+  .dpad .blank{visibility:hidden}
+  #actBtn{
+    pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none;
+    position:absolute;right:20px;bottom:78px;width:92px;height:92px;border-radius:50%;
+    background:rgba(30,26,43,.82);border:2px solid #3a3450;color:#6f6790;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;line-height:1.4;
+  }
+  #actBtn.ready{border-color:var(--gold);color:var(--gold);background:rgba(212,165,49,.16)}
+  #actBtn .big{display:block;font-size:22px;font-weight:500}
+  .card .tapbtn{
+    display:inline-block;margin-top:14px;padding:9px 18px;cursor:pointer;
+    background:#1d1710;color:var(--gold);border:1px solid var(--gold-soft);border-radius:2px;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.08em;
+    -webkit-user-select:none;user-select:none;
+  }
+  .tapbtn.secondary{background:transparent;color:#7d7159;border-color:#c4b797}
+  .mu-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .mu-btns .tapbtn{margin-top:0;padding:10px 14px}
+  @media (max-width:640px){
+    .card{padding:24px 20px 22px}
+    #hintbar{display:none}
+    .dpad{left:12px;bottom:24px;width:138px;height:138px}
+    #actBtn{right:14px;bottom:36px}
+  }
 </style>
 </head>
 <body>
@@ -134,7 +172,22 @@
 <canvas id="game"></canvas>
 
 <div id="hud"><div class="strands" id="strandCount">golden strands · 0 / 20</div></div>
-<div id="hintbar">move <b>← ↑ → ↓</b> / WASD · enter a chamber <b>E</b></div>
+<div id="hintbar">move <b>← ↑ → ↓</b> / WASD or the pad · enter a chamber <b>E</b> or tap <b>enter</b></div>
+
+<div id="touchControls">
+  <div class="dpad">
+    <button class="blank" tabindex="-1"></button>
+    <button data-dir="arrowup" aria-label="Move up">▲</button>
+    <button class="blank" tabindex="-1"></button>
+    <button data-dir="arrowleft" aria-label="Move left">◀</button>
+    <button class="blank" tabindex="-1"></button>
+    <button data-dir="arrowright" aria-label="Move right">▶</button>
+    <button class="blank" tabindex="-1"></button>
+    <button data-dir="arrowdown" aria-label="Move down">▼</button>
+    <button class="blank" tabindex="-1"></button>
+  </div>
+  <button id="actBtn" aria-label="Enter chamber"><span class="big">E</span>wander…</button>
+</div>
 
 <!-- Title screen -->
 <div class="overlay" id="titleOverlay">
@@ -375,6 +428,30 @@ addEventListener("keyup", e=>{ keys[e.key.toLowerCase()] = false; });
 document.getElementById("startBtn").onclick = startGame;
 document.getElementById("againBtn").onclick = ()=>location.reload();
 
+/* ----- on-screen controls ----- */
+document.querySelectorAll(".dpad button[data-dir]").forEach(btn=>{
+  const dir = btn.dataset.dir;
+  const press = e=>{ e.preventDefault(); keys[dir]=true; btn.classList.add("held"); btn.setPointerCapture?.(e.pointerId); };
+  const release = ()=>{ keys[dir]=false; btn.classList.remove("held"); };
+  btn.addEventListener("pointerdown", press);
+  btn.addEventListener("pointerup", release);
+  btn.addEventListener("pointercancel", release);
+  btn.addEventListener("pointerleave", release);
+  btn.addEventListener("contextmenu", e=>e.preventDefault());
+});
+const actBtn = document.getElementById("actBtn");
+actBtn.addEventListener("click", ()=>{
+  if(state==="title") startGame();
+  else if(state==="play") tryEnter();
+});
+function updateActBtn(){
+  if(state!=="play"){ actBtn.classList.remove("ready"); return; }
+  const p = nearPortal();
+  if(p===finalPortal){ actBtn.classList.add("ready"); actBtn.innerHTML = '<span class="big">∞</span>close loop'; }
+  else if(p){ actBtn.classList.add("ready"); actBtn.innerHTML = '<span class="big">E</span>' + (p.done ? "revisit" : "enter"); }
+  else { actBtn.classList.remove("ready"); actBtn.innerHTML = '<span class="big">E</span>wander…'; }
+}
+
 function startGame(){
   document.getElementById("titleOverlay").classList.add("hidden");
   state = "play";
@@ -415,18 +492,22 @@ function openChapter(ch, alreadyDone){
     <p>${ch.blurb}</p>`;
   if(alreadyDone){
     html += `<div class="feedback good"><b>Strand already woven.</b> ${ch.insight}</div>
+             <button class="tapbtn" data-close>Back to the tower</button>
              <div class="footkeys">Esc — back to the tower</div>`;
   } else {
     html += `<p class="q">${ch.q}</p>`;
     ch.opts.forEach((o,i)=>{
       html += `<div class="opt" data-i="${i}"><span class="key">${i+1}</span><span>${o}</span></div>`;
     });
-    html += `<div id="fb"></div><div class="footkeys">1 / 2 / 3 — answer · Esc — leave</div>`;
+    html += `<div id="fb"></div>
+             <button class="tapbtn secondary" data-close>Leave chamber</button>
+             <div class="footkeys">1 / 2 / 3 or tap — answer · Esc — leave</div>`;
   }
   chapterCard.innerHTML = html;
   chapterCard.querySelectorAll(".opt").forEach(el=>{
     el.onclick = ()=>answer(parseInt(el.dataset.i), ch);
   });
+  wireCloseButtons();
   chapterOverlay.classList.remove("hidden");
   state = "modal";
 }
@@ -446,7 +527,9 @@ function answer(i, ch){
   if(i===ch.a){
     answered = true;
     optEls[i].classList.add("right");
-    fb.innerHTML = `<div class="feedback good"><b>A golden strand is yours.</b> ${ch.insight}</div>`;
+    fb.innerHTML = `<div class="feedback good"><b>A golden strand is yours.</b> ${ch.insight}</div>
+                    <button class="tapbtn" data-close>Back to the tower</button>`;
+    wireCloseButtons();
     completePortal();
   } else {
     optEls[i].classList.add("wrong");
@@ -467,6 +550,10 @@ function closeModal(){
   chapterOverlay.classList.add("hidden");
   state = "play";
   activePortal = null;
+}
+
+function wireCloseButtons(){
+  chapterCard.querySelectorAll("[data-close]").forEach(b=>{ b.onclick = closeModal; });
 }
 
 /* =========================================================
@@ -500,12 +587,25 @@ function renderMu(ch, msg){
     ${jumpReady ? `<div class="feedback bad" style="margin-top:14px">
       The cat yawns. You've made ${muMoves} moves and MU is no closer.
       Perhaps the answer isn't <i>inside</i> the system…
-      <b>press J to jump out of the system.</b></div>` : ""}
+      <b>press J — or tap the gold button — to jump out of the system.</b></div>` : ""}
+    <div class="mu-btns">
+      <button class="tapbtn secondary" data-mu="1">Rule 1</button>
+      <button class="tapbtn secondary" data-mu="2">Rule 2</button>
+      <button class="tapbtn secondary" data-mu="3">Rule 3</button>
+      <button class="tapbtn secondary" data-mu="4">Rule 4</button>
+      <button class="tapbtn secondary" data-mu="r">Reset</button>
+      ${jumpReady ? `<button class="tapbtn" data-mu="j">Jump out of the system</button>` : ""}
+      <button class="tapbtn secondary" data-mu="escape">Leave</button>
+    </div>
     <div class="footkeys">1–4 — apply rule · R — reset · ${jumpReady?"J — jump out · ":""}Esc — leave</div>`;
+  chapterCard.querySelectorAll("[data-mu]").forEach(b=>{
+    b.onclick = ()=>muAction(b.dataset.mu);
+  });
 }
 
-function muKey(e){
-  const k = e.key.toLowerCase();
+function muKey(e){ muAction(e.key.toLowerCase()); }
+
+function muAction(k){
   const ch = CHAPTERS[0];
   if(k==="escape"){ closeModal(); return; }
   if(k==="r"){ muStr="MI"; renderMu(ch,"Back to MI."); return; }
@@ -522,7 +622,9 @@ function muKey(e){
       <p>Count the I's. MI has one. Rule 2 doubles the count; rule 3 subtracts three; rules 1 and 4 leave it alone. Starting from 1, the count of I's is <b>never divisible by 3</b> — and MU needs exactly zero I's. Zero is divisible by 3; your count never is.</p>
       <p>No sequence of legal moves can ever reach MU. But nothing <i>inside</i> the MIU-system could tell you that. You had to step outside and reason <i>about</i> the rules — exactly what Gödel did to mathematics itself.</p>
       <div class="feedback good"><b>A golden strand is yours.</b> ${ch.insight}</div>
+      <button class="tapbtn" data-close>Back to the tower</button>
       <div class="footkeys">Esc or Enter — back to the tower</div>`;
+    wireCloseButtons();
     completePortal();
     state = "modal"; answered = true;
     return;
@@ -724,6 +826,7 @@ function drawCat(x,y,dir,step,t){
 function loop(t){
   update();
   draw(t||0);
+  updateActBtn();
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
