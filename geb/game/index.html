@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cat and the Golden Braid — a GEB game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15121d;          /* night-tower indigo ink */
+    --ink-2:#1e1a2b;
+    --paper:#efe6d0;        /* lithograph cream */
+    --paper-dim:#d8cdb4;
+    --gold:#d4a531;         /* the golden braid */
+    --gold-soft:#8a6f2a;
+    --teal:#5aa79b;         /* tortoise teal */
+    --rose:#c96f5e;         /* crab rose, for wrong answers */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    overflow:hidden;
+  }
+  #game{display:block;width:100vw;height:100vh;image-rendering:pixelated}
+
+  /* ---------- HUD ---------- */
+  #hud{
+    position:fixed;top:14px;left:16px;display:flex;gap:10px;align-items:center;
+    pointer-events:none;z-index:5;
+  }
+  .strands{
+    background:rgba(21,18,29,.82);border:1px solid var(--gold-soft);
+    padding:7px 14px;border-radius:2px;
+    font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.06em;
+    color:var(--gold);
+  }
+  #hintbar{
+    position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+    background:rgba(21,18,29,.82);border:1px solid #3a3450;
+    padding:7px 16px;border-radius:2px;font-size:13px;color:var(--paper-dim);
+    font-family:"IBM Plex Mono",monospace;letter-spacing:.04em;
+    z-index:5;pointer-events:none;white-space:nowrap;
+  }
+  #hintbar b{color:var(--gold);font-weight:500}
+
+  /* ---------- Overlays ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(13,11,20,.72);
+    display:flex;align-items:center;justify-content:center;z-index:10;
+  }
+  .hidden{display:none!important}
+  .card{
+    width:min(660px,92vw);max-height:88vh;overflow-y:auto;
+    background:var(--paper);color:#231d14;
+    border:1px solid #b8ab8d;border-radius:3px;
+    box-shadow:0 0 0 6px rgba(212,165,49,.12), 0 30px 80px rgba(0,0,0,.6);
+    padding:34px 40px 30px;
+  }
+  .card .eyebrow{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:#8a6f2a;margin-bottom:8px;
+  }
+  .card h2{
+    font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;
+    font-size:clamp(26px,4vw,34px);line-height:1.12;color:#1d1710;margin-bottom:14px;
+  }
+  .card p{font-size:15px;line-height:1.62;margin-bottom:12px;color:#3a3226}
+  .card .q{
+    font-family:"Cormorant Garamond",Georgia,serif;font-size:20px;font-style:italic;
+    color:#1d1710;margin:18px 0 14px;line-height:1.4;
+  }
+  .opt{
+    display:flex;gap:12px;align-items:baseline;
+    border:1px solid #c4b797;border-radius:2px;background:#f7f0dd;
+    padding:11px 14px;margin-bottom:9px;font-size:14.5px;line-height:1.5;
+    cursor:pointer;color:#2c261b;
+  }
+  .opt:hover{border-color:#8a6f2a}
+  .opt .key{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:#8a6f2a;
+    border:1px solid #b8ab8d;border-radius:2px;padding:1px 7px;flex:none;
+  }
+  .opt.right{border-color:#5aa79b;background:#e6f0e8}
+  .opt.wrong{border-color:var(--rose);background:#f4e2dd}
+  .feedback{font-size:14px;line-height:1.55;margin-top:14px;padding:12px 14px;border-radius:2px}
+  .feedback.good{background:#e6f0e8;border:1px solid #5aa79b;color:#25443d}
+  .feedback.bad{background:#f4e2dd;border:1px solid var(--rose);color:#5c3028}
+  .card .footkeys{
+    margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    letter-spacing:.05em;color:#7d7159;border-top:1px solid #d6caab;padding-top:12px;
+  }
+  .braidrule{height:3px;margin:0 0 20px;background:
+    repeating-linear-gradient(90deg,var(--gold) 0 14px,transparent 14px 22px);
+    opacity:.8}
+
+  /* MU sandbox */
+  .mu-string{
+    font-family:"IBM Plex Mono",monospace;font-size:26px;letter-spacing:.14em;
+    background:#1d1710;color:var(--gold);padding:14px 18px;border-radius:2px;
+    margin:14px 0;word-break:break-all;line-height:1.4;
+  }
+  .mu-rules{font-size:13.5px;line-height:1.7;font-family:"IBM Plex Mono",monospace;color:#3a3226}
+  .mu-rules b{color:#8a6f2a}
+  .mu-note{font-size:13px;color:#7d7159;margin-top:10px;font-style:italic}
+
+  /* Title + ending */
+  .title-card{text-align:center;background:var(--ink-2);color:var(--paper);border-color:#3a3450}
+  .title-card h1{
+    font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;
+    font-size:clamp(34px,6vw,52px);line-height:1.05;margin:10px 0 6px;color:var(--paper);
+  }
+  .title-card h1 em{font-style:italic;color:var(--gold)}
+  .title-card p{color:#b7aec9}
+  .title-card .eyebrow{color:var(--gold)}
+  .start-btn{
+    display:inline-block;margin-top:18px;padding:11px 26px;cursor:pointer;
+    background:var(--gold);color:#1d1710;border:none;border-radius:2px;
+    font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .keys-help{
+    margin-top:22px;display:inline-block;text-align:left;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:2;color:#b7aec9;
+  }
+  .keys-help b{color:var(--gold);font-weight:500}
+  @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud"><div class="strands" id="strandCount">golden strands · 0 / 20</div></div>
+<div id="hintbar">move <b>← ↑ → ↓</b> / WASD · enter a chamber <b>E</b></div>
+
+<!-- Title screen -->
+<div class="overlay" id="titleOverlay">
+  <div class="card title-card">
+    <div class="eyebrow">a keyboard game in twenty chambers</div>
+    <h1>The Cat &amp; the <em>Golden Braid</em></h1>
+    <p style="max-width:46ch;margin:10px auto 0">
+      A small cat wanders an Escher tower built from the twenty chapters of
+      <i>Gödel, Escher, Bach</i>. Enter each chamber, answer its riddle,
+      and weave the golden braid back into a loop.
+    </p>
+    <div class="keys-help">
+      <b>← ↑ → ↓</b> or WASD — pad about<br>
+      <b>E</b> — enter a chamber&nbsp;&nbsp;·&nbsp;&nbsp;<b>1 2 3</b> — answer<br>
+      <b>Esc</b> — leave a chamber
+    </div><br>
+    <button class="start-btn" id="startBtn">Begin — press Enter</button>
+  </div>
+</div>
+
+<!-- Chapter modal -->
+<div class="overlay hidden" id="chapterOverlay">
+  <div class="card" id="chapterCard"></div>
+</div>
+
+<!-- Ending -->
+<div class="overlay hidden" id="endOverlay">
+  <div class="card title-card">
+    <div class="eyebrow">chapter xx · strange loops, or tangled hierarchies</div>
+    <h1>You are back where you <em>began</em></h1>
+    <p style="max-width:48ch;margin:10px auto 0">
+      Twenty chambers, and the stair has climbed only to deliver you to its own
+      first step. That is a <b style="color:var(--gold)">strange loop</b>: moving
+      steadily upward through the levels of a system and arriving, transformed,
+      at the place you started. Hofstadter's wager is that a self — an “I” —
+      is exactly this kind of loop, a system that grew rich enough to point at itself.
+    </p>
+    <p style="max-width:48ch;margin:10px auto 0;color:#b7aec9">
+      The braid is closed. The cat, of course, already knew. <i>MU.</i>
+    </p>
+    <button class="start-btn" id="againBtn">Walk the loop again</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   Chapter data — 20 chapters of Gödel, Escher, Bach
+   ========================================================= */
+const CHAPTERS = [
+{ n:1, t:"The MU-puzzle", special:"mu",
+  blurb:"A formal system is a game of typographical rules: strings in, strings out, no meaning required. Hofstadter opens with the MIU-system and one dare — starting from MI, derive MU.",
+  insight:"You can never reach MU. Every rule preserves this invariant: the count of I's is never divisible by 3. But you only see that by stepping OUTSIDE the system and reasoning about it — the book's first strange loop." },
+{ n:2, t:"Meaning and Form in Mathematics",
+  blurb:"The pq-system derives strings like --p---q----- by blind rules. Yet read p as 'plus' and q as 'equals', and every theorem turns out true of addition.",
+  q:"Why does --p---q----- come to mean 2 + 3 = 5?",
+  opts:["An isomorphism maps the system's theorems perfectly onto true additions, and meaning rides on that mapping",
+        "The hyphens are secretly numerals, so the meaning was built in from the start",
+        "Any string of a formal system means whatever its inventor says it means"],
+  a:0, insight:"Meaning is not injected — it emerges when a formal pattern mirrors reality. Isomorphism is the engine of meaning throughout GEB." },
+{ n:3, t:"Figure and Ground",
+  blurb:"Escher draws pictures where the background is itself a picture. Hofstadter asks the same of formal systems: is the space of NON-theorems just as well-shaped as the theorems?",
+  q:"What is the chapter's sharp mathematical point?",
+  opts:["Every set of theorems has a complement that is also the theorem-set of some system",
+        "There exist sets whose members a machine can list, but whose NON-members no machine can list — grounds that are not figures",
+        "Figure and ground are always interchangeable, in art and in math alike"],
+  a:1, insight:"Recursively enumerable ≠ recursive. Some 'negative space' cannot be captured by any positive rule-set — a first shadow of incompleteness." },
+{ n:4, t:"Consistency, Completeness and Geometry",
+  blurb:"For centuries Euclid's fifth postulate seemed self-evident. Then geometers denied it — and got geometries that were bizarre, yet perfectly consistent.",
+  q:"What rescued non-Euclidean geometry from being 'nonsense'?",
+  opts:["Reinterpreting the undefined terms — letting 'point' and 'line' mean new things that satisfy the new axioms",
+        "Proving Euclid had made an error in the Elements",
+        "Showing that consistency doesn't matter in pure mathematics"],
+  a:0, insight:"Words like 'point' get meaning FROM the axioms, not before them. Consistency is relative to an interpretation — meaning and form again." },
+{ n:5, t:"Recursive Structures and Processes",
+  blurb:"Stories inside stories, functions calling themselves, Bach modulating key within key. Recursion: push, pop, and a stack to remember where you were.",
+  q:"Why isn't a recursive definition circular?",
+  opts:["Because it defines a thing in terms of simpler versions of itself, bottoming out at a base case",
+        "Because computers are fast enough to resolve the circle",
+        "It is circular — that's precisely what makes it paradoxical"],
+  a:0, insight:"Recursion is a spiral, not a circle: each self-reference descends toward solid ground. Nested-yet-grounded structure is everywhere in GEB." },
+{ n:6, t:"The Location of Meaning",
+  blurb:"A vinyl record, a strand of DNA, a message flung into space. Is the meaning IN the object, or in the machinery that reads it?",
+  q:"Where does Hofstadter locate meaning?",
+  opts:["Entirely in the reader — any text can mean anything to someone",
+        "Entirely in the message — decoders merely reveal what was always there",
+        "In the triggering relationship: partly intrinsic when the message is structured so that almost any sufficiently smart decoder converges on it"],
+  a:2, insight:"DNA 'means' an organism only amid cellular machinery — yet its structure so constrains the reading that the meaning is close to intrinsic. Information lives between message and interpreter." },
+{ n:7, t:"The Propositional Calculus",
+  blurb:"A system for pure logic: AND, OR, NOT, IF-THEN, driven by rules of inference. Its most charming rule is the fantasy rule.",
+  q:"What does the fantasy rule let you do?",
+  opts:["Assume anything you like, forever, as a new axiom",
+        "Step into a hypothetical world, derive a conclusion there, then step out carrying the theorem 'premise implies conclusion'",
+        "Delete any theorem that leads to a contradiction"],
+  a:1, insight:"Push into a fantasy, pop back out with an implication. Even logic runs on recursion — worlds within worlds, with strict rules for crossing levels." },
+{ n:8, t:"Typographical Number Theory",
+  blurb:"TNT: all of number theory written as a formal system. Every statement about whole numbers becomes a string of pure symbols like ∀a:∃b:(a=Sb).",
+  q:"That string says 'every number is the successor of some number.' Is it a truth TNT should prove?",
+  opts:["Yes — every number obviously has a predecessor",
+        "No — it is false: zero is the successor of nothing, and TNT must not prove falsehoods",
+        "It is neither true nor false, since symbols have no meaning"],
+  a:1, insight:"Formalizing arithmetic means every truth — and every falsehood — becomes a checkable string. TNT is the stage on which Gödel's theorem will be performed." },
+{ n:9, t:"Mumon and Gödel",
+  blurb:"Zen koans smash the ladder of logic: asked 'does a dog have Buddha-nature?', the master answers 'MU' — un-asking the question.",
+  q:"What do Zen practice and Gödel's work share, in this chapter's telling?",
+  opts:["Both prove that logic is worthless",
+        "Both are mystical traditions with no formal content",
+        "Both point at the limits of a system from within it, and at the move of stepping outside — rejecting the question's own frame"],
+  a:2, insight:"'MU' un-asks the question, as the cat un-asked the MU-puzzle. Enlightenment and incompleteness both live at the edge where a system meets what it cannot say." },
+{ n:10, t:"Levels of Description, and Computer Systems",
+  blurb:"Transistors, machine code, programming language, chess program. A computer is a tower of descriptions, each level sealed off from the ones below.",
+  q:"Why can you discuss a chess program's strategy without mentioning electrons?",
+  opts:["Because higher levels are 'chunked' descriptions — nearly sealed off, with their own reliable vocabulary",
+        "Because electrons behave randomly and cancel out",
+        "You can't — any true account of software must reach the hardware"],
+  a:0, insight:"Chunking makes minds possible to discuss at all: 'belief' and 'goal' are high-level vocabulary for a neural machine, just as 'threatening the queen' is for silicon." },
+{ n:11, t:"Brains and Thoughts",
+  blurb:"Descend into wetware: neurons firing in webs. Somewhere between cell and concept, thought needs a unit of meaning.",
+  q:"What is a 'symbol' in Hofstadter's brain-picture?",
+  opts:["A single dedicated neuron for each concept — the grandmother cell",
+        "A large ensemble of neurons that can be triggered as a functional unit, standing for a concept",
+        "A word stored letter-by-letter in memory"],
+  a:1, insight:"Concepts are choruses, not soloists. Active symbols triggering other symbols is Hofstadter's sketch of thinking itself." },
+{ n:12, t:"Minds and Thoughts",
+  blurb:"If two brains differ in every neuron, in what sense can they hold the same thought? The chapter probes isomorphisms between minds.",
+  q:"In what sense can your brain and a friend's 'correspond'?",
+  opts:["Neuron by neuron — healthy brains are wired nearly identically",
+        "In no sense at all — every mind is incomparably unique",
+        "At a coarse software level: partial, imperfect mappings between symbol networks, enough for communication"],
+  a:2, insight:"We translate between brains the way one translates a poem — never exactly, always usably. Selves are comparable at the level of pattern, not substrate." },
+{ n:13, t:"BlooP and FlooP and GlooP",
+  blurb:"BlooP allows only bounded loops: it always halts. FlooP permits free loops: it can run forever. GlooP — a language beyond FlooP — turns out not to exist.",
+  q:"What does FlooP buy you over BlooP, and at what price?",
+  opts:["Strictly more computable functions — at the price that some programs never halt",
+        "Faster execution of the same functions",
+        "Nothing — bounded loops can compute everything unbounded ones can"],
+  a:0, insight:"Some functions REQUIRE unbounded searching. And by the Church–Turing thesis, FlooP is the ceiling: there is no GlooP. Computation itself has a fixed horizon." },
+{ n:14, t:"On Formally Undecidable Propositions of TNT and Related Systems",
+  blurb:"The summit. Gödel numbers every TNT string, so TNT can talk about its own sentences. Then he constructs G, which asserts: 'G is not a theorem of TNT.'",
+  q:"If TNT is consistent, what is the status of G?",
+  opts:["G is false, and TNT proves its negation",
+        "G is true — yet TNT can prove neither G nor its negation",
+        "G is meaningless, since no sentence may mention itself"],
+  a:1, insight:"If TNT proved G, G would be false — catastrophe. So TNT stays silent, which makes G TRUE and unprovable. Any consistent system rich enough for arithmetic is incomplete." },
+{ n:15, t:"Jumping out of the System",
+  blurb:"Fine — just add G to TNT as a new axiom! The record player that can play any record meets the record titled 'I Cannot Be Played on Record Player X.'",
+  q:"Why doesn't adopting G as an axiom repair TNT?",
+  opts:["Because adding axioms is forbidden by the rules of formal systems",
+        "It does repair it — TNT+G is complete",
+        "Because the new system TNT+G immediately has its own new Gödel sentence G′ — the hole reopens one level up"],
+  a:2, insight:"Incompleteness is not a bug to patch but a shadow every sufficiently strong system casts. Each jump outside the system builds a bigger system with the same flaw." },
+{ n:16, t:"Self-Ref and Self-Rep",
+  blurb:"Sentences that describe themselves; programs that print themselves; molecules that copy themselves. The same trick underlies them all.",
+  q:"What is the shared trick behind a self-printing program (a quine) and DNA?",
+  opts:["Use a description twice — once as instructions to follow, once as data to copy",
+        "Store a complete copy of yourself inside yourself, infinitely nested",
+        "Randomly mutate until a copy appears"],
+  a:0, insight:"Code and data, gene and protein, mention and use: self-replication needs one text playing two roles. Gödel's G is built with exactly this quine trick." },
+{ n:17, t:"Church, Turing, Tarski, and Others",
+  blurb:"Three thinkers fence in the formal world: Church and Turing on what is computable, Tarski on what is expressible.",
+  q:"What did Tarski prove about truth?",
+  opts:["Arithmetic truth cannot be defined by any formula within arithmetic itself",
+        "All true statements are provable in a strong enough system",
+        "Truth and provability are the same concept under different names"],
+  a:0, insight:"Provability was incomplete (Gödel); truth is not even definable inside the system (Tarski). The Church–Turing thesis fixes the third wall: what any machine — perhaps any brain — can compute." },
+{ n:18, t:"Artificial Intelligence: Retrospects",
+  blurb:"Turing's imitation game, chess programs, and ELIZA — the chatbot that charmed people with reflected questions and understood nothing.",
+  q:"What lesson does Hofstadter draw from ELIZA?",
+  opts:["Conversation is trivial to mechanize, so the Turing test is worthless",
+        "Fluent-seeming output can float on zero understanding — surface performance can mask an empty interior",
+        "ELIZA genuinely understood emotions, proving early AI succeeded"],
+  a:1, insight:"The gap between producing plausible symbols and meaning them is the central question of AI — asked in 1979 and still being asked of the machines you're reading this on." },
+{ n:19, t:"Artificial Intelligence: Prospects",
+  blurb:"Bongard puzzles, fluid concepts, frames and slippage. What would a genuinely intelligent program need?",
+  q:"Where does Hofstadter place the core of intelligence?",
+  opts:["In raw speed — enough operations per second yields thought",
+        "In vast memorized knowledge, indexed for retrieval",
+        "In flexible concepts and analogy-making — seeing THIS as a kind of THAT, and letting categories slip creatively"],
+  a:2, insight:"Intelligence is not lookup but liquidity: concepts that stretch, slip, and map onto each other. Analogy, for Hofstadter, is the very fabric of cognition." },
+{ n:20, t:"Strange Loops, or Tangled Hierarchies",
+  blurb:"Escher's hands draw each other; TNT talks about TNT; neurons give rise to symbols that speak of the neurons. The tower's top step lands on its bottom.",
+  q:"What is a strange loop?",
+  opts:["Any circular argument or logical fallacy",
+        "Movement through the levels of a hierarchy that unexpectedly returns you to where you began — a tangled hierarchy",
+        "An infinite regress that never touches ground"],
+  a:1, insight:"The self, Hofstadter proposes, IS a strange loop: matter looping through symbols until the system contains a model of itself and calls that model 'I'." }
+];
+
+/* =========================================================
+   World setup
+   ========================================================= */
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+let W = innerWidth, H = innerHeight;
+function resize(){ W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; }
+addEventListener("resize", resize); resize();
+
+const WORLD = 1900;
+const CENTER = WORLD/2;
+
+// portals on an inward spiral (chamber 1 outermost → 20 nearest centre)
+const portals = CHAPTERS.map((c,i)=>{
+  const t = i/19;                       // 0..1
+  const ang = -Math.PI/2 + t * Math.PI * 3.6;   // ~1.8 turns
+  const r = 760 - t * 520;
+  return {
+    x: CENTER + Math.cos(ang)*r,
+    y: CENTER + Math.sin(ang)*r,
+    ch: c, done:false
+  };
+});
+const finalPortal = { x: CENTER, y: CENTER, done:false };
+
+const cat = { x: portals[0].x, y: portals[0].y + 90, vx:0, vy:0, dir:1, step:0 };
+const SPEED = 3.1;
+
+const keys = {};
+let state = "title";           // title | play | modal | mu | end
+let activePortal = null;
+let doneCount = 0;
+
+/* =========================================================
+   Input
+   ========================================================= */
+addEventListener("keydown", e=>{
+  keys[e.key.toLowerCase()] = true;
+  if(["arrowup","arrowdown","arrowleft","arrowright"," "].includes(e.key.toLowerCase())) e.preventDefault();
+
+  if(state==="title" && (e.key==="Enter"||e.key===" ")) startGame();
+  else if(state==="play" && (e.key.toLowerCase()==="e"||e.key==="Enter")) tryEnter();
+  else if(state==="modal") modalKey(e);
+  else if(state==="mu") muKey(e);
+  else if(state==="end" && e.key==="Enter") location.reload();
+});
+addEventListener("keyup", e=>{ keys[e.key.toLowerCase()] = false; });
+
+document.getElementById("startBtn").onclick = startGame;
+document.getElementById("againBtn").onclick = ()=>location.reload();
+
+function startGame(){
+  document.getElementById("titleOverlay").classList.add("hidden");
+  state = "play";
+}
+
+/* =========================================================
+   Portals & modal logic
+   ========================================================= */
+function nearPortal(){
+  for(const p of portals){
+    if(Math.hypot(cat.x-p.x, cat.y-p.y) < 58) return p;
+  }
+  if(doneCount===20 && Math.hypot(cat.x-finalPortal.x, cat.y-finalPortal.y) < 70) return finalPortal;
+  return null;
+}
+
+function tryEnter(){
+  const p = nearPortal();
+  if(!p) return;
+  if(p===finalPortal){ showEnd(); return; }
+  activePortal = p;
+  if(p.ch.special==="mu" && !p.done) openMu(p.ch);
+  else openChapter(p.ch, p.done);
+}
+
+const chapterOverlay = document.getElementById("chapterOverlay");
+const chapterCard = document.getElementById("chapterCard");
+let answered = false;
+
+function roman(n){const R=[[10,"x"],[9,"ix"],[5,"v"],[4,"iv"],[1,"i"]];let s="";for(const[v,l]of R){while(n>=v){s+=l;n-=v}}return s}
+
+function openChapter(ch, alreadyDone){
+  answered = alreadyDone;
+  let html = `
+    <div class="eyebrow">chapter ${roman(ch.n)} · chamber ${ch.n} of 20</div>
+    <h2>${ch.t}</h2>
+    <div class="braidrule"></div>
+    <p>${ch.blurb}</p>`;
+  if(alreadyDone){
+    html += `<div class="feedback good"><b>Strand already woven.</b> ${ch.insight}</div>
+             <div class="footkeys">Esc — back to the tower</div>`;
+  } else {
+    html += `<p class="q">${ch.q}</p>`;
+    ch.opts.forEach((o,i)=>{
+      html += `<div class="opt" data-i="${i}"><span class="key">${i+1}</span><span>${o}</span></div>`;
+    });
+    html += `<div id="fb"></div><div class="footkeys">1 / 2 / 3 — answer · Esc — leave</div>`;
+  }
+  chapterCard.innerHTML = html;
+  chapterCard.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = ()=>answer(parseInt(el.dataset.i), ch);
+  });
+  chapterOverlay.classList.remove("hidden");
+  state = "modal";
+}
+
+function modalKey(e){
+  if(e.key==="Escape"){ closeModal(); return; }
+  if(answered && e.key==="Enter"){ closeModal(); return; }
+  if(!answered && ["1","2","3"].includes(e.key)){
+    answer(parseInt(e.key)-1, activePortal.ch);
+  }
+}
+
+function answer(i, ch){
+  if(answered) return;
+  const optEls = chapterCard.querySelectorAll(".opt");
+  const fb = chapterCard.querySelector("#fb");
+  if(i===ch.a){
+    answered = true;
+    optEls[i].classList.add("right");
+    fb.innerHTML = `<div class="feedback good"><b>A golden strand is yours.</b> ${ch.insight}</div>`;
+    completePortal();
+  } else {
+    optEls[i].classList.add("wrong");
+    fb.innerHTML = `<div class="feedback bad">Not quite — the tortoise shakes his head. Try another door.</div>`;
+  }
+}
+
+function completePortal(){
+  if(!activePortal.done){
+    activePortal.done = true;
+    doneCount++;
+    document.getElementById("strandCount").textContent =
+      `golden strands · ${doneCount} / 20`;
+  }
+}
+
+function closeModal(){
+  chapterOverlay.classList.add("hidden");
+  state = "play";
+  activePortal = null;
+}
+
+/* =========================================================
+   The MU-puzzle sandbox (chapter 1)
+   ========================================================= */
+let muStr = "MI", muMoves = 0;
+
+function openMu(ch){
+  muStr = "MI"; muMoves = 0;
+  renderMu(ch);
+  chapterOverlay.classList.remove("hidden");
+  state = "mu";
+}
+
+function renderMu(ch, msg){
+  const jumpReady = muMoves >= 6;
+  chapterCard.innerHTML = `
+    <div class="eyebrow">chapter i · chamber 1 of 20</div>
+    <h2>${ch.t}</h2>
+    <div class="braidrule"></div>
+    <p>${ch.blurb} <b>Your goal: turn MI into MU.</b> Work inside the system — press a rule's number to apply it.</p>
+    <div class="mu-string" id="muStr">${muStr}</div>
+    <div class="mu-rules">
+      <b>1</b> &nbsp;…I &nbsp;→ …IU &nbsp;&nbsp;(if it ends in I, append U)<br>
+      <b>2</b> &nbsp;Mx → Mxx &nbsp;(double everything after the M)<br>
+      <b>3</b> &nbsp;III → U &nbsp;&nbsp;(replace the first III with U)<br>
+      <b>4</b> &nbsp;UU → &nbsp;&nbsp;&nbsp;&nbsp;(delete the first UU)<br>
+      <b>R</b> &nbsp;reset to MI
+    </div>
+    ${msg ? `<p class="mu-note">${msg}</p>` : ""}
+    ${jumpReady ? `<div class="feedback bad" style="margin-top:14px">
+      The cat yawns. You've made ${muMoves} moves and MU is no closer.
+      Perhaps the answer isn't <i>inside</i> the system…
+      <b>press J to jump out of the system.</b></div>` : ""}
+    <div class="footkeys">1–4 — apply rule · R — reset · ${jumpReady?"J — jump out · ":""}Esc — leave</div>`;
+}
+
+function muKey(e){
+  const k = e.key.toLowerCase();
+  const ch = CHAPTERS[0];
+  if(k==="escape"){ closeModal(); return; }
+  if(k==="r"){ muStr="MI"; renderMu(ch,"Back to MI."); return; }
+  let msg = null;
+  if(k==="1"){ if(muStr.endsWith("I")){ muStr+="U"; muMoves++; } else msg="Rule 1 needs the string to end in I."; }
+  else if(k==="2"){ if(muStr.length<=17){ muStr = "M"+muStr.slice(1)+muStr.slice(1); muMoves++; } else msg="The string is getting long — doubling again won't help."; }
+  else if(k==="3"){ const i=muStr.indexOf("III"); if(i>=0){ muStr=muStr.slice(0,i)+"U"+muStr.slice(i+3); muMoves++; } else msg="No III found."; }
+  else if(k==="4"){ const i=muStr.indexOf("UU"); if(i>=0){ muStr=muStr.slice(0,i)+muStr.slice(i+2); muMoves++; } else msg="No UU found."; }
+  else if(k==="j" && muMoves>=6){
+    chapterCard.innerHTML = `
+      <div class="eyebrow">chapter i · jumping out</div>
+      <h2>MU is unreachable — and you can only see it from outside</h2>
+      <div class="braidrule"></div>
+      <p>Count the I's. MI has one. Rule 2 doubles the count; rule 3 subtracts three; rules 1 and 4 leave it alone. Starting from 1, the count of I's is <b>never divisible by 3</b> — and MU needs exactly zero I's. Zero is divisible by 3; your count never is.</p>
+      <p>No sequence of legal moves can ever reach MU. But nothing <i>inside</i> the MIU-system could tell you that. You had to step outside and reason <i>about</i> the rules — exactly what Gödel did to mathematics itself.</p>
+      <div class="feedback good"><b>A golden strand is yours.</b> ${ch.insight}</div>
+      <div class="footkeys">Esc or Enter — back to the tower</div>`;
+    completePortal();
+    state = "modal"; answered = true;
+    return;
+  }
+  if(muStr==="MU"){ /* impossible, but just in case of a bug: reward honestly */ }
+  renderMu(ch, msg);
+}
+
+/* =========================================================
+   Ending
+   ========================================================= */
+function showEnd(){
+  state="end";
+  document.getElementById("endOverlay").classList.remove("hidden");
+}
+
+/* =========================================================
+   Render loop
+   ========================================================= */
+function update(){
+  if(state==="play"){
+    let dx=0, dy=0;
+    if(keys["arrowleft"]||keys["a"]) dx-=1;
+    if(keys["arrowright"]||keys["d"]) dx+=1;
+    if(keys["arrowup"]||keys["w"]) dy-=1;
+    if(keys["arrowdown"]||keys["s"]) dy+=1;
+    if(dx&&dy){ dx*=0.707; dy*=0.707; }
+    cat.x = Math.max(60, Math.min(WORLD-60, cat.x + dx*SPEED));
+    cat.y = Math.max(60, Math.min(WORLD-60, cat.y + dy*SPEED));
+    if(dx!==0) cat.dir = dx>0?1:-1;
+    cat.step += (dx||dy) ? 0.22 : 0;
+  }
+}
+
+function draw(t){
+  ctx.fillStyle = "#15121d";
+  ctx.fillRect(0,0,W,H);
+
+  const camX = Math.max(0, Math.min(WORLD-W, cat.x - W/2));
+  const camY = Math.max(0, Math.min(WORLD-H, cat.y - H/2));
+  ctx.save();
+  ctx.translate(-camX, -camY);
+
+  // faint tessellation ground (Escher nod): offset diamond grid
+  ctx.strokeStyle = "rgba(90,80,120,0.10)";
+  ctx.lineWidth = 1;
+  const g = 90;
+  for(let x=0; x<=WORLD; x+=g){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+WORLD,WORLD); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x-WORLD,WORLD); ctx.stroke();
+  }
+
+  // spiral guide path
+  ctx.strokeStyle = "rgba(180,170,210,0.14)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,10]);
+  ctx.beginPath();
+  for(let i=0;i<portals.length;i++){
+    const p = portals[i];
+    i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y);
+  }
+  ctx.lineTo(finalPortal.x, finalPortal.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // THE GOLDEN BRAID — woven through completed chambers, in chapter order
+  const doneSeq = portals.filter(p=>p.done);
+  if(doneSeq.length>1){
+    for(let s=0;s<3;s++){                      // three interleaved strands
+      ctx.strokeStyle = ["#d4a531","#b8891f","#e8c25e"][s];
+      ctx.lineWidth = 2.4 - s*0.4;
+      ctx.beginPath();
+      for(let i=0;i<doneSeq.length;i++){
+        const p = doneSeq[i];
+        const wob = Math.sin(t/500 + i*2 + s*2.1) * 9;
+        const nx = p.x + wob, ny = p.y + Math.cos(t/500 + i*2 + s*2.1)*9;
+        i===0 ? ctx.moveTo(nx,ny) : ctx.lineTo(nx,ny);
+      }
+      if(doneCount===20){                      // close the loop back to chamber 1
+        const p0 = doneSeq[0];
+        ctx.lineTo(finalPortal.x, finalPortal.y);
+        ctx.lineTo(p0.x + Math.sin(t/500+s*2.1)*9, p0.y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  // portals
+  const near = (state==="play") ? nearPortal() : null;
+  for(const p of portals){
+    const pulse = 1 + Math.sin(t/600 + p.ch.n)*0.06;
+    // chamber ring
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 34*pulse, 0, Math.PI*2);
+    ctx.strokeStyle = p.done ? "#d4a531" : "#efe6d0";
+    ctx.lineWidth = p.done ? 3 : 2;
+    ctx.globalAlpha = p.done ? 0.95 : 0.65;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    if(p.done){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y, 26,0,Math.PI*2);
+      ctx.fillStyle = "rgba(212,165,49,0.14)";
+      ctx.fill();
+    }
+    // number
+    ctx.fillStyle = p.done ? "#d4a531" : "#efe6d0";
+    ctx.font = '500 15px "IBM Plex Mono", monospace';
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(p.ch.n, p.x, p.y+1);
+    // title label
+    ctx.font = '11px "IBM Plex Mono", monospace';
+    ctx.fillStyle = "rgba(216,205,180,0.75)";
+    ctx.fillText(p.ch.t.length>30 ? p.ch.t.slice(0,28)+"…" : p.ch.t, p.x, p.y+52);
+    // prompt
+    if(near===p){
+      ctx.fillStyle = "#d4a531";
+      ctx.font = '500 12px "IBM Plex Mono", monospace';
+      ctx.fillText(p.done ? "E — revisit" : "E — enter chamber", p.x, p.y-50);
+    }
+  }
+
+  // final portal
+  if(doneCount===20){
+    const pulse = 1 + Math.sin(t/300)*0.12;
+    ctx.beginPath();
+    ctx.arc(finalPortal.x, finalPortal.y, 46*pulse, 0, Math.PI*2);
+    ctx.strokeStyle = "#e8c25e"; ctx.lineWidth = 4; ctx.stroke();
+    ctx.fillStyle = "rgba(212,165,49,0.20)"; ctx.fill();
+    ctx.fillStyle = "#e8c25e";
+    ctx.font = '600 26px "Cormorant Garamond", serif';
+    ctx.fillText("∞", finalPortal.x, finalPortal.y+2);
+    if(near===finalPortal){
+      ctx.font = '500 12px "IBM Plex Mono", monospace';
+      ctx.fillText("E — close the loop", finalPortal.x, finalPortal.y-62);
+    }
+  } else {
+    ctx.strokeStyle = "rgba(216,205,180,0.25)";
+    ctx.lineWidth = 2; ctx.setLineDash([3,7]);
+    ctx.beginPath(); ctx.arc(finalPortal.x, finalPortal.y, 46, 0, Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "rgba(216,205,180,0.4)";
+    ctx.font = '11px "IBM Plex Mono", monospace';
+    ctx.fillText("weave all 20 strands", finalPortal.x, finalPortal.y);
+  }
+
+  drawCat(cat.x, cat.y, cat.dir, cat.step, t);
+  ctx.restore();
+}
+
+/* pixel cat, drawn from a bitmap */
+const CAT = [
+  "..#......#..",
+  "..##....##..",
+  "..########..",
+  ".##########.",
+  ".#.##..##.#.",
+  ".##########.",
+  "..########..",
+  "..########..",
+  ".##########.",
+  ".##########.",
+  "..#..##..#..",
+  "..#......#.."
+];
+function drawCat(x,y,dir,step,t){
+  const s = 4;
+  const bob = Math.sin(step*2)*2;
+  ctx.save();
+  ctx.translate(x, y - 22 + bob);
+  ctx.scale(dir, 1);
+  // tail
+  ctx.strokeStyle = "#efe6d0"; ctx.lineWidth = 3; ctx.lineCap="round";
+  ctx.beginPath();
+  ctx.moveTo(-6*s/2 - 6, 10);
+  ctx.quadraticCurveTo(-6*s/2 - 16, 2 + Math.sin(t/300)*6, -6*s/2 - 12, -10 + Math.sin(t/300)*4);
+  ctx.stroke();
+  // body
+  for(let r=0;r<CAT.length;r++){
+    for(let c=0;c<CAT[r].length;c++){
+      if(CAT[r][c]==="#"){
+        ctx.fillStyle = "#efe6d0";
+        ctx.fillRect((c-6)*s, (r-6)*s, s, s);
+      }
+    }
+  }
+  // eyes + nose (ink)
+  ctx.fillStyle = "#15121d";
+  ctx.fillRect((-3)*s, (-2)*s, s, s);
+  ctx.fillRect((2)*s, (-2)*s, s, s);
+  ctx.fillStyle = "#c96f5e";
+  ctx.fillRect((-0.5)*s, (-1)*s, s, s*0.7);
+  ctx.restore();
+  // shadow
+  ctx.fillStyle = "rgba(0,0,0,0.3)";
+  ctx.beginPath(); ctx.ellipse(x, y+26, 16, 5, 0, 0, Math.PI*2); ctx.fill();
+}
+
+function loop(t){
+  update();
+  draw(t||0);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
