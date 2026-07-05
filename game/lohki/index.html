@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Lohki Runner</title>
+<style>
+  :root{
+    --navy:#0b1526;
+    --navy-2:#101d33;
+    --ink:#e8ecf4;
+    --dim:#7b8aa5;
+    --amber:#f2b45a;
+    --pink:#ff6b8a;
+    --line:#2a3a55;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+  body{
+    background:var(--navy);
+    color:var(--ink);
+    font-family:"Courier New",ui-monospace,monospace;
+    touch-action:none;
+    user-select:none;-webkit-user-select:none;
+    position:fixed;inset:0;
+  }
+  canvas{
+    display:block;width:100vw;height:100vh;height:100dvh;
+    background:linear-gradient(var(--navy) 0%, var(--navy-2) 100%);
+  }
+
+  /* ---- top HUD + scoreboard, inside the game window ---- */
+  #top{
+    position:absolute;top:0;left:0;right:0;
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) 16px 10px;
+    pointer-events:none; /* taps pass straight through to the game */
+    text-align:center;
+  }
+  #title{font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--amber)}
+  #title span{color:var(--dim)}
+  #hud{margin-top:6px;font-size:13px;letter-spacing:2px;color:var(--dim)}
+  #hud b{color:var(--ink)}
+  #board{
+    margin:12px auto 0;max-width:340px;
+    background:rgba(11,21,38,.55);
+    border:1px solid var(--line);border-radius:10px;
+    padding:8px 14px;
+    backdrop-filter:blur(2px);
+  }
+  #board h2{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);
+    border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:4px}
+  #board ol{list-style:none;font-size:12px;letter-spacing:1px;max-height:26vh;overflow:hidden}
+  #board li{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #1b2942}
+  #board li:last-child{border-bottom:none}
+  #board li .r{color:var(--dim)}
+  #board li .s{color:var(--ink)}
+  #board li.best .s{color:var(--amber)}
+  #board li.best .r::after{content:" ★ best";color:var(--amber)}
+  #board .empty{color:var(--dim);font-size:11px;letter-spacing:1px;padding:4px 0}
+
+  /* ---- centre message ---- */
+  #msg{
+    position:absolute;left:0;right:0;top:44%;
+    transform:translateY(-50%);
+    text-align:center;pointer-events:none;
+    display:flex;flex-direction:column;gap:10px;padding:0 20px;
+  }
+  #msg .big{font-size:clamp(18px,5.5vw,30px);letter-spacing:5px;text-transform:uppercase}
+  #msg .small{font-size:12px;letter-spacing:2px;color:var(--dim)}
+  #msg.hidden{display:none}
+  .blink{animation:blink 1.2s steps(2,start) infinite}
+  @keyframes blink{to{visibility:hidden}}
+  @media (prefers-reduced-motion: reduce){ .blink{animation:none !important} }
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="top">
+  <div id="title">Lohki <span>runner</span></div>
+  <div id="hud">score <b id="score">0</b> · hi <b id="hi">0</b></div>
+  <div id="board">
+    <h2>This session's runs</h2>
+    <ol id="runs"><div class="empty">No runs yet — Lohki is stretching.</div></ol>
+  </div>
+</div>
+
+<div id="msg">
+  <div class="big" id="msgTitle">Lohki the Cat</div>
+  <div class="small blink" id="msgSub">tap anywhere — dodge Thaddeus &amp; Megan</div>
+</div>
+
+<script>
+(() => {
+  const cv = document.getElementById('game');
+  const cx = cv.getContext('2d');
+  const msg = document.getElementById('msg');
+  const msgTitle = document.getElementById('msgTitle');
+  const msgSub = document.getElementById('msgSub');
+  const scoreEl = document.getElementById('score');
+  const hiEl = document.getElementById('hi');
+  const runsEl = document.getElementById('runs');
+
+  // ---- fullscreen sizing (responsive + retina) ----
+  let W = 0, H = 0, GROUND = 0;
+  function fit(){
+    W = window.innerWidth;
+    H = window.innerHeight;
+    // keep the action low on the screen, near the player's thumbs
+    GROUND = H - Math.max(70, H * 0.14);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if(cat && !cat.jumping) cat.y = GROUND - CAT_H;
+    seedStars();
+  }
+  addEventListener('resize', () => fit());
+  addEventListener('orientationchange', () => setTimeout(fit, 250));
+
+  // ---- pixel-art sprites ----
+  const P = Math.max(3, Math.round(Math.min(window.innerWidth, 720) / 180)); // scale pixels a touch on bigger screens
+  function drawGrid(grid, x, y, palette){
+    for(let r = 0; r < grid.length; r++){
+      const row = grid[r];
+      for(let c = 0; c < row.length; c++){
+        const k = row[c];
+        if(k === '.') continue;
+        cx.fillStyle = palette[k];
+        cx.fillRect(x + c * P, y + r * P, P, P);
+      }
+    }
+  }
+
+  const catPal = { o:'#f2b45a', d:'#c98a3a', w:'#fff4e0', k:'#0b1526', p:'#ff6b8a' };
+  const catRun1 = [
+    "..o.....o.......",
+    "..oo...oo.......",
+    "..oooooooo......",
+    "..okoooooko.....",
+    "..oooowooooooo..",
+    "..ooooooooooooo.",
+    "...oooooooooooo.",
+    "...oo..oooo..o..",
+    "...o....oo......",
+    "..o......o......"
+  ];
+  const catRun2 = [
+    "..o.....o.......",
+    "..oo...oo.......",
+    "..oooooooo......",
+    "..okoooooko.....",
+    "..oooowooooooo..",
+    "..ooooooooooooo.",
+    "...oooooooooooo.",
+    "....oo..oo..oo..",
+    "......o....o....",
+    ".....o......o..."
+  ];
+  const catJump = [
+    "..o.....o.......",
+    "..oo...oo.......",
+    "..oooooooo......",
+    "..okoooooko.....",
+    "..oooowooooooo..",
+    "..ooooooooooooo.",
+    "...oooooooooooo.",
+    "..oo...oo....oo.",
+    ".o.....o........",
+    "................"
+  ];
+  const CAT_W = 16 * P, CAT_H = 10 * P;
+
+  const tedPal = { s:'#8fb4ff', k:'#0b1526', h:'#2a3a55', f:'#e8c9a8', t:'#ff6b8a', g:'#5a6b88', n:'#cfd8ea' };
+  const ted = [
+    "....hhhh....",
+    "...hhhhhh...",
+    "...ffffff...",
+    "...fkffkf...",
+    "...ffffff...",
+    "....ffff....",
+    "ss..ssss..ss",
+    "ssssssttssss",
+    "ff..sstts..f",
+    "....ssss....",
+    "....gggg....",
+    "....g..g....",
+    "....g..g....",
+    "...gg..gg..."
+  ];
+  const TED_W = 12 * P, TED_H = 14 * P;
+
+  // Megan: long-haired pixel lady in a lavender dress, arms out, blocking
+  const megPal = { h:'#5a3a24', f:'#e8c9a8', k:'#0b1526', l:'#e06a86', d:'#b48ce8', e:'#9a6fd4', t:'#ff6b8a' };
+  const megan = [
+    "....hhhh....",
+    "...hhhhhh...",
+    "..hhffffhh..",
+    "..hfkffkfh..",
+    "..hhfllfhh..",
+    "..h.ffff.h..",
+    "dd.hddddh.dd",
+    "ddddddttdddd",
+    "ff.ddttttd.f",
+    "..hdddddddh.",
+    "...dddddd...",
+    "..edddddde..",
+    ".eddddddddde",
+    "...ff..ff..."
+  ];
+  const MEG_W = 12 * P, MEG_H = 14 * P;
+
+  // ---- game state ----
+  let state = 'idle';
+  let cat = null, obstacles, hearts, stars = [], speed, score, hi = 0, frame, spawnIn, runCount = 0, shake;
+
+  function reset(){
+    cat = { x: Math.max(40, W * 0.12), y: GROUND - CAT_H, vy: 0, jumping: false };
+    obstacles = []; hearts = [];
+    speed = Math.max(4.2, W / 170); score = 0; frame = 0; spawnIn = 90; shake = 0;
+    scoreEl.textContent = '0';
+  }
+
+  function seedStars(){
+    stars = Array.from({length: Math.round(W / 26)}, () => ({
+      x: Math.random() * W, y: Math.random() * (GROUND - 80),
+      s: Math.random() < 0.3 ? 2 : 1, v: 0.15 + Math.random() * 0.25
+    }));
+  }
+
+  // ---- input: the whole screen is the button ----
+  function jump(){
+    if(state === 'idle' || state === 'over'){ start(); return; }
+    if(!cat.jumping){
+      cat.vy = -12.2;
+      cat.jumping = true;
+    }
+  }
+  addEventListener('keydown', e => {
+    if(e.code === 'Space' || e.code === 'ArrowUp'){ e.preventDefault(); jump(); }
+  });
+  document.body.addEventListener('pointerdown', e => { e.preventDefault(); jump(); });
+
+  function start(){
+    reset();
+    state = 'run';
+    msg.classList.add('hidden');
+  }
+
+  function gameOver(kind){
+    state = 'over';
+    shake = 10;
+    runCount++;
+    if(score > hi){ hi = score; hiEl.textContent = hi; }
+    addRun(runCount, score);
+    msgTitle.textContent = kind === 'megan' ? 'Megan wins this round'
+                        : kind === 'couple' ? 'The power couple wins'
+                        : 'Thaddeus wins this round';
+    msgSub.textContent = 'Lohki cleared ' + score + (score === 1 ? ' obstacle' : ' obstacles') + ' — tap to try again';
+    msg.classList.remove('hidden');
+  }
+
+  // ---- session scoreboard (top of screen, newest first) ----
+  const runLog = [];
+  const MAX_ROWS = 6;
+  function addRun(n, s){
+    runLog.unshift({ n, s });
+    const best = Math.max(...runLog.map(r => r.s));
+    runsEl.innerHTML = runLog.slice(0, MAX_ROWS).map(r =>
+      `<li class="${r.s === best && r.s > 0 ? 'best' : ''}">
+         <span class="r">Run ${r.n}</span>
+         <span class="s">${r.s} ♥</span>
+       </li>`).join('') +
+      (runLog.length > MAX_ROWS
+        ? `<li><span class="r">…and ${runLog.length - MAX_ROWS} more</span><span class="s"></span></li>` : '');
+  }
+
+  // ---- spawning ----
+  // kinds: 'ted' | 'megan' | 'couple' (Thaddeus & Megan side by side)
+  function spawn(){
+    let kind;
+    if(score > 6 && Math.random() < 0.3) kind = 'couple';
+    else kind = Math.random() < 0.5 ? 'ted' : 'megan';
+    const w = kind === 'couple' ? TED_W + MEG_W + 6 : (kind === 'ted' ? TED_W : MEG_W);
+    obstacles.push({ x: W + 20, y: GROUND - TED_H, w, kind, passed: false });
+    const gapBase = Math.max(46, 110 - speed * 5);
+    spawnIn = gapBase + Math.random() * 70;
+  }
+
+  // ---- loop ----
+  function step(){
+    frame++;
+
+    if(state === 'run'){
+      cat.vy += 0.66;
+      cat.y += cat.vy;
+      if(cat.y >= GROUND - CAT_H){ cat.y = GROUND - CAT_H; cat.vy = 0; cat.jumping = false; }
+
+      spawnIn--; if(spawnIn <= 0) spawn();
+      for(const o of obstacles){
+        o.x -= speed;
+        if(!o.passed && o.x + o.w < cat.x){
+          o.passed = true;
+          score++; scoreEl.textContent = score;
+          speed = Math.min(Math.max(11, W / 65), speed + 0.12);
+          hearts.push({ x: cat.x + CAT_W / 2, y: cat.y - 12, life: 60, vy: -1.2 });
+        }
+        const pad = 6;
+        if(cat.x + pad < o.x + o.w - pad && cat.x + CAT_W - pad > o.x + pad &&
+           cat.y + CAT_H - pad > o.y + pad){
+          gameOver(o.kind);
+        }
+      }
+      obstacles = obstacles.filter(o => o.x + o.w > -30);
+    }
+
+    for(const h of hearts){ h.y += h.vy; h.life--; }
+    hearts = hearts.filter(h => h.life > 0);
+
+    draw();
+    requestAnimationFrame(step);
+  }
+
+  function drawHeart(x, y, size, alpha){
+    cx.save();
+    cx.globalAlpha = alpha;
+    cx.fillStyle = '#ff6b8a';
+    cx.beginPath();
+    const s = size;
+    cx.moveTo(x, y + s * 0.3);
+    cx.bezierCurveTo(x, y, x - s * 0.5, y, x - s * 0.5, y + s * 0.3);
+    cx.bezierCurveTo(x - s * 0.5, y + s * 0.6, x, y + s * 0.8, x, y + s);
+    cx.bezierCurveTo(x, y + s * 0.8, x + s * 0.5, y + s * 0.6, x + s * 0.5, y + s * 0.3);
+    cx.bezierCurveTo(x + s * 0.5, y, x, y, x, y + s * 0.3);
+    cx.fill();
+    cx.restore();
+  }
+
+  function draw(){
+    cx.clearRect(0, 0, W, H);
+    cx.save();
+    if(shake > 0){ cx.translate((Math.random() - .5) * shake, (Math.random() - .5) * shake); shake--; }
+
+    // stars
+    cx.fillStyle = '#3d5478';
+    for(const st of stars){
+      st.x -= st.v * (state === 'run' ? 1 : 0.4);
+      if(st.x < -2) st.x = W + 2;
+      cx.fillRect(st.x, st.y, st.s, st.s);
+    }
+    // moon (kept clear of the scoreboard)
+    const mx = W - 50, my = Math.max(H * 0.42, 200);
+    cx.fillStyle = '#e8ecf4'; cx.beginPath(); cx.arc(mx, my, 14, 0, 7); cx.fill();
+    cx.fillStyle = '#101d33'; cx.beginPath(); cx.arc(mx - 6, my - 4, 12, 0, 7); cx.fill();
+
+    // ground
+    cx.strokeStyle = '#2a3a55'; cx.lineWidth = 2;
+    cx.beginPath(); cx.moveTo(0, GROUND + 2); cx.lineTo(W, GROUND + 2); cx.stroke();
+    cx.fillStyle = '#22314c';
+    const speckles = Math.ceil(W / 55) + 2;
+    for(let i = 0; i < speckles; i++){
+      const gx = ((i * 61) - (frame * (state === 'run' ? speed : 1)) % 61 + W) % W;
+      cx.fillRect(gx, GROUND + 12 + (i % 3) * 6, 8, 2);
+    }
+
+    // obstacles
+    for(const o of obstacles){
+      if(o.kind === 'ted'){
+        drawGrid(ted, o.x, o.y, tedPal);
+      } else if(o.kind === 'megan'){
+        drawGrid(megan, o.x, o.y, megPal);
+      } else { // couple
+        drawGrid(ted, o.x, o.y, tedPal);
+        drawGrid(megan, o.x + TED_W + 6, o.y, megPal);
+      }
+    }
+
+    // cat
+    let sprite;
+    if(state !== 'run' || cat.jumping) sprite = catJump;
+    else sprite = (Math.floor(frame / 6) % 2 === 0) ? catRun1 : catRun2;
+    drawGrid(sprite, cat.x, cat.y, catPal);
+
+    // hearts
+    for(const h of hearts){
+      drawHeart(h.x, h.y, 14, Math.min(1, h.life / 40));
+    }
+
+    cx.restore();
+  }
+
+  fit();
+  reset();
+  step();
+})();
+</script>
+</body>
+</html>
