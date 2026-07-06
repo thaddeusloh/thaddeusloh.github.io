@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Data to Agents — an interactive tour of the AI stack</title>
+<script>document.documentElement.className+=" js";</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F6F2;
+  --grid:#E5E8E0;
+  --ink:#1C2530;
+  --ink-soft:#5C6675;
+  --card:#FFFFFF;
+  --line:#D8DCD2;
+  --c-data:#0E7E8C;
+  --c-ml:#5A53C9;
+  --c-gen:#BE3D77;
+  --c-agent:#D2702B;
+  --ok:#1E8A4C;
+  --bad:#C23B3B;
+  --rail-w:150px;
+  --maxw:760px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:28px 28px;
+  line-height:1.6;
+  font-size:16.5px;
+  overflow-x:hidden;
+}
+.level, .hero{scroll-margin-top:76px;}
+::selection{background:#1C253022;}
+
+/* ---------- progress rail (the stack) ---------- */
+.rail{
+  position:fixed; left:24px; top:50%; transform:translateY(-50%);
+  width:var(--rail-w); z-index:50;
+  display:flex; flex-direction:column; gap:8px;
+}
+.rail-cap{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.18em;
+  color:var(--ink-soft); text-align:center; margin-bottom:2px;
+}
+.rail-stack{display:flex; flex-direction:column-reverse; gap:5px;}
+.rail-layer{
+  position:relative; display:block; width:100%; height:52px;
+  border:1.5px solid var(--ink); border-radius:6px; background:var(--card);
+  cursor:pointer; overflow:hidden; padding:0;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+  color:var(--ink); text-transform:uppercase;
+  transition:transform .15s ease;
+}
+.rail-layer:hover{transform:translateX(3px)}
+.rail-layer:focus-visible{outline:3px solid var(--c-ml); outline-offset:2px}
+.rail-layer .fill{
+  position:absolute; inset:0; transform-origin:bottom;
+  transform:scaleY(0); background:var(--acc); opacity:.9;
+  transition:transform .25s ease-out;
+}
+.rail-layer .lab{
+  position:relative; z-index:2; display:flex; align-items:center; justify-content:center;
+  height:100%; gap:6px; mix-blend-mode:normal;
+}
+.rail-layer.lit .lab{color:#fff; font-weight:600}
+.rail-foot{
+  font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-soft);
+  text-align:center; letter-spacing:.08em;
+}
+@media (max-width:1120px){
+  .rail{
+    left:0; right:0; top:0; bottom:auto; transform:none; width:auto;
+    flex-direction:row; align-items:center; gap:10px;
+    background:rgba(245,246,242,.94); backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    border-bottom:1.5px solid var(--ink);
+    padding:8px 12px; min-height:52px;
+  }
+  .rail-cap{margin:0; white-space:nowrap}
+  .rail-stack{flex-direction:row; flex:1; gap:6px; min-width:0}
+  .rail-layer{height:34px; font-size:10px; min-width:0}
+  .rail-layer .lab{white-space:nowrap; overflow:hidden; padding:0 2px}
+  .rail-foot{display:none}
+}
+@media (max-width:560px){
+  .rail{gap:0; padding:8px 10px}
+  .rail-cap{display:none}
+  .rail-layer .lab .n{display:none}
+}
+
+/* ---------- layout ---------- */
+main{max-width:var(--maxw); margin:0 auto; padding:0 22px;}
+@media (min-width:1121px){ main{margin-left:calc(50% - var(--maxw)/2 + 60px);} }
+@media (max-width:1120px){ body{padding-top:52px} }
+
+/* ---------- hero ---------- */
+.hero{padding:88px 0 60px; }
+.kicker{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--ink-soft); margin-bottom:18px;
+}
+.hero h1{
+  font-family:'Archivo',sans-serif; font-weight:900; letter-spacing:-.015em;
+  font-size:clamp(2.5rem,7vw,4.4rem); line-height:1.02; text-transform:uppercase;
+}
+.hero h1 .h-accent{color:var(--c-agent)}
+.hero-sub{max-width:56ch; margin-top:22px; font-size:1.08rem; color:var(--ink-soft)}
+.hero-stack{
+  margin:40px 0 8px; display:flex; flex-direction:column-reverse; gap:6px; max-width:420px;
+}
+.hs-block{
+  border:1.5px solid var(--ink); border-radius:8px; background:var(--card);
+  padding:10px 16px; display:flex; justify-content:space-between; align-items:baseline;
+  opacity:0; transform:translateY(-14px); animation:drop .5s ease forwards;
+  border-left:8px solid var(--acc);
+}
+.hs-block b{font-family:'Archivo',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.04em}
+.hs-block span{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft)}
+.hs-block:nth-child(1){animation-delay:.15s}
+.hs-block:nth-child(2){animation-delay:.55s}
+.hs-block:nth-child(3){animation-delay:.95s}
+.hs-block:nth-child(4){animation-delay:1.35s}
+@keyframes drop{to{opacity:1; transform:translateY(0)}}
+.hero-cta{
+  display:inline-block; margin-top:34px; font-family:'IBM Plex Mono',monospace;
+  font-size:13px; letter-spacing:.06em; color:var(--ink); text-decoration:none;
+  border:1.5px solid var(--ink); border-radius:999px; padding:10px 20px; background:var(--card);
+  transition:background .15s;
+}
+.hero-cta:hover{background:var(--ink); color:#fff}
+
+/* ---------- levels ---------- */
+.level{padding:74px 0 30px; border-top:1.5px solid var(--ink); margin-top:44px;}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.18em;
+  text-transform:uppercase; color:#fff; background:var(--acc);
+  padding:5px 12px; border-radius:4px; margin-bottom:16px;
+}
+.level h2{
+  font-family:'Archivo',sans-serif; font-weight:900; text-transform:uppercase;
+  font-size:clamp(1.9rem,4.5vw,2.7rem); letter-spacing:-.01em; line-height:1.05;
+}
+.level h3{
+  font-family:'Archivo',sans-serif; font-weight:800; font-size:1.15rem;
+  margin:0 0 6px; letter-spacing:.01em;
+}
+.lede{margin-top:16px; max-width:60ch; color:var(--ink-soft); font-size:1.05rem}
+.prose{margin-top:14px; max-width:62ch}
+.prose + .prose{margin-top:12px}
+.term{border-bottom:2px solid var(--acc); font-weight:600}
+
+/* ---------- cards / widgets ---------- */
+.widget{
+  margin-top:34px; background:var(--card); border:1.5px solid var(--ink);
+  border-radius:12px; padding:22px;
+  box-shadow:5px 5px 0 rgba(28,37,48,.15);
+  box-shadow:5px 5px 0 color-mix(in srgb, var(--acc) 28%, transparent);
+}
+.widget-tag{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--acc); font-weight:600; display:block; margin-bottom:6px;
+}
+.widget p.hint{color:var(--ink-soft); font-size:.92rem; margin-top:4px}
+.btn{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; cursor:pointer;
+  border:1.5px solid var(--ink); background:var(--ink); color:#fff;
+  padding:8px 16px; border-radius:8px; letter-spacing:.02em;
+  transition:transform .1s;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid var(--acc); outline-offset:2px}
+.btn.ghost{background:var(--card); color:var(--ink)}
+.btn:disabled{opacity:.35; cursor:default; transform:none}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
+/* sorter */
+.sort-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:12px; margin-top:16px}
+.sort-card{
+  border:1.5px solid var(--line); border-radius:10px; padding:12px 14px; background:var(--paper);
+}
+.sort-card .s-name{font-weight:600; font-size:.95rem}
+.sort-card .s-desc{font-size:.82rem; color:var(--ink-soft); margin:2px 0 10px}
+.sort-btns{display:flex; gap:6px}
+.sort-btns button{
+  flex:1; font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:6px 4px;
+  border:1.5px solid var(--ink); background:var(--card); border-radius:6px; cursor:pointer;
+}
+.sort-btns button:hover{background:var(--ink); color:#fff}
+.sort-btns button:focus-visible{outline:2.5px solid var(--acc); outline-offset:1px}
+.sort-card.right{border-color:var(--ok); background:#F0F8F2}
+.sort-card.wrong{animation:shake .3s}
+.sort-card .verdict{font-size:.8rem; margin-top:8px; display:none}
+.sort-card.done .verdict{display:block}
+.sort-card.done .sort-btns{display:none}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sort-score{font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:14px; color:var(--ink-soft)}
+
+/* ETL */
+.etl-lanes{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:8px; align-items:start; margin-top:18px}
+.etl-stage{border:1.5px dashed var(--line); border-radius:10px; padding:12px; min-height:180px; background:var(--paper)}
+.etl-stage.active{border-style:solid; border-color:var(--acc)}
+.etl-stage h4{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px}
+.etl-stage.active h4{color:var(--acc)}
+.etl-arrow{align-self:center; font-size:1.2rem; color:var(--ink-soft); padding-top:70px}
+.rec{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; background:var(--card);
+  border:1px solid var(--line); border-radius:6px; padding:5px 7px; margin-bottom:6px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.rec.fixed{border-color:var(--ok); background:#F0F8F2}
+.rec.dead{opacity:.35; text-decoration:line-through}
+.rec .note{display:block; color:var(--ok); font-size:9.5px; white-space:normal}
+.etl-status{font-size:.9rem; margin-top:12px; min-height:1.4em}
+@media(max-width:640px){.etl-lanes{grid-template-columns:1fr}.etl-arrow{display:none}}
+
+/* takeaway + bridge */
+.takeaway{
+  margin-top:30px; border-left:5px solid var(--acc);
+  background:#F3F4F0;
+  background:color-mix(in srgb, var(--acc) 7%, white);
+  border-radius:0 10px 10px 0; padding:16px 18px;
+}
+.takeaway b{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--acc); display:block; margin-bottom:6px}
+.takeaway ul{margin-left:18px}
+.takeaway li{margin:4px 0; font-size:.95rem}
+.bridge{
+  margin-top:34px; display:flex; gap:12px; align-items:flex-start;
+  font-size:.98rem; color:var(--ink-soft); max-width:62ch;
+}
+.nojs-note{display:block;margin-top:12px;padding:10px 12px;border:1.5px solid #C99A3B;background:#FBF3E0;border-radius:8px;font-size:.85rem;color:#7A5B14}
+.js .nojs-note{display:none}
+.bridge .arr{font-family:'Archivo',sans-serif; font-weight:900; font-size:1.4rem; color:var(--acc); line-height:1.2}
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="Course progress">
+  <span class="rail-cap">The Stack</span>
+  <div class="rail-stack">
+    <button class="rail-layer" style="--acc:var(--c-data)" data-target="level-data"><i class="fill"></i><span class="lab"><span class="n">1 · </span>Data</span></button>
+    <button class="rail-layer" style="--acc:var(--c-ml)" data-target="level-ml"><i class="fill"></i><span class="lab"><span class="n">2 · </span>AI/ML</span></button>
+    <button class="rail-layer" style="--acc:var(--c-gen)" data-target="level-gen"><i class="fill"></i><span class="lab"><span class="n">3 · </span>GenAI</span></button>
+    <button class="rail-layer" style="--acc:var(--c-agent)" data-target="level-agent"><i class="fill"></i><span class="lab"><span class="n">4 · </span>Agents</span></button>
+  </div>
+  <span class="rail-foot">built bottom-up</span>
+</nav>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <p class="kicker">An interactive explainer · ~15 min</p>
+  <h1>From data<br>to <span class="h-accent">agents</span></h1>
+  <p class="hero-sub">Modern AI isn't one idea — it's a stack of ideas, each one built on the layer below it. This page climbs that stack one floor at a time: raw <b>data</b>, then <b>machine learning</b>, then <b>generative AI</b>, then <b>agentic AI</b>. Every layer comes with something you can poke at.</p>
+
+  <div class="hero-stack" aria-hidden="true">
+    <div class="hs-block" style="--acc:var(--c-data)"><b>Data</b><span>the raw material</span></div>
+    <div class="hs-block" style="--acc:var(--c-ml)"><b>AI / ML</b><span>learning patterns</span></div>
+    <div class="hs-block" style="--acc:var(--c-gen)"><b>Generative AI</b><span>creating new content</span></div>
+    <div class="hs-block" style="--acc:var(--c-agent)"><b>Agentic AI</b><span>acting on goals</span></div>
+  </div>
+
+  <a class="hero-cta" href="#level-data">Start at the bottom ↓</a>
+</header>
+
+<!-- ================= LEVEL 1: DATA ================= -->
+<section class="level" id="level-data" style="--acc:var(--c-data)">
+  <span class="eyebrow">Layer 01 — The foundation</span>
+  <h2>Data</h2>
+  <p class="lede">Everything above this layer is made of data. Before any model learns anything, someone had to collect information, clean it up, and put it somewhere useful. Get this layer wrong and everything built on top of it wobbles.</p>
+
+  <p class="prose">Data comes in different shapes. <span class="term">Structured data</span> fits neatly into rows and columns — a spreadsheet of sales, a database of customers. <span class="term">Unstructured data</span> doesn't: emails, photos, call recordings, PDFs. In between sits <span class="term">semi-structured data</span>, which has some organization (like labels and nesting) but no fixed table shape — think JSON from an API.</p>
+  <p class="prose">Roughly 80% of the world's data is unstructured. That single fact explains a lot of what happens in the upper layers of this page.</p>
+
+  <div class="widget">
+    <span class="widget-tag">Try it · 01</span>
+    <h3>Sort the data</h3>
+    <p class="hint">For each item, decide: is it structured, semi-structured, or unstructured?</p>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <div class="sort-grid" id="sortGrid"></div>
+    <p class="sort-score" id="sortScore">0 of 6 sorted</p>
+  </div>
+
+  <p class="prose" style="margin-top:36px">Raw data is rarely usable as-is. It lives in different systems, in different formats, full of duplicates and typos. The classic fix is a pipeline called <span class="term">ETL</span> — <b>E</b>xtract data from its sources, <b>T</b>ransform it into a clean consistent shape, and <b>L</b>oad it into a destination like a data warehouse. (A popular modern variant, <b>ELT</b>, loads first and transforms inside the warehouse.)</p>
+
+  <div class="widget">
+    <span class="widget-tag">Try it · 02</span>
+    <h3>Run an ETL pipeline</h3>
+    <p class="hint">Step through the three stages and watch messy records from three systems become one clean table.</p>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <div class="etl-lanes">
+      <div class="etl-stage" id="stExtract"><h4>Extract</h4><div id="rawRecs"></div></div>
+      <div class="etl-arrow">→</div>
+      <div class="etl-stage" id="stTransform"><h4>Transform</h4><div id="txRecs"></div></div>
+      <div class="etl-arrow">→</div>
+      <div class="etl-stage" id="stLoad"><h4>Load</h4><div id="loadRecs"></div></div>
+    </div>
+    <p class="etl-status" id="etlStatus">Pipeline idle. Press the button to extract from CRM, web store, and a CSV export.</p>
+    <div class="btn-row">
+      <button class="btn" id="etlBtn">Run: Extract</button>
+      <button class="btn ghost" id="etlReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <b>Layer 01 — what to keep</b>
+    <ul>
+      <li>Structured = tables. Unstructured = everything else. Semi-structured = tagged but not tabular.</li>
+      <li>Most data in the world is unstructured — and historically it was the hardest to use.</li>
+      <li>ETL pipelines turn scattered, messy data into clean, queryable data.</li>
+      <li>"Garbage in, garbage out" starts here: data quality caps everything above it.</li>
+    </ul>
+  </div>
+
+  <div class="bridge">
+    <span class="arr">↑</span>
+    <p><b>Why the next layer needs this one:</b> once you have clean data, a new question appears — instead of just <i>storing and querying</i> it, could a machine <i>learn patterns</i> from it? That question is the entire second layer.</p>
+  </div>
+</section>
+
+<!-- ================= LEVEL 2: AI / ML ================= -->
+<section class="level" id="level-ml" style="--acc:var(--c-ml)">
+  <span class="eyebrow">Layer 02 — Learning from data</span>
+  <h2>AI &amp; Machine Learning</h2>
+  <p class="lede">Traditional software follows rules a human wrote: <i>if this, then that</i>. Machine learning flips it — you show the computer examples, and it works out the rules itself.</p>
+
+  <p class="prose"><span class="term">Artificial intelligence</span> is the broad ambition: software that does things we'd call "smart." <span class="term">Machine learning</span> is the approach that made it practical: algorithms that improve at a task by finding patterns in data — the data you cleaned in Layer 01. A trained pattern-finder is called a <span class="term">model</span>.</p>
+  <p class="prose">There are three classic ways a model learns. <b>Supervised learning</b> uses labeled examples (emails marked spam / not spam). <b>Unsupervised learning</b> finds structure in unlabeled data (grouping customers into segments nobody defined). <b>Reinforcement learning</b> learns by trial, error, and reward (a game-playing bot improving through wins and losses).</p>
+
+  <div class="widget">
+    <span class="widget-tag">Try it · 03</span>
+    <h3>Train a tiny model</h3>
+    <p class="hint">This is supervised learning at its smallest: predicting a house's price from its size. Click the chart to add training examples — the model refits its line instantly. Watch the error drop as it sees more data (then try adding a wild outlier).</p>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <canvas id="mlCanvas" width="700" height="300" style="width:100%;height:auto;aspect-ratio:7/3;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);cursor:crosshair;touch-action:manipulation"></canvas>
+    <div class="btn-row">
+      <button class="btn" id="mlSample">Add 8 sample points</button>
+      <button class="btn ghost" id="mlClear">Clear</button>
+      <span id="mlErr" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;align-self:center;color:var(--ink-soft)">Model: needs at least 2 points</span>
+    </div>
+  </div>
+
+  <p class="prose" style="margin-top:36px">That straight line is a model with two knobs (slope and intercept). Real models — like the <span class="term">neural networks</span> behind modern AI — work the same way in spirit, but with millions or billions of knobs, called <span class="term">parameters</span>. <span class="term">Training</span> is the process of nudging every knob, over and over, until the model's predictions stop being wrong. More good data usually means a better model — which is why Layer 01 matters so much.</p>
+  <p class="prose">One caution worth knowing: a model can memorize its training data instead of learning the general pattern — that's called <span class="term">overfitting</span>. It's why models are always tested on data they've never seen.</p>
+
+  <div class="takeaway">
+    <b>Layer 02 — what to keep</b>
+    <ul>
+      <li>ML = learning rules from examples instead of hand-coding them.</li>
+      <li>A model is a pattern-finder; its knowledge lives in parameters tuned during training.</li>
+      <li>Supervised (labeled), unsupervised (unlabeled), reinforcement (reward) — the three classic modes.</li>
+      <li>More and better data → better models. Data quality is still the ceiling.</li>
+    </ul>
+  </div>
+
+  <div class="bridge">
+    <span class="arr">↑</span>
+    <p><b>Why the next layer needs this one:</b> classic ML predicts numbers and labels — a price, spam / not spam. But what if the "label" a model predicts is simply <i>the next word in a sentence</i>? Trained on enough text, that one trick lets a model write. Welcome to Layer 03.</p>
+  </div>
+</section>
+
+<!-- ================= LEVEL 3: GENAI ================= -->
+<section class="level" id="level-gen" style="--acc:var(--c-gen)">
+  <span class="eyebrow">Layer 03 — Creating, not just predicting</span>
+  <h2>Generative AI</h2>
+  <p class="lede">Everything in Layer 02 predicted something small: a number, a category. Generative AI uses the same machinery to predict something huge — the next piece of content — and by predicting again and again, it <i>creates</i>: text, images, code, audio.</p>
+
+  <p class="prose">A <span class="term">large language model</span> (LLM) is a giant neural network trained on enormous amounts of text — mostly unstructured data, the 80% that Layer 01 said was hard to use. Its core skill is humble: given some text, predict the most likely <span class="term">next token</span> (a word or word-fragment). Do that repeatedly and you get sentences, essays, working code.</p>
+  <p class="prose">The text you give it is the <span class="term">prompt</span> — it's how you steer a model that was never programmed with explicit rules. And because generation is probabilistic, a dial called <span class="term">temperature</span> controls how adventurous its choices are.</p>
+
+  <div class="widget">
+    <span class="widget-tag">Try it · 04</span>
+    <h3>Be the language model</h3>
+    <p class="hint">Build a sentence one token at a time by picking from the model's top predictions — or let it sample on its own. Slide the temperature to see safe choices become creative (and risky) ones.</p>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <p id="lmText" style="font-family:'IBM Plex Mono',monospace;font-size:1.05rem;background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:14px;min-height:3em"></p>
+    <div id="lmOpts" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"></div>
+    <div style="margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <label for="lmTemp" style="font-family:'IBM Plex Mono',monospace;font-size:12px">temperature</label>
+      <input type="range" id="lmTemp" min="0.2" max="2" step="0.1" value="1" style="flex:1;min-width:140px;accent-color:var(--c-gen)">
+      <span id="lmTempVal" style="font-family:'IBM Plex Mono',monospace;font-size:12px;width:6ch">1.0</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="lmAuto">Let the model choose</button>
+      <button class="btn ghost" id="lmReset">Start over</button>
+    </div>
+  </div>
+
+  <p class="prose" style="margin-top:36px">This tiny demo has a vocabulary of a few dozen words. Real LLMs choose between ~100,000 tokens at every step, informed by billions of parameters — but the loop you just ran is genuinely the loop. It also explains their famous flaw: the model picks <i>plausible</i> next tokens, not <i>verified</i> ones, so it can state falsehoods fluently. That failure mode is called <span class="term">hallucination</span>.</p>
+
+  <div class="takeaway">
+    <b>Layer 03 — what to keep</b>
+    <ul>
+      <li>GenAI = ML aimed at producing content, not just labels.</li>
+      <li>LLMs generate text one token at a time, each choice a probability.</li>
+      <li>Prompts steer; temperature trades reliability for creativity.</li>
+      <li>Fluent ≠ true: hallucination is plausible prediction without verification.</li>
+    </ul>
+  </div>
+
+  <div class="bridge">
+    <span class="arr">↑</span>
+    <p><b>Why the next layer needs this one:</b> an LLM can now read, reason in text, and write — but only when spoken to, and only with words. What happens if you give it a goal, tools it can call, and permission to keep going until the job is done? That's Layer 04.</p>
+  </div>
+</section>
+
+<!-- ================= LEVEL 4: AGENTS ================= -->
+<section class="level" id="level-agent" style="--acc:var(--c-agent)">
+  <span class="eyebrow">Layer 04 — From answers to actions</span>
+  <h2>Agentic AI</h2>
+  <p class="lede">A chatbot answers and stops. An <b>agent</b> is given a goal and works toward it: it plans, uses tools, checks results, recovers from failures, and keeps looping until the goal is done — or until it knows it's blocked.</p>
+
+  <p class="prose">The heart of agentic AI is a loop: <span class="term">plan → act → observe → adjust</span>. The "brain" is an LLM from Layer 03, but it's wired to <span class="term">tools</span> — search, databases, calendars, email, code — so its words can become actions. Add <span class="term">memory</span> of what it has tried, and the ability to react when a tool call fails, and you get software that handles multi-step work instead of single questions.</p>
+  <p class="prose">The trade is autonomy for oversight: an agent that can act can also act wrongly, which is why real deployments limit which tools an agent gets and keep humans in the loop for consequential steps.</p>
+
+  <div class="widget">
+    <span class="widget-tag">Try it · 05</span>
+    <h3>Step through an agent</h3>
+    <p class="hint">Pick a goal, then press "Next step" to watch the loop run — including a tool failure and how the agent recovers from it.</p>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <div class="btn-row" style="margin-top:6px">
+      <button class="btn ghost goal-pick" data-goal="0" id="goalA">Goal: schedule a meeting with Sam</button>
+      <button class="btn ghost goal-pick" data-goal="1">Goal: total our software spend last quarter</button>
+    </div>
+    <div id="agentLoop" style="display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px">
+      <span class="loop-node" data-ph="plan">PLAN</span><span class="loop-sep">→</span>
+      <span class="loop-node" data-ph="act">ACT (tool)</span><span class="loop-sep">→</span>
+      <span class="loop-node" data-ph="observe">OBSERVE</span><span class="loop-sep">↺</span>
+    </div>
+    <div id="agentLog" style="border:1.5px solid var(--line);border-radius:10px;background:var(--paper);padding:12px;min-height:120px;max-height:280px;overflow-y:auto"></div>
+    <div class="btn-row">
+      <button class="btn" id="agentNext">Next step</button>
+      <button class="btn ghost" id="agentReset">Reset</button>
+    </div>
+  </div>
+
+  <div class="widget">
+    <span class="widget-tag">Compare</span>
+    <h3>Chatbot vs. agent, same request</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px" class="cmp-grid">
+      <div style="border:1.5px solid var(--line);border-radius:10px;padding:14px;background:var(--paper)">
+        <b style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--c-gen)">GENAI CHATBOT</b>
+        <p style="font-size:.92rem;margin-top:8px">"Here are five tips for scheduling meetings efficiently…"</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:8px">Responds with text. One turn. You do the work.</p>
+      </div>
+      <div style="border:1.5px solid var(--line);border-radius:10px;padding:14px;background:var(--paper)">
+        <b style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--c-agent)">AGENT</b>
+        <p style="font-size:.92rem;margin-top:8px">"Checked both calendars, emailed Sam two options, and I'll book whichever they confirm."</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:8px">Uses tools across many steps. The work gets done.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <b>Layer 04 — what to keep</b>
+    <ul>
+      <li>Agent = LLM + goal + tools + a plan-act-observe loop.</li>
+      <li>The loop is what lets it recover from failures instead of stopping.</li>
+      <li>Autonomy is a dial, not a switch — guardrails and human checkpoints matter.</li>
+      <li>Every layer below is load-bearing: agents reason with GenAI, which learned via ML, which learned from data.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= RECAP + QUIZ ================= -->
+<section class="level" id="recap" style="--acc:var(--c-agent)">
+  <span class="eyebrow" style="background:var(--ink)">The whole stack</span>
+  <h2>One idea per floor</h2>
+  <p class="prose"><b style="color:var(--c-data)">Data</b> is the raw material. <b style="color:var(--c-ml)">Machine learning</b> finds patterns in it. <b style="color:var(--c-gen)">Generative AI</b> uses those patterns to create new content. <b style="color:var(--c-agent)">Agentic AI</b> puts that creator in a loop with tools and a goal. Remove any floor and the ones above it collapse.</p>
+
+  <div class="widget" style="--acc:var(--c-ml)">
+    <span class="widget-tag">Final check · 4 questions</span>
+    <h3>Did the stack stick?</h3>
+    <p class="nojs-note">This demo needs JavaScript, which your current viewer has turned off. If you're previewing the downloaded file in a file-viewer app, open it in a real browser (Safari or Chrome) or visit it on the live site.</p>
+    <div id="quiz"></div>
+    <p id="quizScore" style="font-family:'IBM Plex Mono',monospace;font-size:13px;margin-top:14px;color:var(--ink-soft)"></p>
+  </div>
+
+  <footer style="margin:60px 0 80px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft)">
+    <p>Built as a single HTML file — view source to see every demo. Share it, remix it, teach with it.</p>
+  </footer>
+</section>
+
+</main>
+
+<style>
+.loop-node{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;border:1.5px solid var(--ink);border-radius:6px;padding:5px 10px;background:var(--card)}
+.loop-node.on{background:var(--c-agent);color:#fff;border-color:var(--c-agent)}
+.loop-sep{color:var(--ink-soft);align-self:center}
+.log-line{font-size:.88rem;padding:7px 9px;border-radius:7px;margin-bottom:6px;border:1px solid transparent}
+.log-line b{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;display:block;margin-bottom:2px}
+.log-plan{background:#fff;border-color:var(--line)}
+.log-tool{background:#FDF3EA;border-color:#EBCDB2;font-family:'IBM Plex Mono',monospace;font-size:.8rem}
+.log-obs{background:#F2F1FA;border-color:#D4D1EE}
+.log-fail{background:#FBEDED;border-color:#E7BCBC}
+.log-done{background:#EEF7F0;border-color:#BFDCC7}
+.q-block{border-top:1px solid var(--line);padding:16px 0 6px;margin-top:12px}
+.q-block p.q{font-weight:600;margin-bottom:10px}
+.q-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-size:.93rem}
+.q-opt:hover{border-color:var(--ink)}
+.q-opt:focus-visible{outline:2.5px solid var(--c-ml);outline-offset:2px}
+.q-opt.correct{border-color:var(--ok);background:#EEF7F0;font-weight:600}
+.q-opt.incorrect{border-color:var(--bad);background:#FBEDED}
+.q-expl{font-size:.85rem;color:var(--ink-soft);margin-top:6px;display:none}
+.q-block.answered .q-expl{display:block}
+@media(max-width:640px){.cmp-grid{grid-template-columns:1fr !important}}
+
+/* ---------- small-screen pass ---------- */
+@media (max-width:1120px){ body{padding-top:56px} }
+@media (max-width:640px){
+  body{font-size:15.5px}
+  main{padding:0 16px}
+  .hero{padding:48px 0 40px}
+  .hero-sub{font-size:1rem}
+  .hero-stack{max-width:100%}
+  .level{padding:52px 0 22px; margin-top:32px}
+  .lede{font-size:1rem}
+  .widget{padding:16px 14px; box-shadow:4px 4px 0 color-mix(in srgb, var(--acc) 28%, transparent)}
+  .sort-grid{grid-template-columns:1fr}
+  .sort-btns button{padding:10px 4px; font-size:11px}
+  .btn{padding:11px 14px}
+  .btn-row{gap:8px}
+  .btn-row .btn{flex:1 1 auto; text-align:center}
+  #mlErr{flex-basis:100%}
+  #lmOpts button{min-width:0; flex:1 1 30%}
+  #lmText{font-size:.95rem}
+  .etl-stage{min-height:0}
+  .rec{white-space:normal}
+  .loop-node{padding:8px 10px}
+  .q-opt{padding:12px}
+  .takeaway{padding:14px}
+  .bridge{gap:8px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .hs-block{animation:none;opacity:1;transform:none}
+  *{transition:none !important}
+}
+</style>
+
+<script>
+function __initPage(){
+"use strict";
+function each(list,fn){for(var i=0;i<list.length;i++){fn(list[i],i);}}
+
+
+try{
+/* ---------- progress rail ---------- */
+var sections=["level-data","level-ml","level-gen","level-agent"].map(function(id){return document.getElementById(id)});
+var layers=document.querySelectorAll(".rail-layer");
+each(layers,function(btn){
+  btn.addEventListener("click",function(){
+    var el=document.getElementById(btn.getAttribute("data-target"));
+    if(el) el.scrollIntoView({behavior:"smooth"});
+  });
+});
+function railUpdate(){
+  var vp=window.innerHeight;
+  sections.forEach(function(sec,i){
+    var r=sec.getBoundingClientRect();
+    var total=r.height;
+    var seen=Math.min(Math.max(vp*0.75-r.top,0),total);
+    var p=total>0?seen/total:0;
+    var f=layers[i].querySelector(".fill");
+    f.style.transform="scaleY("+p.toFixed(3)+")";
+    if(p>0.5){layers[i].classList.add("lit");}else{layers[i].classList.remove("lit");}
+  });
+}
+window.addEventListener("scroll",railUpdate,{passive:true});
+window.addEventListener("resize",railUpdate);
+railUpdate();
+}catch(e){if(window.console&&console.error)console.error("Widget failed [progress rail]:",e);}
+
+try{
+/* ---------- 01: sorter ---------- */
+var ITEMS=[
+ {n:"Sales spreadsheet",d:"Rows of orders: date, item, price",t:0,why:"Fixed rows and columns — the definition of structured."},
+ {n:"Customer support calls",d:"Audio recordings of phone calls",t:2,why:"Audio has no rows or fields — unstructured."},
+ {n:"JSON from a weather API",d:'{"city":"Oslo","temp":-3,...}',t:1,why:"Tagged and nested, but no fixed table schema — semi-structured."},
+ {n:"Product photos",d:"12,000 JPEGs from the catalog shoot",t:2,why:"Images are classic unstructured data."},
+ {n:"Bank transactions table",d:"Account, amount, timestamp per row",t:0,why:"Perfectly tabular — structured."},
+ {n:"Email inbox",d:"Free-form message bodies (with a few headers)",t:2,why:"Headers give a little structure, but the content — the body — is free text: treated as unstructured."}
+];
+var LBL=["Structured","Semi","Unstructured"];
+var grid=document.getElementById("sortGrid"),score=0,doneCt=0;
+ITEMS.forEach(function(it){
+  var c=document.createElement("div");c.className="sort-card";
+  c.innerHTML='<div class="s-name">'+it.n+'</div><div class="s-desc">'+it.d+'</div>'+
+    '<div class="sort-btns">'+LBL.map(function(l,j){return '<button data-j="'+j+'">'+l+'</button>'}).join("")+'</div>'+
+    '<div class="verdict"></div>';
+  each(c.querySelectorAll("button"),function(b){
+    b.addEventListener("click",function(){
+      var j=+b.getAttribute("data-j");
+      if(j===it.t){
+        c.classList.add("right","done");doneCt++;score++;
+        c.querySelector(".verdict").innerHTML="✓ <b>"+LBL[it.t]+".</b> "+it.why;
+        document.getElementById("sortScore").textContent=score+" of "+ITEMS.length+" sorted"+(doneCt===ITEMS.length?" — nice work.":"");
+      }else{
+        c.classList.remove("wrong");void c.offsetWidth;c.classList.add("wrong");
+      }
+    });
+  });
+  grid.appendChild(c);
+});
+}catch(e){if(window.console&&console.error)console.error("Widget failed [01: sorter]:",e);}
+
+try{
+/* ---------- 01: ETL ---------- */
+var RAW=[
+ {src:"CRM",txt:'name: "  ALICE chen "',fix:'name: "Alice Chen"',note:"trimmed + title case"},
+ {src:"CRM",txt:'signup: "03/04/2024"',fix:'signup: 2024-04-03',note:"date standardized (ISO)"},
+ {src:"Web",txt:'email: "a.chen@mail.com"',fix:'email: "a.chen@mail.com"',note:"validated ✓"},
+ {src:"Web",txt:'email: "a.chen@mail.com" (dup)',fix:null,note:"duplicate removed"},
+ {src:"CSV",txt:'spend: "$1,204.00"',fix:'spend: 1204.00',note:"currency → number"},
+ {src:"CSV",txt:'country: ""',fix:'country: "Unknown"',note:"missing value handled"}
+];
+var etlStep=0;
+var etlBtn=document.getElementById("etlBtn"),etlStatus=document.getElementById("etlStatus");
+var stE=document.getElementById("stExtract"),stT=document.getElementById("stTransform"),stL=document.getElementById("stLoad");
+function etlReset(){
+  etlStep=0;etlBtn.disabled=false;etlBtn.textContent="Run: Extract";
+  [stE,stT,stL].forEach(function(s){s.classList.remove("active")});
+  document.getElementById("rawRecs").innerHTML="";
+  document.getElementById("txRecs").innerHTML="";
+  document.getElementById("loadRecs").innerHTML="";
+  etlStatus.textContent="Pipeline idle. Press the button to extract from CRM, web store, and a CSV export.";
+}
+etlBtn.addEventListener("click",function(){
+  if(etlStep===0){
+    stE.classList.add("active");
+    var h="";RAW.forEach(function(r){h+='<div class="rec">['+r.src+'] '+r.txt+'</div>'});
+    document.getElementById("rawRecs").innerHTML=h;
+    etlStatus.textContent="Extracted 6 records from 3 systems. Notice the mess: mixed formats, a duplicate, a missing value.";
+    etlBtn.textContent="Run: Transform";etlStep=1;
+  }else if(etlStep===1){
+    stE.classList.remove("active");stT.classList.add("active");
+    var h2="";RAW.forEach(function(r){
+      if(r.fix===null){h2+='<div class="rec dead">'+r.txt+'<span class="note">'+r.note+'</span></div>'}
+      else{h2+='<div class="rec fixed">'+r.fix+'<span class="note">'+r.note+'</span></div>'}
+    });
+    document.getElementById("txRecs").innerHTML=h2;
+    etlStatus.textContent="Transformed: cleaned text, standardized dates, converted types, dropped 1 duplicate, filled 1 gap.";
+    etlBtn.textContent="Run: Load";etlStep=2;
+  }else if(etlStep===2){
+    stT.classList.remove("active");stL.classList.add("active");
+    document.getElementById("loadRecs").innerHTML=
+      '<div class="rec fixed">customers ▸ 1 clean row</div>'+
+      '<div class="rec fixed">warehouse: analytics.customers</div>'+
+      '<div class="rec">ready for BI dashboards…</div>'+
+      '<div class="rec">…and for training models (Layer 02 ↑)</div>';
+    etlStatus.textContent="Loaded into the warehouse. This clean table is exactly the kind of data the next layer learns from.";
+    etlBtn.textContent="Pipeline complete ✓";etlBtn.disabled=true;etlStep=3;
+  }
+});
+document.getElementById("etlReset").addEventListener("click",etlReset);
+}catch(e){if(window.console&&console.error)console.error("Widget failed [01: ETL]:",e);}
+
+try{
+/* ---------- 02: regression canvas ---------- */
+var cv=document.getElementById("mlCanvas"),ctx=cv.getContext("2d");
+var pts=[];
+function cvPos(e){
+  var r=cv.getBoundingClientRect();
+  var x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+  return {x:Math.min(Math.max(x,0.02),0.98), y:Math.min(Math.max(y,0.05),0.95)};
+}
+cv.addEventListener("click",function(e){pts.push(cvPos(e));drawML();});
+document.getElementById("mlClear").addEventListener("click",function(){pts=[];drawML();});
+document.getElementById("mlSample").addEventListener("click",function(){
+  for(var i=0;i<8;i++){
+    var x=0.08+Math.random()*0.84;
+    var y=0.85-0.6*x+(Math.random()-0.5)*0.16;
+    pts.push({x:x,y:Math.min(Math.max(y,0.05),0.95)});
+  }
+  drawML();
+});
+function fit(){
+  var n=pts.length;if(n<2)return null;
+  var sx=0,sy=0,sxy=0,sxx=0;
+  pts.forEach(function(p){sx+=p.x;sy+=p.y;sxy+=p.x*p.y;sxx+=p.x*p.x});
+  var d=n*sxx-sx*sx;if(Math.abs(d)<1e-9)return null;
+  var a=(n*sxy-sx*sy)/d,b=(sy-a*sx)/n;
+  return {a:a,b:b};
+}
+function drawML(){
+  var W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle="#D8DCD2";ctx.lineWidth=1;
+  ctx.strokeRect(40,10,W-60,H-50);
+  ctx.fillStyle="#5C6675";ctx.font="12px 'IBM Plex Mono',monospace";
+  ctx.fillText("size (sq ft) →",W/2-40,H-14);
+  ctx.save();ctx.translate(16,H/2+20);ctx.rotate(-Math.PI/2);ctx.fillText("price →",0,0);ctx.restore();
+  var m=fit();
+  if(m){
+    ctx.strokeStyle="#5A53C9";ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(40+0*(W-60),10+(m.b+m.a*0)*(H-60));
+    ctx.lineTo(40+1*(W-60),10+(m.b+m.a*1)*(H-60));
+    ctx.stroke();
+  }
+  pts.forEach(function(p){
+    var px=40+p.x*(W-60),py=10+p.y*(H-60);
+    if(m){
+      var ly=10+(m.b+m.a*p.x)*(H-60);
+      ctx.strokeStyle="rgba(90,83,201,.25)";ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,ly);ctx.stroke();
+    }
+    ctx.fillStyle="#1C2530";
+    ctx.beginPath();ctx.arc(px,py,5,0,7);ctx.fill();
+  });
+  var lbl=document.getElementById("mlErr");
+  if(!m){lbl.textContent="Model: needs at least 2 points";}
+  else{
+    var err=0;pts.forEach(function(p){err+=Math.abs((m.b+m.a*p.x)-p.y)});
+    err/=pts.length;
+    lbl.textContent="Trained on "+pts.length+" examples · avg error: "+(err*100).toFixed(1)+" (lower = better fit)";
+  }
+}
+drawML();
+}catch(e){if(window.console&&console.error)console.error("Widget failed [02: regression canvas]:",e);}
+
+try{
+/* ---------- 03: token predictor ---------- */
+var LM={
+ __start:["learned","dreamed","refused"],
+ learned:["to","from","fast"], dreamed:["of","in"], refused:["to","politely"],
+ to:["paint","cook","dance"], of:["electric","quiet"], "in":["color","binary"],
+ from:["mistakes","humans"], paint:["sunsets","portraits"], cook:["breakfast","slowly"],
+ dance:["badly","beautifully"], electric:["sheep"], quiet:["oceans"]
+};
+var BASEP={3:[0.5,0.3,0.2],2:[0.65,0.35],1:[1]};
+var lmWords=["The","robot"],lmDone=false;
+var lmTextEl=document.getElementById("lmText"),lmOptsEl=document.getElementById("lmOpts");
+var tempEl=document.getElementById("lmTemp");
+tempEl.addEventListener("input",function(){
+  document.getElementById("lmTempVal").textContent=(+tempEl.value).toFixed(1);
+  lmRender();
+});
+function lmCurOpts(){
+  var last=lmWords.length===2?"__start":lmWords[lmWords.length-1];
+  var o=LM[last];
+  if(!o)return null;
+  var base=BASEP[o.length];
+  var T=+tempEl.value;
+  var w=base.map(function(p){return Math.pow(p,1/T)});
+  var s=w.reduce(function(a,b){return a+b},0);
+  return o.map(function(word,i){return {w:word,p:w[i]/s}});
+}
+function lmRender(){
+  lmTextEl.innerHTML=lmWords.join(" ")+(lmDone?".":' <span style="opacity:.4">▊</span>');
+  lmOptsEl.innerHTML="";
+  if(lmDone){
+    lmOptsEl.innerHTML='<span style="font-size:.9rem;color:var(--ink-soft)">Sentence complete — the model predicted an end token. Start over to explore another path.</span>';
+    document.getElementById("lmAuto").disabled=true;
+    return;
+  }
+  document.getElementById("lmAuto").disabled=false;
+  var opts=lmCurOpts();
+  if(!opts){lmDone=true;lmRender();return;}
+  opts.forEach(function(o){
+    var b=document.createElement("button");
+    b.className="btn ghost";
+    b.style.cssText="display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:110px";
+    b.innerHTML='<span style="font-weight:600">'+o.w+'</span>'+
+      '<span style="display:block;height:5px;width:'+Math.round(o.p*100)+'%;min-width:6px;background:var(--c-gen);border-radius:3px"></span>'+
+      '<span style="font-size:10px;color:var(--ink-soft)">'+(o.p*100).toFixed(0)+'%</span>';
+    b.addEventListener("click",function(){lmPick(o.w)});
+    lmOptsEl.appendChild(b);
+  });
+}
+function lmPick(w){
+  lmWords.push(w);
+  if(!LM[w])lmDone=true;
+  lmRender();
+}
+document.getElementById("lmAuto").addEventListener("click",function(){
+  var opts=lmCurOpts();if(!opts)return;
+  var r=Math.random(),acc=0,chosen=opts[opts.length-1].w;
+  for(var i=0;i<opts.length;i++){acc+=opts[i].p;if(r<=acc){chosen=opts[i].w;break;}}
+  lmPick(chosen);
+});
+document.getElementById("lmReset").addEventListener("click",function(){
+  lmWords=["The","robot"];lmDone=false;lmRender();
+});
+lmRender();
+}catch(e){if(window.console&&console.error)console.error("Widget failed [03: token predictor]:",e);}
+
+try{
+/* ---------- 04: agent simulator ---------- */
+var GOALS=[
+ {name:"Schedule a meeting with Sam next week",steps:[
+  {ph:"plan",cls:"log-plan",tag:"PLAN",txt:"Break the goal down: I need my availability, Sam's availability, then a confirmed slot."},
+  {ph:"act",cls:"log-tool",tag:"TOOL: calendar.read(week=next)",txt:"→ Free: Tue 10:00–12:00, Wed 14:00–17:00, Thu morning"},
+  {ph:"observe",cls:"log-obs",tag:"OBSERVE",txt:"I know my open slots. I still don't know Sam's — next I'll check past emails."},
+  {ph:"act",cls:"log-fail",tag:"TOOL: email.search(\"Sam availability\") — FAILED",txt:"→ No results found."},
+  {ph:"observe",cls:"log-obs",tag:"OBSERVE + ADJUST",txt:"The search came up empty. A chatbot would stop here. New plan: skip guessing — just ask Sam directly."},
+  {ph:"act",cls:"log-tool",tag:"TOOL: email.send(to=sam@…)",txt:"→ Sent: \"Would Tue 10:00 or Wed 15:00 work for a 30-min sync?\""},
+  {ph:"plan",cls:"log-done",tag:"WRAP UP",txt:"Goal is now blocked on a human reply — the right move is to report back and pause. ✅ \"I've proposed Tue 10:00 or Wed 15:00 to Sam and will book whichever they confirm.\""}
+ ]},
+ {name:"Total our software spend last quarter",steps:[
+  {ph:"plan",cls:"log-plan",tag:"PLAN",txt:"I need last quarter's transactions, filtered to the software category, then summed."},
+  {ph:"act",cls:"log-tool",tag:"TOOL: db.query(transactions, Q2)",txt:"→ 1,204 rows returned"},
+  {ph:"observe",cls:"log-obs",tag:"OBSERVE",txt:"Problem: 78 rows have no category. Summing now would undercount. (Layer 01 strikes again — data quality.)"},
+  {ph:"plan",cls:"log-plan",tag:"ADJUST PLAN",txt:"Classify the uncategorized rows by vendor name before summing."},
+  {ph:"act",cls:"log-tool",tag:"TOOL: classify(vendors=78)",txt:"→ 71 mapped to categories, 7 flagged for human review"},
+  {ph:"act",cls:"log-tool",tag:"TOOL: sum(category=\"software\")",txt:"→ $48,310"},
+  {ph:"plan",cls:"log-done",tag:"WRAP UP",txt:"✅ \"Software spend last quarter: $48,310. Note: 7 transactions ($612) need a human to categorize — flagged for you.\""}
+ ]}
+];
+var gIdx=0,sIdx=0;
+var logEl=document.getElementById("agentLog"),nodes=document.querySelectorAll(".loop-node");
+function agentReset(){
+  sIdx=0;logEl.innerHTML='<span style="font-size:.85rem;color:var(--ink-soft)">Goal: “'+GOALS[gIdx].name+'” — press Next step.</span>';
+  each(nodes,function(n){n.classList.remove("on")});
+  document.getElementById("agentNext").disabled=false;
+}
+each(document.querySelectorAll(".goal-pick"),function(b){
+  b.addEventListener("click",function(){gIdx=+b.getAttribute("data-goal");agentReset();});
+});
+document.getElementById("agentReset").addEventListener("click",agentReset);
+document.getElementById("agentNext").addEventListener("click",function(){
+  var steps=GOALS[gIdx].steps;
+  if(sIdx===0)logEl.innerHTML="";
+  if(sIdx>=steps.length)return;
+  var s=steps[sIdx];
+  each(nodes,function(n){if(n.getAttribute("data-ph")===s.ph){n.classList.add("on");}else{n.classList.remove("on");}});
+  var d=document.createElement("div");
+  d.className="log-line "+s.cls;
+  d.innerHTML="<b>"+s.tag+"</b>"+s.txt;
+  logEl.appendChild(d);
+  logEl.scrollTop=logEl.scrollHeight;
+  sIdx++;
+  if(sIdx>=steps.length){
+    document.getElementById("agentNext").disabled=true;
+    each(nodes,function(n){n.classList.remove("on")});
+  }
+});
+agentReset();
+}catch(e){if(window.console&&console.error)console.error("Widget failed [04: agent simulator]:",e);}
+
+try{
+/* ---------- quiz ---------- */
+var QUIZ=[
+ {q:"Which of these is unstructured data?",opts:["A table of bank transactions","Recordings of customer support calls","JSON from a weather API"],a:1,
+  e:"Audio has no rows, columns, or tags — classic unstructured data. (The JSON is semi-structured.)"},
+ {q:"A spam filter trained on emails that humans labeled “spam” or “not spam” is an example of…",opts:["Unsupervised learning","Reinforcement learning","Supervised learning"],a:2,
+  e:"Labeled examples → supervised learning."},
+ {q:"At its core, a large language model repeatedly…",opts:["Looks up verified facts in a database","Predicts the most likely next token","Follows grammar rules written by linguists"],a:1,
+  e:"Generation is next-token prediction in a loop — which is also why fluent output isn't guaranteed to be true."},
+ {q:"What most distinguishes an agent from a chatbot?",opts:["It uses a bigger model","It answers faster","It pursues a goal through a loop of planning, tool use, and observation"],a:2,
+  e:"The loop — plan, act with tools, observe, adjust — is the defining trait. Model size isn't."}
+];
+var qEl=document.getElementById("quiz"),qScore=0,qDone=0;
+QUIZ.forEach(function(item,qi){
+  var blk=document.createElement("div");blk.className="q-block";
+  blk.innerHTML='<p class="q">'+(qi+1)+". "+item.q+'</p>';
+  item.opts.forEach(function(o,oi){
+    var b=document.createElement("button");b.className="q-opt";b.textContent=o;
+    b.addEventListener("click",function(){
+      if(blk.classList.contains("answered"))return;
+      blk.classList.add("answered");qDone++;
+      if(oi===item.a){b.classList.add("correct");qScore++;}
+      else{b.classList.add("incorrect");blk.querySelectorAll(".q-opt")[item.a].classList.add("correct");}
+      blk.querySelector(".q-expl").style.display="block";
+      var msg=qDone+" / "+QUIZ.length+" answered · score "+qScore;
+      if(qDone===QUIZ.length){
+        msg+= qScore===4 ? " — perfect. You climbed the whole stack. 🏗" :
+              qScore>=3 ? " — solid. The stack stuck." :
+              " — worth one more pass from the bottom.";
+      }
+      document.getElementById("quizScore").textContent=msg;
+    });
+    blk.appendChild(b);
+  });
+  var ex=document.createElement("p");ex.className="q-expl";ex.textContent=item.e;
+  blk.appendChild(ex);
+  qEl.appendChild(blk);
+});
+}catch(e){if(window.console&&console.error)console.error("Widget failed [quiz]:",e);}
+
+}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",__initPage);}else{__initPage();}
+</script>
+</body>
+</html>
