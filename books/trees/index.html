@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trees — A Rainforest Field Guide · from Bukit Timah to the canopy</title>
+<meta name="description" content="A fun, all-ages summary of Peter A. Thomas's book 'Trees: Their Natural History', told through the tropical rainforest of Bukit Timah and the trees of Singapore.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Figtree:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --floor:#0E1710;       /* deep forest floor */
+    --canopy:#14301E;      /* deep canopy green */
+    --moss:#22462E;
+    --leaf:#57A05E;        /* living leaf */
+    --fern:#A6D65B;        /* new-growth accent (the pop) */
+    --sun:#EBB44C;         /* dappled sunlight amber */
+    --bark:#8A5C33;        /* warm bark */
+    --paper:#F5F1E4;       /* warm paper */
+    --paper-2:#ECE6D3;
+    --ink:#20291F;         /* text on paper */
+    --ink-soft:#5A6455;
+    --cream:#EFEEDF;       /* text on dark */
+    --cream-dim:rgba(239,238,223,.72);
+    --line-dark:rgba(166,214,91,.22);
+    --line-light:rgba(32,41,31,.14);
+    --maxw:1120px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--floor);
+    color:var(--cream);
+    font-family:"Figtree",system-ui,sans-serif;
+    font-size:clamp(16px,1.05vw + 13px,18px);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.05;margin:0;}
+  .binom{font-family:"Fraunces",serif;font-style:italic;font-weight:500;}
+  .mono{font-family:"Spline Sans Mono",monospace;}
+  a{color:inherit;}
+  img{max-width:100%;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,44px);}
+
+  .eyebrow{
+    font-family:"Spline Sans Mono",monospace;
+    font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+    font-weight:500;color:var(--fern);
+    display:inline-flex;align-items:center;gap:.7em;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--fern);opacity:.6;}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding-bottom:clamp(40px,7vh,90px);
+    background:
+      radial-gradient(120% 80% at 70% -10%, rgba(235,180,76,.34), transparent 55%),
+      linear-gradient(180deg,#3C6B44 0%,#1E4229 34%,#14301E 62%,#0E1710 100%);
+    overflow:hidden;
+  }
+  /* sun rays */
+  .rays{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+    background:
+      linear-gradient(102deg,transparent 46%,rgba(255,236,180,.35) 47%,transparent 49%),
+      linear-gradient(88deg,transparent 60%,rgba(255,236,180,.22) 61%,transparent 63%),
+      linear-gradient(96deg,transparent 30%,rgba(255,236,180,.18) 31%,transparent 33%);
+  }
+  /* silhouetted canopy layers */
+  .silhouette{position:absolute;left:0;right:0;bottom:0;pointer-events:none;}
+  .silhouette svg{display:block;width:100%;height:auto;}
+  .hero-content{position:relative;z-index:3;}
+  .hero-kicker{color:var(--sun);}
+  .hero h1{
+    font-size:clamp(3.6rem,15vw,11rem);
+    font-weight:600;letter-spacing:-.02em;
+    margin:.18em 0 .1em;
+    text-shadow:0 2px 40px rgba(0,0,0,.25);
+  }
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--fern);}
+  .hero-sub{
+    max-width:44ch;font-size:clamp(1.05rem,1.6vw,1.35rem);
+    color:var(--cream-dim);margin:.2em 0 1.4em;
+  }
+  .hero-credit{
+    font-family:"Spline Sans Mono",monospace;font-size:.8rem;
+    color:var(--cream-dim);letter-spacing:.02em;line-height:1.6;
+  }
+  .hero-credit b{color:var(--cream);font-weight:600;}
+  .scroll-cue{margin-top:2.2rem;font-family:"Spline Sans Mono",monospace;
+    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream-dim);
+    display:inline-flex;align-items:center;gap:.6em;}
+  .scroll-cue span{display:inline-block;animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+  /* spinning dipterocarp seeds */
+  .seed{position:absolute;top:-8%;z-index:2;width:34px;height:34px;pointer-events:none;
+    animation:fall linear infinite;}
+  .seed .spin{width:100%;height:100%;transform-origin:50% 42%;animation:twirl .9s linear infinite;}
+  .seed:nth-child(1){left:12%;animation-duration:11s;animation-delay:0s;}
+  .seed:nth-child(2){left:37%;animation-duration:14s;animation-delay:4s;width:26px;}
+  .seed:nth-child(3){left:63%;animation-duration:9.5s;animation-delay:2s;}
+  .seed:nth-child(4){left:82%;animation-duration:13s;animation-delay:6s;width:22px;}
+  @keyframes fall{0%{transform:translateY(0) translateX(0);opacity:0;}
+    8%{opacity:.9;}90%{opacity:.85;}100%{transform:translateY(108vh) translateX(40px);opacity:0;}}
+  @keyframes twirl{to{transform:rotate(360deg);}}
+
+  /* ============ generic section ============ */
+  section{position:relative;}
+  .band-paper{background:var(--paper);color:var(--ink);}
+  .band-paper .eyebrow{color:var(--bark);}
+  .band-paper .eyebrow::before{background:var(--bark);}
+  .band-dark{background:var(--floor);color:var(--cream);}
+  .pad{padding:clamp(64px,10vh,120px) 0;}
+
+  .section-head{max-width:60ch;margin-bottom:clamp(2rem,5vh,3.2rem);}
+  .section-head h2{font-size:clamp(2.1rem,5vw,3.6rem);letter-spacing:-.015em;margin:.5rem 0 .6rem;}
+  .section-head p{font-size:clamp(1.05rem,1.5vw,1.22rem);margin:0;}
+  .band-paper .section-head p{color:var(--ink-soft);}
+  .band-dark .section-head p{color:var(--cream-dim);}
+
+  .lead{font-size:clamp(1.15rem,2vw,1.5rem);line-height:1.55;font-family:"Fraunces",serif;
+    font-weight:400;max-width:34ch;}
+
+  /* ---- the book in brief ---- */
+  .book-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:start;}
+  .spine{
+    border-left:3px solid var(--sun);padding:1.6rem 0 1.6rem 1.6rem;
+    background:linear-gradient(90deg,rgba(235,180,76,.10),transparent 70%);
+  }
+  .spine .mono{font-size:.78rem;letter-spacing:.04em;color:var(--bark);}
+  .spine h3{font-size:1.5rem;margin:.35rem 0 .5rem;color:var(--ink);}
+  .chapters{list-style:none;margin:1.4rem 0 0;padding:0;counter-reset:ch;}
+  .chapters li{display:flex;gap:1rem;padding:.7rem 0;border-top:1px solid var(--line-light);align-items:baseline;}
+  .chapters li::before{counter-increment:ch;content:counter(ch,decimal-leading-zero);
+    font-family:"Spline Sans Mono",monospace;font-size:.8rem;color:var(--bark);flex:0 0 auto;width:2.2em;}
+  .chapters b{font-weight:600;color:var(--ink);}
+  .chapters span{color:var(--ink-soft);}
+
+  .qcard-wrap{display:grid;gap:1rem;}
+  .qcard{background:var(--paper-2);border-radius:14px;padding:1.3rem 1.4rem;
+    border:1px solid var(--line-light);}
+  .qcard h4{font-family:"Fraunces",serif;font-size:1.18rem;font-weight:600;margin:0 0 .3rem;color:var(--ink);}
+  .qcard p{margin:0;color:var(--ink-soft);font-size:.98rem;}
+
+  /* ---- how a tree works : part cards ---- */
+  .parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.4rem;margin-top:.5rem;}
+  .part{background:rgba(166,214,91,.05);border:1px solid var(--line-dark);border-radius:18px;
+    padding:1.6rem;transition:transform .3s ease,border-color .3s ease,background .3s ease;}
+  .part:hover{transform:translateY(-4px);border-color:var(--fern);background:rgba(166,214,91,.09);}
+  .part .ico{font-size:1.6rem;line-height:1;}
+  .part h3{font-size:1.35rem;margin:.7rem 0 .5rem;color:var(--cream);}
+  .part .tag{font-family:"Spline Sans Mono",monospace;font-size:.68rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--fern);}
+  .part p{margin:.4rem 0 0;color:var(--cream-dim);font-size:.97rem;}
+  .part .did{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--line-dark);
+    font-size:.9rem;color:var(--sun);}
+  .part .did b{font-family:"Spline Sans Mono",monospace;font-size:.62rem;letter-spacing:.16em;
+    display:block;text-transform:uppercase;color:var(--sun);opacity:.8;margin-bottom:.2rem;}
+
+  /* ---- forest strata ---- */
+  .strata{display:grid;grid-template-columns:88px 1fr;gap:0;margin-top:1rem;
+    border-radius:20px;overflow:hidden;border:1px solid var(--line-dark);}
+  .scale{display:grid;grid-template-rows:repeat(5,1fr);font-family:"Spline Sans Mono",monospace;
+    font-size:.72rem;color:var(--cream-dim);background:var(--floor);}
+  .scale div{display:flex;align-items:flex-start;justify-content:flex-end;padding:.9rem .8rem 0 0;
+    border-bottom:1px dashed var(--line-dark);}
+  .scale div:last-child{border-bottom:none;}
+  .layers{display:grid;grid-template-rows:repeat(5,1fr);}
+  .layer{position:relative;padding:1.1rem 1.4rem;cursor:pointer;
+    border-bottom:1px solid rgba(0,0,0,.25);transition:background .35s ease;overflow:hidden;}
+  .layer:last-child{border-bottom:none;}
+  .layer .lname{font-family:"Fraunces",serif;font-size:clamp(1.1rem,2.4vw,1.7rem);font-weight:600;}
+  .layer .ldesc{color:rgba(255,255,255,.82);font-size:.95rem;margin-top:.15rem;max-width:56ch;}
+  .layer .lwho{font-family:"Spline Sans Mono",monospace;font-size:.72rem;color:rgba(255,255,255,.7);
+    margin-top:.5rem;letter-spacing:.02em;}
+  .layer::after{content:"";position:absolute;inset:0;background:rgba(166,214,91,0);
+    transition:background .35s ease;pointer-events:none;}
+  .layer:hover::after,.layer:focus-visible::after{background:rgba(166,214,91,.10);}
+  .layer:focus-visible{outline:2px solid var(--fern);outline-offset:-3px;}
+  .l1{background:linear-gradient(90deg,#5E8F4E,#4B7A44);}
+  .l2{background:linear-gradient(90deg,#3E6E3D,#356236);}
+  .l3{background:linear-gradient(90deg,#2C5531,#28492C);}
+  .l4{background:linear-gradient(90deg,#20492A,#1B3A24);}
+  .l5{background:linear-gradient(90deg,#173321,#10241A);}
+
+  /* ---- field guide cards ---- */
+  .fg-note{font-family:"Spline Sans Mono",monospace;font-size:.74rem;letter-spacing:.03em;
+    color:var(--ink-soft);margin-bottom:1.6rem;}
+  .band-dark .fg-note{color:var(--cream-dim);}
+  .guide{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:1.3rem;}
+  .card{border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+    background:var(--paper);border:1px solid var(--line-light);
+    box-shadow:0 1px 0 rgba(0,0,0,.03);transition:transform .3s ease,box-shadow .3s ease;}
+  .band-dark .card{background:#132419;border-color:var(--line-dark);}
+  .card:hover{transform:translateY(-5px);box-shadow:0 18px 40px -22px rgba(0,0,0,.4);}
+  .card .head{padding:1rem 1.2rem;background:var(--canopy);color:var(--cream);
+    display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;}
+  .card .head .num{font-family:"Spline Sans Mono",monospace;font-size:.7rem;color:var(--fern);}
+  .card .head h3{font-size:1.28rem;color:var(--cream);}
+  .card .body{padding:1.05rem 1.2rem 1.3rem;flex:1;display:flex;flex-direction:column;}
+  .card .binom{color:var(--leaf);font-size:.95rem;margin-bottom:.6rem;}
+  .band-dark .card .body{color:var(--cream-dim);}
+  .band-paper .card .body{color:var(--ink-soft);}
+  .card p{margin:0 0 .7rem;font-size:.96rem;}
+  .card .spot{margin-top:auto;padding-top:.8rem;border-top:1px dashed var(--line-light);
+    font-size:.86rem;display:flex;gap:.5rem;}
+  .band-dark .card .spot{border-top-color:var(--line-dark);}
+  .card .spot b{font-family:"Spline Sans Mono",monospace;font-size:.6rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--bark);flex:0 0 auto;padding-top:.15rem;}
+  .band-dark .card .spot b{color:var(--sun);}
+  .card.hero-card{grid-column:span 2;}
+  .card.hero-card .head{background:linear-gradient(100deg,#2C5531,#173321);}
+
+  /* ---- fun fact ribbon ---- */
+  .ribbon{margin-top:2.4rem;border-radius:18px;padding:1.6rem 1.8rem;
+    background:linear-gradient(100deg,rgba(235,180,76,.16),rgba(166,214,91,.10));
+    border:1px solid var(--line-dark);display:flex;gap:1.2rem;align-items:flex-start;}
+  .band-paper .ribbon{background:linear-gradient(100deg,rgba(235,180,76,.22),rgba(87,160,94,.12));
+    border-color:var(--line-light);}
+  .ribbon .big{font-family:"Fraunces",serif;font-size:2.4rem;line-height:1;color:var(--sun);flex:0 0 auto;}
+  .ribbon p{margin:0;}
+  .ribbon .mono{display:block;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:.3rem;color:var(--leaf);}
+
+  .placenames{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.55rem;}
+  .chip{font-family:"Spline Sans Mono",monospace;font-size:.78rem;padding:.35em .8em;border-radius:999px;
+    background:rgba(87,160,94,.12);border:1px solid var(--line-light);color:var(--ink);}
+  .chip b{color:var(--bark);}
+
+  /* ---- closing ---- */
+  .closing{background:
+    radial-gradient(120% 90% at 30% 120%, rgba(235,180,76,.25), transparent 55%),
+    linear-gradient(180deg,#0E1710,#14301E);
+    text-align:center;}
+  .closing h2{font-size:clamp(2.2rem,6vw,4.2rem);max-width:18ch;margin:0 auto .8rem;}
+  .closing .lead{margin:0 auto 2rem;text-align:center;max-width:52ch;color:var(--cream-dim);}
+  .visit{display:inline-flex;flex-direction:column;gap:.2rem;padding:1rem 1.6rem;border-radius:14px;
+    border:1px solid var(--line-dark);background:rgba(166,214,91,.06);text-align:left;}
+  .visit .mono{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fern);}
+  .visit b{font-family:"Fraunces",serif;font-size:1.3rem;font-weight:600;}
+
+  footer{background:var(--floor);color:var(--cream-dim);border-top:1px solid var(--line-dark);
+    font-family:"Spline Sans Mono",monospace;font-size:.78rem;line-height:1.8;}
+  footer .wrap{padding-top:2.6rem;padding-bottom:2.6rem;}
+  footer b{color:var(--cream);}
+  footer a{color:var(--fern);text-decoration:none;}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  @media(max-width:760px){
+    .book-grid{grid-template-columns:1fr;}
+    .card.hero-card{grid-column:span 1;}
+    .strata{grid-template-columns:58px 1fr;}
+    .scale{font-size:.62rem;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important;}
+    .reveal{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="rays"></div>
+
+  <!-- spinning dipterocarp seeds -->
+  <div class="seed"><svg class="spin" viewBox="0 0 40 40"><g fill="#EBB44C" opacity=".9"><ellipse cx="20" cy="26" rx="4" ry="5.5"/><path d="M20 24 C10 10 4 12 6 20 C8 24 15 24 20 26Z" opacity=".8"/><path d="M20 24 C30 10 36 12 34 20 C32 24 25 24 20 26Z" opacity=".65"/></g></svg></div>
+  <div class="seed"><svg class="spin" viewBox="0 0 40 40"><g fill="#A6D65B" opacity=".85"><ellipse cx="20" cy="26" rx="4" ry="5.5"/><path d="M20 24 C10 10 4 12 6 20 C8 24 15 24 20 26Z" opacity=".8"/><path d="M20 24 C30 10 36 12 34 20 C32 24 25 24 20 26Z" opacity=".65"/></g></svg></div>
+  <div class="seed"><svg class="spin" viewBox="0 0 40 40"><g fill="#EBB44C" opacity=".85"><ellipse cx="20" cy="26" rx="4" ry="5.5"/><path d="M20 24 C10 10 4 12 6 20 C8 24 15 24 20 26Z" opacity=".8"/><path d="M20 24 C30 10 36 12 34 20 C32 24 25 24 20 26Z" opacity=".65"/></g></svg></div>
+  <div class="seed"><svg class="spin" viewBox="0 0 40 40"><g fill="#A6D65B" opacity=".8"><ellipse cx="20" cy="26" rx="4" ry="5.5"/><path d="M20 24 C10 10 4 12 6 20 C8 24 15 24 20 26Z" opacity=".8"/><path d="M20 24 C30 10 36 12 34 20 C32 24 25 24 20 26Z" opacity=".65"/></g></svg></div>
+
+  <!-- canopy silhouette -->
+  <div class="silhouette" aria-hidden="true">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="#0E1710" fill-opacity=".55" d="M0,200 C120,150 180,180 240,140 C300,100 340,170 420,150 C520,124 560,190 640,160 C720,132 760,200 860,170 C960,142 1000,196 1100,168 C1200,142 1260,190 1340,160 C1400,140 1440,170 1440,170 L1440,320 L0,320 Z"/>
+      <path fill="#0E1710" d="M0,250 C120,220 200,250 300,232 C420,210 480,258 600,240 C720,222 780,262 900,244 C1020,226 1080,264 1200,246 C1320,228 1380,258 1440,242 L1440,320 L0,320 Z"/>
+    </svg>
+  </div>
+
+  <div class="wrap hero-content">
+    <p class="eyebrow hero-kicker">A field guide to a book about trees</p>
+    <h1><em>Trees</em></h1>
+    <p class="hero-sub">How trees drink, breathe, grow tall and grow old — the natural history of trees, told from the floor of a tropical rainforest.</p>
+    <p class="hero-credit">A friendly summary of <b>“Trees: Their Natural History”</b> by <b>Peter A. Thomas</b> (Cambridge University Press),<br>rooted in the rainforest of <b>Bukit Timah</b> and the trees of Singapore.</p>
+    <p class="scroll-cue">Descend into the canopy <span>↓</span></p>
+  </div>
+</header>
+
+<!-- ============ THE BOOK ============ -->
+<section class="band-paper pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">The book in a nutshell</p>
+      <h2>A tree is stranger than it looks</h2>
+      <p>We walk past thousands of them without a second glance. Yet a tree is one of the most extraordinary machines on Earth: a living tower that makes its own food from sunlight, hauls water dozens of metres into the sky with no pump, and can keep going for centuries. Peter Thomas set out to answer the simple questions we never think to ask.</p>
+    </div>
+
+    <div class="book-grid">
+      <div class="reveal">
+        <div class="spine">
+          <p class="mono">Cambridge University Press · 2nd edition</p>
+          <h3>Trees: Their Natural History</h3>
+          <p style="margin:.2rem 0 0;color:var(--ink-soft);">Peter A. Thomas is a forest ecologist at Keele University. His book is loved because it explains the deep biology of trees in plain, playful language — every chapter can be read on its own, and every page hides a surprising fact from a forest somewhere in the world.</p>
+        </div>
+        <ol class="chapters">
+          <li><b>An overview</b><span>&nbsp;— what makes a tree a tree</span></li>
+          <li><b>Leaves</b><span>&nbsp;— the food producers</span></li>
+          <li><b>Trunk &amp; branches</b><span>&nbsp;— more than a drainpipe</span></li>
+          <li><b>Roots</b><span>&nbsp;— the hidden tree</span></li>
+          <li><b>Flowers, fruits &amp; seeds</b><span>&nbsp;— the next generation</span></li>
+          <li><b>The growing tree</b><span>&nbsp;— how big, how fast</span></li>
+          <li><b>The shape of trees</b><span>&nbsp;— why trees look how they do</span></li>
+          <li><b>New trees from old</b><span>&nbsp;— seeds, suckers &amp; grafts</span></li>
+          <li><b>Living in a hostile world</b><span>&nbsp;— age, damage &amp; death</span></li>
+          <li><b>Trees &amp; us</b><span>&nbsp;— a long partnership</span></li>
+        </ol>
+      </div>
+
+      <div class="qcard-wrap reveal">
+        <div class="qcard"><h4>How does water reach the top?</h4><p>There is no pump inside a tree. Water is pulled upward in an unbroken thread, dragged by leaves losing water to the air — a straw kilometres long that never sips.</p></div>
+        <div class="qcard"><h4>Why is a tree not a tangle?</h4><p>A century-old tree could have dozens of orders of branching. Instead it keeps only a handful — most buds simply never grow, so light can still reach the leaves.</p></div>
+        <div class="qcard"><h4>How does a tree get wider?</h4><p>Just under the bark sits a paper-thin living layer, the cambium, adding a fresh sleeve of wood each year. The bark must split and stretch to keep up.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW A TREE WORKS ============ -->
+<section class="band-dark pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">How a tree works</p>
+      <h2>Four parts, one living machine</h2>
+      <p>Thomas builds the book around the tree itself — leaves, trunk, roots and seeds — then asks how each solves the puzzle of staying alive. Here is the whole tree in four movements, plus the tough business of surviving.</p>
+    </div>
+
+    <div class="parts">
+      <div class="part reveal">
+        <div class="ico">🍃</div>
+        <p class="tag">The food producers</p>
+        <h3>Leaves</h3>
+        <p>Leaves are solar panels. They catch sunlight and turn air and water into sugar — the tree's food — while breathing out the oxygen we live on. Their green is chlorophyll doing the work.</p>
+        <p class="did"><b>Did you know</b>Every pore on a leaf is a gamble: open to feed, and the tree loses water; close to save water, and it goes hungry.</p>
+      </div>
+      <div class="part reveal">
+        <div class="ico">🪵</div>
+        <p class="tag">More than a drainpipe</p>
+        <h3>Trunk &amp; branches</h3>
+        <p>The trunk is scaffolding <em>and</em> plumbing. Wood carries water up from the roots; a separate layer carries sugar down from the leaves. The rings you count are years of growth stacked like sleeves.</p>
+        <p class="did"><b>Did you know</b>Most of a trunk is dead. Only a thin living skin around the outside is actually alive and growing.</p>
+      </div>
+      <div class="part reveal">
+        <div class="ico">🌱</div>
+        <p class="tag">The hidden tree</p>
+        <h3>Roots</h3>
+        <p>Half the tree is underground and out of sight — anchoring it, drinking water, mining minerals. Most roots trade with fungi in the soil, swapping sugar for nutrients in a vast secret network.</p>
+        <p class="did"><b>Did you know</b>Roots spread wide and shallow far more than they plunge deep — a tree stands like a wine glass on a saucer, not a nail.</p>
+      </div>
+      <div class="part reveal">
+        <div class="ico">🌸</div>
+        <p class="tag">The next generation</p>
+        <h3>Flowers &amp; seeds</h3>
+        <p>Flowers are how trees flirt — with wind, bees, birds and bats. A seed is a packed lunch and a set of wings, engineered to land somewhere its parent's shade won't smother it.</p>
+        <p class="did"><b>Did you know</b>Rainforest trees often bribe animals with sweet fruit to carry their seeds far away for free.</p>
+      </div>
+      <div class="part reveal">
+        <div class="ico">🛡️</div>
+        <p class="tag">Living in a hostile world</p>
+        <h3>Defence &amp; age</h3>
+        <p>A tree cannot run, so it fights chemically: bitter bark, sticky resin, walls sealed around wounds. It weathers drought, fire, storms and hungry insects — sometimes for hundreds of years.</p>
+        <p class="did"><b>Did you know</b>Trees don't die of old age so much as of accumulated damage — they simply run out of ways to keep repairing themselves.</p>
+      </div>
+      <div class="part reveal">
+        <div class="ico">🤝</div>
+        <p class="tag">Trees &amp; us</p>
+        <h3>A long partnership</h3>
+        <p>The final chapter turns to people: timber, fruit, medicine, shade, shelter and clean air. Our cultures grew up under trees — and their future now depends on ours.</p>
+        <p class="did"><b>Did you know</b>A single large rainforest tree can be a whole neighbourhood — home to hundreds of other plants and animals at once.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTO THE RAINFOREST ============ -->
+<section class="band-dark pad" style="background:linear-gradient(180deg,#0E1710,#122417 60%,#0E1710);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Into the tropical rainforest</p>
+      <h2>The forest has five floors</h2>
+      <p>Thomas shows that no two trees compete on a level playing field — a forest is stacked into layers, each with its own light, air and residents. Nowhere is this clearer than in a lowland tropical rainforest like the one at <strong style="color:var(--fern)">Bukit Timah</strong>, one of the last patches of ancient forest in Singapore. Hover or tap a layer to explore it.</p>
+    </div>
+
+    <div class="strata reveal" role="list" aria-label="Rainforest layers from top to bottom">
+      <div class="scale" aria-hidden="true">
+        <div>50m+</div><div>30m</div><div>20m</div><div>5m</div><div>0m</div>
+      </div>
+      <div class="layers">
+        <div class="layer l1" role="listitem" tabindex="0">
+          <div class="lname">Emergent</div>
+          <div class="ldesc">A handful of giants punch above the rest into full sun and wind — the tallest trees in Singapore live up here.</div>
+          <div class="lwho">Residents · seraya · keruing · the great red dhup · eagles &amp; hornbills</div>
+        </div>
+        <div class="layer l2" role="listitem" tabindex="0">
+          <div class="lname">Canopy</div>
+          <div class="ldesc">A dense green roof that soaks up most of the light and rain. This is the busiest floor of the forest — a highway of leaves, fruit and life.</div>
+          <div class="lwho">Residents · meranti · figs · orchids · monkeys · gliding colugos</div>
+        </div>
+        <div class="layer l3" role="listitem" tabindex="0">
+          <div class="lname">Sub-canopy</div>
+          <div class="ldesc">Younger trees biding their time in filtered light, ready to shoot up whenever a giant falls and opens a gap of sky.</div>
+          <div class="lwho">Residents · saplings · climbing rattan palms · woodpeckers</div>
+        </div>
+        <div class="layer l4" role="listitem" tabindex="0">
+          <div class="lname">Understorey</div>
+          <div class="ldesc">A dim, humid world of broad leaves and fan palms making the most of the few sunflecks that reach them.</div>
+          <div class="lwho">Residents · fan palms · gingers · young ferns · shy forest birds</div>
+        </div>
+        <div class="layer l5" role="listitem" tabindex="0">
+          <div class="lname">Forest floor</div>
+          <div class="ldesc">Deep shade and fast decay. Fallen leaves are recycled within weeks by fungi and insects, feeding the giants above.</div>
+          <div class="lwho">Residents · fungi · leaf litter · pangolins · the Singapore freshwater crab</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ribbon reveal">
+      <span class="big">40%</span>
+      <p><span class="mono">A tiny reserve, an enormous inheritance</span>
+      Bukit Timah covers just 0.2% of Singapore's land, yet it shelters around <strong style="color:var(--cream)">40% of the nation's native plants</strong> — over 840 kinds of flowering plant crowded into 163 hectares. It is the only <em>hill</em> dipterocarp forest in the country, and one of very few city-centre primary rainforests anywhere on Earth.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TREES OF BUKIT TIMAH ============ -->
+<section class="band-paper pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Field guide · Bukit Timah Nature Reserve</p>
+      <h2>The trees of Bukit Timah</h2>
+      <p>This forest is ruled by one great family: the <strong>dipterocarps</strong> — the "two-winged fruit" trees whose seeds spin down like helicopters. They build the towering skyline of the reserve. Around and beneath them grows a riot of figs, palms, climbers and ferns.</p>
+    </div>
+    <p class="fg-note reveal">↳ 18 dipterocarp species live here · the tallest emergents reach 30–60 m · established 1883, Singapore's oldest reserve</p>
+
+    <div class="guide">
+      <div class="card hero-card reveal">
+        <div class="head"><h3>Seraya — the ridge-top king</h3><span class="num">DIPTEROCARP · 01</span></div>
+        <div class="body">
+          <p class="binom">Shorea curtisii</p>
+          <p>The seraya is the signature tree of Bukit Timah, crowding the drier ridge-tops where few others thrive. From a distance its crown looks like a giant grey-green cauliflower floating above the forest. One seraya here is thought to be around <strong>360 years old</strong> — among the oldest living things in Singapore, a sapling long before the island was a city.</p>
+          <div class="spot"><b>Spot it</b><span>Look up at the ridgeline for pale, cauliflower-shaped crowns standing proud of everything else.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Keruing</h3><span class="num">02</span></div>
+        <div class="body">
+          <p class="binom">Dipterocarpus caudatus</p>
+          <p>A soaring forest giant whose seeds carry two or three papery wings. They twirl to the ground and germinate almost at once, racing to root before the leaf litter smothers them.</p>
+          <div class="spot"><b>Spot it</b><span>A tall, straight trunk; after fruiting, winged "helicopter" seeds scattered on the path.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Red Meranti &amp; Mersawa</h3><span class="num">03</span></div>
+        <div class="body">
+          <p class="binom">Shorea &amp; Anisoptera spp.</p>
+          <p>More members of the meranti clan that make up the reserve's high canopy. For centuries their prized timber built houses and boats across the region — which is exactly why so little primary forest survives.</p>
+          <div class="spot"><b>Spot it</b><span>Straight, buttressed trunks rising like pillars into the green ceiling.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Red Dhup</h3><span class="num">HERITAGE · 04</span></div>
+        <div class="body">
+          <p class="binom">Parishia insignis</p>
+          <p>One of the true emergent giants of the reserve and a listed Heritage Tree — protected, health-checked and even fitted with a lightning conductor to help it weather the storms of another century.</p>
+          <div class="spot"><b>Spot it</b><span>An enormous crown breaking through the canopy near the main trails.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Strangling Figs</h3><span class="num">05</span></div>
+        <div class="body">
+          <p class="binom">Ficus spp.</p>
+          <p>Figs are the forest's great feeders — their fruit sustains birds, bats and monkeys year-round. Each fig is pollinated by its own tiny wasp in one of nature's neatest partnerships. Some figs begin life high on another tree and slowly wrap it in a living cage.</p>
+          <div class="spot"><b>Spot it</b><span>Clusters of small round figs growing straight from the trunk and branches.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Macaranga</h3><span class="num">PIONEER · 06</span></div>
+        <div class="body">
+          <p class="binom">Macaranga spp.</p>
+          <p>The forest's first responders. When a giant falls and light floods in, fast-growing macarangas rush to fill the gap, sheltering the slower giants that will one day overtake them.</p>
+          <div class="spot"><b>Spot it</b><span>Broad, umbrella-like leaves crowding sunny clearings and trail edges.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Rattan Palms</h3><span class="num">07</span></div>
+        <div class="body">
+          <p class="binom">Calamus &amp; Daemonorops spp.</p>
+          <p>Climbing palms that hook and scramble their way up to the light rather than build their own trunk. They armour themselves in vicious spines — and give us cane furniture.</p>
+          <div class="spot"><b>Spot it</b><span>Whip-like, thorny stems looping through the understorey. Look, don't grab!</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Fan Palm &amp; Ferns</h3><span class="num">08</span></div>
+        <div class="body">
+          <p class="binom">Licuala · Platycerium · Asplenium</p>
+          <p>The shady understorey belongs to fan palms and to over 80 kinds of fern. Staghorn and bird's-nest ferns perch high on trunks, catching falling leaves to compost their own private soil.</p>
+          <div class="spot"><b>Spot it</b><span>Perfectly circular fan-palm leaves below; nest-like ferns cradled in the branches above.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TREES OF SINGAPORE ============ -->
+<section class="band-dark pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Field guide · beyond the reserve</p>
+      <h2>The trees of everyday Singapore</h2>
+      <p>Step out of the forest and the trees keep going — shading pavements, arching over expressways, standing guard in parks. Many were planted to turn a hot young city into a Garden City. These are the ones you'll meet on any ordinary day.</p>
+    </div>
+
+    <div class="guide">
+      <div class="card reveal">
+        <div class="head"><h3>Tembusu</h3><span class="num">NATIVE · $5</span></div>
+        <div class="body">
+          <p class="binom">Cyrtophyllum fragrans</p>
+          <p>Singapore's unofficial national tree, native and slow-growing, with wood so hard that termites give up. The famous low-slung branch of the tembusu at the Botanic Gardens is drawn on the back of the S$5 note — you carry one in your wallet.</p>
+          <div class="spot"><b>Spot it</b><span>Deeply cracked bark; a heavy horizontal branch; a sweet scent on the evening air.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Rain Tree</h3><span class="num">"PUKUL LIMA"</span></div>
+        <div class="body">
+          <p class="binom">Samanea saman</p>
+          <p>The great umbrella that shades Singapore's roads — surprisingly, an immigrant from tropical America. Its leaflets fold up before rain and again around five o'clock, earning the Malay name <em>pukul lima</em>, "five o'clock". Ferns and orchids ride on its mighty arms.</p>
+          <div class="spot"><b>Spot it</b><span>A vast, flat, umbrella-shaped crown; branches furred with bird's-nest ferns.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Angsana</h3><span class="num">SHADE</span></div>
+        <div class="body">
+          <p class="binom">Pterocarpus indicus</p>
+          <p>A fast-growing giant that greened the city in a hurry. Once a year it erupts in fragrant yellow blossom that lasts a single day — bloom in the morning, a golden carpet on the ground by the next.</p>
+          <div class="spot"><b>Spot it</b><span>A dense dome of drooping foliage; a sudden overnight scatter of yellow flowers.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Yellow Flame</h3><span class="num">NATIVE</span></div>
+        <div class="body">
+          <p class="binom">Peltophorum pterocarpum</p>
+          <p>A tough, sun-loving native whose whole crown lights up with fragrant yellow blossom. Its love of heat and drought makes it a natural survivor of the Singapore roadside.</p>
+          <div class="spot"><b>Spot it</b><span>Sprays of bright yellow flowers above feathery, fern-like leaves.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Saga</h3><span class="num">RED SEEDS</span></div>
+        <div class="body">
+          <p class="binom">Adenanthera pavonina</p>
+          <p>A roadside shade tree with a secret treasure: pods that split to reveal glossy, perfectly scarlet seeds. Generations of Singaporean children have collected them by the pocketful.</p>
+          <div class="spot"><b>Spot it</b><span>Curling brown pods overhead; bright red heart-shaped seeds on the pavement.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="head"><h3>Heritage Trees</h3><span class="num">SINCE 2001</span></div>
+        <div class="body">
+          <p class="binom">The city's living monuments</p>
+          <p>Over 200 exceptional mature trees are protected under Singapore's Heritage Tree Scheme — nominated by the public, health-checked by arborists ("tree doctors") and shielded from lightning. Any giant with a trunk over five metres around can qualify.</p>
+          <div class="spot"><b>Spot it</b><span>A small plaque and a slender lightning rod marking a truly grand old tree.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="fg-note" style="margin-top:2.4rem;margin-bottom:.4rem;">A quiet fact hiding in plain sight — half the map of Singapore is named after trees:</p>
+      <div class="placenames">
+        <span class="chip"><b>Tampines</b> · tempinis tree</span>
+        <span class="chip"><b>Katong</b> · katong tree</span>
+        <span class="chip"><b>Angsana</b> · rd</span>
+        <span class="chip"><b>Tembusu</b> · st</span>
+        <span class="chip"><b>Meranti</b> · rd</span>
+        <span class="chip"><b>Keruing</b> · rd</span>
+        <span class="chip"><b>Sembawang</b> · sembawang tree</span>
+        <span class="chip"><b>Kranji</b> · keranji tree</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="pad closing">
+  <div class="wrap reveal">
+    <p class="eyebrow" style="justify-content:center;color:var(--fern);">Trees &amp; us</p>
+    <h2>Go and stand beneath one</h2>
+    <p class="lead">Peter Thomas's book ends where it began — with wonder. The best way to feel it isn't to read about a tree at all, but to walk into a forest, look straight up, and realise how little we notice the giants we live among. Bukit Timah is fifteen minutes from the city. Its oldest tree was already ancient before Singapore had a name.</p>
+    <div class="visit">
+      <span class="mono">Plan a visit</span>
+      <b>Bukit Timah Nature Reserve</b>
+      <span style="color:var(--cream-dim);font-size:.9rem;">177 Hindhede Drive · open daily · free · summit trail ≈ 30–45 min</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Source book:</b> Peter A. Thomas, <em>Trees: Their Natural History</em> (2nd ed.), Cambridge University Press.<br>
+    A general-audience summary — for the full story, read the book.</p>
+    <p style="margin-top:1rem;"><b>Forest facts</b> drawn from the National Parks Board, Bukit Timah Nature Reserve records and Singapore heritage-tree resources.<br>
+    Made for the curious, of every age. 🌳</p>
+  </div>
+</footer>
+
+<script>
+  // gentle scroll reveal
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>
