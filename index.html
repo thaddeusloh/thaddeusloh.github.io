@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thaddeus Loh — Technology, grown in the wild</title>
+  <meta name="description" content="Thaddeus Loh — AI & data strategist in wealth management, Singapore. Where the rainforest meets the machine." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --canopy:    #060F0A;   /* rainforest night */
+      --understory:#0B1A12;   /* surface */
+      --moss:      #16291D;   /* borders */
+      --moss-soft: #1E3627;
+      --biolume:   #4DE8A0;   /* bioluminescent mint — the future glow */
+      --biolume-dim: rgba(77, 232, 160, 0.14);
+      --sunbeam:   #E4C56B;   /* light through canopy */
+      --mist:      #E9F2EC;   /* primary text */
+      --fern:      #8FAC9B;   /* muted text */
+      --deep-fern: #55705F;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans:  'Outfit', system-ui, sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      background: var(--canopy);
+      color: var(--mist);
+      font-family: var(--sans);
+      font-size: 16.5px;
+      font-weight: 300;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--biolume); color: var(--canopy); }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--biolume);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none; /* Optional: removes the default underline */
+    }
+
+    /* ─────────── NAV ─────────── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(6, 15, 10, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(30, 54, 39, 0.7);
+    }
+    .nav-inner {
+      max-width: 1180px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none;
+    }
+    .logo svg { width: 22px; height: 22px; }
+    .logo-word {
+      font-family: var(--mono); font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.14em; color: var(--mist);
+    }
+    .logo-word em { font-style: normal; color: var(--biolume); }
+
+    .nav-links { list-style: none; display: flex; gap: 2rem; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--fern); text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--biolume); }
+
+    /* hamburger */
+    .burger {
+      display: none;
+      background: none; border: 0; cursor: pointer;
+      width: 42px; height: 42px;
+      flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+    }
+    .burger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--mist); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    body.menu-open .burger span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    body.menu-open .burger span:nth-child(2) { opacity: 0; }
+    body.menu-open .burger span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* mobile overlay menu */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 150;
+      background: radial-gradient(120% 100% at 50% 0%, #0B1E13 0%, var(--canopy) 70%);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 2rem 3rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    body.menu-open .mobile-menu { opacity: 1; pointer-events: auto; }
+    .mobile-menu ol { list-style: none; }
+    .mobile-menu li { margin: 0.45rem 0; }
+    .mobile-menu a {
+      display: flex; align-items: baseline; gap: 1rem;
+      text-decoration: none;
+      font-family: var(--serif); font-size: clamp(1.7rem, 6.5vw, 2.3rem); font-weight: 400;
+      color: var(--mist);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--biolume); }
+    .mobile-menu a .mk {
+      font-family: var(--mono); font-size: 0.68rem; color: var(--deep-fern);
+      letter-spacing: 0.15em; min-width: 3ch;
+    }
+    .mobile-menu .menu-foot {
+      margin-top: 2.5rem;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em;
+      color: var(--deep-fern); text-transform: uppercase;
+    }
+
+    /* ─────────── SHARED LAYOUT ─────────── */
+    main section { position: relative; padding: 6.5rem 1.5rem; }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+
+    .trail {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--biolume); margin-bottom: 1.2rem;
+    }
+    .trail::before {
+      content: ""; width: 26px; height: 1px; background: var(--biolume); opacity: 0.6;
+    }
+    .trail .elev { color: var(--deep-fern); letter-spacing: 0.12em; }
+
+    h2.sec {
+      font-family: var(--serif); font-weight: 400;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.18; letter-spacing: -0.01em;
+      max-width: 22ch; margin-bottom: 1.4rem;
+    }
+    h2.sec em { font-style: italic; color: var(--biolume); }
+
+    .lede { color: var(--fern); max-width: 62ch; }
+
+    /* ─────────── HERO ─────────── */
+    #top {
+      min-height: 100svh;
+      display: flex; align-items: center;
+      overflow: hidden;
+      padding-top: 6rem;
+      background:
+        radial-gradient(90% 60% at 70% 8%, rgba(77,232,160,0.07) 0%, transparent 60%),
+        radial-gradient(70% 50% at 15% 90%, rgba(228,197,107,0.05) 0%, transparent 65%),
+        var(--canopy);
+    }
+    #fireflies { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .canopy-silhouette {
+      position: absolute; left: 0; right: 0; bottom: -2px;
+      width: 100%; height: auto; pointer-events: none;
+      opacity: 0.9;
+    }
+    .hero-inner {
+      position: relative; z-index: 3;
+      max-width: 1080px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1.35fr 1fr; gap: 3rem; align-items: center;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--fern);
+      margin-bottom: 1.6rem;
+    }
+    .hero-eyebrow b { color: var(--biolume); font-weight: 500; }
+    h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(2.6rem, 7vw, 4.6rem);
+      line-height: 1.06; letter-spacing: -0.015em;
+      margin-bottom: 1.6rem;
+    }
+    h1 .wild { font-style: italic; font-weight: 500; color: var(--biolume); }
+    .hero-sub { color: var(--fern); max-width: 52ch; margin-bottom: 2.4rem; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      font-family: var(--mono); font-size: 0.74rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none; padding: 0.85rem 1.5rem;
+      border-radius: 999px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+    }
+    .btn-solid { background: var(--biolume); color: var(--canopy); }
+    .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(77,232,160,0.28); }
+    .btn-ghost { border: 1px solid var(--moss-soft); color: var(--mist); }
+    .btn-ghost:hover { border-color: var(--biolume); color: var(--biolume); }
+
+    /* circuit leaf — signature */
+    .leaf-wrap { display: flex; justify-content: center; }
+    .leaf-wrap svg { width: min(100%, 340px); height: auto; overflow: visible; }
+    .vein {
+      stroke: var(--biolume); stroke-width: 1.4; fill: none;
+      stroke-linecap: round;
+      stroke-dasharray: 260; stroke-dashoffset: 260;
+      animation: growvein 3.2s ease forwards;
+      filter: drop-shadow(0 0 5px rgba(77,232,160,0.55));
+    }
+    .vein.v2 { animation-delay: 0.5s; } .vein.v3 { animation-delay: 0.9s; }
+    .vein.v4 { animation-delay: 1.3s; } .vein.v5 { animation-delay: 1.7s; }
+    .vein.v6 { animation-delay: 2.1s; }
+    @keyframes growvein { to { stroke-dashoffset: 0; } }
+    .node {
+      fill: var(--biolume); opacity: 0;
+      animation: nodein 0.6s ease forwards;
+      filter: drop-shadow(0 0 6px rgba(77,232,160,0.8));
+    }
+    .node.n1 { animation-delay: 1.4s; } .node.n2 { animation-delay: 1.8s; }
+    .node.n3 { animation-delay: 2.2s; } .node.n4 { animation-delay: 2.6s; }
+    @keyframes nodein { to { opacity: 1; } }
+    .leaf-body { fill: rgba(30, 54, 39, 0.45); stroke: var(--moss-soft); stroke-width: 1; }
+
+    .scroll-hint {
+      position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
+      z-index: 3;
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--deep-fern);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .scroll-hint::after {
+      content: ""; width: 1px; height: 34px;
+      background: linear-gradient(var(--biolume), transparent);
+      animation: drip 2.2s ease infinite;
+    }
+    @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 60% { transform: scaleY(1); } 100% { opacity: 0; transform: scaleY(1); } }
+
+    /* ─────────── ABOUT ─────────── */
+    #about { background: var(--understory); border-top: 1px solid var(--moss); }
+    .about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; align-items: start; }
+    .about-copy p { margin-bottom: 1.1rem; color: var(--fern); }
+    .about-copy strong { color: var(--mist); font-weight: 500; }
+    .about-copy .conviction {
+      border-left: 2px solid var(--biolume);
+      padding: 0.4rem 0 0.4rem 1.2rem;
+      font-family: var(--serif); font-size: 1.15rem; font-style: italic;
+      color: var(--mist); margin-top: 1.6rem;
+    }
+    .stats { display: grid; gap: 1rem; }
+    .stat {
+      border: 1px solid var(--moss); border-radius: 14px;
+      padding: 1.3rem 1.4rem;
+      background: linear-gradient(160deg, rgba(77,232,160,0.05), transparent 55%);
+    }
+    .stat .big { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--biolume); line-height: 1.1; }
+    .stat .small { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fern); margin-top: 0.3rem; }
+
+    /* ─────────── EXPERTISE ─────────── */
+    .cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem;
+    }
+    .card {
+      border: 1px solid var(--moss); border-radius: 16px;
+      padding: 1.6rem 1.5rem;
+      background: var(--understory);
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .card:hover { border-color: rgba(77,232,160,0.45); transform: translateY(-3px); }
+    .card .glyph { color: var(--biolume); margin-bottom: 0.9rem; }
+    .card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.12rem; margin-bottom: 0.55rem; letter-spacing: 0.005em; }
+    .card p { font-size: 0.92rem; color: var(--fern); line-height: 1.65; }
+
+    /* ─────────── EXPERIENCE ─────────── */
+    #experience { background: var(--understory); border-top: 1px solid var(--moss); }
+    .timeline { margin-top: 2.8rem; position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+      width: 1px;
+      background: linear-gradient(var(--biolume), var(--moss-soft));
+    }
+    .tl-item { position: relative; padding-bottom: 2.6rem; }
+    .tl-item:last-of-type { padding-bottom: 0.5rem; }
+    .tl-item::before {
+      content: ""; position: absolute; left: -2rem; top: 7px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--canopy); border: 2px solid var(--biolume);
+      box-shadow: 0 0 10px rgba(77,232,160,0.5);
+    }
+    .tl-when { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--biolume); }
+    .tl-item h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 500; margin: 0.35rem 0 0.15rem; }
+    .tl-org { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--fern); text-transform: uppercase; }
+    .tl-item p { color: var(--fern); max-width: 62ch; margin-top: 0.55rem; }
+    .tl-note { font-size: 0.82rem; color: var(--deep-fern); font-style: italic; margin-top: 2rem; }
+
+    /* ─────────── STACK ─────────── */
+    .stack-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .stack-group { border: 1px solid var(--moss); border-radius: 16px; padding: 1.5rem; background: var(--understory); }
+    .stack-group h3 {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--sunbeam);
+      margin-bottom: 1rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.72rem;
+      padding: 0.32rem 0.75rem; border-radius: 999px;
+      border: 1px solid var(--moss-soft); color: var(--fern);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tag:hover { color: var(--biolume); border-color: rgba(77,232,160,0.5); }
+
+    /* ─────────── LIBRARY (books + brown bags) ─────────── */
+    #books { background: var(--understory); border-top: 1px solid var(--moss); }
+    .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .book {
+      border: 1px solid var(--moss); border-radius: 16px; overflow: hidden;
+      background: var(--canopy);
+      display: flex; flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .book:hover { border-color: rgba(228,197,107,0.5); transform: translateY(-3px); }
+    .book .spine { height: 5px; background: linear-gradient(90deg, var(--sunbeam), var(--biolume)); }
+    .book .inner { padding: 1.4rem 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .book h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.35; }
+    .book .by { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; color: var(--deep-fern); text-transform: uppercase; }
+    .book p { font-size: 0.88rem; color: var(--fern); line-height: 1.6; }
+    .book .status { margin-top: auto; padding-top: 0.8rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sunbeam); }
+
+    /* brown bags */
+    .sessions { margin-top: 2.6rem; display: grid; gap: 0.9rem; }
+    .session {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 1.4rem; align-items: center;
+      border: 1px solid var(--moss); border-radius: 14px;
+      padding: 1.2rem 1.4rem; background: var(--understory);
+      transition: border-color 0.25s;
+    }
+    .session:hover { border-color: rgba(77,232,160,0.45); }
+    .session .num { font-family: var(--mono); font-size: 0.72rem; color: var(--biolume); letter-spacing: 0.12em; }
+    .session h3 { font-family: var(--serif); font-size: 1.12rem; font-weight: 500; }
+    .session p { font-size: 0.88rem; color: var(--fern); margin-top: 0.15rem; }
+    .session .pill {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; border-radius: 999px; white-space: nowrap;
+    }
+    .pill.live { border: 1px solid rgba(77,232,160,0.5); color: var(--biolume); }
+    .pill.soon { border: 1px solid var(--moss-soft); color: var(--deep-fern); }
+
+    /* ─────────── PLAYGROUND (games + apps) ─────────── */
+    #games { background: var(--understory); border-top: 1px solid var(--moss); }
+    .play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .play {
+      position: relative; border: 1px solid var(--moss); border-radius: 18px;
+      padding: 1.6rem 1.5rem; background: var(--canopy); overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .play:hover { border-color: rgba(77,232,160,0.5); transform: translateY(-3px); }
+    .play::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(70% 60% at 85% 0%, rgba(77,232,160,0.08), transparent 65%);
+      pointer-events: none;
+    }
+    .play .kind { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sunbeam); }
+    .play h3 { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; margin: 0.5rem 0 0.4rem; }
+    .play p { font-size: 0.9rem; color: var(--fern); line-height: 1.65; }
+    .play .go {
+      display: inline-block; margin-top: 1rem;
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--biolume); text-decoration: none;
+    }
+    .play .go:hover { text-decoration: underline; }
+    .seedling { border-style: dashed; }
+    .seedling h3, .seedling p { color: var(--deep-fern); }
+    .seedling .kind { color: var(--deep-fern); }
+
+    /* ─────────── CONTACT ─────────── */
+    #contact { text-align: center; padding-bottom: 4rem; }
+    #contact h2.sec { margin-left: auto; margin-right: auto; }
+    #contact .lede { margin: 0 auto 2.4rem; }
+    footer {
+      border-top: 1px solid var(--moss);
+      padding: 2rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      max-width: 1080px; margin: 0 auto;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+      color: var(--deep-fern); text-transform: uppercase;
+    }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ─────────── RESPONSIVE ─────────── */
+    @media (max-width: 900px) {
+      .cards, .shelf, .play-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .leaf-wrap { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      main section { padding: 4.5rem 1.25rem; }
+      .cards, .shelf, .play-grid, .stack-groups, .stats { grid-template-columns: 1fr; }
+      .session { grid-template-columns: 1fr; gap: 0.5rem; }
+      .session .pill { justify-self: start; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─────────── NAV ─────────── -->
+  <header>
+    <div class="nav-inner">
+      <a class="logo" href="#top" aria-label="ted.sg home">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 21C12 13 7 9 3 8c1 7 4 12 9 13Z" fill="#4DE8A0" opacity="0.85"/>
+          <path d="M12 21c0-9 4-13 9-15-.5 8-3.5 14-9 15Z" fill="#4DE8A0" opacity="0.5"/>
+          <path d="M12 21V10" stroke="#4DE8A0" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="logo-word">ted<em>.sg</em></span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#expertise">Work</a></li>
+          <li><a href="#books">Books</a></li>
+          <li><a href="#brownbags">Brown Bags</a></li>
+          <li><a href="#games">Playground</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- mobile overlay -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <ol>
+      <li><a href="#about"><span class="mk">01</span>About</a></li>
+      <li><a href="#expertise"><span class="mk">02</span>Expertise</a></li>
+      <li><a href="#experience"><span class="mk">03</span>Experience</a></li>
+      <li><a href="#stack"><span class="mk">04</span>Stack</a></li>
+      <li><a href="#books"><span class="mk">05</span>Books</a></li>
+      <li><a href="#brownbags"><span class="mk">06</span>Brown Bags</a></li>
+      <li><a href="#games"><span class="mk">07</span>Mini Games</a></li>
+      <li><a href="#apps"><span class="mk">08</span>Web Apps</a></li>
+      <li><a href="#contact"><span class="mk">09</span>Contact</a></li>
+    </ol>
+    <p class="menu-foot">Thaddeus Loh · Singapore · 163 m above sea level</p>
+  </nav>
+
+  <main>
+    <!-- ─────────── HERO ─────────── -->
+    <section id="top">
+      <canvas id="fireflies" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <div>
+          <p class="hero-eyebrow">Thaddeus Loh · Singapore · <b>1.3547° N, 103.7763° E</b></p>
+          <h1>Technology,<br />grown <span class="wild">in the wild.</span></h1>
+          <p class="hero-sub">Engineer turned strategist. I build and shape AI systems that power the next generation of digital wealth advisory — deep technical roots, a canopy-level view of capital markets, and a conviction that the best ideas grow like rainforests: layered, patient, alive.</p>
+          <div class="hero-cta">
+            <a class="btn btn-solid" href="#about">Step into the forest</a>
+            <a class="btn btn-ghost" href="https://sg.linkedin.com/in/thaddeusloh" rel="noopener">Connect on LinkedIn</a>
+          </div>
+        </div>
+        <div class="leaf-wrap" aria-hidden="true">
+          <!-- signature: leaf with circuit veins -->
+          <svg viewBox="0 0 300 340">
+            <path class="leaf-body" d="M150 8 C 250 70, 268 190, 150 332 C 32 190, 50 70, 150 8 Z"/>
+            <path class="vein v1" d="M150 330 L150 20"/>
+            <path class="vein v2" d="M150 270 L96 236 L96 196"/>
+            <path class="vein v3" d="M150 270 L204 236 L204 196"/>
+            <path class="vein v4" d="M150 190 L104 158 L104 118"/>
+            <path class="vein v5" d="M150 190 L196 158 L196 118"/>
+            <path class="vein v6" d="M150 110 L122 88 M150 110 L178 88"/>
+            <circle class="node n1" cx="96" cy="196" r="4"/>
+            <circle class="node n2" cx="204" cy="196" r="4"/>
+            <circle class="node n3" cx="104" cy="118" r="4"/>
+            <circle class="node n4" cx="196" cy="118" r="4"/>
+            <circle class="node n2" cx="122" cy="88" r="3"/>
+            <circle class="node n3" cx="178" cy="88" r="3"/>
+            <circle class="node n4" cx="150" cy="20" r="4.5"/>
+          </svg>
+        </div>
+      </div>
+      <!-- canopy silhouette -->
+      <svg class="canopy-silhouette" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 180 L0 120 Q 60 70 130 105 Q 170 40 240 80 Q 300 30 370 75 Q 430 95 480 70 Q 540 20 620 65 Q 680 90 740 60 Q 800 15 880 60 Q 940 85 1000 65 Q 1060 25 1140 70 Q 1200 95 1260 75 Q 1320 45 1440 90 L1440 180 Z" fill="#0B1A12"/>
+        <path d="M0 180 L0 145 Q 90 105 180 135 Q 260 90 340 125 Q 420 145 500 120 Q 590 85 680 120 Q 760 145 840 118 Q 930 88 1020 122 Q 1100 145 1180 122 Q 1270 95 1360 128 L1440 140 L1440 180 Z" fill="#08140D"/>
+      </svg>
+      <p class="scroll-hint">descend</p>
+    </section>
+
+    <!-- ─────────── ABOUT ─────────── -->
+    <section id="about">
+      <div class="wrap">
+        <p class="trail reveal">Trail 01 — Understory <span class="elev">· elev 40 m</span></p>
+        <h2 class="sec reveal">A technologist with a <em>living-systems</em> worldview.</h2>
+        <div class="about-grid">
+          <div class="about-copy reveal">
+            <p>I began as a <strong>software engineer</strong>, specialising in backend API architecture and data engineering for large-scale platforms. My early career took me deep into the root system of finance — <strong>core banking, trade execution, compliance, and multi-asset-class wealth platforms</strong>.</p>
+            <p>Over time, my focus grew upward: from building systems to shaping strategy. Today I work at the intersection of <strong>AI, machine learning, and digital advisory</strong> — designing intelligent capabilities that help institutions understand, serve, and grow their clients.</p>
+            <p>Off the clock you'll find me on a trail — Bukit Timah on a Friday, the Southern Alps or a US national park when the leave calendar allows. The forest is where I do my best thinking.</p>
+            <p class="conviction">The best AI in finance isn't automation — it's augmentation. Sharper insight, faster, for advisors and the people they serve.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><div class="big">10+</div><div class="small">Years in fintech & banking platforms</div></div>
+            <div class="stat"><div class="big">AI/ML</div><div class="small">Strategy & digital advisory focus</div></div>
+            <div class="stat"><div class="big">SG</div><div class="small">Based in Singapore · APAC markets</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── EXPERTISE ─────────── -->
+    <section id="expertise">
+      <div class="wrap">
+        <p class="trail reveal">Trail 02 — Canopy <span class="elev">· elev 80 m</span></p>
+        <h2 class="sec reveal">What grows well <em>under my care.</em></h2>
+        <div class="cards">
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M12 8l5-3M12 8 7 5M12 14l6-3M12 14l-6-3"/></svg></div>
+            <h3>AI Strategy in Wealth Management</h3>
+            <p>AI-powered advisory capabilities — nudge engines, recommendation systems, agentic workflows — that translate into measurable client outcomes.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="18" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18" cy="14" r="2"/><path d="M7.5 16.5 10.5 10M13.7 9.4l2.8 3.2"/></svg></div>
+            <h3>Machine Learning for Finance</h3>
+            <p>ML at scale on financial data — portfolio analytics, client segmentation, behavioural modelling, predictive signals — with rigorous model governance.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="18" height="5" rx="1.5"/><path d="M7 6.5h.01M7 14.5h.01"/></svg></div>
+            <h3>Data Platform Architecture</h3>
+            <p>Big data infrastructure for real-time analytics, O2O client journeys, and content personalisation at institutional scale.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h16v10H9l-5 4V6Z" stroke-linejoin="round"/><path d="M8 10h8M8 13h5"/></svg></div>
+            <h3>Digital Advisory Products</h3>
+            <p>Intelligent chatbots, relationship-manager copilots, and personalised content platforms that bridge technology and client trust.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4Z" stroke-linejoin="round"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Core Banking & Compliance</h3>
+            <p>Hands-on depth in the regulatory backbone of finance — trade execution, compliance platforms, and settlement infrastructure.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 20c3-9 8-14 16-16-1 8-6 13-13 15"/><path d="M4 20c1-3 2.5-5 5-7"/></svg></div>
+            <h3>Strategic Roadmapping</h3>
+            <p>Translating AI and data ambitions into actionable roadmaps — aligning engineering, business stakeholders, and senior leadership.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── EXPERIENCE ─────────── -->
+    <section id="experience">
+      <div class="wrap">
+        <p class="trail reveal">Trail 03 — Growth Rings <span class="elev">· elev 110 m</span></p>
+        <h2 class="sec reveal">Career trajectory, <em>ring by ring.</em></h2>
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <span class="tl-when">Present</span>
+            <h3>Product - AI & Data Strategy</h3>
+            <span class="tl-org">Wealth Management · Singapore</span>
+            <p>Leading strategic data initiatives for digital advisory — AI nudge engines, content personalisation platforms, and agentic advisory capabilities for a major financial institution.</p>
+          </div>
+          <div class="tl-item reveal">
+            <span class="tl-when">Prior</span>
+            <h3>Senior Software Engineer — Global Financial Markets, Data Platform</h3>
+            <span class="tl-org">Financial Services · Singapore</span>
+            <p>Built backend APIs and data engineering infrastructure for multi-asset trade execution and portfolio analytics at institutional scale.</p>
+          </div>
+          <div class="tl-item reveal">
+            <span class="tl-when">Early career</span>
+            <h3>Software Engineer — Core Banking</h3>
+            <span class="tl-org">Banking Technology</span>
+            <p>Worked on compliance systems and core banking platforms, developing expertise in the operational fabric of large financial institutions.</p>
+          </div>
+        </div>
+        <p class="tl-note reveal">Full history on LinkedIn.</p>
+      </div>
+    </section>
+
+    <!-- ─────────── STACK ─────────── -->
+    <section id="stack">
+      <div class="wrap">
+        <p class="trail reveal">Trail 04 — Root System <span class="elev">· elev 130 m</span></p>
+        <h2 class="sec reveal">Tools of the trade.</h2>
+        <div class="stack-groups">
+          <div class="stack-group reveal">
+            <h3>AI & Machine Learning</h3>
+            <div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">LLM Fine-tuning</span><span class="tag">RAG Architectures</span><span class="tag">LangChain</span><span class="tag">Agentic AI</span><span class="tag">Hugging Face</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Data Engineering</h3>
+            <div class="tags"><span class="tag">Apache Spark</span><span class="tag">Kafka</span><span class="tag">Airflow</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Backend & APIs</h3>
+            <div class="tags"><span class="tag">Java</span><span class="tag">REST</span><span class="tag">gRPC</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Cloud & Infrastructure</h3>
+            <div class="tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Kubernetes</span><span class="tag">Docker</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── BOOKS ─────────── -->
+    <section id="books">
+      <div class="wrap">
+        <p class="trail reveal">Trail 05 — The Reading Canopy <span class="elev">· elev 145 m</span></p>
+        <h2 class="sec reveal">Books that <em>rewired</em> me.</h2>
+        <p class="lede reveal">A slow-growing shelf. Each entry earns its place by changing how I think, not just what I know.</p>
+        <div class="shelf">
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>Gödel, Escher, Bach</h3>
+              <span class="by">Douglas Hofstadter</span>
+              <span class="status">◆ Re-reading</span>
+              <p>Strange loops, self-reference, and the machinery of minds. The book that made me want to build things that think.</p>
+              <span class="status"><a href="https://ted.sg/geb">Summary → </a></span>
+            </div>
+          </div>
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>Trees</h3>
+              <span class="by">Peter A Thomas</span>
+              <span class="status">◆ On the shelf</span>
+              <p>The incredible world of trees, and snippets of Bukit Timah's flora. Learning about trees uncovered another dimension in the world around me.</p>
+              <span class="status"><a href="https://ted.sg/books/trees">Summary → </a></span>
+            </div>
+          </div>
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>GEB Kids</h3>
+              <span class="by">Thaddeus Loh</span>
+              <span class="status">◆ Explainer</span>
+              <p>A kids friendly version of GEB. Learn about the incompleteness theorem</p>
+              <span class="status"><a href="https://ted.sg/geb/kids">Summary → </a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── BROWN BAGS ─────────── -->
+    <section id="brownbags">
+      <div class="wrap">
+        <p class="trail reveal">Trail 06 — Brown Bags <span class="elev">· elev 155 m</span></p>
+        <h2 class="sec reveal">Lunchtime talks on ideas <em>worth chewing.</em></h2>
+        <p class="lede reveal">Short, informal sessions on topics I find fascinating — slides, demos, and honest opinions included.</p>
+        <div class="sessions">
+          <div class="session reveal">
+            <span class="num">BB·01</span>
+            <div>
+              <h3>From data to Agentic AI</h3>
+              <p>ELI5 course with interactive explainers</p>
+            </div>
+            <span class="pill live"><a href="https://ted.sg/brownbag/llm">Available → </a></span>
+          </div>
+          <div class="session reveal">
+            <span class="num">BB·02</span>
+            <div>
+              <h3>Strange Loops & Machine Minds</h3>
+              <p>What Gödel, Escher, and Bach can still teach us about large language models and self-reference.</p>
+            </div>
+            <span class="pill soon">In the works</span>
+          </div>
+          <div class="session reveal">
+            <span class="num">BB·03</span>
+            <div>
+              <h3>Agentic AI in Wealth Advisory</h3>
+              <p>From nudge engines to autonomous copilots — what actually works when AI meets relationship managers.</p>
+            </div>
+            <span class="pill soon">Germinating</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── MINI GAMES ─────────── -->
+    <section id="games">
+      <div class="wrap">
+        <p class="trail reveal">Trail 07 — The Playground <span class="elev">· elev 160 m</span></p>
+        <h2 class="sec reveal">Mini games, <em>hand-grown</em> in the browser.</h2>
+        <p class="lede reveal">Small HTML5 experiments — no installs, no accounts, just play.</p>
+        <div class="play-grid">
+          <div class="play reveal">
+            <span class="kind">Endless Runner</span>
+            <h3>Lohki Runner</h3>
+            <p>A cat, a scrolling world, and obstacles named after people who will recognise themselves. Dodge, jump, repeat.</p>
+            <a class="go" href="https://ted.sg/game">Play →</a>
+          </div>
+          <div class="play reveal">
+            <span class="kind">Puzzle · Educational</span>
+            <h3>The Cat & the Golden Braid</h3>
+            <p>Twenty riddle chambers through an Escher-inspired labyrinth of strange loops. Bring your curiosity.</p>
+            <a class="go" href="https://ted.sg/geb/game">Play →</a>
+          </div>
+          <div class="play seedling reveal">
+            <span class="kind">Seedling</span>
+            <h3>Next build</h3>
+            <p>Something new is germinating. Check back after the next long weekend.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── WEB APPS ─────────── -->
+    <section id="apps">
+      <div class="wrap">
+        <p class="trail reveal">Trail 08 — Toolshed <span class="elev">· elev 163 m · summit</span></p>
+        <h2 class="sec reveal">Mini web apps — small tools, <em>sharp edges.</em></h2>
+        <p class="lede reveal">Single-purpose utilities I build for myself, then share.</p>
+        <div class="play-grid">
+          <div class="play seedling reveal">
+            <span class="kind">Seedling</span>
+            <h3>Seraya</h3>
+            <p>A small tool taking root. Name, purpose, and link coming soon.</p>
+          </div>
+          <div class="play seedling reveal">
+            <span class="kind">Seedling</span>
+            <h3>Sequoia</h3>
+            <p>Planted, watered, growing. This slot is waiting for its first release.</p>
+          </div>
+          <div class="play seedling reveal">
+            <span class="kind">Seedling</span>
+            <h3>Kruing</h3>
+            <p>Every forest starts with a few saplings. More tools on the way.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── CONTACT ─────────── -->
+    <section id="contact">
+      <div class="wrap">
+        <p class="trail reveal" style="justify-content:center;">Trail 09 — Summit</p>
+        <h2 class="sec reveal">Let's build something <em>that lasts.</em></h2>
+        <p class="lede reveal">Open to conversations about AI strategy, advisory technology, or the intersection of machine intelligence and financial services. Trail recommendations also welcome.</p>
+        <div class="hero-cta reveal" style="justify-content:center;">
+          <a class="btn btn-solid" href="https://www.linkedin.com/" rel="noopener">LinkedIn</a>
+          <a class="btn btn-ghost" href="mailto:hello@ted.sg">Email</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Thaddeus Loh · ted.sg</span>
+    <span>Singapore · grown near Bukit Timah</span>
+  </footer>
+
+  <script>
+    // mobile menu
+    const burger = document.querySelector('.burger');
+    const menuLinks = document.querySelectorAll('.mobile-menu a');
+    function toggleMenu(force) {
+      const open = force !== undefined ? force : !document.body.classList.contains('menu-open');
+      document.body.classList.toggle('menu-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    burger.addEventListener('click', () => toggleMenu());
+    menuLinks.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+
+    // scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // fireflies
+    const canvas = document.getElementById('fireflies');
+    const ctx = canvas.getContext('2d');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let flies = [];
+    function resize() {
+      canvas.width = canvas.offsetWidth * devicePixelRatio;
+      canvas.height = canvas.offsetHeight * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      const n = Math.min(46, Math.floor(canvas.offsetWidth / 26));
+      flies = Array.from({ length: n }, () => ({
+        x: Math.random() * canvas.offsetWidth,
+        y: Math.random() * canvas.offsetHeight,
+        r: 0.8 + Math.random() * 1.8,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.2,
+        ph: Math.random() * Math.PI * 2,
+        sp: 0.008 + Math.random() * 0.02,
+        gold: Math.random() < 0.18
+      }));
+    }
+    function tick() {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      for (const f of flies) {
+        f.x += f.vx; f.y += f.vy; f.ph += f.sp;
+        if (f.x < -10) f.x = canvas.offsetWidth + 10;
+        if (f.x > canvas.offsetWidth + 10) f.x = -10;
+        if (f.y < -10) f.y = canvas.offsetHeight + 10;
+        if (f.y > canvas.offsetHeight + 10) f.y = -10;
+        const a = 0.15 + 0.55 * (0.5 + 0.5 * Math.sin(f.ph));
+        const c = f.gold ? '228,197,107' : '77,232,160';
+        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 5);
+        grad.addColorStop(0, `rgba(${c},${a})`);
+        grad.addColorStop(1, `rgba(${c},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `rgba(${c},${Math.min(1, a + 0.25)})`;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+      }
+      if (!reduced) requestAnimationFrame(tick);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    tick();
+  </script>
+</body>
+</html>
