@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canopy &amp; Coast — A Field Guide to Wild Singapore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg-deep:#0b1f1a;
+  --bg-panel:#0f2921;
+  --bg-panel-2:#132f26;
+  --bg-plate:#f2ede1;
+  --line:#25493c;
+  --line-soft:#1a362c;
+  --mint:#8fd9c4;
+  --mint-dim:#5fae97;
+  --gold:#d4af6a;
+  --gold-dim:#a5813f;
+  --cream:#f2ede1;
+  --cream-dim:#c9c3b3;
+  --clay:#c1603f;
+  --moss:#7a8f4a;
+  --teal:#5aa3a0;
+  --shadow: 0 12px 30px -12px rgba(0,0,0,0.5);
+  --radius: 3px;
+  --disp: "Fraunces", serif;
+  --body: "Inter", sans-serif;
+  --mono: "JetBrains Mono", monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg-deep);
+  color:var(--cream);
+  font-family:var(--body);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+}
+a{color:inherit;}
+::selection{background:var(--gold); color:var(--bg-deep);}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+@media (max-width:640px){.wrap{padding:0 16px;}}
+
+/* ============ NAV ============ */
+.nav{
+  position:sticky; top:0; z-index:40;
+  background:rgba(11,31,26,0.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  display:flex; align-items:center; gap:20px;
+  padding:14px 28px;
+  max-width:1180px; margin:0 auto;
+  flex-wrap:wrap;
+}
+@media (max-width:640px){.nav-inner{padding:12px 16px; gap:12px;}}
+.brand{
+  font-family:var(--disp); font-weight:600; font-size:1.15rem;
+  letter-spacing:0.01em; white-space:nowrap;
+  display:flex; align-items:baseline; gap:8px;
+}
+.brand .sub{font-family:var(--mono); font-size:0.62rem; color:var(--mint-dim); letter-spacing:0.12em; text-transform:uppercase;}
+.nav-chips{display:flex; gap:8px; flex-wrap:wrap;}
+.chip{
+  font-family:var(--mono); font-size:0.72rem; letter-spacing:0.04em;
+  padding:6px 12px; border:1px solid var(--line); border-radius:20px;
+  background:transparent; color:var(--cream-dim); cursor:pointer;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.chip:hover{border-color:var(--mint-dim); color:var(--cream);}
+.chip.active{background:var(--mint); border-color:var(--mint); color:#0b1f1a; font-weight:600;}
+.nav-search{margin-left:auto; position:relative; min-width:180px;}
+@media (max-width:640px){.nav-search{margin-left:0; width:100%;}}
+.nav-search input{
+  width:100%; background:var(--bg-panel); border:1px solid var(--line);
+  color:var(--cream); font-family:var(--body); font-size:0.85rem;
+  padding:8px 12px 8px 32px; border-radius:20px; outline:none;
+}
+.nav-search input:focus{border-color:var(--gold);}
+.nav-search::before{
+  content:"⌕"; position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  color:var(--cream-dim); font-size:0.95rem; pointer-events:none;
+}
+.results-count{font-family:var(--mono); font-size:0.68rem; color:var(--mint-dim); letter-spacing:0.06em;}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative; overflow:hidden;
+  padding:64px 0 40px;
+  border-bottom:1px solid var(--line);
+}
+.hero::before{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(212,175,106,0.14), transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(143,217,196,0.10), transparent 50%);
+  pointer-events:none;
+}
+.shaft{
+  position:absolute; top:-10%; width:2px; height:140%;
+  background:linear-gradient(to bottom, rgba(212,175,106,0.28), transparent 70%);
+  transform:rotate(10deg);
+  animation:drift 14s ease-in-out infinite;
+  pointer-events:none;
+}
+.shaft.s1{left:12%; animation-delay:0s;}
+.shaft.s2{left:34%; width:3px; animation-delay:-4s;}
+.shaft.s3{left:61%; animation-delay:-8s;}
+.shaft.s4{left:82%; width:1.5px; animation-delay:-2s;}
+@keyframes drift{
+  0%,100%{opacity:0.35; transform:rotate(10deg) translateX(0);}
+  50%{opacity:0.7; transform:rotate(10deg) translateX(14px);}
+}
+.hero-inner{position:relative; z-index:2;}
+.eyebrow{
+  font-family:var(--mono); font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--gold); margin:0 0 14px;
+}
+.hero h1{
+  font-family:var(--disp); font-weight:600; font-optical-sizing:auto;
+  font-size:clamp(2.1rem, 5vw, 3.6rem); line-height:1.05; margin:0 0 18px; max-width:16ch;
+  color:var(--cream);
+}
+.hero h1 em{font-style:italic; color:var(--mint); font-weight:500;}
+.hero p.lede{
+  font-size:1.02rem; color:var(--cream-dim); max-width:56ch; margin:0 0 28px;
+}
+.hero-stats{display:flex; gap:32px; flex-wrap:wrap; margin-top:8px;}
+.stat b{display:block; font-family:var(--disp); font-size:1.9rem; color:var(--gold); font-weight:600;}
+.stat span{font-family:var(--mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--cream-dim);}
+
+/* ============ MAP (signature element) ============ */
+.map-section{padding:48px 0 20px; border-bottom:1px solid var(--line);}
+.section-head{margin-bottom:22px;}
+.section-eyebrow{font-family:var(--mono); font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--mint); margin:0 0 6px;}
+.section-title{font-family:var(--disp); font-size:1.7rem; font-weight:600; margin:0 0 8px;}
+.section-desc{color:var(--cream-dim); max-width:62ch; font-size:0.92rem; margin:0;}
+
+.map-layout{display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:start;}
+@media (max-width:860px){.map-layout{grid-template-columns:1fr;}}
+.map-svg-wrap{
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px; position:relative;
+}
+.map-svg-wrap svg{width:100%; height:auto; display:block;}
+.zone-dot{cursor:pointer;}
+.zone-dot circle.ring{fill:none; stroke:var(--gold); stroke-width:1; opacity:0.35; transition:opacity .2s;}
+.zone-dot circle.core{fill:var(--gold); transition:fill .2s, r .2s;}
+.zone-dot:hover circle.ring, .zone-dot.active circle.ring{opacity:1;}
+.zone-dot.active circle.core{fill:var(--mint);}
+.zone-dot text{font-family:var(--mono); font-size:5.4px; fill:var(--cream-dim); letter-spacing:0.02em;}
+.zone-dot:hover text, .zone-dot.active text{fill:var(--cream);}
+.sg-shape{fill:var(--bg-panel-2); stroke:var(--line); stroke-width:1;}
+
+.zone-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;}
+.zone-item{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 16px; border:1px solid var(--line); border-radius:var(--radius);
+  cursor:pointer; background:var(--bg-panel); transition:border-color .15s, background .15s;
+}
+.zone-item:hover{border-color:var(--mint-dim);}
+.zone-item.active{border-color:var(--mint); background:var(--bg-panel-2);}
+.zone-item .zname{font-weight:600; font-size:0.9rem;}
+.zone-item .zcount{font-family:var(--mono); font-size:0.68rem; color:var(--gold); white-space:nowrap;}
+.zone-clear{
+  margin-top:10px; font-family:var(--mono); font-size:0.7rem; color:var(--cream-dim);
+  background:none; border:1px dashed var(--line); border-radius:20px; padding:7px 14px; cursor:pointer;
+  display:none;
+}
+.zone-clear.show{display:inline-block;}
+.zone-clear:hover{color:var(--cream); border-color:var(--cream-dim);}
+
+/* ============ TAXONOMY EXPLORER ============ */
+.tax-section{padding:48px 0 20px; border-bottom:1px solid var(--line);}
+.tax-groups{display:flex; flex-direction:column; gap:10px;}
+.kingdom-block{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-panel); overflow:hidden;}
+.kingdom-head{
+  padding:14px 18px; font-family:var(--disp); font-size:1.05rem; font-weight:600;
+  display:flex; align-items:center; gap:10px; color:var(--gold);
+}
+.kingdom-head .count{font-family:var(--mono); font-size:0.68rem; color:var(--cream-dim); font-weight:400;}
+.class-details{border-top:1px solid var(--line-soft);}
+.class-details > summary{
+  list-style:none; cursor:pointer; padding:11px 18px 11px 30px;
+  display:flex; align-items:center; gap:10px; font-weight:600; font-size:0.88rem;
+  color:var(--mint);
+}
+.class-details > summary::-webkit-details-marker{display:none;}
+.class-details > summary::before{content:"▸"; font-size:0.7rem; transition:transform .15s; display:inline-block; color:var(--cream-dim);}
+.class-details[open] > summary::before{transform:rotate(90deg);}
+.class-details > summary .count{font-family:var(--mono); font-size:0.65rem; color:var(--cream-dim); font-weight:400; margin-left:auto;}
+.order-details{margin-left:20px;}
+.order-details > summary{
+  list-style:none; cursor:pointer; padding:8px 18px 8px 22px;
+  font-size:0.82rem; color:var(--cream-dim); display:flex; align-items:center; gap:8px;
+}
+.order-details > summary::-webkit-details-marker{display:none;}
+.order-details > summary::before{content:"·"; color:var(--gold); font-size:1rem;}
+.order-details > summary .rank-label{font-family:var(--mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--gold-dim); margin-right:2px;}
+.fam-block{margin-left:20px; padding:2px 18px 10px;}
+.fam-name{font-family:var(--mono); font-size:0.68rem; letter-spacing:0.05em; color:var(--gold-dim); text-transform:uppercase; margin:8px 0 6px;}
+.sp-links{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px;}
+.sp-link{
+  font-size:0.8rem; padding:5px 10px; border:1px solid var(--line); border-radius:16px;
+  cursor:pointer; color:var(--cream-dim); background:transparent; transition:all .15s;
+}
+.sp-link:hover{border-color:var(--mint); color:var(--cream);}
+.sp-link.match{border-color:var(--gold); color:var(--gold);}
+.tax-hint{font-size:0.78rem; color:var(--cream-dim); margin-top:10px; font-style:italic;}
+
+/* ============ PLATES ============ */
+.plates-section{padding:48px 0 70px;}
+.plates-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(270px,1fr)); gap:18px;
+  margin-top:26px;
+}
+.plate{
+  background:var(--bg-plate); color:#1c231f; border-radius:2px;
+  border:1px solid #d8d1bd; box-shadow:var(--shadow);
+  padding:0; overflow:hidden; position:relative;
+  transition:transform .2s, box-shadow .2s;
+}
+.plate.hidden{display:none;}
+.plate.pulse{animation:pulse 1.1s ease;}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(212,175,106,0.65);}
+  70%{box-shadow:0 0 0 14px rgba(212,175,106,0);}
+  100%{box-shadow:0 0 0 0 rgba(212,175,106,0);}
+}
+.plate-head{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding:14px 16px 0;
+}
+.plate-cat{font-family:var(--mono); font-size:0.62rem; letter-spacing:0.05em; color:#8a8368;}
+.plate-status{
+  font-family:var(--mono); font-size:0.58rem; letter-spacing:0.03em; text-transform:uppercase;
+  padding:2px 8px; border-radius:10px; white-space:nowrap; margin-left:8px;
+}
+.plate-illust{
+  height:150px; display:flex; align-items:center; justify-content:center;
+  padding:6px 0 0;
+}
+.plate-illust svg{width:110px; height:110px;}
+.plate-body{padding:6px 18px 18px;}
+.plate-body h3{font-family:var(--disp); font-size:1.15rem; font-weight:600; margin:0 0 2px; color:#1c231f;}
+.plate-body .sci{font-style:italic; font-size:0.82rem; color:#6b6552; margin:0 0 10px;}
+.plate-body .blurb{font-size:0.85rem; color:#3a4038; margin:0 0 12px; line-height:1.5;}
+.plate-tax{font-family:var(--mono); font-size:0.62rem; color:#8a8368; margin:0 0 10px; letter-spacing:0.02em;}
+.plate-zones{display:flex; flex-wrap:wrap; gap:5px;}
+.zone-tag{
+  font-family:var(--mono); font-size:0.6rem; letter-spacing:0.02em;
+  padding:3px 8px; border-radius:10px; background:#e7e1cf; color:#4a4632; cursor:pointer;
+  border:1px solid #d3cbb2; transition:background .15s;
+}
+.zone-tag:hover{background:#d9d2b8;}
+
+/* class accent bars */
+.plate[data-cls="tree"] .plate-illust svg{color:#3f6b4f;}
+.plate[data-cls="tree"] .plate-status{background:#dcead9; color:#2f5c3a;}
+.plate[data-cls="bird"] .plate-illust svg{color:#a5732c;}
+.plate[data-cls="bird"] .plate-status{background:#f3e3c2; color:#8a5c17;}
+.plate[data-cls="mammal"] .plate-illust svg{color:#9a4a2e;}
+.plate[data-cls="mammal"] .plate-status{background:#f0dcd0; color:#8a3f22;}
+.plate[data-cls="reptile"] .plate-illust svg{color:#5c6b2e;}
+.plate[data-cls="reptile"] .plate-status{background:#e2e6ce; color:#4c5722;}
+.plate[data-cls="amphibian"] .plate-illust svg{color:#2e6b66;}
+.plate[data-cls="amphibian"] .plate-status{background:#d4e8e6; color:#215955;}
+
+.empty-state{
+  text-align:center; padding:60px 20px; color:var(--cream-dim); font-family:var(--body);
+  display:none;
+}
+.empty-state.show{display:block;}
+
+footer{
+  border-top:1px solid var(--line); padding:32px 0 50px; color:var(--cream-dim); font-size:0.8rem;
+}
+footer p{max-width:70ch; margin:0 0 10px;}
+footer .sig{font-family:var(--mono); font-size:0.68rem; color:var(--mint-dim); letter-spacing:0.05em;}
+
+.visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+  outline:2px solid var(--gold); outline-offset:2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SVG ICON LIBRARY ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+
+<symbol id="ic-tree-broadleaf" viewBox="0 0 100 100">
+  <rect x="46" y="58" width="8" height="30" fill="currentColor" opacity="0.85"/>
+  <path d="M50 20 C25 22 14 42 22 58 C10 62 12 80 30 82 C34 90 66 90 70 82 C88 80 90 62 78 58 C86 42 75 22 50 20 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-tree-dipterocarp" viewBox="0 0 100 100">
+  <path d="M44 60 L40 90 M56 60 L60 90 M50 60 L50 90" stroke="currentColor" stroke-width="3" fill="none" opacity="0.85"/>
+  <path d="M50 8 C34 10 28 24 34 34 C22 36 20 50 32 54 C28 62 40 68 50 62 C60 68 72 62 68 54 C80 50 78 36 66 34 C72 24 66 10 50 8 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-tree-palm" viewBox="0 0 100 100">
+  <path d="M50 92 C48 70 47 50 52 30" stroke="currentColor" stroke-width="4" fill="none"/>
+  <path d="M52 32 C34 20 18 22 8 32" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M52 30 C40 12 30 8 16 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M53 28 C58 8 68 0 82 0" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M53 32 C64 18 78 14 92 18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M52 36 C60 34 78 38 88 48" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M51 38 C44 40 30 48 24 60" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-tree-mangrove" viewBox="0 0 100 100">
+  <path d="M50 55 C36 66 30 78 20 92 M50 55 C46 68 44 80 40 92 M50 55 C54 68 56 80 60 92 M50 55 C64 66 70 78 80 92" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M50 14 C30 16 22 34 30 46 C18 48 18 62 32 64 C40 70 62 70 68 64 C82 62 82 48 70 46 C78 34 70 16 50 14 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-tree-fig" viewBox="0 0 100 100">
+  <path d="M38 55 L34 92 M50 58 L48 92 M62 55 L66 92" stroke="currentColor" stroke-width="2" fill="none" opacity="0.7"/>
+  <path d="M50 10 C28 12 18 32 28 44 C14 48 16 64 32 66 C38 74 62 74 68 66 C84 64 86 48 72 44 C82 32 72 12 50 10 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-tree-flowering" viewBox="0 0 100 100">
+  <rect x="46" y="58" width="8" height="30" fill="currentColor" opacity="0.85"/>
+  <path d="M50 20 C25 22 14 42 22 58 C10 62 12 80 30 82 C34 90 66 90 70 82 C88 80 90 62 78 58 C86 42 75 22 50 20 Z" fill="currentColor" opacity="0.9"/>
+  <circle cx="34" cy="38" r="3.4" fill="#fff" opacity="0.85"/>
+  <circle cx="58" cy="30" r="3.4" fill="#fff" opacity="0.85"/>
+  <circle cx="66" cy="52" r="3.4" fill="#fff" opacity="0.85"/>
+  <circle cx="42" cy="62" r="3.4" fill="#fff" opacity="0.85"/>
+</symbol>
+
+<symbol id="ic-tree-conifer" viewBox="0 0 100 100">
+  <rect x="47" y="80" width="6" height="14" fill="currentColor"/>
+  <path d="M50 8 L32 34 H68 Z" fill="currentColor"/>
+  <path d="M50 24 L26 54 H74 Z" fill="currentColor"/>
+  <path d="M50 42 L20 80 H80 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-bird-perching" viewBox="0 0 100 100">
+  <path d="M18 82 H82" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <path d="M40 82 C34 60 36 46 50 40 C68 32 78 42 74 52 C86 52 88 62 76 64 C74 74 64 82 54 82 Z" fill="currentColor"/>
+  <path d="M74 52 L86 48 L78 58 Z" fill="currentColor"/>
+  <line x1="46" y1="82" x2="44" y2="90" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="56" y1="82" x2="58" y2="90" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="66" cy="46" r="2" fill="#f2ede1"/>
+</symbol>
+
+<symbol id="ic-bird-raptor" viewBox="0 0 100 100">
+  <path d="M50 46 C40 44 20 30 6 32 C20 40 34 48 42 54 C30 56 12 52 4 58 C18 62 34 62 44 60 C50 66 50 74 46 84 C56 84 58 74 56 62 C64 64 82 64 96 58 C86 52 68 56 58 54 C64 48 78 40 92 32 C78 30 60 44 50 46 Z" fill="currentColor"/>
+  <path d="M50 40 L44 46 L50 48 L56 46 Z" fill="currentColor"/>
+  <path d="M50 44 L46 50 L54 50 Z" fill="#f2ede1"/>
+</symbol>
+
+<symbol id="ic-bird-wading" viewBox="0 0 100 100">
+  <path d="M50 92 L48 66 M58 92 L56 66" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M52 66 C40 60 36 48 42 40 C36 34 34 24 40 16 C46 22 48 30 46 36 C56 30 68 34 70 44 C58 44 50 50 52 58 C64 56 74 60 74 66 C66 70 58 70 52 66 Z" fill="currentColor"/>
+  <line x1="40" y1="16" x2="30" y2="8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-bird-hornbill" viewBox="0 0 100 100">
+  <path d="M20 84 H80" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <path d="M38 84 C32 62 34 50 46 44 C50 44 52 40 58 38 C56 44 58 46 62 46 C82 44 92 52 88 58 C84 58 80 60 78 64 C88 66 86 74 76 74 C72 80 62 84 52 84 Z" fill="currentColor"/>
+  <path d="M58 38 C64 30 78 28 88 34 C80 36 68 40 62 46 Z" fill="currentColor" opacity="0.75"/>
+  <circle cx="70" cy="52" r="2" fill="#f2ede1"/>
+  <line x1="44" y1="84" x2="42" y2="92" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="54" y1="84" x2="56" y2="92" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-bird-kingfisher" viewBox="0 0 100 100">
+  <path d="M14 88 H60" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <path d="M34 86 C26 70 28 54 42 48 C58 42 66 44 66 50 C90 46 94 52 86 56 C80 56 76 58 74 62 C74 74 58 86 44 86 Z" fill="currentColor"/>
+  <circle cx="52" cy="52" r="2" fill="#f2ede1"/>
+  <line x1="40" y1="86" x2="38" y2="94" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-bird-dove" viewBox="0 0 100 100">
+  <path d="M20 86 H80" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <path d="M40 86 C28 74 26 54 40 44 C52 36 66 38 70 46 C82 46 88 52 82 58 C78 58 74 60 72 64 C76 76 64 86 52 86 Z" fill="currentColor"/>
+  <circle cx="58" cy="48" r="2" fill="#f2ede1"/>
+  <line x1="44" y1="86" x2="42" y2="94" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="54" y1="86" x2="56" y2="94" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-bird-owl" viewBox="0 0 100 100">
+  <path d="M28 88 H72" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <path d="M50 20 C30 20 22 36 24 52 C20 66 30 84 50 86 C70 84 80 66 76 52 C78 36 70 20 50 20 Z" fill="currentColor"/>
+  <path d="M32 24 L26 12 M68 24 L74 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="40" cy="46" r="9" fill="#f2ede1"/>
+  <circle cx="60" cy="46" r="9" fill="#f2ede1"/>
+  <circle cx="40" cy="46" r="4" fill="currentColor"/>
+  <circle cx="60" cy="46" r="4" fill="currentColor"/>
+  <path d="M50 54 L46 60 L54 60 Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="ic-mammal-primate" viewBox="0 0 100 100">
+  <path d="M60 60 C74 66 78 80 70 90" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="46" cy="62" rx="20" ry="24" fill="currentColor"/>
+  <circle cx="46" cy="30" r="16" fill="currentColor"/>
+  <circle cx="40" cy="28" r="3" fill="#f2ede1"/>
+  <circle cx="52" cy="28" r="3" fill="#f2ede1"/>
+  <path d="M30 60 L16 74 M62 60 L74 76 M36 82 L30 94 M54 84 L58 96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-mammal-quad-small" viewBox="0 0 100 100">
+  <ellipse cx="50" cy="56" rx="34" ry="12" fill="currentColor"/>
+  <path d="M70 52 C82 48 90 52 88 58 C84 58 78 58 74 60 Z" fill="currentColor"/>
+  <circle cx="86" cy="52" r="1.6" fill="#f2ede1"/>
+  <path d="M50 68 C60 76 68 86 64 92 M50 68 C42 78 40 88 34 92" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M22 60 L14 76 M32 62 L26 78" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <path d="M16 56 C6 50 4 60 12 62 C14 66 22 62 22 58 Z" fill="currentColor" opacity="0.9"/>
+</symbol>
+
+<symbol id="ic-mammal-quad-hoofed" viewBox="0 0 100 100">
+  <ellipse cx="48" cy="58" rx="28" ry="15" fill="currentColor"/>
+  <path d="M70 52 C82 44 88 44 88 50 C84 52 78 54 74 58 Z" fill="currentColor"/>
+  <path d="M20 66 L16 86 M36 70 L34 88 M60 70 L62 88 M74 66 L78 86" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <path d="M50 68 C56 76 58 84 54 88" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+</symbol>
+
+<symbol id="ic-mammal-squirrel" viewBox="0 0 100 100">
+  <path d="M62 70 C82 66 86 40 70 24 C86 30 92 56 74 74 C68 80 60 78 62 70 Z" fill="currentColor"/>
+  <ellipse cx="42" cy="66" rx="18" ry="20" fill="currentColor"/>
+  <circle cx="38" cy="42" r="12" fill="currentColor"/>
+  <circle cx="34" cy="40" r="2.2" fill="#f2ede1"/>
+  <path d="M28 32 L24 24 M46 32 L48 24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <path d="M30 82 L26 92 M50 84 L54 94" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-mammal-bat" viewBox="0 0 100 100">
+  <ellipse cx="50" cy="50" rx="8" ry="14" fill="currentColor"/>
+  <circle cx="50" cy="32" r="9" fill="currentColor"/>
+  <path d="M44 46 C24 40 8 46 4 62 C16 58 26 56 42 58 Z" fill="currentColor" opacity="0.92"/>
+  <path d="M56 46 C76 40 92 46 96 62 C84 58 74 56 58 58 Z" fill="currentColor" opacity="0.92"/>
+  <path d="M44 28 L38 18 M56 28 L62 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <path d="M46 60 L44 78 M54 60 L56 78" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-mammal-pangolin" viewBox="0 0 100 100">
+  <path d="M20 70 C16 50 30 30 52 28 C74 26 88 42 82 58 C90 60 88 70 78 68" fill="currentColor"/>
+  <path d="M28 42 C36 44 44 44 50 40 M24 52 C34 54 44 54 52 50 M22 62 C34 64 46 64 56 60" stroke="#f2ede1" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M20 68 C10 76 6 88 14 94" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="76" cy="40" r="2" fill="#f2ede1"/>
+</symbol>
+
+<symbol id="ic-reptile-snake" viewBox="0 0 100 100">
+  <path d="M14 30 C34 10 50 30 40 46 C30 62 50 78 66 62 C78 50 90 60 88 76" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <circle cx="12" cy="28" r="6" fill="currentColor"/>
+  <circle cx="10" cy="25" r="1.3" fill="#f2ede1"/>
+</symbol>
+
+<symbol id="ic-reptile-lizard" viewBox="0 0 100 100">
+  <path d="M30 55 C30 45 40 38 54 40 C68 42 76 50 84 48 C90 46 94 50 90 54 C82 56 74 54 66 56 C70 64 78 76 90 82" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <ellipse cx="36" cy="54" rx="14" ry="9" fill="currentColor"/>
+  <circle cx="26" cy="50" r="6" fill="currentColor"/>
+  <circle cx="23" cy="48" r="1.4" fill="#f2ede1"/>
+  <path d="M32 60 L22 70 M42 62 L38 74 M28 48 L16 44 M40 46 L34 36" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-reptile-monitor" viewBox="0 0 100 100">
+  <path d="M26 58 C24 48 34 42 48 44 C62 46 70 52 82 50 C90 48 94 54 88 58" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <path d="M88 58 C94 66 96 78 88 88" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <ellipse cx="32" cy="56" rx="15" ry="10" fill="currentColor"/>
+  <path d="M18 54 L6 50 M18 58 L6 62" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="24" cy="52" r="1.6" fill="#f2ede1"/>
+  <path d="M30 64 L20 76 M46 66 L42 80 M62 52 L58 38 M74 52 L74 38" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-reptile-turtle" viewBox="0 0 100 100">
+  <ellipse cx="50" cy="54" rx="34" ry="28" fill="currentColor"/>
+  <path d="M50 26 V82 M22 40 L78 40 M20 54 L80 54 M24 68 L76 68 M50 26 L28 40 M50 26 L72 40 M50 82 L30 68 M50 82 L70 68" stroke="#f2ede1" stroke-width="1.6" fill="none" opacity="0.45"/>
+  <circle cx="50" cy="20" r="9" fill="currentColor"/>
+  <path d="M20 44 L8 40 M20 64 L8 68 M80 44 L92 40 M80 64 L92 68" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-reptile-croc" viewBox="0 0 100 100">
+  <path d="M6 60 C6 52 16 48 28 50 C44 52 56 50 70 46 C84 42 92 44 94 50 C88 52 82 54 78 58 C82 60 86 62 90 68" stroke="currentColor" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M40 46 L44 38 M50 45 L54 36 M60 43 L64 34" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="20" cy="52" r="1.6" fill="#f2ede1"/>
+  <path d="M14 62 L6 74 M26 64 L22 78" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ic-amphibian-frog" viewBox="0 0 100 100">
+  <ellipse cx="50" cy="62" rx="26" ry="20" fill="currentColor"/>
+  <circle cx="36" cy="38" r="10" fill="currentColor"/>
+  <circle cx="64" cy="38" r="10" fill="currentColor"/>
+  <circle cx="36" cy="36" r="4" fill="#f2ede1"/>
+  <circle cx="64" cy="36" r="4" fill="#f2ede1"/>
+  <circle cx="36" cy="36" r="1.8" fill="#1c231f"/>
+  <circle cx="64" cy="36" r="1.8" fill="#1c231f"/>
+  <path d="M26 74 C16 78 10 88 16 92 M74 74 C84 78 90 88 84 92" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M30 58 L12 54 M70 58 L88 54" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+</symbol>
+
+</defs>
+</svg>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">Canopy &amp; Coast <span class="sub">Field Guide · SG</span></div>
+    <div class="nav-chips" id="groupChips">
+      <button class="chip active" data-group="all">All species</button>
+      <button class="chip" data-group="tree">Trees</button>
+      <button class="chip" data-group="bird">Birds</button>
+      <button class="chip" data-group="land">Land animals</button>
+    </div>
+    <div class="nav-search">
+      <input type="text" id="searchInput" placeholder="Search by name…" aria-label="Search species">
+    </div>
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="shaft s1"></div><div class="shaft s2"></div><div class="shaft s3"></div><div class="shaft s4"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">A field guide to the little red dot's wild half</p>
+    <h1>Field notes from the <em>last forests</em><br>of Singapore</h1>
+    <p class="lede">A hand-illustrated, taxonomically organised guide to the trees, birds, and land animals sharing this island with 6 million people — from the dipterocarp giants of Bukit Timah to the otters working the canals of Punggol. Tap a zone on the map, browse the taxonomy, or search a name to begin.</p>
+    <div class="hero-stats" id="heroStats">
+      <div class="stat"><b id="statTrees">–</b><span>Tree species</span></div>
+      <div class="stat"><b id="statBirds">–</b><span>Bird species</span></div>
+      <div class="stat"><b id="statAnimals">–</b><span>Land animal species</span></div>
+      <div class="stat"><b id="statZones">–</b><span>Wild zones mapped</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MAP ============ -->
+<section class="map-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Where to find them</p>
+      <h2 class="section-title">Choose a wild zone</h2>
+      <p class="section-desc">Singapore's biodiversity concentrates in a handful of nature reserves, coastal reserves, and green corridors. Tap a point on the map — or a zone in the list — to filter the guide to species recorded there.</p>
+    </div>
+    <div class="map-layout">
+      <div class="map-svg-wrap">
+        <svg viewBox="0 0 300 200" id="sgMap" role="img" aria-label="Schematic map of Singapore with clickable nature zones">
+          <path class="sg-shape" d="M40 95 C55 75 90 60 120 58 C140 56 150 45 165 40 C180 36 200 40 210 50 C225 48 245 55 255 68 C265 78 262 92 248 96 C255 105 250 118 236 118 C238 130 222 138 208 132 C198 142 178 145 165 138 C150 148 125 148 112 138 C95 145 72 140 62 128 C48 130 34 122 32 110 C26 105 30 98 40 95 Z"/>
+          <g opacity="0.35" stroke="#8fd9c4" stroke-width="0.6" fill="none">
+            <path d="M45 100 C60 82 92 66 120 63"/>
+            <path d="M170 45 C190 42 210 48 220 56"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <ul class="zone-list" id="zoneList"></ul>
+        <button class="zone-clear" id="zoneClear">Clear zone filter ✕</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAXONOMY EXPLORER ============ -->
+<section class="tax-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Classification</p>
+      <h2 class="section-title">Explore the taxonomy</h2>
+      <p class="section-desc">Organised by kingdom, class, order, and family. Plant groupings follow modern APG clade classification (Monocots / Eudicots) rather than the old Linnaean "class," which botanists retired for good reason. Tap any species to jump to its specimen plate below.</p>
+    </div>
+    <div class="tax-groups" id="taxGroups"></div>
+    <p class="tax-hint">Tip: filtering by zone or group above also narrows this tree.</p>
+  </div>
+</section>
+
+<!-- ============ PLATES ============ -->
+<section class="plates-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Specimen plates</p>
+      <h2 class="section-title">The field plates</h2>
+      <p class="section-desc">Each plate is a stylised naturalist illustration, not a photograph — built this way so every entry stays visually consistent and citation-free. Use it to learn silhouette and shape; pair with a photo app in the field for confirmation.</p>
+    </div>
+    <div class="plates-grid" id="platesGrid"></div>
+    <div class="empty-state" id="emptyState">No species match this combination of filters. Try clearing the zone or search.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>On scope.</strong> Singapore hosts several thousand documented species across these groups — far more than any single guide can responsibly illustrate by hand. This edition curates roughly 75 species chosen for being iconic, common, or ecologically important, spanning every major order you're likely to encounter. Treat it as a strong starting field guide, not an exhaustive checklist.</p>
+    <p><strong>On accuracy.</strong> Locations reflect general, well-documented habitat associations rather than precise survey data, and conservation statuses are described qualitatively. For rare or protected species (langurs, pangolins, otters), observe from a distance and report sightings to NParks rather than approaching.</p>
+    <p class="sig">Illustrated field guide · built for Ted · Singapore, 2026</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Canopy & Coast — Singapore Field Guide
+   Data file: zones + curated species records
+   ============================================================ */
+
+const ZONES = [
+  { id:'z1', name:'Bukit Timah Nature Reserve', desc:"Singapore's tallest hill (163m) and its last substantial patch of primary rainforest.", x:104, y:88 },
+  { id:'z2', name:'Central Catchment Nature Reserve', desc:'The forested reservoir heartland around MacRitchie, Peirce and Seletar.', x:145, y:76 },
+  { id:'z3', name:'Sungei Buloh Wetland Reserve', desc:"Mangroves and mudflats on the northwest coast — Singapore's first ASEAN Heritage Park.", x:70, y:72 },
+  { id:'z4', name:'Pulau Ubin', desc:'A rustic offshore island of secondary forest, old farmland, and coastal habitat.', x:232, y:56 },
+  { id:'z5', name:'Southern Ridges', desc:'A forested ridgeline linking Kent Ridge, Telok Blangah and Mount Faber.', x:138, y:122 },
+  { id:'z6', name:"Labrador Nature Reserve & Southern Islands", desc:"Coastal cliff forest and the St John's / Kusu Island group.", x:172, y:136 },
+  { id:'z7', name:'Urban Parks & Gardens', desc:'Botanic Gardens, park connectors and roadside greenery, island-wide.', x:178, y:98 },
+  { id:'z8', name:'East Coast & Coastal Habitats', desc:'Pasir Ris, Changi and the secondary coastal vegetation of the east.', x:238, y:96 }
+];
+
+/* g = group: tree | bird | mammal | reptile | amphibian
+   land = mammal|reptile|amphibian, used for the "Land animals" nav filter
+   clade = for trees only: Gymnosperms | Monocots | Eudicots
+   cls   = for animals: Aves | Mammalia | Reptilia | Amphibia            */
+
+const SPECIES = [
+
+/* ---------------------------- TREES ---------------------------- */
+{ i:'t01', c:'SG·PLA·01', g:'tree', clade:'Eudicots', ord:'Gentianales', fam:'Gentianaceae',
+  n:'Tembusu', s:'Fagraea fragrans', ic:'ic-tree-broadleaf', st:'Native · Iconic',
+  zn:['z7','z2'], tx:"The gnarled tree on the Singapore five-dollar note. Fragrant white flowers open at dusk and turn deep yellow by morning, drawing moths overnight." },
+{ i:'t02', c:'SG·PLA·02', g:'tree', clade:'Eudicots', ord:'Malvales', fam:'Dipterocarpaceae',
+  n:'Seraya', s:'Shorea curtisii', ic:'ic-tree-dipterocarp', st:'Native · Emergent',
+  zn:['z1'], tx:'A tall emergent dipterocarp that once dominated Singapore\u2019s hill forests; its winged seeds spiral down like helicopter blades.' },
+{ i:'t03', c:'SG·PLA·03', g:'tree', clade:'Eudicots', ord:'Malvales', fam:'Dipterocarpaceae',
+  n:'Chengal', s:'Neobalanocarpus heimii', ic:'ic-tree-dipterocarp', st:'Native · Uncommon',
+  zn:['z1','z2'], tx:'A slow-growing hardwood prized historically for boat-building; surviving specimens in the catchment forests are centuries old.' },
+{ i:'t04', c:'SG·PLA·04', g:'tree', clade:'Eudicots', ord:'Malvales', fam:'Dipterocarpaceae',
+  n:'Keruing', s:'Dipterocarpus spp.', ic:'ic-tree-dipterocarp', st:'Native',
+  zn:['z1','z2'], tx:'Tall, buttressed dipterocarps with resin-scented bark, forming part of the closed canopy in the older forest reserves.' },
+{ i:'t05', c:'SG·PLA·05', g:'tree', clade:'Eudicots', ord:'Fabales', fam:'Fabaceae',
+  n:'Rain Tree', s:'Samanea saman', ic:'ic-tree-broadleaf', st:'Introduced · Naturalised',
+  zn:['z7'], tx:'An umbrella-canopied roadside giant, originally from the Americas, whose leaflets fold shut at dusk or before rain.' },
+{ i:'t06', c:'SG·PLA·06', g:'tree', clade:'Eudicots', ord:'Fabales', fam:'Fabaceae',
+  n:'Angsana', s:'Pterocarpus indicus', ic:'ic-tree-flowering', st:'Native · Planted',
+  zn:['z7'], tx:'Bursts into a canopy of small golden flowers for a single day after rain, carpeting the pavement below in yellow.' },
+{ i:'t07', c:'SG·PLA·07', g:'tree', clade:'Eudicots', ord:'Myrtales', fam:'Combretaceae',
+  n:'Sea Almond', s:'Terminalia catappa', ic:'ic-tree-broadleaf', st:'Native · Coastal',
+  zn:['z6','z8'], tx:'A tiered, pagoda-shaped coastal tree whose almond-like seeds are cracked open by everything from crabs to fruit bats.' },
+{ i:'t08', c:'SG·PLA·08', g:'tree', clade:'Eudicots', ord:'Rosales', fam:'Moraceae',
+  n:'Common Chinese Banyan', s:'Ficus microcarpa', ic:'ic-tree-fig', st:'Native · Keystone species',
+  zn:['z7'], tx:'One of Singapore\u2019s most important fig species — its year-round fruiting sustains bulbuls, mynas and hornbills through lean seasons.' },
+{ i:'t09', c:'SG·PLA·09', g:'tree', clade:'Eudicots', ord:'Rosales', fam:'Moraceae',
+  n:'Weeping Fig', s:'Ficus benjamina', ic:'ic-tree-fig', st:'Native · Planted',
+  zn:['z7'], tx:'Recognisable by cascading aerial roots and glossy drooping leaves; a common street and park tree island-wide.' },
+{ i:'t10', c:'SG·PLA·10', g:'tree', clade:'Eudicots', ord:'Ericales', fam:'Lecythidaceae',
+  n:'Sea Poison Tree', s:'Barringtonia asiatica', ic:'ic-tree-flowering', st:'Native · Coastal',
+  zn:['z6','z4'], tx:'Produces large, showy night-blooming flowers with pink-tipped stamens, followed by a distinctive box-shaped, water-dispersed fruit.' },
+{ i:'t11', c:'SG·PLA·11', g:'tree', clade:'Eudicots', ord:'Malpighiales', fam:'Rhizophoraceae',
+  n:'Bakau Minyak', s:'Rhizophora apiculata', ic:'ic-tree-mangrove', st:'Native · Foundation species',
+  zn:['z3','z4'], tx:'A true mangrove propped on stilt roots that trap sediment and shelter mudskippers and mangrove crabs at the waterline.' },
+{ i:'t12', c:'SG·PLA·12', g:'tree', clade:'Eudicots', ord:'Lamiales', fam:'Acanthaceae',
+  n:'Api-api Putih', s:'Avicennia alba', ic:'ic-tree-mangrove', st:'Native · Pioneer species',
+  zn:['z3'], tx:'A pioneering mangrove that colonises soft new mud, breathing through pencil-like roots (pneumatophores) poking above the silt.' },
+{ i:'t13', c:'SG·PLA·13', g:'tree', clade:'Eudicots', ord:'Myrtales', fam:'Lythraceae',
+  n:'Perepat', s:'Sonneratia alba', ic:'ic-tree-mangrove', st:'Native',
+  zn:['z3','z4'], tx:'A mangrove with pale, bat-pollinated flowers that open at night — an important nectar source for Singapore\u2019s flying foxes.' },
+{ i:'t14', c:'SG·PLA·14', g:'tree', clade:'Eudicots', ord:'Malvales', fam:'Malvaceae',
+  n:'Durian', s:'Durio zibethinus', ic:'ic-tree-broadleaf', st:'Native · Wild remnant',
+  zn:['z2','z1'], tx:'Wild durian trees still stand in the catchment forests, their thorny fruit a favourite of civets and long-tailed macaques.' },
+{ i:'t15', c:'SG·PLA·15', g:'tree', clade:'Monocots', ord:'Arecales', fam:'Arecaceae',
+  n:'Nibong Palm', s:'Oncosperma tigillarium', ic:'ic-tree-palm', st:'Native · Mangrove-fringe',
+  zn:['z3'], tx:'A clustering, spine-covered palm that forms dense stands along the landward fringe of Singapore\u2019s remaining mangroves.' },
+{ i:'t16', c:'SG·PLA·16', g:'tree', clade:'Monocots', ord:'Arecales', fam:'Arecaceae',
+  n:'Coconut Palm', s:'Cocos nucifera', ic:'ic-tree-palm', st:'Naturalised · Coastal',
+  zn:['z6','z8'], tx:'The classic leaning silhouette of Singapore\u2019s coastline and Southern Islands, its fruit able to drift and germinate on new shores.' },
+{ i:'t17', c:'SG·PLA·17', g:'tree', clade:'Eudicots', ord:'Gentianales', fam:'Apocynaceae',
+  n:'Frangipani', s:'Plumeria rubra', ic:'ic-tree-flowering', st:'Introduced · Ornamental',
+  zn:['z7'], tx:'A gnarled, sculptural small tree grown for its heavily scented flowers, historically associated with temple and cemetery grounds.' },
+{ i:'t18', c:'SG·PLA·18', g:'tree', clade:'Eudicots', ord:'Gentianales', fam:'Apocynaceae',
+  n:'Pong Pong', s:'Cerbera odollam', ic:'ic-tree-flowering', st:'Native · Coastal',
+  zn:['z8','z3'], tx:'A milky-sapped coastal tree with pinwheel white flowers; every part of the plant, including the mango-like fruit, is toxic.' },
+{ i:'t19', c:'SG·PLA·19', g:'tree', clade:'Monocots', ord:'Arecales', fam:'Arecaceae',
+  n:'Sealing Wax Palm', s:'Cyrtostachys renda', ic:'ic-tree-palm', st:'Native · Planted',
+  zn:['z7'], tx:'Named for its brilliant lacquer-red crownshaft, native to Southeast Asian peat swamps and widely planted in Singapore\u2019s gardens.' },
+{ i:'t20', c:'SG·PLA·20', g:'tree', clade:'Gymnosperms', ord:'Araucariales', fam:'Araucariaceae',
+  n:'Damar Minyak', s:'Agathis borneensis', ic:'ic-tree-conifer', st:'Native · Rare',
+  zn:['z1'], tx:'A tall, resin-rich conifer relative — one of the few gymnosperms native to Singapore\u2019s forests, now scarce outside protected reserves.' },
+{ i:'t21', c:'SG·PLA·21', g:'tree', clade:'Eudicots', ord:'Dilleniales', fam:'Dilleniaceae',
+  n:'Simpoh Air', s:'Dillenia suffruticosa', ic:'ic-tree-flowering', st:'Native · Common',
+  zn:['z2'], tx:'A fast-colonising small tree of forest edges and disturbed ground, its huge leaves once used to wrap food, its red seed-pods loved by birds.' },
+{ i:'t22', c:'SG·PLA·22', g:'tree', clade:'Eudicots', ord:'Myrtales', fam:'Myrtaceae',
+  n:'Jambu Laut', s:'Syzygium grande', ic:'ic-tree-broadleaf', st:'Native',
+  zn:['z2','z4'], tx:'A handsome forest tree with glossy leaves and creamy tufted flowers, common along streams in the central catchment.' },
+
+/* ---------------------------- BIRDS ---------------------------- */
+{ i:'b01', c:'SG·AVE·01', g:'bird', cls:'Aves', ord:'Accipitriformes', fam:'Accipitridae',
+  n:'White-bellied Sea Eagle', s:'Haliaeetus leucogaster', ic:'ic-bird-raptor', st:'Native',
+  zn:['z3','z6','z4'], tx:"Singapore's largest resident raptor, seen soaring over the coast on flat wings before folding into a plunge for fish." },
+{ i:'b02', c:'SG·AVE·02', g:'bird', cls:'Aves', ord:'Accipitriformes', fam:'Accipitridae',
+  n:'Brahminy Kite', s:'Haliastur indus', ic:'ic-bird-raptor', st:'Native',
+  zn:['z3','z4','z8'], tx:'A rust-and-white kite of estuaries and coastlines, often seen scavenging or snatching fish and crabs near the water\u2019s surface.' },
+{ i:'b03', c:'SG·AVE·03', g:'bird', cls:'Aves', ord:'Accipitriformes', fam:'Accipitridae',
+  n:'Changeable Hawk-Eagle', s:'Nisaetus cirrhatus', ic:'ic-bird-raptor', st:'Native · Uncommon',
+  zn:['z2','z1'], tx:'A crested forest raptor of variable plumage, patrolling the canopy edge of the catchment reserves for squirrels and lizards.' },
+{ i:'b04', c:'SG·AVE·04', g:'bird', cls:'Aves', ord:'Bucerotiformes', fam:'Bucerotidae',
+  n:'Oriental Pied Hornbill', s:'Anthracoceros albirostris', ic:'ic-bird-hornbill', st:'Native · Recovering',
+  zn:['z4','z1','z5'], tx:'Once locally extinct, this black-and-white hornbill recolonised naturally from Malaysia via Pulau Ubin and now nests island-wide.' },
+{ i:'b05', c:'SG·AVE·05', g:'bird', cls:'Aves', ord:'Coraciiformes', fam:'Alcedinidae',
+  n:'Common Kingfisher', s:'Alcedo atthis', ic:'ic-bird-kingfisher', st:'Migrant · Winter visitor',
+  zn:['z3','z7'], tx:'A jewel-toned migrant that spends the northern winter perched motionless over ponds and mangrove creeks, watching for small fish.' },
+{ i:'b06', c:'SG·AVE·06', g:'bird', cls:'Aves', ord:'Coraciiformes', fam:'Alcedinidae',
+  n:'Collared Kingfisher', s:'Todiramphus chloris', ic:'ic-bird-kingfisher', st:'Native · Common',
+  zn:['z8','z3','z7'], tx:'A loud, blue-backed kingfisher equally at home hunting crabs in mangroves or lizards on a suburban lawn.' },
+{ i:'b07', c:'SG·AVE·07', g:'bird', cls:'Aves', ord:'Coraciiformes', fam:'Alcedinidae',
+  n:'Blue-eared Kingfisher', s:'Alcedo meninting', ic:'ic-bird-kingfisher', st:'Native · Uncommon',
+  zn:['z2'], tx:'A small, deep-blue forest kingfisher of shaded streams, easily mistaken for a fast blue spark low over the water.' },
+{ i:'b08', c:'SG·AVE·08', g:'bird', cls:'Aves', ord:'Coraciiformes', fam:'Coraciidae',
+  n:'Dollarbird', s:'Eurystomus orientalis', ic:'ic-bird-perching', st:'Migrant',
+  zn:['z2'], tx:'Named for the pale coin-shaped patches on its wings, seen in silhouette flycatching from bare high perches at dusk.' },
+{ i:'b09', c:'SG·AVE·09', g:'bird', cls:'Aves', ord:'Piciformes', fam:'Picidae',
+  n:'Common Flameback', s:'Dinopium javanense', ic:'ic-bird-perching', st:'Native',
+  zn:['z2','z1'], tx:'A golden-backed woodpecker that hitches up tree trunks in the forest reserves, drumming to mark territory.' },
+{ i:'b10', c:'SG·AVE·10', g:'bird', cls:'Aves', ord:'Piciformes', fam:'Megalaimidae',
+  n:'Coppersmith Barbet', s:'Psilopogon haemacephalus', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z7'], tx:'A stocky green barbet named for its metronomic "tonk… tonk… tonk" call, echoing through gardens and fig trees.' },
+{ i:'b11', c:'SG·AVE·11', g:'bird', cls:'Aves', ord:'Psittaciformes', fam:'Psittaculidae',
+  n:'Red-breasted Parakeet', s:'Psittacula alexandri', ic:'ic-bird-perching', st:'Introduced · Established',
+  zn:['z7','z2'], tx:'A long-tailed parakeet with a pink-blushed chest, now breeding freely across the island after early escapes from captivity.' },
+{ i:'b12', c:'SG·AVE·12', g:'bird', cls:'Aves', ord:'Psittaciformes', fam:'Psittaculidae',
+  n:'Long-tailed Parakeet', s:'Psittacula longicauda', ic:'ic-bird-perching', st:'Native · Uncommon',
+  zn:['z2','z1'], tx:"Singapore's only native parakeet, distinguished from introduced parakeets by its red-and-blue head cap and streaming tail." },
+{ i:'b13', c:'SG·AVE·13', g:'bird', cls:'Aves', ord:'Columbiformes', fam:'Columbidae',
+  n:'Pink-necked Green Pigeon', s:'Treron vernans', ic:'ic-bird-dove', st:'Native · Common',
+  zn:['z7'], tx:'A fruit-eating pigeon whose males show a soft grey-and-pink head and orange breast; often seen in noisy fig-tree flocks.' },
+{ i:'b14', c:'SG·AVE·14', g:'bird', cls:'Aves', ord:'Columbiformes', fam:'Columbidae',
+  n:'Zebra Dove', s:'Geopelia striata', ic:'ic-bird-dove', st:'Native · Common',
+  zn:['z7'], tx:'A small, finely barred ground dove with a soft cooing call, a familiar sight foraging on pavements and void-deck grass.' },
+{ i:'b15', c:'SG·AVE·15', g:'bird', cls:'Aves', ord:'Cuculiformes', fam:'Cuculidae',
+  n:'Greater Coucal', s:'Centropus sinensis', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z2','z8'], tx:'A large, crow-sized, deep-red-eyed member of the cuckoo family that clambers through scrub rather than flying far, with a deep booming call.' },
+{ i:'b16', c:'SG·AVE·16', g:'bird', cls:'Aves', ord:'Cuculiformes', fam:'Cuculidae',
+  n:'Asian Koel', s:'Eudynamys scolopaceus', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z7'], tx:'Heard far more than seen — its loud, rising "ko-el" call is one of the defining dawn sounds of Singapore\u2019s housing estates.' },
+{ i:'b17', c:'SG·AVE·17', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Nectariniidae',
+  n:'Olive-backed Sunbird', s:'Cinnyris jugularis', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z7'], tx:'A tiny, iridescent-throated nectar feeder that builds a hanging, untidy nest and is at home in almost any garden with flowers.' },
+{ i:'b18', c:'SG·AVE·18', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Nectariniidae',
+  n:'Crimson Sunbird', s:'Aethopyga siparaja', ic:'ic-bird-perching', st:"Native · Singapore's national bird",
+  zn:['z2','z1'], tx:"Chosen as Singapore's national bird — a brilliant scarlet-and-olive sunbird of forest edges and flowering understorey shrubs." },
+{ i:'b19', c:'SG·AVE·19', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Oriolidae',
+  n:'Black-naped Oriole', s:'Oriolus chinensis', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z7'], tx:'A vivid yellow, black-masked bird whose fluting call carries across parks and mature roadside trees island-wide.' },
+{ i:'b20', c:'SG·AVE·20', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Pycnonotidae',
+  n:'Straw-headed Bulbul', s:'Pycnonotus zeylanicus', ic:'ic-bird-perching', st:'Critically Endangered',
+  zn:['z4','z2'], tx:'One of the world\u2019s most sought-after songbirds in the illegal cage-bird trade; Singapore, especially Pulau Ubin, now holds a globally important population.' },
+{ i:'b21', c:'SG·AVE·21', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Muscicapidae',
+  n:'Oriental Magpie-Robin', s:'Copsychus saularis', ic:'ic-bird-perching', st:'Native · Common',
+  zn:['z7'], tx:'A confident black-and-white songster that forages boldly on lawns, tail cocked, and sings from rooftops at first light.' },
+{ i:'b22', c:'SG·AVE·22', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Muscicapidae',
+  n:'White-rumped Shama', s:'Copsychus malabaricus', ic:'ic-bird-perching', st:'Native · Uncommon',
+  zn:['z2','z1'], tx:'A shy forest relative of the magpie-robin with a long graduated tail, prized historically for its rich, varied song.' },
+{ i:'b23', c:'SG·AVE·23', g:'bird', cls:'Aves', ord:'Passeriformes', fam:'Cisticolidae',
+  n:'Ashy Tailorbird', s:'Orthotomus ruficeps', ic:'ic-bird-perching', st:'Native',
+  zn:['z3','z8'], tx:'A mangrove and scrub specialist that stitches leaves together with plant fibre to form a hidden cradle for its nest.' },
+{ i:'b24', c:'SG·AVE·24', g:'bird', cls:'Aves', ord:'Pelecaniformes', fam:'Ardeidae',
+  n:'Grey Heron', s:'Ardea cinerea', ic:'ic-bird-wading', st:'Native · Common',
+  zn:['z3','z7'], tx:'A tall, patient wader that stands motionless in shallow water for long stretches before a lightning strike at passing fish.' },
+{ i:'b25', c:'SG·AVE·25', g:'bird', cls:'Aves', ord:'Pelecaniformes', fam:'Ardeidae',
+  n:'Purple Heron', s:'Ardea purpurea', ic:'ic-bird-wading', st:'Native · Uncommon',
+  zn:['z3'], tx:'A slimmer, more secretive heron than its grey cousin, favouring reedbeds and mangrove fringes at Sungei Buloh.' },
+{ i:'b26', c:'SG·AVE·26', g:'bird', cls:'Aves', ord:'Gruiformes', fam:'Rallidae',
+  n:'White-breasted Waterhen', s:'Amaurornis phoenicurus', ic:'ic-bird-wading', st:'Native · Common',
+  zn:['z7','z3'], tx:'A familiar sight jerking its tail as it picks along pond edges and drains, remarkably tolerant of urban surroundings.' },
+{ i:'b27', c:'SG·AVE·27', g:'bird', cls:'Aves', ord:'Strigiformes', fam:'Strigidae',
+  n:'Buffy Fish Owl', s:'Ketupa ketupu', ic:'ic-bird-owl', st:'Native · Uncommon',
+  zn:['z2','z4'], tx:"Singapore's largest resident owl, with piercing yellow eyes and bristling ear-tufts, hunting fish and frogs after dark near water." },
+{ i:'b28', c:'SG·AVE·28', g:'bird', cls:'Aves', ord:'Galliformes', fam:'Phasianidae',
+  n:'Red Junglefowl', s:'Gallus gallus', ic:'ic-bird-perching', st:'Native · Wild ancestor of the chicken',
+  zn:['z4','z2'], tx:"The wild ancestor of the domestic chicken, still surviving in Singapore's forests — though many island birds are hybridised with feral domestic stock." },
+
+/* ---------------------------- MAMMALS ---------------------------- */
+{ i:'m01', c:'SG·MAM·01', g:'mammal', cls:'Mammalia', ord:'Primates', fam:'Cercopithecidae',
+  n:"Raffles' Banded Langur", s:'Presbytis femoralis', ic:'ic-mammal-primate', st:'Critically Endangered',
+  zn:['z2'], tx:'One of the rarest primates on Earth, with a small dark-furred population confined almost entirely to the Central Catchment forest.' },
+{ i:'m02', c:'SG·MAM·02', g:'mammal', cls:'Mammalia', ord:'Primates', fam:'Cercopithecidae',
+  n:'Long-tailed Macaque', s:'Macaca fascicularis', ic:'ic-mammal-primate', st:'Native · Common',
+  zn:['z2','z1'], tx:"Singapore's only wild monkey, living in troops along forest edges; visitors are asked not to feed them to avoid habituation." },
+{ i:'m03', c:'SG·MAM·03', g:'mammal', cls:'Mammalia', ord:'Primates', fam:'Lorisidae',
+  n:'Sunda Slow Loris', s:'Nycticebus coucang', ic:'ic-mammal-primate', st:'Native · Rare, nocturnal',
+  zn:['z2'], tx:'A slow-moving, saucer-eyed nocturnal primate with a toxic bite gland on its elbow — rarely seen except on night walks.' },
+{ i:'m04', c:'SG·MAM·04', g:'mammal', cls:'Mammalia', ord:'Scandentia', fam:'Tupaiidae',
+  n:'Common Treeshrew', s:'Tupaia glis', ic:'ic-mammal-squirrel', st:'Native',
+  zn:['z2','z1'], tx:'A quick, squirrel-like insectivore that forages on the forest floor and low trunks, unrelated to true shrews despite the name.' },
+{ i:'m05', c:'SG·MAM·05', g:'mammal', cls:'Mammalia', ord:'Pholidota', fam:'Manidae',
+  n:'Sunda Pangolin', s:'Manis javanica', ic:'ic-mammal-pangolin', st:'Endangered',
+  zn:['z2'], tx:'A scale-armoured, ant-eating mammal — the world\u2019s most trafficked wild mammal — with a small, closely monitored population in the catchment forest.' },
+{ i:'m06', c:'SG·MAM·06', g:'mammal', cls:'Mammalia', ord:'Carnivora', fam:'Felidae',
+  n:'Leopard Cat', s:'Prionailurus bengalensis', ic:'ic-mammal-quad-small', st:'Native · Rare',
+  zn:['z2'], tx:"Singapore's only wild cat, a spotted, nocturnal hunter of rodents rarely photographed outside camera traps." },
+{ i:'m07', c:'SG·MAM·07', g:'mammal', cls:'Mammalia', ord:'Carnivora', fam:'Mustelidae',
+  n:'Smooth-coated Otter', s:'Lutrogale perspicillata', ic:'ic-mammal-quad-small', st:'Native · Recovering',
+  zn:['z3','z7'], tx:'A conservation success story: otter families now patrol reservoirs and even city waterways, having recolonised from Malaysia decades ago.' },
+{ i:'m08', c:'SG·MAM·08', g:'mammal', cls:'Mammalia', ord:'Carnivora', fam:'Viverridae',
+  n:'Common Palm Civet', s:'Paradoxurus hermaphroditus', ic:'ic-mammal-quad-small', st:'Native · Common',
+  zn:['z7','z2'], tx:'A masked, nocturnal fruit-eater often heard scurrying across roofs at night; one of the few native carnivores thriving alongside people.' },
+{ i:'m09', c:'SG·MAM·09', g:'mammal', cls:'Mammalia', ord:'Carnivora', fam:'Herpestidae',
+  n:'Small Asian Mongoose', s:'Herpestes javanicus', ic:'ic-mammal-quad-small', st:'Introduced',
+  zn:['z5'], tx:'A slender, low-slung hunter of lizards and rodents, introduced historically and now established in scrub and grassland patches.' },
+{ i:'m10', c:'SG·MAM·10', g:'mammal', cls:'Mammalia', ord:'Rodentia', fam:'Sciuridae',
+  n:'Plantain Squirrel', s:'Callosciurus notatus', ic:'ic-mammal-squirrel', st:'Native · Common',
+  zn:['z7','z2'], tx:"The everyday squirrel of Singapore's parks and gardens, with a warm orange belly and a habit of stripping bark from ornamental trees." },
+{ i:'m11', c:'SG·MAM·11', g:'mammal', cls:'Mammalia', ord:'Rodentia', fam:'Sciuridae',
+  n:'Red Giant Flying Squirrel', s:'Petaurista petaurista', ic:'ic-mammal-squirrel', st:'Native · Rare',
+  zn:['z2'], tx:'A large nocturnal glider that launches from emergent trees and rides a skin membrane in long silent arcs across the canopy.' },
+{ i:'m12', c:'SG·MAM·12', g:'mammal', cls:'Mammalia', ord:'Chiroptera', fam:'Pteropodidae',
+  n:"Lyle's Flying Fox", s:'Pteropus lylei', ic:'ic-mammal-bat', st:'Native · Uncommon',
+  zn:['z4','z2'], tx:'A large fruit bat with a wingspan approaching a metre, an important pollinator of durian and mangrove flowers at dusk.' },
+{ i:'m13', c:'SG·MAM·13', g:'mammal', cls:'Mammalia', ord:'Cetartiodactyla', fam:'Tragulidae',
+  n:'Greater Mouse-deer', s:'Tragulus napu', ic:'ic-mammal-quad-hoofed', st:'Native · Uncommon',
+  zn:['z2','z4'], tx:"One of the world's smallest hoofed mammals, a shy, deer-like forager the size of a rabbit, most active at dawn and dusk." },
+{ i:'m14', c:'SG·MAM·14', g:'mammal', cls:'Mammalia', ord:'Cetartiodactyla', fam:'Suidae',
+  n:'Wild Boar', s:'Sus scrofa', ic:'ic-mammal-quad-hoofed', st:'Native · Re-established',
+  zn:['z2','z4'], tx:'Once locally extinct, wild boar swam or were reintroduced from nearby islands and are now well established in the catchment forest.' },
+{ i:'m15', c:'SG·MAM·15', g:'mammal', cls:'Mammalia', ord:'Cetartiodactyla', fam:'Cervidae',
+  n:'Sambar Deer', s:'Rusa unicolor', ic:'ic-mammal-quad-hoofed', st:'Reintroduced · Small population',
+  zn:['z2'], tx:'A large native deer reintroduced to the Central Catchment area, with a small free-ranging population now seen near forest trails.' },
+
+/* ---------------------------- REPTILES ---------------------------- */
+{ i:'r01', c:'SG·REP·01', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Pythonidae',
+  n:'Reticulated Python', s:'Malayopython reticulatus', ic:'ic-reptile-snake', st:'Native · Common',
+  zn:['z7','z2'], tx:"The world's longest snake species, an excellent swimmer sometimes found in canals and drains as well as deep forest." },
+{ i:'r02', c:'SG·REP·02', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Colubridae',
+  n:'Oriental Whip Snake', s:'Ahaetulla prasina', ic:'ic-reptile-snake', st:'Native · Common',
+  zn:['z2','z7'], tx:'A slender, bright-green, mildly venomous snake with a pointed snout and horizontal pupils, common in garden shrubbery.' },
+{ i:'r03', c:'SG·REP·03', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Agamidae',
+  n:'Changeable Lizard', s:'Calotes versicolor', ic:'ic-reptile-lizard', st:'Native · Common',
+  zn:['z7'], tx:'An open-country lizard that flushes orange-and-black on the head and throat during breeding displays and territorial disputes.' },
+{ i:'r04', c:'SG·REP·04', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Agamidae',
+  n:'Green Crested Lizard', s:'Bronchocela cristatella', ic:'ic-reptile-lizard', st:'Native · Uncommon',
+  zn:['z2','z1'], tx:'Singapore\u2019s native forest counterpart to the changeable lizard — slender, uniformly bright green, with a low crest along the back.' },
+{ i:'r05', c:'SG·REP·05', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Varanidae',
+  n:'Malayan Water Monitor', s:'Varanus salvator', ic:'ic-reptile-monitor', st:'Native · Common',
+  zn:['z3','z7'], tx:'A powerful, semi-aquatic monitor lizard often seen basking beside canals and reservoirs or swimming with its tail as a rudder.' },
+{ i:'r06', c:'SG·REP·06', g:'reptile', cls:'Reptilia', ord:'Squamata', fam:'Varanidae',
+  n:'Clouded Monitor', s:'Varanus nebulosus', ic:'ic-reptile-monitor', st:'Native · Uncommon',
+  zn:['z2','z1'], tx:'A smaller, more arboreal monitor than its water-loving cousin, favouring drier forest and climbing readily after prey.' },
+{ i:'r07', c:'SG·REP·07', g:'reptile', cls:'Reptilia', ord:'Testudines', fam:'Geoemydidae',
+  n:'Malayan Box Turtle', s:'Cuora amboinensis', ic:'ic-reptile-turtle', st:'Vulnerable',
+  zn:['z2'], tx:'A freshwater turtle able to fully seal its hinged shell for protection, threatened range-wide by the pet and food trade.' },
+{ i:'r08', c:'SG·REP·08', g:'reptile', cls:'Reptilia', ord:'Crocodylia', fam:'Crocodylidae',
+  n:'Estuarine Crocodile', s:'Crocodylus porosus', ic:'ic-reptile-croc', st:'Native · Rare visitor',
+  zn:['z3'], tx:'The largest living reptile, occasionally recorded in Sungei Buloh\u2019s waterways — a reminder to keep to boardwalks at the reserve.' },
+
+/* ---------------------------- AMPHIBIANS ---------------------------- */
+{ i:'a01', c:'SG·AMP·01', g:'amphibian', cls:'Amphibia', ord:'Anura', fam:'Microhylidae',
+  n:'Banded Bullfrog', s:'Kaloula pulchra', ic:'ic-amphibian-frog', st:'Native · Common',
+  zn:['z7'], tx:'A squat, round frog that inflates when threatened and calls with a deep, resonant "waaah" chorus after heavy rain.' },
+{ i:'a02', c:'SG·AMP·02', g:'amphibian', cls:'Amphibia', ord:'Anura', fam:'Rhacophoridae',
+  n:'Four-lined Tree Frog', s:'Polypedates leucomystax', ic:'ic-amphibian-frog', st:'Native · Common',
+  zn:['z7'], tx:'A slender tree frog that whips egg foam into a frothy nest overhanging still water, common around gardens and drains.' },
+{ i:'a03', c:'SG·AMP·03', g:'amphibian', cls:'Amphibia', ord:'Anura', fam:'Ranidae',
+  n:'Copper-cheeked Frog', s:'Hylarana chalconota', ic:'ic-amphibian-frog', st:'Native',
+  zn:['z2'], tx:'A stream-side frog with a metallic sheen on the cheek, most easily located at night by torchlight along forest streams.' }
+
+];
+
+</script>
+<script>
+/* ============================================================
+   Canopy & Coast — app logic
+   ============================================================ */
+(function(){
+
+  const ZONE_SHORT = {
+    z1:'Bukit Timah', z2:'Central Catchment', z3:'Sungei Buloh',
+    z4:'Pulau Ubin', z5:'Southern Ridges', z6:'Labrador & Isles',
+    z7:'Urban Parks', z8:'East Coast'
+  };
+  const LAND = ['mammal','reptile','amphibian'];
+
+  let activeGroup = 'all';
+  let activeZone = null;
+
+  const els = {
+    groupChips: document.getElementById('groupChips'),
+    searchInput: document.getElementById('searchInput'),
+    resultsCount: document.getElementById('resultsCount'),
+    zoneList: document.getElementById('zoneList'),
+    zoneClear: document.getElementById('zoneClear'),
+    sgMap: document.getElementById('sgMap'),
+    taxGroups: document.getElementById('taxGroups'),
+    platesGrid: document.getElementById('platesGrid'),
+    emptyState: document.getElementById('emptyState'),
+    statTrees: document.getElementById('statTrees'),
+    statBirds: document.getElementById('statBirds'),
+    statAnimals: document.getElementById('statAnimals'),
+    statZones: document.getElementById('statZones'),
+  };
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  /* ---------------- filtering helpers ---------------- */
+  function matchesGroup(sp){
+    if(activeGroup==='all') return true;
+    if(activeGroup==='tree') return sp.g==='tree';
+    if(activeGroup==='bird') return sp.g==='bird';
+    if(activeGroup==='land') return LAND.includes(sp.g);
+    return true;
+  }
+  function matchesSearch(sp,q){
+    if(!q) return true;
+    return sp.n.toLowerCase().includes(q) || sp.s.toLowerCase().includes(q);
+  }
+  function baseFiltered(){
+    const q = els.searchInput.value.trim().toLowerCase();
+    return SPECIES.filter(sp=>matchesGroup(sp) && matchesSearch(sp,q));
+  }
+  function fullyFiltered(){
+    const base = baseFiltered();
+    if(!activeZone) return base;
+    return base.filter(sp=>sp.zn.includes(activeZone));
+  }
+
+  /* ---------------- hero stats (static, whole dataset) ---------------- */
+  function renderHeroStats(){
+    els.statTrees.textContent = SPECIES.filter(s=>s.g==='tree').length;
+    els.statBirds.textContent = SPECIES.filter(s=>s.g==='bird').length;
+    els.statAnimals.textContent = SPECIES.filter(s=>LAND.includes(s.g)).length;
+    els.statZones.textContent = ZONES.length;
+  }
+
+  /* ---------------- zone map + zone list ---------------- */
+  function buildMapDots(){
+    ZONES.forEach(z=>{
+      const g = document.createElementNS(svgNS,'g');
+      g.setAttribute('class','zone-dot');
+      g.setAttribute('data-zone', z.id);
+      g.setAttribute('tabindex','0');
+      g.setAttribute('role','button');
+      g.setAttribute('aria-label', 'Filter by ' + z.name);
+      g.setAttribute('transform', `translate(${z.x},${z.y})`);
+
+      const ring = document.createElementNS(svgNS,'circle');
+      ring.setAttribute('class','ring'); ring.setAttribute('r','9');
+      const core = document.createElementNS(svgNS,'circle');
+      core.setAttribute('class','core'); core.setAttribute('r','3.6');
+      const text = document.createElementNS(svgNS,'text');
+      text.setAttribute('y','-13');
+      text.setAttribute('text-anchor','middle');
+      text.textContent = ZONE_SHORT[z.id];
+
+      g.appendChild(ring); g.appendChild(core); g.appendChild(text);
+      g.addEventListener('click', ()=>toggleZone(z.id));
+      g.addEventListener('keydown', e=>{
+        if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleZone(z.id); }
+      });
+      els.sgMap.appendChild(g);
+    });
+  }
+
+  function renderZoneList(){
+    const base = baseFiltered();
+    els.zoneList.innerHTML = '';
+    ZONES.forEach(z=>{
+      const count = base.filter(sp=>sp.zn.includes(z.id)).length;
+      const li = document.createElement('li');
+      li.className = 'zone-item' + (activeZone===z.id ? ' active' : '');
+      li.tabIndex = 0;
+      li.setAttribute('role','button');
+      li.dataset.zone = z.id;
+      li.innerHTML = `<span class="zname">${z.name}</span><span class="zcount">${count} sp.</span>`;
+      li.title = z.desc;
+      li.addEventListener('click', ()=>toggleZone(z.id));
+      li.addEventListener('keydown', e=>{
+        if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleZone(z.id); }
+      });
+      els.zoneList.appendChild(li);
+    });
+    els.zoneClear.classList.toggle('show', !!activeZone);
+  }
+
+  function toggleZone(id){
+    activeZone = (activeZone===id) ? null : id;
+    syncMapActiveState();
+    renderAll();
+  }
+
+  function syncMapActiveState(){
+    els.sgMap.querySelectorAll('.zone-dot').forEach(g=>{
+      g.classList.toggle('active', g.dataset.zone===activeZone);
+    });
+  }
+
+  /* ---------------- taxonomy tree ---------------- */
+  function groupBy(arr, keyFn){
+    const map = new Map();
+    arr.forEach(item=>{
+      const k = keyFn(item);
+      if(!map.has(k)) map.set(k, []);
+      map.get(k).push(item);
+    });
+    return map;
+  }
+
+  function renderTaxonomy(list){
+    els.taxGroups.innerHTML = '';
+
+    const plants = list.filter(s=>s.g==='tree');
+    const animals = list.filter(s=>s.g!=='tree');
+
+    if(plants.length) els.taxGroups.appendChild(buildKingdomBlock('Kingdom Plantae', plants, 'clade'));
+    if(animals.length) els.taxGroups.appendChild(buildKingdomBlock('Kingdom Animalia', animals, 'cls'));
+
+    if(!plants.length && !animals.length){
+      const p = document.createElement('p');
+      p.className = 'tax-hint';
+      p.textContent = 'No taxa to display for the current filters.';
+      els.taxGroups.appendChild(p);
+    }
+  }
+
+  function buildKingdomBlock(title, items, topKey){
+    const block = document.createElement('div');
+    block.className = 'kingdom-block';
+
+    const head = document.createElement('div');
+    head.className = 'kingdom-head';
+    head.innerHTML = `${title} <span class="count">(${items.length} species)</span>`;
+    block.appendChild(head);
+
+    const byTop = groupBy(items, it=>it[topKey]);
+    // stable, sensible ordering
+    const order = ['Gymnosperms','Monocots','Eudicots','Aves','Mammalia','Reptilia','Amphibia'];
+    const keys = Array.from(byTop.keys()).sort((a,b)=> order.indexOf(a)-order.indexOf(b));
+
+    keys.forEach(topVal=>{
+      const topItems = byTop.get(topVal);
+      const det = document.createElement('details');
+      det.className = 'class-details';
+      const summary = document.createElement('summary');
+      summary.innerHTML = `${topKey==='cls' ? 'Class ' : ''}${topVal} <span class="count">${topItems.length}</span>`;
+      det.appendChild(summary);
+
+      const byOrder = groupBy(topItems, it=>it.ord);
+      Array.from(byOrder.keys()).sort().forEach(ordName=>{
+        const ordItems = byOrder.get(ordName);
+        const odet = document.createElement('details');
+        odet.className = 'order-details';
+        const osum = document.createElement('summary');
+        osum.innerHTML = `<span class="rank-label">Order</span> ${ordName} <span class="count">${ordItems.length}</span>`;
+        odet.appendChild(osum);
+
+        const byFam = groupBy(ordItems, it=>it.fam);
+        Array.from(byFam.keys()).sort().forEach(famName=>{
+          const famItems = byFam.get(famName);
+          const famBlock = document.createElement('div');
+          famBlock.className = 'fam-block';
+          const famLabel = document.createElement('div');
+          famLabel.className = 'fam-name';
+          famLabel.textContent = `Family ${famName}`;
+          famBlock.appendChild(famLabel);
+
+          const ul = document.createElement('ul');
+          ul.className = 'sp-links';
+          famItems.forEach(sp=>{
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.className = 'sp-link';
+            btn.textContent = sp.n;
+            btn.title = sp.s;
+            btn.addEventListener('click', ()=>jumpToPlate(sp.i));
+            li.appendChild(btn);
+            ul.appendChild(li);
+          });
+          famBlock.appendChild(ul);
+          odet.appendChild(famBlock);
+        });
+
+        det.appendChild(odet);
+      });
+
+      block.appendChild(det);
+    });
+
+    return block;
+  }
+
+  function jumpToPlate(id){
+    const el = document.querySelector(`.plate[data-id="${id}"]`);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.remove('pulse');
+    // restart animation
+    void el.offsetWidth;
+    el.classList.add('pulse');
+  }
+
+  /* ---------------- plates grid ---------------- */
+  function renderPlates(list){
+    els.platesGrid.innerHTML = '';
+    list.forEach(sp=>{
+      const card = document.createElement('article');
+      card.className = 'plate';
+      card.dataset.cls = sp.g;
+      card.dataset.id = sp.i;
+
+      const zoneTags = sp.zn.map(zid=>
+        `<button class="zone-tag" data-zone="${zid}" title="Filter by this zone">${ZONE_SHORT[zid]}</button>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="plate-head">
+          <span class="plate-cat">${sp.c}</span>
+          <span class="plate-status">${sp.st}</span>
+        </div>
+        <div class="plate-illust"><svg viewBox="0 0 100 100"><use href="#${sp.ic}"></use></svg></div>
+        <div class="plate-body">
+          <h3>${sp.n}</h3>
+          <p class="sci">${sp.s}</p>
+          <p class="plate-tax">${sp.ord} · ${sp.fam}</p>
+          <p class="blurb">${sp.tx}</p>
+          <div class="plate-zones">${zoneTags}</div>
+        </div>
+      `;
+      els.platesGrid.appendChild(card);
+    });
+
+    els.platesGrid.querySelectorAll('.zone-tag').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.dataset.zone;
+        activeZone = id;
+        syncMapActiveState();
+        renderAll();
+        document.querySelector('.map-section').scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+
+    els.emptyState.classList.toggle('show', list.length===0);
+  }
+
+  /* ---------------- results count ---------------- */
+  function updateResultsCount(list){
+    const total = SPECIES.length;
+    els.resultsCount.textContent = `${list.length} / ${total} shown`;
+  }
+
+  /* ---------------- orchestration ---------------- */
+  function renderAll(){
+    const filtered = fullyFiltered();
+    renderPlates(filtered);
+    renderTaxonomy(filtered);
+    renderZoneList();
+    updateResultsCount(filtered);
+  }
+
+  function initChips(){
+    els.groupChips.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        els.groupChips.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        activeGroup = chip.dataset.group;
+        renderAll();
+      });
+    });
+  }
+
+  function initSearch(){
+    els.searchInput.addEventListener('input', ()=>renderAll());
+  }
+
+  function initZoneClear(){
+    els.zoneClear.addEventListener('click', ()=>{
+      activeZone = null;
+      syncMapActiveState();
+      renderAll();
+    });
+  }
+
+  /* ---------------- boot ---------------- */
+  renderHeroStats();
+  buildMapDots();
+  initChips();
+  initSearch();
+  initZoneClear();
+  renderAll();
+
+})();
+
+</script>
+</body>
+</html>
