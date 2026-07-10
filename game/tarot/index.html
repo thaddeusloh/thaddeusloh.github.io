@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lohki Tarot — a 78-card fortune, told by one small cat</title>
+<meta name="description" content="An interactive tarot reading game featuring Lohki the cat. 78 hand-sketched cards, three spreads, infinite naps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --table:#191712;        /* dark graphite table */
+    --table-soft:#211e18;
+    --paper:#f3edde;        /* card stock */
+    --paper-dim:#e9e2cf;
+    --ink:#38332a;          /* graphite ink */
+    --ink-soft:#6b6355;
+    --amber:#c08a2b;        /* Lohki's eyes */
+    --amber-soft:#d9a94f;
+    --cream-text:#d9d2c0;
+    --cream-dim:#9a927e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--table);
+    color:var(--cream-text);
+    font-family:'Crimson Pro',Georgia,serif;
+    font-size:19px;
+    line-height:1.6;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(192,138,43,.07), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");
+  }
+  ::selection{background:var(--amber);color:var(--table)}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+
+  /* ---------- type ---------- */
+  h1,h2,.fell{font-family:'IM Fell English',Georgia,serif;font-weight:400}
+  .sc{font-family:'IM Fell English SC',Georgia,serif}
+  .eyebrow{
+    font-family:'IM Fell English SC',serif;
+    letter-spacing:.32em;font-size:.72rem;color:var(--amber-soft);
+    text-transform:lowercase;
+  }
+  h1{font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.02;color:var(--paper)}
+  h2{font-size:clamp(1.7rem,4vw,2.4rem);color:var(--paper);margin-bottom:.5em}
+  p.lede{font-size:clamp(1.1rem,2.2vw,1.3rem);color:var(--cream-text)}
+  .muted{color:var(--cream-dim)}
+  em{font-style:italic}
+
+  /* ---------- hero ---------- */
+  header{padding:64px 0 26px;text-align:center;position:relative;overflow:hidden}
+  .hero-cat{width:min(240px,52vw);margin:20px auto 6px;display:block}
+  .hero-cat svg{width:100%;height:auto;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5))}
+  .hero-rule{display:flex;align-items:center;gap:14px;justify-content:center;margin:18px 0 6px;color:var(--cream-dim)}
+  .hero-rule::before,.hero-rule::after{content:"";height:1px;width:min(120px,22vw);background:linear-gradient(90deg,transparent,var(--cream-dim))}
+  .hero-rule::after{background:linear-gradient(90deg,var(--cream-dim),transparent)}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+
+  button{
+    font-family:'IM Fell English SC',serif;
+    font-size:1rem;letter-spacing:.14em;
+    background:transparent;color:var(--paper);
+    border:1px solid var(--cream-dim);
+    padding:12px 26px;border-radius:2px;cursor:pointer;
+    transition:border-color .2s,color .2s,background .2s,transform .15s;
+  }
+  button:hover{border-color:var(--amber-soft);color:var(--amber-soft)}
+  button:focus-visible{outline:2px solid var(--amber-soft);outline-offset:3px}
+  button.primary{background:var(--amber);border-color:var(--amber);color:#1c150a}
+  button.primary:hover{background:var(--amber-soft);border-color:var(--amber-soft);color:#1c150a}
+  button.on{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+  button:disabled{opacity:.4;cursor:default}
+
+  section{padding:70px 0}
+  .divider{display:flex;justify-content:center;padding:6px 0;color:var(--amber-soft);font-size:1.3rem;letter-spacing:.8em}
+
+  /* ---------- intro ---------- */
+  .intro-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:44px;align-items:start}
+  .intro-grid p+p{margin-top:1em}
+  .suit-legend{border:1px solid #3a352c;border-radius:4px;padding:22px 24px;background:var(--table-soft)}
+  .suit-legend h3{font-family:'IM Fell English SC',serif;font-weight:400;letter-spacing:.2em;font-size:.95rem;color:var(--amber-soft);margin-bottom:14px}
+  .suit-row{display:flex;gap:14px;align-items:center;padding:10px 0;border-top:1px dashed #3a352c}
+  .suit-row svg{flex:0 0 44px;height:44px}
+  .suit-row b{font-family:'IM Fell English',serif;font-weight:400;color:var(--paper);display:block}
+  .suit-row span{font-size:.92rem;color:var(--cream-dim);line-height:1.35;display:block}
+
+  /* ---------- reading ---------- */
+  #reading{border-top:1px solid #2c2820}
+  .spread-row{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}
+  .spread-note{min-height:1.6em;color:var(--cream-dim);font-style:italic}
+
+  .fan{
+    display:flex;justify-content:flex-start;align-items:flex-end;
+    padding:34px 8px 20px;margin-top:10px;
+    overflow-x:auto;scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
+  }
+  .fan-card{
+    flex:0 0 auto;width:92px;aspect-ratio:5/8;margin-left:-46px;
+    border:none;padding:0;background:none;border-radius:7px;
+    transform:rotate(var(--tilt)) translateY(var(--lift));
+    transition:transform .22s ease,filter .22s ease;
+    cursor:pointer;position:relative;
+  }
+  .fan-card:first-child{margin-left:0}
+  .fan-card svg{width:100%;height:100%;display:block;border-radius:7px;box-shadow:0 6px 16px rgba(0,0,0,.55)}
+  .fan-card:hover,.fan-card:focus-visible{transform:rotate(var(--tilt)) translateY(calc(var(--lift) - 22px));filter:brightness(1.08);z-index:5}
+  .fan-card:focus-visible{outline:2px solid var(--amber-soft);outline-offset:2px}
+  .fan-card.taken{visibility:hidden;pointer-events:none}
+
+  .slots{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .slot{width:min(200px,42vw);text-align:center}
+  .slot .pos{font-family:'IM Fell English SC',serif;letter-spacing:.2em;font-size:.8rem;color:var(--amber-soft);margin-bottom:10px;min-height:1.3em}
+  .slot .well{
+    aspect-ratio:5/8;border:1px dashed #45402f;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;color:#4a4436;
+    font-family:'IM Fell English',serif;font-size:2rem;
+    perspective:1200px;
+  }
+  .flip{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .flip.flipped{transform:rotateY(180deg)}
+  .flip .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.55)}
+  .flip .front{transform:rotateY(180deg)}
+  .flip svg{width:100%;height:100%;display:block}
+  .rev-tag{margin-top:8px;font-size:.85rem;color:var(--cream-dim);font-style:italic;min-height:1.3em}
+
+  .meanings{max-width:760px;margin:40px auto 0}
+  .meaning{border-top:1px solid #2f2a21;padding:20px 4px;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+  .meaning.show{opacity:1;transform:none}
+  .meaning h4{font-family:'IM Fell English',serif;font-weight:400;font-size:1.35rem;color:var(--paper)}
+  .meaning .pos-label{font-family:'IM Fell English SC',serif;font-size:.75rem;letter-spacing:.25em;color:var(--amber-soft)}
+  .meaning p{margin-top:6px}
+  .meaning .rev{color:var(--amber-soft);font-style:italic}
+  .reading-actions{display:flex;gap:12px;justify-content:center;margin-top:34px}
+
+  /* ---------- gallery ---------- */
+  #deck-section{border-top:1px solid #2c2820}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 26px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:16px}
+  .mini{border:none;background:none;padding:0;cursor:pointer;border-radius:6px;transition:transform .18s}
+  .mini svg{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 5px 14px rgba(0,0,0,.45)}
+  .mini:hover,.mini:focus-visible{transform:translateY(-6px)}
+  .mini:focus-visible{outline:2px solid var(--amber-soft);outline-offset:3px}
+  .mini figcaption{font-size:.78rem;color:var(--cream-dim);text-align:center;margin-top:6px;font-style:italic}
+
+  /* ---------- modal ---------- */
+  dialog{
+    background:var(--table-soft);color:var(--cream-text);
+    border:1px solid #453f31;border-radius:8px;padding:0;
+    max-width:min(680px,94vw);width:100%;
+  }
+  dialog::backdrop{background:rgba(8,7,5,.78)}
+  .modal-body{display:grid;grid-template-columns:220px 1fr;gap:26px;padding:28px}
+  .modal-body .big svg{width:100%;height:auto;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.6)}
+  .modal-body h3{font-family:'IM Fell English',serif;font-weight:400;font-size:1.6rem;color:var(--paper)}
+  .modal-body .kind{font-family:'IM Fell English SC',serif;font-size:.75rem;letter-spacing:.28em;color:var(--amber-soft)}
+  .modal-body p{margin-top:12px}
+  .modal-close{margin:0 28px 24px;float:right}
+
+  footer{padding:56px 0 70px;text-align:center;border-top:1px solid #2c2820}
+  footer p{color:var(--cream-dim);font-size:.95rem}
+  footer .paw{color:var(--amber-soft);letter-spacing:.5em}
+
+  @media (max-width:760px){
+    .intro-grid{grid-template-columns:1fr}
+    .modal-body{grid-template-columns:1fr;justify-items:center}
+    .modal-body .big{max-width:230px}
+    body{font-size:17px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- shared sketchy filter for all card SVGs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="roughen" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="wrap">
+  <p class="eyebrow">a small divination · from a small cat</p>
+  <h1>The Lohki Tarot</h1>
+  <div class="hero-cat" id="heroCat" aria-hidden="true"></div>
+  <div class="hero-rule"><span class="sc" style="letter-spacing:.3em">est. one thousand naps ago</span></div>
+  <p class="lede">Seventy-eight cards, sketched in graphite and governed entirely<br class="wide-only">
+  by the moods of Lohki — house cat, oracle, professional sunbeam inspector.</p>
+  <div class="cta-row">
+    <button class="primary" onclick="document.getElementById('reading').scrollIntoView()">Have your fortune read</button>
+    <button onclick="document.getElementById('deck-section').scrollIntoView()">Browse the deck</button>
+  </div>
+</header>
+
+<div class="divider" aria-hidden="true">· · ·</div>
+
+<section class="wrap" id="about">
+  <div class="intro-grid">
+    <div>
+      <p class="eyebrow" style="margin-bottom:10px">first, a little history</p>
+      <h2>What is tarot?</h2>
+      <p>Tarot began in fifteenth-century Italy as a card game for aristocrats, and only
+      centuries later drifted into the candle-lit business of fortune-telling. A full deck holds
+      <em>seventy-eight cards</em>: twenty-two <strong>Major Arcana</strong> — the big, archetypal
+      moments of a life — and fifty-six <strong>Minor Arcana</strong>, divided into four suits
+      that speak to everyday matters of energy, feeling, thought, and reward.</p>
+      <p>A reading is simple: shuffle, draw, and let the cards act as mirrors. They don't
+      predict the future so much as give you new angles on the present — which, coincidentally,
+      is also what happens when you stare at a cat long enough.</p>
+      <p>This deck replaces every classical symbol with the iconography of one specific
+      tabby. The Wheel of Fortune is a ball of yarn. The Tower is a toppled vase. The Devil is,
+      of course, the red dot. Draw your cards below — and remember, like all tarot,
+      it's <em>for reflection and entertainment</em>. Lohki accepts no liability, only treats.</p>
+    </div>
+    <aside class="suit-legend">
+      <h3>The four suits of Lohki</h3>
+      <div class="suit-row" id="legend-whiskers"></div>
+      <div class="suit-row" id="legend-bowls"></div>
+      <div class="suit-row" id="legend-claws"></div>
+      <div class="suit-row" id="legend-yarn"></div>
+    </aside>
+  </div>
+</section>
+
+<section class="wrap" id="reading">
+  <p class="eyebrow" style="margin-bottom:10px">the reading table</p>
+  <h2>Consult the cat</h2>
+  <p class="muted">Choose a spread, then pluck your cards from the fan. Some cards arrive
+  <em>reversed</em> — upside-down, like a cat on a warm afternoon — which softens or turns their meaning.</p>
+
+  <div class="spread-row" role="group" aria-label="Choose a spread">
+    <button data-spread="1">One Paw · quick omen</button>
+    <button data-spread="3" class="on">Three Paws · past, present, future</button>
+    <button data-spread="5">The Cat's Cross · five cards</button>
+  </div>
+  <p class="spread-note" id="spreadNote"></p>
+
+  <div class="fan" id="fan" aria-label="Face-down cards. Pick from the fan."></div>
+
+  <div class="slots" id="slots"></div>
+  <div class="meanings" id="meanings"></div>
+
+  <div class="reading-actions">
+    <button id="resetBtn">Shuffle &amp; begin again</button>
+  </div>
+</section>
+
+<section class="wrap" id="deck-section">
+  <p class="eyebrow" style="margin-bottom:10px">the full seventy-eight</p>
+  <h2>Browse the deck</h2>
+  <p class="muted">Every card, from The Kitten to the King of Yarn. Tap any card to read it.</p>
+  <div class="tabs" role="group" aria-label="Filter the deck">
+    <button data-tab="major" class="on">Major Arcana</button>
+    <button data-tab="whiskers">Whiskers</button>
+    <button data-tab="bowls">Bowls</button>
+    <button data-tab="claws">Claws</button>
+    <button data-tab="yarn">Yarn</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<dialog id="modal" aria-label="Card details">
+  <div class="modal-body">
+    <div class="big" id="modalCard"></div>
+    <div>
+      <p class="kind" id="modalKind"></p>
+      <h3 id="modalName"></h3>
+      <p id="modalMeaning"></p>
+      <p class="rev" id="modalRev" style="color:var(--amber-soft);font-style:italic"></p>
+    </div>
+  </div>
+  <button class="modal-close" onclick="document.getElementById('modal').close()">Close</button>
+</dialog>
+
+<footer class="wrap">
+  <p class="paw" aria-hidden="true">🐾</p>
+  <p>Drawn after a graphite sketch of Lohki, resident oracle.<br>
+  All fortunes are for entertainment; all naps are legally binding.</p>
+</footer>
+
+<script>
+/* ============================================================
+   THE LOHKI TAROT — data
+   ============================================================ */
+const AMBER = '#c08a2b', INK = '#3b362e', PAPER = '#f3edde';
+const ROMAN = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+
+const MAJORS = [
+ ['The Kitten','fool','A leap from the top shelf with total faith and no plan. Begin the thing before you feel ready; innocence is its own safety net.','Reversed: pause — look where you\u2019re landing before this particular leap.'],
+ ['The Conjurer','magician','Every tool is already at paw: will, wit, whiskers. What you can imagine, you can bat into existence.','Reversed: clever tricks without follow-through; talent left dozing.'],
+ ['The Window Watcher','watcher','Still and silent behind the glass, knowing more than she says. Trust the quiet inner meow of intuition.','Reversed: you\u2019re ignoring what you already know to be true.'],
+ ['The Cushion Queen','cushion','Softness as power. Nurture something — a project, a person, yourself — and watch abundance pile up like blankets.','Reversed: caring for everyone but the cat in the mirror.'],
+ ['The Keeper of the House','keeper','Order, routine, protected territory. Build structure now and the whole household rests easier.','Reversed: rules have grown taller than the warmth they were built to guard.'],
+ ['The Elder Cat','elder','Wisdom from the ones who napped here before you. Tradition, teachers, the old proven paths.','Reversed: question the old ways — some doors were meant to be pushed open.'],
+ ['The Chin Scratch','lovers','Chosen affection; two natures aligning in a purring, whole-hearted yes. Choose with your values, not just your appetite.','Reversed: a mismatch of wants; the scratch is in the wrong spot.'],
+ ['The Zoomies','zoomies','Momentum at three-a.m. speed. Harness the wild energy, point it down one hallway, and go.','Reversed: careening without a destination; rein it in before the vase does.'],
+ ['The Gentle Paw','strength','True power keeps its claws sheathed. Patience and soft persistence tame what force never could.','Reversed: you\u2019re doubting a quiet strength you demonstrably have.'],
+ ['The Cat Under the Bed','hermit','Withdraw on purpose. In the dust-mote dark there is thinking to be done that no crowd can do for you.','Reversed: hiding past the point of healing; a paw pokes out — follow it.'],
+ ['The Wheel of Yarn','wheel','The great ball rolls and everything turns with it. Luck changes; chase the thread while it unravels in your favour.','Reversed: resisting the turn of the wheel only tangles you in it.'],
+ ['The Fair Share','justice','Two bowls, evenly filled, witnessed by an unblinking stare. Truth, balance, and consequences arriving on schedule.','Reversed: an uneven bowl somewhere needs righting — possibly yours.'],
+ ['The Upside-Down Cat','hanged','Dangling happily off the couch, seeing the room anew. A willing pause; surrender the old angle.','Reversed: stalling and calling it perspective.'],
+ ['The Ninth Life','death','One life ends so the next can begin. Shed the winter coat; what falls away was finished anyway.','Reversed: clinging to the eighth life while the ninth waits at the door.'],
+ ['The Slow Blink','temperance','The measured blink of perfect trust. Blend, moderate, soothe; the middle path smells of warm milk.','Reversed: extremes and spilled saucers; slow everything down.'],
+ ['The Red Dot','devil','You are chasing something designed never to be caught. Name the dot, and the wall loses its power over you.','Reversed: you\u2019ve looked away from the dot at last — freedom.'],
+ ['The Toppled Vase','tower','Crash. What was balanced on the edge was always going to fall; gravity is just honesty. Sweep up, rebuild truer.','Reversed: aftershocks and near-misses; quiet rebuilding is underway.'],
+ ['The Night Window','star','Beyond the dark glass, something glitters and calls you to hope. Heal, wish, refill the bowl of faith.','Reversed: a fogged pane; clean it gently — the star never moved.'],
+ ['The Midnight Prowl','moon','Hallway shadows playing tricks; not everything hissing is a threat. Move slowly through uncertainty.','Reversed: the fog lifts; fears, once named, turn out to be coat racks.'],
+ ['The Sunbeam Nap','sun','Pure warmth. Success, vitality, and joy stretched full-length across the floor. Bask without apology.','Reversed: the beam has merely moved to another room — follow it.'],
+ ['The Dinner Bell','judgement','A call rings through the house and everything changes. Rise, answer, be renewed; you know that sound.','Reversed: pretending not to hear the call doesn\u2019t stop it ringing.'],
+ ['The Whole House','world','Every room explored, every cushion claimed, the circle complete. Completion — then, naturally, a nap before the next cycle.','Reversed: one last door stands ajar; finish before you begin again.']
+];
+
+const SUITS = {
+ whiskers:{name:'Whiskers',element:'the spark',desc:'Curiosity, instinct, adventure — the twitch before the pounce. (In classical decks: Wands.)'},
+ bowls:{name:'Bowls',element:'the heart',desc:'Affection, comfort, friendship — everything that fills or empties. (Classically: Cups.)'},
+ claws:{name:'Claws',element:'the mind',desc:'Wit, truth, sharp decisions — handled carefully or felt keenly. (Classically: Swords.)'},
+ yarn:{name:'Yarn',element:'the reward',desc:'Play, work, patience, prosperity — the long thread of effort. (Classically: Pentacles.)'}
+};
+
+const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Kitten','Prowler','Queen','King'];
+const RANK_LABEL = ['A','2','3','4','5','6','7','8','9','10','KT','PR','Q','K'];
+
+const MINORS = {
+ whiskers:[
+  ['A twitch of the whiskers: a brand-new adventure announces itself. Say yes before the scent fades.','Reversed: hesitating at an open door.'],
+  ['Two paths seen from the windowsill. Survey the territory, then commit to one direction.','Reversed: fear of leaving the ledge.'],
+  ['Your ships — and treat deliveries — are on the horizon. Keep watch; what you set moving is coming.','Reversed: delays in what you sent out.'],
+  ['A warm home and a small celebration: four paws firmly planted in comfort and welcome.','Reversed: cosiness turning restless.'],
+  ['A playful scuffle — several cats batting the same toy. Friendly friction sharpens everyone.','Reversed: the squabble has dragged on too long.'],
+  ['A victory lap around the living room. Your triumph is real and, better yet, witnessed.','Reversed: applause that doesn\u2019t reach you; validate yourself.'],
+  ['Defend the top of the cat tree. You earned the high ground; hold it with steady swats.','Reversed: overwhelmed — the ground is slipping, ask for backup.'],
+  ['Zoomies incoming: swift news, sudden movement, everything arriving at once. Clear the hallway.','Reversed: frustrating delays; energy scattering in circles.'],
+  ['Wary but unbowed — one ear back, still guarding what matters. You are more resilient than you feel.','Reversed: bracing for a pounce that never comes; rest.'],
+  ['Carrying too many toys in one small mouth. Set a few burdens down; no one is counting.','Reversed: at last, the load is being dropped.'],
+  ['An eager pounce-in-training. A spark of curiosity or an exciting message lands at your feet.','Reversed: a false start; wind up again.'],
+  ['The bold night-runner: charge at life, tail high, apologise to no vase.','Reversed: recklessness knocking things over on the way.'],
+  ['Radiant, magnetic confidence — she claims the sunniest seat and everyone is glad she did.','Reversed: warmth curdling into a need for attention.'],
+  ['The seasoned adventurer who leads with vision and unhurried daring. Command your territory kindly.','Reversed: impulsive orders; leading with claws first.']
+ ],
+ bowls:[
+  ['A fresh bowl filled to the brim. New love, new friendship, new feeling — lap it up.','Reversed: a full bowl left untouched; open your heart\u2019s door.'],
+  ['Two cats sharing one sunbeam: partnership, mutual trust, tails entwined.','Reversed: a good bond quietly asking for maintenance.'],
+  ['Celebration with the whole litter — friendship, laughter, shared treats on the good china.','Reversed: too many cats at one bowl; guard your energy.'],
+  ['Bored with the usual kibble while a new offering sits unnoticed at the edge of the mat.','Reversed: appetite — and gratitude — returning.'],
+  ['Three bowls spilled, but two still stand full behind you. Grieve properly, then turn around.','Reversed: acceptance; the tongue-bath of moving on.'],
+  ['A scent of kittenhood: nostalgia, an old friend, a gift returning from the past, sweeter than remembered.','Reversed: living in the old sunbeam instead of today\u2019s.'],
+  ['So many bowls, so many imagined dinners. Dreaming is lovely; choose one before they all go cold.','Reversed: clarity at last — one bowl is real.'],
+  ['Walking away from a full bowl to search for something the bowl can\u2019t hold. Deeper meaning calls.','Reversed: fear of leaving the comfortable dish.'],
+  ['The contented loaf: wishes granted, belly full, purr at maximum settings. Enjoy it thoroughly.','Reversed: wanting exactly one treat too many.'],
+  ['The whole family piled on one couch. Lasting harmony, warm hearts, a home that hums.','Reversed: the pile needs a gentle rearranging.'],
+  ['A tender, dreamy message arrives — intuition mewing softly at the door of your heart.','Reversed: moody sulking under the table.'],
+  ['The romantic, arriving with a feather held gently as an offering. Lead with the heart.','Reversed: beautiful promises, no feathers delivered.'],
+  ['Deep empathy: she knows you\u2019re sad before you do, and sits on precisely the right lap.','Reversed: absorbing every mood in the house; shake your coat out.'],
+  ['A calm heart and steady comfort — wise counsel offered over a quietly shared meal.','Reversed: feelings kept hidden behind the whiskers.']
+ ],
+ claws:[
+  ['One clean scratch of truth: sudden clarity, a breakthrough idea, the fog shredded in a stroke.','Reversed: a sharp idea used carelessly.'],
+  ['Eyes closed, paws crossed, refusing to choose. A decision avoided is still a decision.','Reversed: the fence has grown uncomfortable; pick a side.'],
+  ['A scratched heart. A painful truth, honestly delivered, hurts less than a soft lie — but it still hurts.','Reversed: the scab itches; healing has begun.'],
+  ['Mandatory nap. The mind must rest between hunts; recovery is part of the stalking.','Reversed: restlessness; ignoring the nap invites burnout.'],
+  ['Winning the argument but losing the sunbeam. Ask what the victory actually cost.','Reversed: making amends; sharing the warm spot again.'],
+  ['Crossing to calmer windowsills, leaving churned water behind. Passage, transition, gentler days ahead.','Reversed: dragging old baggage into the carrier.'],
+  ['Sneaky paws in the treat jar. Strategy, or something less flattering? Check your own reflection.','Reversed: the clever plan unravels like cheap string.'],
+  ['Feeling boxed in on every side — but look closely: this box has never had a lid.','Reversed: one paw over the edge; you\u2019re wriggling free.'],
+  ['Three-a.m. worries pacing the hallway of the mind. Most of these shadows are coat racks.','Reversed: dawn arrives; the fears look smaller fed and watered.'],
+  ['The dramatic belly-up flop: an ending, performed fully, felt completely. It is finished.','Reversed: slowly rolling upright; the worst is behind you.'],
+  ['Sharp-eyed curiosity. Watch, learn, question everything twice, report back honestly.','Reversed: gossip over the garden fence.'],
+  ['Charging headfirst at the truth, claws out, fur flying. Brave — but aim before you leap.','Reversed: haste that scratches friend and foe alike.'],
+  ['Piercing perception with perfect posture: honest, fair, immune to flattery and to fluff.','Reversed: the cold shoulder; honesty without warmth.'],
+  ['The strategic mind, master of the long unblinking stare. Rule by reason, temper it with purring.','Reversed: judgment gone rigid; bend a whisker.']
+ ],
+ yarn:[
+  ['A brand-new ball of yarn drops at your feet. A tangible opportunity — real, round, and yours.','Reversed: the chance rolls under the couch; fish it out.'],
+  ['Juggling two toys at once with practiced paws. Balance the bounce; drop neither.','Reversed: threads slipping; simplify the game.'],
+  ['The team hunt: your craft is noticed, your part matters, the collaboration pays off.','Reversed: working alone in a corner that needs colleagues.'],
+  ['Hoarding every toy under the couch. Security is good; a dragon\u2019s hoard of yarn is lonely.','Reversed: the grip loosens; generosity returns.'],
+  ['Locked out in the cold, looking in at the warm window. Hardship — but no cat weathers it alone.','Reversed: the door creaks open; help arrives.'],
+  ['Treats shared fairly down the line. Generosity, given or received, comes back around the yarn.','Reversed: strings attached to the string.'],
+  ['Watching the yarn unwind, slowly, slowly. Investment, patience; growth keeps its own calendar.','Reversed: impatience with a perfectly healthy pace.'],
+  ['The devoted kneading of the blanket: mastery through repetition, craft through ten thousand paws.','Reversed: kneading on autopilot; recall why you began.'],
+  ['A well-earned solo luxuriation in the garden. Independence, abundance, self-made comfort.','Reversed: the comfort feels hollow; invite someone in.'],
+  ['A dynasty of cats and an inherited armchair. Lasting security, legacy, the long thread held.','Reversed: family knots that want gentle untangling.'],
+  ['A small chance to learn a large skill. Study the toy seriously; apprenticeship suits you.','Reversed: shiny distractions; one toy at a time.'],
+  ['The slow, methodical stalker. Unglamorous, reliable progress, paw after deliberate paw.','Reversed: the routine has become a rut; vary the route.'],
+  ['The nurturing provider: the house runs on her schedule and everyone is mysteriously fed.','Reversed: caretaking stretched past its ninth life.'],
+  ['The fat cat of prosperity — disciplined, generous, secure, radiating well-earned calm.','Reversed: guarding the food bowl from imaginary thieves.']
+ ]
+};
+</script>
+<script>
+/* ============================================================
+   SVG art — everything sketched in graphite, after the drawing
+   ============================================================ */
+
+/* Lohki, sitting, drawn once in a 200×200 box (paws at y≈192).
+   opts: eyes:'open'|'closed', stripes:true, crown:'king'|'queen'|null */
+function catSVG(o = {}) {
+  const eyes = o.eyes === 'closed'
+    ? `<path d="M76,82 q9,5 18,0" /><path d="M106,82 q9,5 18,0" />`
+    : `<path d="M77,80 q9,-8 18,0 q-9,8 -18,0 Z" fill="${AMBER}" stroke-width="1.6"/>
+       <path d="M105,80 q9,-8 18,0 q-9,8 -18,0 Z" fill="${AMBER}" stroke-width="1.6"/>
+       <path d="M86,75 l0,10 M114,75 l0,10" stroke-width="1.8"/>`;
+  const crown = o.crown === 'king'
+    ? `<path d="M78,26 l6,-16 8,10 8,-14 8,14 8,-10 6,16 Z" fill="none" stroke-width="2"/>`
+    : o.crown === 'queen'
+    ? `<path d="M84,28 l5,-12 11,8 11,-8 5,12" fill="none" stroke-width="2"/><circle cx="100" cy="12" r="2.4" fill="${AMBER}" stroke="none"/>`
+    : '';
+  const stripes = o.stripes === false ? '' : `
+    <g stroke-width="1.7" opacity=".85">
+      <path d="M88,48 q4,8 1,15"/><path d="M100,45 q2,9 0,16"/><path d="M112,48 q-4,8 -1,15"/>
+      <path d="M64,72 q6,3 10,2"/><path d="M136,72 q-6,3 -10,2"/>
+      <path d="M124,132 q11,5 16,13"/><path d="M120,146 q11,5 15,13"/><path d="M116,160 q10,5 14,12"/>
+      <path d="M62,140 q-6,7 -6,14"/><path d="M64,158 q-5,6 -5,12"/>
+      <path d="M166,150 q7,2 10,-2"/><path d="M162,166 q7,2 10,-2"/>
+    </g>`;
+  return `
+  <g fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    ${crown}
+    <path d="M66,60 L56,26 L88,46"/>
+    <path d="M134,60 L144,26 L112,46"/>
+    <path d="M64,32 L74,42 M136,32 L126,42" stroke-width="1.5"/>
+    <path d="M66,60 Q56,84 66,100 Q82,116 100,116 Q118,116 134,100 Q144,84 134,60 Q118,44 100,44 Q82,44 66,60 Z"/>
+    ${eyes}
+    <path d="M96,92 l8,0 l-4,5 Z" fill="${INK}" stroke-width="1"/>
+    <path d="M100,97 q-3,7 -10,6 M100,97 q3,7 10,6" stroke-width="1.7"/>
+    <path d="M72,90 q-20,-5 -32,-11 M73,96 q-21,0 -34,-2 M74,102 q-19,4 -31,9" stroke-width="1.4"/>
+    <path d="M128,90 q20,-5 32,-11 M127,96 q21,0 34,-2 M126,102 q19,4 31,9" stroke-width="1.4"/>
+    <path d="M72,110 Q52,146 55,190"/>
+    <path d="M128,110 Q150,140 148,190"/>
+    <path d="M148,168 Q146,146 132,140" stroke-width="1.8"/>
+    <path d="M86,124 L83,188 M104,124 L102,188" stroke-width="1.9"/>
+    <path d="M72,190 q9,6 18,1 M94,190 q8,6 17,1 M119,191 q10,6 20,0" stroke-width="1.8"/>
+    <path d="M148,186 Q180,182 179,152 Q178,130 160,131 Q150,132 152,144" stroke-width="2.4"/>
+    <path d="M170,138 q6,4 7,10 M158,134 q-2,6 1,11" stroke-width="1.5"/>
+    ${stripes}
+    <g stroke-width="1.1" opacity=".5">
+      <path d="M88,132 l-6,10 M95,133 l-6,10 M102,133 l-6,10"/>
+    </g>
+  </g>`;
+}
+
+/* suit pip glyphs, centred on (0,0), ~26px tall */
+const PIP = {
+  whiskers: s => `<g transform="scale(${s})" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round">
+    <circle cx="-9" cy="6" r="1.8" fill="${INK}" stroke="none"/>
+    <path d="M-8,5 Q4,-8 13,-9"/><path d="M-8,7 Q6,0 14,1" opacity=".55" stroke-width="1.4"/></g>`,
+  bowls: s => `<g transform="scale(${s})" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round">
+    <ellipse cx="0" cy="-3" rx="11" ry="3.4"/>
+    <path d="M-11,-3 Q-10,9 0,9 Q10,9 11,-3"/>
+    <path d="M-4,-9 q1,-4 -1,-6 M3,-9 q1,-4 -1,-6" opacity=".6" stroke-width="1.4"/></g>`,
+  claws: s => `<g transform="scale(${s})" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round">
+    <path d="M-8,-10 Q-4,2 -7,11"/><path d="M0,-12 Q4,1 1,12"/><path d="M8,-10 Q12,2 9,11"/></g>`,
+  yarn: s => `<g transform="scale(${s})" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round">
+    <circle cx="0" cy="0" r="10"/>
+    <path d="M-9,-4 Q0,4 9,-4 M-9,4 Q0,-4 9,4 M-4,-9 Q2,0 -4,9" stroke-width="1.5"/>
+    <path d="M9,4 q8,4 12,10" stroke-width="1.6"/></g>`
+};
+
+/* pip layouts per count (positions in a 150×130 box centred at 0,0) */
+const PIP_POS = [
+ [],
+ [[0,0]],
+ [[0,-34],[0,34]],
+ [[0,-42],[0,0],[0,42]],
+ [[-34,-34],[34,-34],[-34,34],[34,34]],
+ [[-34,-38],[34,-38],[0,0],[-34,38],[34,38]],
+ [[-34,-42],[34,-42],[-34,0],[34,0],[-34,42],[34,42]],
+ [[-34,-44],[34,-44],[0,-14],[-34,12],[34,12],[-34,48],[34,48]],
+ [[-34,-46],[34,-46],[-34,-15],[34,-15],[-34,16],[34,16],[-34,47],[34,47]],
+ [[-34,-48],[34,-48],[-34,-16],[34,-16],[0,0],[-34,16],[34,16],[-34,48],[34,48]],
+ [[-34,-50],[34,-50],[-34,-20],[34,-20],[0,-35],[0,35],[-34,20],[34,20],[-34,50],[34,50]]
+];
+
+/* major arcana motif glyphs, drawn in a ~200×90 band (centre ≈100,45) */
+function motifSVG(id){
+  const g = (inner)=>`<g fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`;
+  switch(id){
+    case 'fool': return g(`<path d="M86,40 q-16,-18 -26,-4 q-6,10 12,12 Z"/><path d="M100,40 q16,-18 26,-4 q6,10 -12,12 Z"/><path d="M93,36 q0,14 0,22" stroke-width="1.6"/><circle cx="93" cy="32" r="3.4"/>`);
+    case 'magician': return g(`<path d="M70,58 L130,26" stroke-width="2.6"/><path d="M130,26 l8,-8 m-8,8 l11,2 m-11,-2 l-2,-11" stroke-width="1.6" stroke="${AMBER}"/><path d="M56,40 l6,0 m-3,-3 l0,6" stroke="${AMBER}" stroke-width="1.6"/>`);
+    case 'watcher': return g(`<rect x="62" y="14" width="76" height="58" rx="3"/><path d="M100,14 L100,72 M62,43 L138,43" stroke-width="1.6"/><path d="M118,26 a8,8 0 1 0 6,13 a10,10 0 1 1 -6,-13" fill="${AMBER}" stroke-width="1.2"/>`);
+    case 'cushion': return g(`<path d="M56,58 Q100,42 144,58 Q148,74 144,76 Q100,64 56,76 Q52,74 56,58 Z"/><path d="M56,58 l-7,-7 M144,58 l7,-7 M56,76 l-7,6 M144,76 l7,6" stroke-width="1.6"/><path d="M96,26 q4,-8 8,0 q8,-4 6,4 q6,4 -2,7 q-2,8 -8,3 q-8,4 -8,-4 q-7,-3 -1,-8 Z" stroke-width="1.5" stroke="${AMBER}"/>`);
+    case 'keeper': return g(`<circle cx="80" cy="42" r="13"/><circle cx="80" cy="42" r="5" stroke-width="1.6"/><path d="M93,42 L138,42 M124,42 l0,10 M134,42 l0,13" stroke-width="2.4"/>`);
+    case 'elder': return g(`<path d="M64,64 Q100,50 100,26 Q100,50 136,64 L136,70 Q100,56 64,70 Z"/><path d="M100,26 L100,56" stroke-width="1.6"/><path d="M72,60 q28,-11 56,0" stroke-width="1.2" opacity=".6"/>`);
+    case 'lovers': return g(`<path d="M100,64 Q74,48 74,34 Q74,22 86,22 Q96,22 100,32 Q104,22 114,22 Q126,22 126,34 Q126,48 100,64 Z" stroke="${AMBER}"/><path d="M88,40 q12,8 24,0" stroke-width="1.4"/>`);
+    case 'zoomies': return g(`<path d="M50,32 L96,32 M42,44 L88,44 M52,56 L92,56" stroke-width="2.4"/><path d="M108,26 q28,4 34,18 q-30,-4 -40,6" stroke-width="2"/><path d="M138,24 l6,20" stroke-width="1.5" opacity=".6"/>`);
+    case 'strength': return g(`<circle cx="100" cy="38" r="9"/><circle cx="84" cy="54" r="6"/><circle cx="100" cy="58" r="6"/><circle cx="116" cy="54" r="6"/><path d="M76,26 q24,-14 48,0" stroke-width="1.4" opacity=".6" stroke="${AMBER}"/>`);
+    case 'hermit': return g(`<path d="M52,26 L148,26 M60,26 L60,44 M140,26 L140,44" stroke-width="2.6"/><path d="M64,36 q36,10 72,0" stroke-width="1.2" opacity=".5"/><path d="M96,52 q4,-6 8,0" stroke="${AMBER}" stroke-width="1.6"/>`);
+    case 'wheel': return g(`<circle cx="100" cy="44" r="26"/><circle cx="100" cy="44" r="17" stroke-width="1.4"/><path d="M84,32 Q100,52 116,32 M84,56 Q100,36 116,56 M100,18 Q92,44 100,70" stroke-width="1.4"/><path d="M126,44 q14,6 20,14" stroke-width="1.6"/>`);
+    case 'justice': return g(`<path d="M100,16 L100,58 M72,24 L128,24" stroke-width="2.2"/><path d="M72,24 l-9,18 a11,7 0 0 0 18,0 Z M128,24 l-9,18 a11,7 0 0 0 18,0 Z" stroke-width="1.6"/><path d="M92,62 l16,0" stroke-width="2"/>`);
+    case 'hanged': return g(`<path d="M56,20 L144,20" stroke-width="2.6"/><path d="M100,20 L100,34" stroke-width="1.8"/><path d="M88,42 q12,18 24,0" stroke-width="2"/><path d="M84,52 q16,14 32,0" stroke-width="1.4" opacity=".6"/>`);
+    case 'death': return g(`<g stroke="${AMBER}" stroke-width="1.5">${[0,1,2,3,4,5,6,7,8].map(i=>{const a=i/9*Math.PI*2-Math.PI/2,x=100+Math.cos(a)*30,y=44+Math.sin(a)*24;return `<path d="M${x-3},${y} l6,0 M${x},${y-3} l0,6"/>`;}).join('')}</g><path d="M92,44 q-10,-12 -16,-2 q-4,7 8,8 Z M108,44 q10,-12 16,-2 q4,7 -8,8 Z" stroke-width="1.7"/>`);
+    case 'temperance': return g(`<path d="M64,34 q18,14 36,0 M100,34 q18,14 36,0" stroke-width="2.4"/><path d="M70,48 q14,10 28,0 M102,48 q14,10 28,0" stroke-width="1.4" opacity=".55"/>`);
+    case 'devil': return g(`<circle cx="100" cy="40" r="9" fill="#b0432c" stroke="none"/><circle cx="100" cy="40" r="14" stroke="#b0432c" stroke-width="1.4" opacity=".6"/><path d="M46,18 L88,34" stroke-width="1.3" opacity=".5"/><path d="M100,40 l0,0" />`);
+    case 'tower': return g(`<path d="M84,66 L90,20 L114,22 L116,66" /><path d="M90,20 L86,12 M114,22 L120,14" stroke-width="1.6"/><path d="M96,34 q6,4 12,0 M95,48 q7,4 13,0" stroke-width="1.3" opacity=".6"/><path d="M132,12 l-8,12 8,2 -10,16" stroke="${AMBER}" stroke-width="2"/>`);
+    case 'star': return g(`<path d="M100,14 L106,36 L128,42 L106,48 L100,70 L94,48 L72,42 L94,36 Z" stroke="${AMBER}" fill="none"/><path d="M64,22 l4,4 m-4,0 l4,-4 M138,58 l4,4 m-4,0 l4,-4" stroke-width="1.4"/>`);
+    case 'moon': return g(`<path d="M112,16 a26,26 0 1 0 10,44 a22,22 0 1 1 -10,-44" stroke="${AMBER}"/><path d="M60,60 l3,3 m-3,0 l3,-3 M146,28 l3,3 m-3,0 l3,-3" stroke-width="1.4"/>`);
+    case 'sun': return g(`<circle cx="100" cy="42" r="17" stroke="${AMBER}"/><g stroke="${AMBER}" stroke-width="1.7">${[0,1,2,3,4,5,6,7].map(i=>{const a=i/8*Math.PI*2,x1=100+Math.cos(a)*23,y1=42+Math.sin(a)*23,x2=100+Math.cos(a)*32,y2=42+Math.sin(a)*32;return `<path d="M${x1},${y1} L${x2},${y2}"/>`;}).join('')}</g>`);
+    case 'judgement': return g(`<path d="M100,14 q-20,2 -20,26 l-6,10 52,0 -6,-10 q0,-24 -20,-26 Z"/><path d="M94,54 q6,8 12,0" stroke-width="1.8"/><path d="M64,26 q-6,8 -4,16 M136,26 q6,8 4,16" stroke-width="1.4" opacity=".6"/>`);
+    case 'world': return g(`<path d="M62,44 Q62,14 100,14 Q138,14 138,44" stroke-width="1.8"/><path d="M62,44 q10,-8 14,0 M138,44 q-10,-8 -14,0" stroke-width="1.4"/><path d="M70,58 q30,14 60,0" stroke="${AMBER}" stroke-width="1.6"/><path d="M96,30 l4,-6 4,6 -4,4 Z" stroke-width="1.4"/>`);
+    default: return '';
+  }
+}
+
+/* full card face, 220×360 */
+function cardFace(card, opts = {}) {
+  const rough = opts.rough === false ? '' : ' filter="url(#roughen)"';
+  const frame = `
+    <rect x="0" y="0" width="220" height="360" rx="10" fill="${PAPER}"/>
+    <rect x="7" y="7" width="206" height="346" rx="7" fill="none" stroke="${INK}" stroke-width="2.4"/>
+    <rect x="14" y="14" width="192" height="332" rx="4" fill="none" stroke="${INK}" stroke-width="1" opacity=".55"/>
+    <path d="M14,14 l10,10 M206,14 l-10,10 M14,346 l10,-10 M206,346 l-10,-10" stroke="${INK}" stroke-width="1" opacity=".45"/>
+    <circle cx="176" cy="330" r="9" fill="none" stroke="${INK}" stroke-width=".7" opacity=".12"/>`;
+  const nameSize = card.name.length > 19 ? 12.5 : card.name.length > 14 ? 14 : 15.5;
+  const banner = `
+    <path d="M30,308 L190,308" stroke="${INK}" stroke-width="1" opacity=".6"/>
+    <text x="110" y="332" text-anchor="middle" font-family="'IM Fell English SC',serif" font-size="${nameSize}" fill="${INK}">${card.name}</text>`;
+  let art = '';
+  if (card.kind === 'major') {
+    art = `
+      <text x="110" y="40" text-anchor="middle" font-family="'IM Fell English',serif" font-size="17" fill="${INK}">${ROMAN[card.num]}</text>
+      <g transform="translate(10,44)">${motifSVG(card.motif)}</g>
+      <g transform="translate(20,128) scale(0.9)${card.motif==='hanged' ? ' rotate(180 100 116)' : ''}">${catSVG(card.catOpts)}</g>`;
+  } else if (card.rankIndex <= 9) {
+    const n = card.rankIndex + 1;
+    const pips = PIP_POS[n].map(([x,y]) => `<g transform="translate(${110+x},${118+y})">${PIP[card.suit](1.05)}</g>`).join('');
+    art = `
+      <text x="30" y="42" text-anchor="middle" font-family="'IM Fell English',serif" font-size="18" fill="${INK}">${RANK_LABEL[card.rankIndex]}</text>
+      <text x="190" y="42" text-anchor="middle" font-family="'IM Fell English',serif" font-size="18" fill="${INK}">${RANK_LABEL[card.rankIndex]}</text>
+      ${pips}
+      <g transform="translate(52,190) scale(0.58)">${catSVG({stripes:true})}</g>`;
+  } else {
+    const crown = card.rankIndex === 13 ? 'king' : card.rankIndex === 12 ? 'queen' : null;
+    const scale = card.rankIndex === 10 ? 0.66 : 0.88;
+    const tx = card.rankIndex === 10 ? 44 : 22;
+    const ty = card.rankIndex === 10 ? 168 : 122;
+    const speed = card.rankIndex === 11 ? `<path d="M28,190 l30,0 M22,204 l28,0 M30,218 l26,0" stroke="${INK}" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>` : '';
+    art = `
+      <g transform="translate(96,66)">${PIP[card.suit](1.15)}</g>
+      ${speed}
+      <g transform="translate(${tx},${ty}) scale(${scale})">${catSVG({crown, eyes: card.rankIndex===10?'open':'open'})}</g>`;
+  }
+  return `<svg viewBox="0 0 220 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.name}">
+    ${frame}<g${rough}>${art}${banner}</g></svg>`;
+}
+
+/* card back: hatched cat sigil */
+function cardBack() {
+  return `<svg viewBox="0 0 220 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect width="220" height="360" rx="10" fill="${PAPER}"/>
+    <rect x="7" y="7" width="206" height="346" rx="7" fill="none" stroke="${INK}" stroke-width="2.4"/>
+    <rect x="15" y="15" width="190" height="330" rx="4" fill="none" stroke="${INK}" stroke-width="1"/>
+    <g fill="none" stroke="${INK}" stroke-width="1.1" opacity=".9">
+      ${Array.from({length:26},(_,i)=>`<path d="M${22+i*7},22 L22,${22+i*7}" opacity=".18"/>`).join('')}
+      ${Array.from({length:26},(_,i)=>`<path d="M${198-i*7},338 L198,${338-i*7}" opacity=".18"/>`).join('')}
+      <circle cx="110" cy="180" r="66"/>
+      <circle cx="110" cy="180" r="58" stroke-dasharray="3 5"/>
+      ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>{const a=i/12*Math.PI*2,x1=110+Math.cos(a)*70,y1=180+Math.sin(a)*70,x2=110+Math.cos(a)*84,y2=180+Math.sin(a)*84;return `<path d="M${x1},${y1} L${x2},${y2}"/>`;}).join('')}
+    </g>
+    <g fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M84,158 L76,132 L98,146"/>
+      <path d="M136,158 L144,132 L122,146"/>
+      <path d="M84,158 Q76,178 86,192 Q98,204 110,204 Q122,204 134,192 Q144,178 136,158 Q124,146 110,146 Q96,146 84,158 Z"/>
+      <path d="M94,176 q8,5 16,0 M126,176 q-8,5 -16,0" transform="translate(-8,0)" stroke-width="0" />
+      <path d="M92,176 q7,5 14,0" /><path d="M114,176 q7,5 14,0"/>
+      <path d="M106,188 l8,0 l-4,5 Z" fill="${INK}" stroke-width="1"/>
+      <path d="M86,190 q-16,-3 -26,-8 M86,196 q-16,2 -27,6 M134,190 q16,-3 26,-8 M134,196 q16,2 27,6" stroke-width="1.3"/>
+    </g>
+    <g fill="${AMBER}" stroke="none">
+      <circle cx="110" cy="70" r="3"/><circle cx="110" cy="290" r="3"/>
+      <path d="M62,58 l2.4,6 6,2.4 -6,2.4 -2.4,6 -2.4,-6 -6,-2.4 6,-2.4 Z"/>
+      <path d="M158,290 l2.4,6 6,2.4 -6,2.4 -2.4,6 -2.4,-6 -6,-2.4 6,-2.4 Z"/>
+    </g>
+    <text x="110" y="330" text-anchor="middle" font-family="'IM Fell English SC',serif" font-size="11" fill="${INK}" letter-spacing="3">LOHKI</text>
+  </svg>`;
+}
+
+/* ============================================================
+   Build the deck
+   ============================================================ */
+const DECK = [];
+MAJORS.forEach((m, i) => DECK.push({
+  kind:'major', num:i, name:m[0], motif:m[1], meaning:m[2], reversed:m[3],
+  catOpts: m[1]==='sun'||m[1]==='temperance' ? {eyes:'closed'} : m[1]==='keeper' ? {crown:'king'} : m[1]==='cushion' ? {crown:'queen'} : {},
+  label:`${ROMAN[i]} · Major Arcana`
+}));
+Object.keys(MINORS).forEach(suit => {
+  MINORS[suit].forEach((m, r) => DECK.push({
+    kind:'minor', suit, rankIndex:r,
+    name: r <= 9 ? `${RANKS[r]} of ${SUITS[suit].name}` : `${RANKS[r]} of ${SUITS[suit].name}`,
+    meaning:m[0], reversed:m[1],
+    label:`${SUITS[suit].name} · ${SUITS[suit].element}`
+  }));
+});
+
+/* ============================================================
+   The reading
+   ============================================================ */
+const SPREADS = {
+  1:{positions:['The Omen'], note:'One card. One truth. One cat.'},
+  3:{positions:['Past','Present','Future'], note:'Where you\u2019ve prowled, where you sit, where the sunbeam moves next.'},
+  5:{positions:['You','The Obstacle','What Hides','The Advice','The Outcome'], note:'The Cat\u2019s Cross: a fuller portrait of your situation, in five cards.'}
+};
+let spreadSize = 3, drawPile = [], drawn = 0;
+
+const fanEl = document.getElementById('fan');
+const slotsEl = document.getElementById('slots');
+const meaningsEl = document.getElementById('meanings');
+const noteEl = document.getElementById('spreadNote');
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function setupReading(){
+  drawPile = shuffle([...DECK]).slice(0, 22).map(c => ({...c, isReversed: Math.random() < 0.28}));
+  drawn = 0;
+  const spread = SPREADS[spreadSize];
+  noteEl.textContent = spread.note;
+
+  fanEl.innerHTML = '';
+  drawPile.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'fan-card';
+    b.setAttribute('aria-label', `Face-down card ${i+1} of ${drawPile.length}`);
+    const mid = (drawPile.length-1)/2, d = (i-mid)/mid;
+    b.style.setProperty('--tilt', (d*7).toFixed(1)+'deg');
+    b.style.setProperty('--lift', (Math.abs(d)*26).toFixed(0)+'px');
+    b.innerHTML = cardBack();
+    b.addEventListener('click', () => pick(b, c));
+    fanEl.appendChild(b);
+  });
+  fanEl.scrollLeft = (fanEl.scrollWidth - fanEl.clientWidth)/2;
+
+  slotsEl.innerHTML = '';
+  meaningsEl.innerHTML = '';
+  spread.positions.forEach((pos, i) => {
+    const s = document.createElement('div');
+    s.className = 'slot';
+    s.innerHTML = `<div class="pos">${pos}</div><div class="well" id="well${i}"><span aria-hidden="true">?</span></div><div class="rev-tag" id="rev${i}"></div>`;
+    slotsEl.appendChild(s);
+  });
+}
+
+function pick(btn, card){
+  if (drawn >= spreadSize) return;
+  btn.classList.add('taken');
+  btn.disabled = true;
+  const i = drawn++;
+  const pos = SPREADS[spreadSize].positions[i];
+  const well = document.getElementById('well'+i);
+  const revText = document.getElementById('rev'+i);
+  const rot = card.isReversed ? ' style="transform:rotate(180deg)"' : '';
+  well.innerHTML = `
+    <div class="flip">
+      <div class="face back">${cardBack()}</div>
+      <div class="face front"><div${rot} style="width:100%;height:100%">${cardFace(card)}</div></div>
+    </div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=> well.querySelector('.flip').classList.add('flipped')));
+  setTimeout(()=>{ revText.textContent = card.isReversed ? 'reversed' : ''; }, 500);
+
+  const m = document.createElement('div');
+  m.className = 'meaning';
+  m.innerHTML = `
+    <span class="pos-label">${pos}</span>
+    <h4>${card.name}${card.isReversed ? ' <span style="font-size:.8em;color:var(--amber-soft)">(reversed)</span>' : ''}</h4>
+    <p class="muted" style="font-size:.9rem">${card.label}</p>
+    <p>${card.isReversed ? card.reversed : card.meaning}</p>
+    ${card.isReversed ? `<p class="muted" style="font-size:.95rem">Upright, this card means: ${card.meaning}</p>` : ''}`;
+  meaningsEl.appendChild(m);
+  setTimeout(()=>m.classList.add('show'), 600);
+
+  if (drawn === spreadSize){
+    fanEl.querySelectorAll('.fan-card:not(.taken)').forEach(b=>{b.disabled = true; b.style.opacity = .35;});
+    const done = document.createElement('div');
+    done.className = 'meaning';
+    done.innerHTML = `<p style="text-align:center;font-style:italic">The cat has spoken. He is now asleep. <span style="color:var(--amber-soft)">Shuffle again whenever you like.</span></p>`;
+    meaningsEl.appendChild(done);
+    setTimeout(()=>done.classList.add('show'), 900);
+  }
+}
+
+document.querySelectorAll('[data-spread]').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-spread]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    spreadSize = +b.dataset.spread;
+    setupReading();
+  });
+});
+document.getElementById('resetBtn').addEventListener('click', setupReading);
+
+/* ============================================================
+   Gallery + modal
+   ============================================================ */
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modal');
+
+function openModal(card){
+  document.getElementById('modalCard').innerHTML = cardFace(card);
+  document.getElementById('modalKind').textContent = card.label;
+  document.getElementById('modalName').textContent = card.name;
+  document.getElementById('modalMeaning').textContent = card.meaning;
+  document.getElementById('modalRev').textContent = card.reversed;
+  modal.showModal();
+}
+modal.addEventListener('click', e=>{ if(e.target === modal) modal.close(); });
+
+function renderTab(tab){
+  grid.innerHTML = '';
+  const cards = tab === 'major' ? DECK.filter(c=>c.kind==='major') : DECK.filter(c=>c.suit===tab);
+  const frag = document.createDocumentFragment();
+  cards.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'mini';
+    b.setAttribute('aria-label', `View ${c.name}`);
+    b.innerHTML = `<figure>${cardFace(c,{rough:false})}<figcaption>${c.name}</figcaption></figure>`;
+    b.addEventListener('click', ()=>openModal(c));
+    frag.appendChild(b);
+  });
+  grid.appendChild(frag);
+}
+document.querySelectorAll('[data-tab]').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    renderTab(b.dataset.tab);
+  });
+});
+
+/* ============================================================
+   Hero cat + suit legend
+   ============================================================ */
+document.getElementById('heroCat').innerHTML =
+  `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+     <g filter="url(#roughen)">
+       <g stroke="${'#d9d2c0'}">${catSVG().replaceAll(INK, '#d9d2c0')}</g>
+     </g>
+   </svg>`;
+
+[['whiskers','#legend-whiskers'],['bowls','#legend-bowls'],['claws','#legend-claws'],['yarn','#legend-yarn']].forEach(([s,sel])=>{
+  const el = document.querySelector(sel);
+  el.innerHTML = `
+    <svg viewBox="-16 -16 32 32">${PIP[s](1).replaceAll(INK,'#d9d2c0')}</svg>
+    <div><b>${SUITS[s].name} <span style="color:var(--cream-dim);font-size:.85em">· ${SUITS[s].element}</span></b>
+    <span>${SUITS[s].desc}</span></div>`;
+});
+
+/* go */
+setupReading();
+renderTab('major');
+</script>
+</body>
+</html>
