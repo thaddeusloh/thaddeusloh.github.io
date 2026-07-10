@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The State of Crypto — July 2026</title>
+<meta name="description" content="A beginner's research report on the crypto market in July 2026: what's hot, what's not, key trends, roadmaps, and where to do your own research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1B2C;          /* deep harbor navy */
+    --ink-soft:#3C4A5E;
+    --paper:#EEF2F4;        /* ice */
+    --panel:#FFFFFF;
+    --line:#C9D3DA;
+    --cobalt:#1B5BFF;       /* accent */
+    --gain:#0FA36B;
+    --loss:#D93A3A;
+    --heat-cold:#4A7DB5;
+    --heat-hot:#E24C2E;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --display:'Space Grotesk',sans-serif;
+    --body:'Source Serif 4',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65}
+  a{color:var(--cobalt)}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* ---------- ticker tape ---------- */
+  .tape{background:var(--ink);color:#E8EEF4;overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:13px;border-bottom:3px solid var(--cobalt)}
+  .tape-inner{display:inline-block;padding:9px 0;animation:tape 40s linear infinite}
+  @keyframes tape{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tape span{margin:0 26px}
+  .up{color:#5FDDA8}.dn{color:#FF8B8B}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:72px 0 56px;border-bottom:1px solid var(--line)}
+  .stamp{font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .stamp .dot{width:8px;height:8px;border-radius:50%;background:var(--loss);display:inline-block}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.02;letter-spacing:-.02em;margin:20px 0 18px}
+  h1 em{font-style:normal;color:var(--cobalt)}
+  .lede{max-width:680px;font-size:1.15rem;color:var(--ink-soft)}
+  .gauge{margin-top:34px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .gauge-bar{position:relative;height:14px;width:min(420px,100%);border-radius:7px;background:linear-gradient(90deg,var(--loss),#E8A13C,var(--gain))}
+  .gauge-pin{position:absolute;top:-7px;left:27%;width:4px;height:28px;background:var(--ink);border-radius:2px}
+  .gauge-pin::after{content:"27";position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;font-weight:600}
+  .gauge-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--cobalt);margin-bottom:12px}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.01em;margin-bottom:22px}
+  p+p{margin-top:14px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}}
+
+  /* ---------- snapshot table ---------- */
+  .snap{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:14px;margin-top:8px}
+  .snap th{text-align:left;font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--ink-soft);border-bottom:2px solid var(--ink);padding:8px 10px}
+  .snap td{padding:11px 10px;border-bottom:1px solid var(--line)}
+  .snap .chg-dn{color:var(--loss);font-weight:600}
+  .snap .chg-up{color:var(--gain);font-weight:600}
+
+  /* ---------- heat board (signature) ---------- */
+  .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:8px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:10px}
+  .card h3{font-family:var(--display);font-size:1.15rem;font-weight:700}
+  .card .temp{height:8px;border-radius:4px;background:#DDE4E9;position:relative;overflow:hidden}
+  .card .temp i{position:absolute;inset:0;border-radius:4px;background:linear-gradient(90deg,var(--heat-cold),var(--heat-hot));transform-origin:left}
+  .t95 i{transform:scaleX(.95)}.t88 i{transform:scaleX(.88)}.t82 i{transform:scaleX(.82)}.t74 i{transform:scaleX(.74)}.t66 i{transform:scaleX(.66)}.t60 i{transform:scaleX(.60)}
+  .t25 i{transform:scaleX(.25)}.t18 i{transform:scaleX(.18)}.t12 i{transform:scaleX(.12)}
+  .card .stat{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+  .card p{font-size:.95rem;color:var(--ink-soft)}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+  .tag.hot{background:#FBE3DC;color:#A83418}
+  .tag.cold{background:#DCE7F5;color:#2C5AA0}
+
+  /* ---------- pumpfun autopsy ---------- */
+  .autopsy{background:var(--ink);color:#E8EEF4;border-radius:14px;padding:38px 34px;margin-top:6px}
+  .autopsy h3{font-family:var(--display);font-size:1.5rem;margin-bottom:6px}
+  .autopsy .verdict{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#FFB199}
+  .autopsy p{color:#B9C6D4;margin-top:14px;max-width:720px}
+  .vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:26px}
+  .vital{border:1px solid #2A3B52;border-radius:10px;padding:16px}
+  .vital b{display:block;font-family:var(--mono);font-size:1.35rem;color:#FF8B8B}
+  .vital span{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:#8FA1B5}
+
+  /* ---------- roadmap timeline ---------- */
+  .timeline{list-style:none;margin-top:8px;border-left:3px solid var(--cobalt);padding-left:26px}
+  .timeline li{position:relative;padding:0 0 30px}
+  .timeline li::before{content:"";position:absolute;left:-33px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--paper);border:3px solid var(--cobalt)}
+  .timeline .when{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt)}
+  .timeline h3{font-family:var(--display);font-size:1.15rem;margin:4px 0 6px}
+  .timeline p{font-size:.97rem;color:var(--ink-soft);max-width:640px}
+
+  /* ---------- toolkit ---------- */
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:8px}
+  .tool{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+  .tool b{font-family:var(--display);display:block;margin-bottom:5px}
+  .tool span{font-size:.9rem;color:var(--ink-soft)}
+  .tool .use{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cobalt)}
+
+  /* ---------- watchouts ---------- */
+  .watch{background:#FBF3DC;border:1px solid #E4CE8A;border-radius:12px;padding:26px 28px;margin-top:10px}
+  .watch h3{font-family:var(--display);margin-bottom:10px}
+  .watch ul{padding-left:20px}
+  .watch li{margin:7px 0;font-size:.98rem}
+
+  footer{padding:48px 0 60px;font-size:.9rem;color:var(--ink-soft)}
+  footer .disc{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:22px}
+  footer .meta{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- ticker -->
+<div class="tape" aria-hidden="true">
+  <div class="tape-inner">
+    <span>BTC $63,700 <b class="dn">▼ 32% from Jan</b></span>
+    <span>ETH $1,800 <b class="dn">▼ 64% from ATH</b></span>
+    <span>SOL $82 <b class="dn">▼ 71% from ATH</b></span>
+    <span>FEAR &amp; GREED 27 · FEAR</span>
+    <span>STABLECOINS $311B+ <b class="up">▲ 50% YoY</b></span>
+    <span>RWA ON-CHAIN ~$29B <b class="up">▲ 300% YoY</b></span>
+    <span>HYPERLIQUID Q1 VOLUME $493B</span>
+    <span>MEMECOIN MCAP $30B <b class="dn">▼ $110B from peak</b></span>
+    <!-- duplicate for seamless loop -->
+    <span>BTC $63,700 <b class="dn">▼ 32% from Jan</b></span>
+    <span>ETH $1,800 <b class="dn">▼ 64% from ATH</b></span>
+    <span>SOL $82 <b class="dn">▼ 71% from ATH</b></span>
+    <span>FEAR &amp; GREED 27 · FEAR</span>
+    <span>STABLECOINS $311B+ <b class="up">▲ 50% YoY</b></span>
+    <span>RWA ON-CHAIN ~$29B <b class="up">▲ 300% YoY</b></span>
+    <span>HYPERLIQUID Q1 VOLUME $493B</span>
+    <span>MEMECOIN MCAP $30B <b class="dn">▼ $110B from peak</b></span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="stamp"><span class="dot"></span> RESEARCH REPORT · JULY 2026 · WRITTEN BY A CURIOUS NEWCOMER</div>
+    <h1>The State of Crypto:<br>less casino, <em>more plumbing</em>.</h1>
+    <p class="lede">The market is down, the memecoin party is over, and yet the most interesting building in crypto's history is happening right now. Here's what I found when I went looking.</p>
+    <div class="gauge">
+      <div class="gauge-bar"><div class="gauge-pin"></div></div>
+      <div class="gauge-label">Fear &amp; Greed Index — 27 / 100 (Fear)</div>
+    </div>
+  </div>
+</header>
+
+<section id="snapshot">
+  <div class="wrap">
+    <div class="eyebrow">01 — Market snapshot</div>
+    <h2>Where prices stand</h2>
+    <div class="cols">
+      <div>
+        <p>Crypto entered July 2026 in a correction. Bitcoin began the year above $93,000 and fell to roughly $60,000 by late June — a 21-month low — before bouncing back to the $63–64k range. The main culprits: sticky interest rates, record outflows from spot Bitcoin ETFs, and capital rotating into AI stocks.</p>
+        <p>Forecasts are genuinely split. Bernstein still calls for $150,000 BTC by year-end, arguing institutional ownership is smoothing the old boom-bust cycle. Citi cut its 12-month target to $82,000 with a bear case near $53,000, and Galaxy Research warns a $40–46k floor is possible. Nobody knows — that's the honest summary.</p>
+      </div>
+      <div>
+        <table class="snap">
+          <thead><tr><th>Asset</th><th>Price (approx.)</th><th>From high</th></tr></thead>
+          <tbody>
+            <tr><td>Bitcoin (BTC)</td><td>$63,700</td><td class="chg-dn">−49% vs $126K ATH</td></tr>
+            <tr><td>Ethereum (ETH)</td><td>$1,800</td><td class="chg-dn">−64% vs $4,953</td></tr>
+            <tr><td>Solana (SOL)</td><td>$82</td><td class="chg-dn">−71% vs $294</td></tr>
+            <tr><td>Stablecoins (total)</td><td>$311B+</td><td class="chg-up">+50% YoY</td></tr>
+            <tr><td>Tokenized RWAs</td><td>~$29B</td><td class="chg-up">+300% YoY</td></tr>
+            <tr><td>Memecoins (total)</td><td>~$30B</td><td class="chg-dn">−$110B from peak</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="heat">
+  <div class="wrap">
+    <div class="eyebrow">02 — The heat board</div>
+    <h2>What's hot, what's not</h2>
+    <p style="max-width:700px;margin-bottom:22px">The clearest shift of this cycle: money is leaving pure speculation and flowing toward protocols with <strong>real revenue, real users, and real-world assets</strong>. Each bar below is my read of how much attention and capital a sector is attracting right now.</p>
+    <div class="board">
+      <div class="card"><span class="tag hot">Hot</span><h3>Perp DEXs / Hyperliquid</h3><div class="temp t95"><i></i></div><span class="stat">$493B Q1 volume · ~70% of on-chain perps</span><p>Decentralized derivatives exchanges now rival centralized ones. Hyperliquid recycles 97–99% of fees into token buybacks — the model everyone is copying.</p></div>
+      <div class="card"><span class="tag hot">Hot</span><h3>Stablecoins &amp; stablechains</h3><div class="temp t88"><i></i></div><span class="stat">$311B+ market cap · GENIUS Act live Jan 2027</span><p>Crypto's killer app. Now expanding into payroll, remittances and B2B settlement, with dedicated payment chains from Circle, Stripe/Paradigm and others.</p></div>
+      <div class="card"><span class="tag hot">Hot</span><h3>RWA tokenization</h3><div class="temp t88"><i></i></div><span class="stat">~$29B on-chain · Treasuries 37x in 3 years</span><p>BlackRock, Franklin Templeton and 40+ institutions are putting Treasuries, private credit and funds on-chain. Analysts call it a "tokenization supercycle."</p></div>
+      <div class="card"><span class="tag hot">Hot</span><h3>Prediction markets</h3><div class="temp t74"><i></i></div><span class="stat">Billions in weekly volume potential</span><p>Polymarket-style event markets turn arguments into tradable probabilities. Coinbase expects aggregators to become a dominant interface layer.</p></div>
+      <div class="card"><span class="tag hot">Hot</span><h3>AI × crypto infrastructure</h3><div class="temp t66"><i></i></div><span class="stat">919 projects · $22.6B combined mcap</span><p>The hype tokens crashed, but infrastructure like Bittensor is generating tens of millions in actual AI service revenue. Quality is separating from noise.</p></div>
+      <div class="card"><span class="tag hot">Warm</span><h3>Privacy &amp; zero-knowledge</h3><div class="temp t60"><i></i></div><span class="stat">Compliance-friendly privacy rising</span><p>ZK proofs bridge privacy and regulation, and zkEVM tech is being pulled into Ethereum's core roadmap. A slower burn, but strategically important.</p></div>
+      <div class="card"><span class="tag cold">Not hot</span><h3>Memecoins</h3><div class="temp t18"><i></i></div><span class="stat">Market cap down $110B+ from 2024 peak</span><p>DOGE, PEPE, BONK and friends are down 20–90% over the past year. Speculative capital has rotated to perps and revenue-generating protocols.</p></div>
+      <div class="card"><span class="tag cold">Not hot</span><h3>Memecoin launchpads</h3><div class="temp t12"><i></i></div><span class="stat">Pump.fun activity down ~80% in 3 months</span><p>The token-a-minute casino model has broken down. See the autopsy below.</p></div>
+      <div class="card"><span class="tag cold">Cooling</span><h3>Digital asset treasuries 1.0</h3><div class="temp t25"><i></i></div><span class="stat">Valuation-driven consolidation underway</span><p>Companies that just accumulated coins on their balance sheet are consolidating. Watch for a more specialized "DAT 2.0" model instead.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pumpfun">
+  <div class="wrap">
+    <div class="eyebrow">03 — Case study</div>
+    <h2>Is pump.fun dead?</h2>
+    <div class="autopsy">
+      <div class="verdict">Verdict: Not dead — but the era it defined is over</div>
+      <h3>The memecoin machine has stalled</h3>
+      <p>Pump.fun made launching a token as easy as posting a tweet, and at its peak it was the single largest revenue generator on Solana. In 2026 the wheels came off: activity collapsed, roughly half of trading wallets lost money, a $500M lawsuit alleges insiders had unfair advantages, and a whistleblower handed over thousands of internal messages.</p>
+      <p>The company is fighting to survive — cutting launch fees, burning 36% of the PUMP token supply, and pivoting toward a broader product suite. But a major test arrives July 12, 2026, when 41% of the locked token supply unlocks and becomes sellable.</p>
+      <div class="vitals">
+        <div class="vital"><b>−83%</b><span>Daily revenue ($4.8M → ~$800K)</span></div>
+        <div class="vital"><b>0.26%</b><span>Token "graduation" rate</span></div>
+        <div class="vital"><b>−80%</b><span>Activity in 3 months</span></div>
+        <div class="vital"><b>~98%</b><span>Of tokens alleged rug pulls / failures</span></div>
+        <div class="vital"><b>$500M</b><span>Lawsuit vs. co-founders</span></div>
+        <div class="vital"><b>Jul 12</b><span>41% supply unlock</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmaps">
+  <div class="wrap">
+    <div class="eyebrow">04 — What's coming</div>
+    <h2>Roadmaps &amp; catalysts to watch</h2>
+    <ul class="timeline">
+      <li>
+        <span class="when">Q3 2026 (target)</span>
+        <h3>Solana "Alpenglow" + Firedancer</h3>
+        <p>The biggest consensus overhaul in Solana's history: transaction finality drops from ~12.8 seconds to 100–150 milliseconds — faster than a Visa authorization. Firedancer, a full validator rewrite that hit 1M TPS in testing, rolls out alongside it.</p>
+      </li>
+      <li>
+        <span class="when">H2 2026 (target ~Aug)</span>
+        <h3>Ethereum "Glamsterdam"</h3>
+        <p>Called Ethereum's most significant upgrade since The Merge. Targets ~10,000 TPS on L1, raising the gas limit from 60M toward 200M, plus enshrined proposer-builder separation to make block building fairer. The "Hegotá" fork follows in late 2026/early 2027, part of a plan of ~7 hard forks through 2029.</p>
+      </li>
+      <li>
+        <span class="when">Ongoing 2026</span>
+        <h3>US regulation: CLARITY Act &amp; altcoin ETFs</h3>
+        <p>The CLARITY Act (crypto market structure) is stuck in the Senate but backed by 200+ crypto firms. Meanwhile spot ETF proposals for altcoins like Solana continue through review — each approval widens the institutional door.</p>
+      </li>
+      <li>
+        <span class="when">January 2027</span>
+        <h3>GENIUS Act stablecoin regime takes effect</h3>
+        <p>Only licensed banks and approved issuers can issue stablecoins in the US, with 1:1 reserves in Treasuries or cash and monthly disclosures. This is the moment stablecoins fully graduate into regulated financial infrastructure.</p>
+      </li>
+      <li>
+        <span class="when">Longer horizon</span>
+        <h3>RWA perps, DAT 2.0, and quantum readiness</h3>
+        <p>Analysts expect perpetual futures on tokenized stocks and commodities to be a breakout use case; treasury companies to evolve into specialized block-space operators; and chains like Solana to begin adopting quantum-resistant signatures.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="toolkit">
+  <div class="wrap">
+    <div class="eyebrow">05 — DYOR toolkit</div>
+    <h2>Where I do my research</h2>
+    <div class="tools">
+      <div class="tool"><b>CoinGecko / CoinMarketCap</b><span>Prices, market caps, and excellent narrative &amp; sector reports.</span><span class="use">Start here</span></div>
+      <div class="tool"><b>DefiLlama</b><span>Protocol revenue, fees and TVL. The "show me the actual money" site.</span><span class="use">Fundamentals</span></div>
+      <div class="tool"><b>Dune Analytics</b><span>Community dashboards built on raw on-chain data. See what's really happening.</span><span class="use">On-chain data</span></div>
+      <div class="tool"><b>Messari</b><span>Institutional-grade research, asset profiles and comparison tools.</span><span class="use">Deep dives</span></div>
+      <div class="tool"><b>The Block / Blockworks</b><span>Data-driven crypto journalism and research newsletters.</span><span class="use">News + data</span></div>
+      <div class="tool"><b>RWA.xyz</b><span>Tracks tokenized Treasuries, private credit and the whole RWA sector.</span><span class="use">Tokenization</span></div>
+      <div class="tool"><b>Polymarket</b><span>Prediction markets — crowd-priced probabilities on real events.</span><span class="use">Sentiment</span></div>
+      <div class="tool"><b>X (Twitter)</b><span>Where narratives are born. Fast, useful, and full of people selling you things.</span><span class="use">Handle with care</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="watchouts">
+  <div class="wrap">
+    <div class="eyebrow">06 — Reality check</div>
+    <h2>What a newbie should keep in mind</h2>
+    <div class="watch">
+      <h3>Lessons I'm taking from this research</h3>
+      <ul>
+        <li><strong>Most tokens go to zero.</strong> On the biggest launchpad, roughly 98% of tokens were rugs or failures and about half of all trading wallets lost money.</li>
+        <li><strong>Narratives move faster than fundamentals.</strong> The same sector can be "the future" and "dead" within twelve months — memecoins just proved it.</li>
+        <li><strong>Follow revenue, not vibes.</strong> The winners of this cycle (Hyperliquid, stablecoin issuers, RWA platforms) all have measurable cash flows you can verify on DefiLlama.</li>
+        <li><strong>Crypto still trades like a risk asset.</strong> Rates, ETF flows and the AI stock boom moved this market more than anything crypto-native did.</li>
+        <li><strong>Token unlocks matter.</strong> Check vesting schedules before touching anything — supply hitting the market is a recurring source of pain.</li>
+        <li><strong>Size positions like they can go to zero.</strong> Because they can.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="disc">
+      <strong>Disclaimer:</strong> This page is a personal research summary for educational purposes only. It is not financial, investment, legal or tax advice, and I'm not a licensed advisor — just someone learning in public. Figures are approximate, compiled from public sources in July 2026, and will go stale quickly. Crypto assets are extremely volatile and you can lose everything you put in. Always do your own research.
+    </div>
+    <div class="meta">Compiled July 2026 · Sources: CoinGecko, DefiLlama, The Block, Blockworks, Coinbase Institutional, CoinDesk, Messari, ethereum.org &amp; others</div>
+  </div>
+</footer>
+
+</body>
+</html>
