@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Red Book, Illuminated — Functional Programming in Scala, Chapter by Chapter</title>
+<meta name="description" content="A junior-developer-friendly field guide to every chapter of Functional Programming in Scala, with interactive examples.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1E14;          /* deep forest floor */
+  --moss:#122A1D;         /* raised panel */
+  --moss-2:#183524;       /* hover / code bg */
+  --line:#25452F;         /* hairline borders */
+  --cream:#EDE6D4;        /* body text */
+  --cream-dim:#B9BFA9;    /* secondary text */
+  --mint:#9FD6B4;         /* sage mint — interactive */
+  --gold:#D8A94E;         /* canopy gold — emphasis */
+  --red:#C8503F;          /* the red book — chapter plates only */
+  --red-dim:#8C3A2E;
+  --mono:'JetBrains Mono',monospace;
+  --ui:'Space Grotesk',sans-serif;
+  --body:'Newsreader',serif;
+  --disp:'Fraunces',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{background:var(--ink);color:var(--cream);font-family:var(--body);font-size:18px;line-height:1.65;
+  background-image:radial-gradient(1200px 600px at 80% -10%, rgba(159,214,180,.05), transparent 60%),
+                   radial-gradient(900px 500px at 0% 30%, rgba(216,169,78,.04), transparent 60%);}
+::selection{background:var(--gold);color:var(--ink)}
+a{color:var(--mint);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:var(--ui)}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- top nav ---------- */
+nav.top{position:sticky;top:0;z-index:50;background:rgba(11,30,20,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:12px 24px;flex-wrap:wrap}
+nav.top .mark{font-family:var(--disp);font-weight:700;font-size:17px;color:var(--cream);letter-spacing:.01em}
+nav.top .mark em{color:var(--red);font-style:normal}
+nav.top .links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.top .links a{font-family:var(--ui);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--cream-dim);padding:6px 10px;border-radius:6px}
+nav.top .links a:hover{color:var(--mint);background:var(--moss);text-decoration:none}
+
+/* ---------- hero ---------- */
+header.hero{max-width:1060px;margin:0 auto;padding:84px 24px 56px;display:grid;grid-template-columns:1.4fr .8fr;gap:40px;align-items:center}
+.eyebrow{font-family:var(--ui);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+h1.title{font-family:var(--disp);font-weight:600;font-size:clamp(38px,5.4vw,62px);line-height:1.06;letter-spacing:-.015em}
+h1.title .rb{color:var(--red)}
+.hero p.lede{margin-top:22px;font-size:20px;color:var(--cream-dim);max-width:56ch}
+.hero p.lede strong{color:var(--cream);font-weight:500}
+.hero .legend{margin-top:26px;display:flex;gap:20px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--cream-dim)}
+.legend .k{display:inline-flex;align-items:center;gap:8px}
+.legend .dot{width:10px;height:10px;border-radius:50%}
+.hero-fig{justify-self:center}
+@media(max-width:820px){header.hero{grid-template-columns:1fr}.hero-fig{display:none}}
+
+/* ---------- structure ---------- */
+main{max-width:1060px;margin:0 auto;padding:0 24px 120px}
+section.part{margin-top:88px}
+.part-head{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.part-head .pn{font-family:var(--ui);font-size:13px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.part-head h2{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3vw,32px);letter-spacing:-.01em}
+.part-head .range{margin-left:auto;font-family:var(--ui);font-size:12.5px;color:var(--cream-dim);white-space:nowrap}
+.part-intro{margin-top:16px;color:var(--cream-dim);max-width:70ch;font-size:18px}
+
+article.ch{margin-top:56px;border:1px solid var(--line);border-radius:14px;background:var(--moss);overflow:hidden}
+.ch-plate{display:flex;align-items:center;gap:16px;padding:18px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg, rgba(200,80,63,.06), transparent)}
+.ch-num{font-family:var(--disp);font-weight:700;font-size:30px;color:var(--red);min-width:44px;line-height:1}
+.ch-plate h3{font-family:var(--disp);font-weight:600;font-size:clamp(20px,2.4vw,25px);letter-spacing:-.01em}
+.ch-plate .tag{margin-left:auto;font-family:var(--ui);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cream-dim);border:1px solid var(--line);border-radius:99px;padding:4px 12px;white-space:nowrap}
+.ch-body{padding:24px 26px 28px}
+.ch-body p{max-width:72ch;margin-bottom:14px}
+.ch-body p:last-child{margin-bottom:0}
+.ch-body .why{color:var(--cream-dim)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.chip{font-family:var(--ui);font-size:12.5px;color:var(--mint);background:rgba(159,214,180,.08);
+  border:1px solid rgba(159,214,180,.25);border-radius:99px;padding:4px 12px}
+
+/* ---------- code ---------- */
+pre.code{background:#0A1810;border:1px solid var(--line);border-radius:10px;padding:18px 20px;overflow-x:auto;
+  font-family:var(--mono);font-size:13.5px;line-height:1.6;margin:16px 0;color:#D7E4D0}
+pre.code .kw{color:var(--gold)}      /* keywords */
+pre.code .ty{color:var(--mint)}      /* types */
+pre.code .st{color:#E0B08C}          /* strings */
+pre.code .cm{color:#6E8A76;font-style:italic}  /* comments */
+pre.code .fn{color:#EDE6D4;font-weight:500}
+code.inl{font-family:var(--mono);font-size:.86em;background:var(--moss-2);border:1px solid var(--line);
+  border-radius:5px;padding:1px 6px;color:var(--mint)}
+
+/* ---------- interactive labs ---------- */
+.lab{margin-top:20px;border:1px solid rgba(159,214,180,.3);border-left:3px solid var(--mint);
+  border-radius:10px;background:rgba(159,214,180,.04);padding:18px 20px}
+.lab-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.lab-head .lbl{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint)}
+.lab-head .ttl{font-family:var(--ui);font-size:14.5px;font-weight:600;color:var(--cream)}
+.lab p.hint{font-size:15.5px;color:var(--cream-dim);margin-bottom:12px;max-width:70ch}
+.lab .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.btn{font-family:var(--ui);font-size:13.5px;font-weight:600;letter-spacing:.02em;cursor:pointer;
+  background:var(--mint);color:var(--ink);border:none;border-radius:8px;padding:9px 16px;transition:transform .08s ease, filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--mint);border:1px solid rgba(159,214,180,.4)}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.danger{background:var(--red);color:#fff}
+.lab input[type=text],.lab input[type=number],.lab select{font-family:var(--mono);font-size:13.5px;background:#0A1810;color:var(--cream);
+  border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:0}
+.out{font-family:var(--mono);font-size:13px;line-height:1.7;background:#0A1810;border:1px solid var(--line);
+  border-radius:8px;padding:14px 16px;margin-top:10px;white-space:pre-wrap;word-break:break-word;min-height:24px;color:#CFE0C8}
+.out .ok{color:var(--mint)}
+.out .bad{color:#E8907F}
+.out .g{color:var(--gold)}
+.out .dim{color:#7E9B85}
+.viz{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:var(--mono);font-size:13px}
+.cell{border:1px solid var(--line);background:#0A1810;border-radius:8px;padding:8px 12px;transition:all .25s}
+.cell.hot{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.cell.done{border-color:var(--mint);color:var(--mint)}
+.cell.dead{opacity:.35}
+.arrow{color:var(--cream-dim)}
+
+/* ---------- figures ---------- */
+figure.fig{margin:20px 0;text-align:center}
+figure.fig svg{max-width:100%;height:auto}
+figcaption{font-family:var(--ui);font-size:12.5px;color:var(--cream-dim);margin-top:10px;letter-spacing:.03em}
+
+/* ---------- takeaway + footer ---------- */
+.take{margin-top:20px;border-left:3px solid var(--gold);padding:4px 0 4px 16px;font-size:17px;color:var(--cream)}
+.take .t{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:4px}
+footer{border-top:1px solid var(--line);margin-top:100px;padding:36px 24px 60px;text-align:center;
+  font-family:var(--ui);font-size:13.5px;color:var(--cream-dim)}
+footer .leaf{color:var(--mint)}
+.gloss{max-width:1060px;margin:88px auto 0;padding:0 0}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:22px}
+.gcard{border:1px solid var(--line);border-radius:10px;background:var(--moss);padding:16px 18px}
+.gcard .gt{font-family:var(--mono);font-size:14px;color:var(--gold);font-weight:600}
+.gcard p{font-size:15.5px;color:var(--cream-dim);margin-top:6px;line-height:1.55}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media(max-width:640px){
+  body{font-size:16.5px}
+  .ch-body{padding:20px 18px 24px}
+  .ch-plate{padding:14px 16px}
+  .ch-plate .tag{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <span class="mark">The <em>Red Book</em>, Illuminated</span>
+  <div class="links">
+    <a href="#part1">I · Foundations</a>
+    <a href="#part2">II · Library Design</a>
+    <a href="#part3">III · Abstractions</a>
+    <a href="#part4">IV · Effects</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div>
+    <p class="eyebrow">A field guide for junior developers</p>
+    <h1 class="title">Functional Programming in Scala, <span class="rb">chapter by chapter</span></h1>
+    <p class="lede"><strong>Chiusano &amp; Bjørnason's "red book"</strong> is famously dense — it teaches you to <em>derive</em> functional programming rather than memorise it. This guide walks all 15 chapters in plain English, with runnable, clickable examples so you can poke each idea until it makes sense.</p>
+    <div class="legend">
+      <span class="k"><span class="dot" style="background:var(--red)"></span>Chapter plates</span>
+      <span class="k"><span class="dot" style="background:var(--mint)"></span>Interactive labs — click things</span>
+      <span class="k"><span class="dot" style="background:var(--gold)"></span>Key takeaways</span>
+    </div>
+  </div>
+  <div class="hero-fig" aria-hidden="true">
+    <svg width="240" height="280" viewBox="0 0 240 280">
+      <!-- a lambda growing like a seedling -->
+      <defs>
+        <linearGradient id="stem" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#25452F"/><stop offset="1" stop-color="#9FD6B4"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="120" cy="250" rx="86" ry="14" fill="#122A1D"/>
+      <path d="M120 250 C120 200 90 170 78 120 M120 250 C120 190 155 160 168 96" stroke="url(#stem)" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M78 120 C60 96 62 70 84 56 C96 78 96 102 78 120Z" fill="#9FD6B4" opacity=".9"/>
+      <path d="M168 96 C186 70 184 44 160 32 C150 56 152 80 168 96Z" fill="#D8A94E" opacity=".9"/>
+      <circle cx="120" cy="250" r="5" fill="#C8503F"/>
+      <text x="106" y="180" font-family="Fraunces, serif" font-size="52" fill="#EDE6D4" opacity=".25">λ</text>
+    </svg>
+  </div>
+</header>
+
+<main>
+<!-- ==================== PART I ==================== -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="pn">Part I</span>
+    <h2>Introduction to functional programming</h2>
+    <span class="range">Chapters 1–6</span>
+  </div>
+  <p class="part-intro">The foundations: what "functional" actually means, and how to rebuild the everyday tools you rely on — data structures, error handling, loops, random numbers — using nothing but pure functions.</p>
+
+  <!-- Chapter 1 -->
+  <article class="ch" id="ch1">
+    <div class="ch-plate"><span class="ch-num">01</span><h3>What is functional programming?</h3><span class="tag">Purity · Referential transparency</span></div>
+    <div class="ch-body">
+      <p>Functional programming (FP) is programming with <strong>pure functions</strong>: functions whose only job is to compute a result from their inputs. No printing, no database writes, no mutating variables outside themselves — those are <strong>side effects</strong>.</p>
+      <p>The book opens with a coffee shop. An impure <code class="inl">buyCoffee</code> charges a credit card <em>as a side effect</em>, which makes it painful to test (you'd bill a real card!) and impossible to reuse (buying 10 coffees charges the card 10 times when you wanted one combined charge). The fix: return the charge as <em>data</em> instead of performing it.</p>
+      <div class="chips"><span class="chip">pure function</span><span class="chip">side effect</span><span class="chip">referential transparency</span><span class="chip">substitution model</span></div>
+<pre class="code"><span class="cm">// Impure: charging happens inside the function (invisible side effect)</span>
+<span class="kw">def</span> <span class="fn">buyCoffee</span>(cc: <span class="ty">CreditCard</span>): <span class="ty">Coffee</span> = {
+  <span class="kw">val</span> cup = <span class="kw">new</span> <span class="ty">Coffee</span>()
+  cc.charge(cup.price)   <span class="cm">// side effect!</span>
+  cup
+}
+
+<span class="cm">// Pure: return the charge as a value, let the caller decide what to do</span>
+<span class="kw">def</span> <span class="fn">buyCoffee</span>(cc: <span class="ty">CreditCard</span>): (<span class="ty">Coffee</span>, <span class="ty">Charge</span>) = {
+  <span class="kw">val</span> cup = <span class="kw">new</span> <span class="ty">Coffee</span>()
+  (cup, <span class="ty">Charge</span>(cc, cup.price))
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Impure vs. pure coffee shop</span></div>
+        <p class="hint">Buy three coffees in each shop, then look at what the "payment system" saw. Same clicks, very different consequences.</p>
+        <div class="row">
+          <button class="btn danger" onclick="lab1Buy('impure')">Buy coffee (impure)</button>
+          <button class="btn" onclick="lab1Buy('pure')">Buy coffee (pure)</button>
+          <button class="btn gold" onclick="lab1Settle()">Coalesce &amp; settle pure charges</button>
+          <button class="btn ghost" onclick="lab1Reset()">Reset</button>
+        </div>
+        <div class="out" id="lab1out"><span class="dim">No purchases yet. The impure shop hits the card immediately; the pure shop just returns Charge values you can combine first.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>A pure function can be replaced by its result anywhere it appears (referential transparency). That single property is what makes FP code easy to test, reuse, refactor, and reason about.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 2 -->
+  <article class="ch" id="ch2">
+    <div class="ch-plate"><span class="ch-num">02</span><h3>Getting started with FP in Scala</h3><span class="tag">Recursion · Higher-order functions</span></div>
+    <div class="ch-body">
+      <p>Without mutable loop counters, how do you loop? <strong>Recursion.</strong> Scala turns <em>tail-recursive</em> functions (where the recursive call is the very last thing that happens) into loops under the hood, so they never blow the stack. The <code class="inl">@annotation.tailrec</code> annotation makes the compiler verify this for you.</p>
+      <p>The chapter also introduces <strong>higher-order functions</strong> (functions that take or return other functions) and <strong>polymorphic functions</strong> that work for <em>any</em> type. When a signature is generic enough — like <code class="inl">def compose[A,B,C](f: B => C, g: A => B): A => C</code> — there's often only <em>one</em> reasonable implementation. The types guide you; the book calls this "following the types."</p>
+      <div class="chips"><span class="chip">tail recursion</span><span class="chip">higher-order function</span><span class="chip">polymorphism</span><span class="chip">currying &amp; compose</span></div>
+<pre class="code"><span class="kw">def</span> <span class="fn">factorial</span>(n: <span class="ty">Int</span>): <span class="ty">Int</span> = {
+  <span class="kw">@annotation.tailrec</span>
+  <span class="kw">def</span> <span class="fn">go</span>(n: <span class="ty">Int</span>, acc: <span class="ty">Int</span>): <span class="ty">Int</span> =
+    <span class="kw">if</span> (n &lt;= 0) acc
+    <span class="kw">else</span> go(n - 1, n * acc)   <span class="cm">// tail call: nothing left to do after</span>
+  go(n, 1)
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Watch tail recursion accumulate</span></div>
+        <p class="hint">Step through <code class="inl">factorial(6)</code>. Notice the state lives in the <em>arguments</em> (n, acc) — no mutable variables, and the stack never grows.</p>
+        <div class="row">
+          <button class="btn" id="lab2step" onclick="lab2Step()">Step</button>
+          <button class="btn ghost" onclick="lab2Reset()">Reset</button>
+        </div>
+        <div class="viz" id="lab2viz"></div>
+        <div class="out" id="lab2out"><span class="dim">Press Step to begin: go(6, 1)</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Loops become tail recursion; "what varies each iteration" becomes function arguments. And generic type signatures are so constraining that they often write the implementation for you.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 3 -->
+  <article class="ch" id="ch3">
+    <div class="ch-plate"><span class="ch-num">03</span><h3>Functional data structures</h3><span class="tag">Immutable List · Pattern matching · Folds</span></div>
+    <div class="ch-body">
+      <p>Functional data structures are <strong>immutable</strong> — "modifying" a list means building a new one. That sounds wasteful, but immutability enables <strong>data sharing</strong>: prepending to a list reuses the entire old list as the tail. Nothing needs to be copied, and nothing can break, because nobody can mutate the shared part.</p>
+      <p>The chapter builds a singly linked <code class="inl">List</code> from scratch as an <strong>algebraic data type</strong> (ADT) — it's either <code class="inl">Nil</code> or <code class="inl">Cons(head, tail)</code> — and takes it apart with <strong>pattern matching</strong>. Then comes the workhorse of the whole book: <strong>fold</strong>. Almost every list operation (<code class="inl">sum</code>, <code class="inl">length</code>, <code class="inl">map</code>, <code class="inl">filter</code>, even <code class="inl">append</code>) is just a fold with a different combining function.</p>
+      <div class="chips"><span class="chip">immutability</span><span class="chip">data sharing</span><span class="chip">ADT</span><span class="chip">pattern matching</span><span class="chip">foldRight / foldLeft</span></div>
+<pre class="code"><span class="kw">sealed trait</span> <span class="ty">List</span>[+<span class="ty">A</span>]
+<span class="kw">case object</span> <span class="ty">Nil</span> <span class="kw">extends</span> <span class="ty">List</span>[<span class="ty">Nothing</span>]
+<span class="kw">case class</span> <span class="ty">Cons</span>[+<span class="ty">A</span>](head: <span class="ty">A</span>, tail: <span class="ty">List</span>[<span class="ty">A</span>]) <span class="kw">extends</span> <span class="ty">List</span>[<span class="ty">A</span>]
+
+<span class="kw">def</span> <span class="fn">foldRight</span>[<span class="ty">A</span>,<span class="ty">B</span>](as: <span class="ty">List</span>[<span class="ty">A</span>], z: <span class="ty">B</span>)(f: (<span class="ty">A</span>, <span class="ty">B</span>) => <span class="ty">B</span>): <span class="ty">B</span> = as <span class="kw">match</span> {
+  <span class="kw">case</span> <span class="ty">Nil</span> => z
+  <span class="kw">case</span> <span class="ty">Cons</span>(h, t) => f(h, foldRight(t, z)(f))
+}
+<span class="cm">// sum = foldRight(xs, 0)(_ + _)   length = foldRight(xs, 0)((_, n) => n + 1)</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Fold visualizer</span></div>
+        <p class="hint">Fold the list <code class="inl">[1, 2, 3, 4]</code>. foldRight nests to the right — f(1, f(2, f(3, f(4, z)))) — while foldLeft eats from the left. Watch the expression build, then collapse.</p>
+        <div class="row">
+          <select id="lab3op"><option value="add">sum: (a,b) => a + b, z = 0</option><option value="mul">product: (a,b) => a * b, z = 1</option><option value="cat">concat: (a,b) => a + "·" + b, z = "z"</option></select>
+          <button class="btn" onclick="lab3Run('right')">foldRight</button>
+          <button class="btn" onclick="lab3Run('left')">foldLeft</button>
+        </div>
+        <div class="viz" id="lab3viz"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span></div>
+        <div class="out" id="lab3out"><span class="dim">Pick an operation and fold.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Immutable structures share instead of copy. And once you see that map, filter, length and friends are all folds, you stop writing loops and start writing one-liners.</div>
+    </div>
+  </article>
+  <!-- Chapter 4 -->
+  <article class="ch" id="ch4">
+    <div class="ch-plate"><span class="ch-num">04</span><h3>Handling errors without exceptions</h3><span class="tag">Option · Either</span></div>
+    <div class="ch-body">
+      <p>Exceptions break referential transparency — a function that throws doesn't really return what its signature promises, and the error escapes the type system entirely. The functional answer: <strong>represent failure as an ordinary value</strong>.</p>
+      <p><code class="inl">Option[A]</code> is either <code class="inl">Some(a)</code> or <code class="inl">None</code> — "there might not be an answer." <code class="inl">Either[E, A]</code> is <code class="inl">Right(a)</code> or <code class="inl">Left(e)</code> — same idea, but the failure carries information. The magic is that you don't have to null-check at every step: <code class="inl">map</code> and <code class="inl">flatMap</code> let you write the happy path, and any <code class="inl">None</code> short-circuits the rest automatically.</p>
+      <div class="chips"><span class="chip">Option</span><span class="chip">Either</span><span class="chip">flatMap chaining</span><span class="chip">short-circuiting</span><span class="chip">errors as values</span></div>
+<pre class="code"><span class="kw">def</span> <span class="fn">parseAge</span>(s: <span class="ty">String</span>): <span class="ty">Option</span>[<span class="ty">Int</span>] =
+  s.toIntOption                       <span class="cm">// None if not a number</span>
+
+<span class="kw">def</span> <span class="fn">validAge</span>(n: <span class="ty">Int</span>): <span class="ty">Option</span>[<span class="ty">Int</span>] =
+  <span class="kw">if</span> (n &gt;= 0 &amp;&amp; n &lt;= 120) <span class="ty">Some</span>(n) <span class="kw">else</span> <span class="ty">None</span>
+
+<span class="kw">def</span> <span class="fn">category</span>(s: <span class="ty">String</span>): <span class="ty">Option</span>[<span class="ty">String</span>] =
+  parseAge(s)
+    .flatMap(validAge)
+    .map(n => <span class="kw">if</span> (n &lt; 18) <span class="st">"minor"</span> <span class="kw">else</span> <span class="st">"adult"</span>)</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Option pipeline: watch the short-circuit</span></div>
+        <p class="hint">Type an age and run it through the three-stage pipeline above. Try <code class="inl">27</code>, then <code class="inl">abc</code>, then <code class="inl">300</code> — see exactly which stage flips the flow to None.</p>
+        <div class="row">
+          <input type="text" id="lab4in" value="27" size="10" aria-label="age input">
+          <button class="btn" onclick="lab4Run()">Run pipeline</button>
+        </div>
+        <div class="viz" id="lab4viz">
+          <span class="cell" id="l4s0">input</span><span class="arrow">→</span>
+          <span class="cell" id="l4s1">parseAge</span><span class="arrow">→</span>
+          <span class="cell" id="l4s2">flatMap(validAge)</span><span class="arrow">→</span>
+          <span class="cell" id="l4s3">map(category)</span>
+        </div>
+        <div class="out" id="lab4out"><span class="dim">Result appears here.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>When failure is a value, the compiler forces every caller to deal with it — no forgotten try/catch, no surprise NullPointerException. flatMap turns "check, check, check" into a clean pipeline.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 5 -->
+  <article class="ch" id="ch5">
+    <div class="ch-plate"><span class="ch-num">05</span><h3>Strictness and laziness</h3><span class="tag">Non-strict evaluation · Streams</span></div>
+    <div class="ch-body">
+      <p>Scala normally evaluates arguments <strong>strictly</strong> (before the function runs). A <strong>non-strict</strong> (lazy) argument — written <code class="inl">=> A</code> — is only evaluated if and when it's actually used, and <code class="inl">lazy val</code> caches the result so it's evaluated at most once.</p>
+      <p>Laziness unlocks <strong>Stream</strong> (today's <code class="inl">LazyList</code>): a list whose tail is a thunk that isn't computed until you ask. Now <code class="inl">map</code>, <code class="inl">filter</code> and <code class="inl">take</code> don't each walk the whole list — they <em>fuse</em> into one pass that does the minimum work needed. You can even describe <strong>infinite</strong> streams like <code class="inl">ones</code> or all the Fibonacci numbers, then <code class="inl">take(10)</code> from them safely. The chapter frames this as <em>separating the description of a computation from its evaluation</em>.</p>
+      <div class="chips"><span class="chip">thunk (=> A)</span><span class="chip">lazy val</span><span class="chip">LazyList / Stream</span><span class="chip">infinite data</span><span class="chip">unfold</span></div>
+<pre class="code"><span class="kw">val</span> fibs: <span class="ty">LazyList</span>[<span class="ty">Int</span>] = {
+  <span class="kw">def</span> <span class="fn">go</span>(a: <span class="ty">Int</span>, b: <span class="ty">Int</span>): <span class="ty">LazyList</span>[<span class="ty">Int</span>] =
+    a #:: go(b, a + b)          <span class="cm">// #:: is lazy cons — tail not computed yet</span>
+  go(0, 1)
+}
+fibs.take(8).toList   <span class="cm">// List(0, 1, 1, 2, 3, 5, 8, 13) — only 8 evaluations</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Pull from an infinite stream</span></div>
+        <p class="hint">This Fibonacci stream is infinite, but nothing is computed until you pull. Each click forces exactly one more element — the evaluation counter proves it.</p>
+        <div class="row">
+          <button class="btn" onclick="lab5Pull()">Pull next element</button>
+          <button class="btn ghost" onclick="lab5Reset()">Reset stream</button>
+        </div>
+        <div class="viz" id="lab5viz"><span class="cell dead">? unevaluated ?</span></div>
+        <div class="out" id="lab5out"><span class="dim">Evaluations so far: 0. An infinite structure costs nothing until you look at it.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Laziness lets you describe more than you compute. Infinite streams, fused pipelines, and "only do the work someone actually asks for" all fall out of one idea: delay evaluation until needed.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 6 -->
+  <article class="ch" id="ch6">
+    <div class="ch-plate"><span class="ch-num">06</span><h3>Purely functional state</h3><span class="tag">RNG · The State monad in disguise</span></div>
+    <div class="ch-body">
+      <p>How can a <em>pure</em> function generate random numbers, when calling it twice must return the same thing? Answer: make the generator's state explicit. Instead of mutating hidden state, a functional RNG takes a state in and returns the next value <strong>together with the next state</strong>: <code class="inl">RNG => (A, RNG)</code>.</p>
+      <p>Threading that state by hand gets tedious fast, so the chapter abstracts the pattern into <code class="inl">State[S, A]</code> — "a program that, given a state, produces a value and a new state" — with <code class="inl">map</code> and <code class="inl">flatMap</code> to sequence steps without ever mentioning the state explicitly. This is the same shape you'll meet again in Chapter 11 as a monad.</p>
+      <div class="chips"><span class="chip">explicit state passing</span><span class="chip">S => (A, S)</span><span class="chip">deterministic "randomness"</span><span class="chip">State[S, A]</span></div>
+<pre class="code"><span class="kw">trait</span> <span class="ty">RNG</span> { <span class="kw">def</span> <span class="fn">nextInt</span>: (<span class="ty">Int</span>, <span class="ty">RNG</span>) }
+
+<span class="kw">case class</span> <span class="ty">SimpleRNG</span>(seed: <span class="ty">Long</span>) <span class="kw">extends</span> <span class="ty">RNG</span> {
+  <span class="kw">def</span> <span class="fn">nextInt</span>: (<span class="ty">Int</span>, <span class="ty">RNG</span>) = {
+    <span class="kw">val</span> newSeed = (seed * 0x5DEECE66DL + 0xBL) &amp; 0xFFFFFFFFFFFFL
+    <span class="kw">val</span> n = (newSeed &gt;&gt;&gt; 16).toInt
+    (n, <span class="ty">SimpleRNG</span>(newSeed))     <span class="cm">// value AND the next generator</span>
+  }
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Deterministic randomness</span></div>
+        <p class="hint">Generate numbers, then reset to the same seed and generate again — you'll get the identical sequence. Pure functions can't surprise you; the "randomness" lives entirely in which state you feed in.</p>
+        <div class="row">
+          <input type="number" id="lab6seed" value="42" size="8" aria-label="seed">
+          <button class="btn" onclick="lab6Seed()">Set seed</button>
+          <button class="btn gold" onclick="lab6Next()">nextInt</button>
+        </div>
+        <div class="out" id="lab6out"><span class="dim">Seed set to 42. Each call shows (value, newState).</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Any stateful process can be modelled purely as S => (A, S). Pass state in, get state out — then let State's map/flatMap hide the plumbing. Testable "randomness" is a superpower.</div>
+    </div>
+  </article>
+</section>
+<!-- ==================== PART II ==================== -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="pn">Part II</span>
+    <h2>Functional design and combinator libraries</h2>
+    <span class="range">Chapters 7–9</span>
+  </div>
+  <p class="part-intro">Three worked case studies in library design. The recurring recipe: invent a small <em>algebra</em> of data types and combinators, refine it by playing with laws and examples, and worry about the implementation last.</p>
+
+  <!-- Chapter 7 -->
+  <article class="ch" id="ch7">
+    <div class="ch-plate"><span class="ch-num">07</span><h3>Purely functional parallelism</h3><span class="tag">Par · Separating description from execution</span></div>
+    <div class="ch-body">
+      <p>The chapter designs a parallelism library from scratch. The core data type is <code class="inl">Par[A]</code>: a <em>description</em> of a parallel computation that will eventually yield an A. Crucially, building a <code class="inl">Par</code> runs nothing — you compose descriptions with combinators like <code class="inl">map2</code> (combine two parallel results) and <code class="inl">fork</code> (mark something for its own thread), and only <code class="inl">run</code> actually touches a thread pool.</p>
+      <p>This is the book's big design lesson: <strong>separate the what from the how</strong>. Because <code class="inl">Par</code> values are just data, they obey algebraic laws (like <code class="inl">map(unit(x))(f) == unit(f(x))</code>) that you can reason about — and the whole API stays pure even though execution involves very impure threads.</p>
+      <div class="chips"><span class="chip">Par[A]</span><span class="chip">unit / map2 / fork / run</span><span class="chip">description vs execution</span><span class="chip">algebraic laws</span></div>
+<pre class="code"><span class="kw">def</span> <span class="fn">sum</span>(ints: <span class="ty">IndexedSeq</span>[<span class="ty">Int</span>]): <span class="ty">Par</span>[<span class="ty">Int</span>] =
+  <span class="kw">if</span> (ints.size &lt;= 1) <span class="ty">Par</span>.unit(ints.headOption.getOrElse(0))
+  <span class="kw">else</span> {
+    <span class="kw">val</span> (l, r) = ints.splitAt(ints.size / 2)
+    <span class="ty">Par</span>.map2(<span class="ty">Par</span>.fork(sum(l)), <span class="ty">Par</span>.fork(sum(r)))(_ + _)
+  }
+<span class="cm">// Nothing runs yet. Par.run(pool)(sum(xs)) executes the tree.</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Divide, conquer, combine</span></div>
+        <p class="hint">Sum [3, 1, 4, 1, 5, 9, 2, 6] the Par way. First <em>build</em> the description tree, then <em>run</em> it and watch halves get summed in parallel and combined upward.</p>
+        <div class="row">
+          <button class="btn" onclick="lab7Build()">1 · Build description</button>
+          <button class="btn gold" id="lab7runbtn" onclick="lab7Run()" disabled>2 · run(pool)</button>
+        </div>
+        <div class="out" id="lab7out"><span class="dim">Step 1 builds a tree of Par values — pure data, no threads involved.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Model the computation as a data type, compose with combinators, execute at the edge. When descriptions are values, parallelism becomes something you can refactor and test like any other code.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 8 -->
+  <article class="ch" id="ch8">
+    <div class="ch-plate"><span class="ch-num">08</span><h3>Property-based testing</h3><span class="tag">Gen · Prop · Laws as tests</span></div>
+    <div class="ch-body">
+      <p>Instead of hand-writing example tests ("reverse of [1,2,3] is [3,2,1]"), property-based testing states a <strong>law</strong> that must hold for <em>all</em> inputs ("reversing twice gives back the original list") and lets the library hammer it with hundreds of random cases. When a case fails, good libraries <em>shrink</em> it to a minimal counterexample.</p>
+      <p>The chapter builds the two halves: <code class="inl">Gen[A]</code>, a generator of random test values (built on Chapter 6's State/RNG!), and <code class="inl">Prop</code>, a property that can be checked, with combinators like <code class="inl">&amp;&amp;</code> and <code class="inl">forAll</code>. It's both a testing tool and a third case study in algebra-first library design.</p>
+      <div class="chips"><span class="chip">Gen[A]</span><span class="chip">forAll</span><span class="chip">properties &amp; laws</span><span class="chip">shrinking</span><span class="chip">falsification</span></div>
+<pre class="code"><span class="kw">val</span> intList = <span class="ty">Gen</span>.listOf(<span class="ty">Gen</span>.choose(0, 100))
+
+<span class="kw">val</span> reverseProp = forAll(intList) { xs =>
+  xs.reverse.reverse == xs               <span class="cm">// must hold for EVERY list</span>
+}
+<span class="kw">val</span> badProp = forAll(intList) { xs =>
+  xs.reverse == xs                       <span class="cm">// only true for palindromes!</span>
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Falsify a property</span></div>
+        <p class="hint">Check both properties against 100 random lists. The good law passes everything; the bad one gets falsified almost instantly — with the counterexample shown.</p>
+        <div class="row">
+          <button class="btn" onclick="lab8Run(true)">Check: reverse(reverse(xs)) == xs</button>
+          <button class="btn" onclick="lab8Run(false)">Check: reverse(xs) == xs</button>
+        </div>
+        <div class="out" id="lab8out"><span class="dim">Results appear here.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Think in laws, not examples. A property test encodes what must always be true, and random generation explores corners you'd never think to write by hand.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 9 -->
+  <article class="ch" id="ch9">
+    <div class="ch-plate"><span class="ch-num">09</span><h3>Parser combinators</h3><span class="tag">Algebra-first design</span></div>
+    <div class="ch-body">
+      <p>A parser combinator library builds big parsers out of tiny ones: <code class="inl">char('a')</code> parses one character, <code class="inl">or</code> tries alternatives, <code class="inl">many</code> repeats, <code class="inl">map</code> transforms results, <code class="inl">product</code> sequences two parsers. A JSON parser is just these pieces stacked up.</p>
+      <p>The chapter's real subject is method: it designs the <em>algebra</em> (the combinator signatures and the laws relating them) before writing any implementation at all — the purest demonstration of "algebraic design" in the book. Error reporting (labels, nesting, committed vs. uncommitted branches) is designed the same way.</p>
+      <div class="chips"><span class="chip">combinator</span><span class="chip">or / many / map / product</span><span class="chip">algebraic design</span><span class="chip">error reporting</span></div>
+<pre class="code"><span class="cm">// The algebra — signatures first, implementation later</span>
+<span class="kw">def</span> <span class="fn">char</span>(c: <span class="ty">Char</span>): <span class="ty">Parser</span>[<span class="ty">Char</span>]
+<span class="kw">def</span> <span class="fn">or</span>[<span class="ty">A</span>](p1: <span class="ty">Parser</span>[<span class="ty">A</span>], p2: <span class="ty">Parser</span>[<span class="ty">A</span>]): <span class="ty">Parser</span>[<span class="ty">A</span>]
+<span class="kw">def</span> <span class="fn">many</span>[<span class="ty">A</span>](p: <span class="ty">Parser</span>[<span class="ty">A</span>]): <span class="ty">Parser</span>[<span class="ty">List</span>[<span class="ty">A</span>]]
+<span class="cm">// law: run(char(c))(c.toString) == Right(c)</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">A live combinator parser</span></div>
+        <p class="hint">This parser is <code class="inl">many(digit).map(_.mkString.toInt) followed by many(letter)</code> — i.e. "a number, then letters". Try <code class="inl">42abc</code>, <code class="inl">7x</code>, then break it with <code class="inl">abc42</code>.</p>
+        <div class="row">
+          <input type="text" id="lab9in" value="42abc" size="14" aria-label="parser input">
+          <button class="btn" onclick="lab9Run()">Parse</button>
+        </div>
+        <div class="out" id="lab9out"><span class="dim">Parse result appears here, including where it failed.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Design the interface as an algebra with laws before implementing anything. Small parsers compose into arbitrarily complex ones — the same compositional story as Par and Gen.</div>
+    </div>
+  </article>
+</section>
+<!-- ==================== PART III ==================== -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="pn">Part III</span>
+    <h2>Common structures in functional design</h2>
+    <span class="range">Chapters 10–12</span>
+  </div>
+  <p class="part-intro">By now you've written <code class="inl">map</code>, <code class="inl">flatMap</code> and <code class="inl">map2</code> four separate times — for Option, Par, Gen and Parser. Part III names the patterns: monoids, monads and applicative functors are the abstractions those duplicated signatures were pointing at all along.</p>
+
+  <!-- Chapter 10 -->
+  <article class="ch" id="ch10">
+    <div class="ch-plate"><span class="ch-num">10</span><h3>Monoids</h3><span class="tag">Combine + identity</span></div>
+    <div class="ch-body">
+      <p>A <strong>monoid</strong> is the simplest useful abstraction in the book: a type with a binary <code class="inl">combine</code> operation that is <strong>associative</strong> — <code class="inl">(a·b)·c == a·(b·c)</code> — plus an <strong>identity</strong> element that does nothing. Integers with + and 0. Strings with concatenation and "". Lists with append and Nil. Booleans with &amp;&amp; and true.</p>
+      <p>Why care? Associativity means grouping doesn't matter — so a fold over a monoid can be split into chunks, computed <strong>in parallel</strong>, and combined in any order, with the identity as a safe starting value. Monoids also compose: if A and B are monoids, so is (A, B), which lets you compute several aggregates (say, sum <em>and</em> count, for a mean) in a single pass.</p>
+      <div class="chips"><span class="chip">associativity</span><span class="chip">identity element</span><span class="chip">foldMap</span><span class="chip">parallel folds</span><span class="chip">monoids compose</span></div>
+<pre class="code"><span class="kw">trait</span> <span class="ty">Monoid</span>[<span class="ty">A</span>] {
+  <span class="kw">def</span> <span class="fn">combine</span>(a1: <span class="ty">A</span>, a2: <span class="ty">A</span>): <span class="ty">A</span>   <span class="cm">// must be associative</span>
+  <span class="kw">def</span> <span class="fn">empty</span>: <span class="ty">A</span>                     <span class="cm">// combine(a, empty) == a</span>
+}
+<span class="kw">val</span> intAddition = <span class="kw">new</span> <span class="ty">Monoid</span>[<span class="ty">Int</span>] {
+  <span class="kw">def</span> <span class="fn">combine</span>(a: <span class="ty">Int</span>, b: <span class="ty">Int</span>) = a + b
+  <span class="kw">def</span> <span class="fn">empty</span> = 0
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Same fold, different monoid — and a free parallel split</span></div>
+        <p class="hint">Fold [2, 3, 4, 5] under different monoids, sequentially or split in half "in parallel". Associativity guarantees both groupings agree.</p>
+        <div class="row">
+          <select id="lab10m">
+            <option value="add">Int + (empty 0)</option>
+            <option value="mul">Int × (empty 1)</option>
+            <option value="str">String ++ (empty "")</option>
+            <option value="max">Int max (empty -∞)</option>
+          </select>
+          <button class="btn" onclick="lab10Run(false)">Fold sequentially</button>
+          <button class="btn gold" onclick="lab10Run(true)">Fold in parallel halves</button>
+        </div>
+        <div class="out" id="lab10out"><span class="dim">Pick a monoid and fold.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>"Combinable with a neutral element" sounds trivial, but it's exactly the licence you need to chunk work, parallelise it, and merge results in any order. Big-data reduces are monoids all the way down.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 11 -->
+  <article class="ch" id="ch11">
+    <div class="ch-plate"><span class="ch-num">11</span><h3>Monads</h3><span class="tag">The pattern you already know</span></div>
+    <div class="ch-body">
+      <p>Option, List, Par, Gen, Parser, State — you implemented <code class="inl">flatMap</code> and <code class="inl">unit</code> for every one of them. A <strong>monad</strong> is just the name for that shared interface: <code class="inl">unit(a)</code> wraps a plain value, and <code class="inl">flatMap</code> sequences a computation with a function that produces the <em>next</em> computation. Once a type is a monad, you get a pile of functions for free — <code class="inl">map</code>, <code class="inl">map2</code>, <code class="inl">sequence</code>, <code class="inl">traverse</code> — written once, working for all of them.</p>
+      <p>The laws (associativity and identity, cousins of the monoid laws) guarantee that chaining behaves sensibly no matter how you group the steps. Don't look for a metaphor — the book's stance is that a monad is <em>defined by its operations and laws</em>, nothing more mystical. Each instance just decides what "and then" means: for Option it's "if it succeeded so far", for List "for each result", for State "threading the state through."</p>
+      <div class="chips"><span class="chip">unit &amp; flatMap</span><span class="chip">monad laws</span><span class="chip">sequence / traverse for free</span><span class="chip">"programmable semicolon"</span></div>
+<pre class="code"><span class="kw">trait</span> <span class="ty">Monad</span>[<span class="ty">F</span>[_]] {
+  <span class="kw">def</span> <span class="fn">unit</span>[<span class="ty">A</span>](a: => <span class="ty">A</span>): <span class="ty">F</span>[<span class="ty">A</span>]
+  <span class="kw">def</span> <span class="fn">flatMap</span>[<span class="ty">A</span>,<span class="ty">B</span>](fa: <span class="ty">F</span>[<span class="ty">A</span>])(f: <span class="ty">A</span> => <span class="ty">F</span>[<span class="ty">B</span>]): <span class="ty">F</span>[<span class="ty">B</span>]
+
+  <span class="cm">// free for every monad:</span>
+  <span class="kw">def</span> <span class="fn">map</span>[<span class="ty">A</span>,<span class="ty">B</span>](fa: <span class="ty">F</span>[<span class="ty">A</span>])(f: <span class="ty">A</span> => <span class="ty">B</span>): <span class="ty">F</span>[<span class="ty">B</span>] =
+    flatMap(fa)(a => unit(f(a)))
+}</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">One flatMap chain, three monads</span></div>
+        <p class="hint">The <em>same</em> program — <code class="inl">unit(x).flatMap(double).flatMap(addOne)</code> — run in three monads. Only the meaning of "and then" changes.</p>
+        <div class="row">
+          <button class="btn" onclick="lab11Run('option')">Option monad</button>
+          <button class="btn" onclick="lab11Run('list')">List monad</button>
+          <button class="btn" onclick="lab11Run('state')">State monad</button>
+        </div>
+        <div class="out" id="lab11out"><span class="dim">Pick a monad. double = x*2 (Option: fails if > 50; List: returns [x*2, x*2+1]; State: also logs a step).</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>A monad is an interface — unit + flatMap + laws — not a metaphor. Recognising it means you write sequence, traverse and friends once, and reuse them across every effect type you'll ever build.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 12 -->
+  <article class="ch" id="ch12">
+    <div class="ch-plate"><span class="ch-num">12</span><h3>Applicative and traversable functors</h3><span class="tag">Independent effects · Traverse</span></div>
+    <div class="ch-body">
+      <p>An <strong>applicative functor</strong> sits between plain functors and monads: its core operation <code class="inl">map2</code> combines two <em>independent</em> effects. Monads are strictly more powerful — <code class="inl">flatMap</code> lets the second computation <em>depend</em> on the first's result — but that power costs you: monadic effects must run in sequence, while applicative effects have a fixed, statically-known structure you can analyse, parallelise, or run all at once.</p>
+      <p>The practical star is validation: with Either, chained flatMaps stop at the <em>first</em> error. An applicative <code class="inl">Validation</code> type combines independent checks and <strong>accumulates every error</strong> — exactly what you want for a web form. The chapter also introduces <code class="inl">Traverse</code>: <code class="inl">traverse</code> walks a structure, applies an effectful function to each element, and flips the result inside-out (e.g. <code class="inl">List[Option[A]] => Option[List[A]]</code>).</p>
+      <div class="chips"><span class="chip">map2 / apply</span><span class="chip">applicative vs monad</span><span class="chip">error accumulation</span><span class="chip">traverse &amp; sequence</span></div>
+<pre class="code"><span class="cm">// Monadic Either: stops at the first Left</span>
+<span class="cm">// Applicative Validation: gathers ALL the Lefts</span>
+<span class="kw">def</span> <span class="fn">validateForm</span>(name: <span class="ty">String</span>, age: <span class="ty">String</span>, email: <span class="ty">String</span>) =
+  map3(checkName(name), checkAge(age), checkEmail(email))(<span class="ty">User</span>(_, _, _))</pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Monadic vs applicative validation</span></div>
+        <p class="hint">Submit a deliberately broken form (empty name, age "abc", bad email) both ways. The monad reports one error; the applicative reports all three.</p>
+        <div class="row">
+          <input type="text" id="lab12name" value="" placeholder="name" size="8" aria-label="name">
+          <input type="text" id="lab12age" value="abc" placeholder="age" size="6" aria-label="age">
+          <input type="text" id="lab12email" value="ted[at]sg" placeholder="email" size="12" aria-label="email">
+        </div>
+        <div class="row">
+          <button class="btn" onclick="lab12Run(false)">Validate with flatMap (monadic)</button>
+          <button class="btn gold" onclick="lab12Run(true)">Validate with map3 (applicative)</button>
+        </div>
+        <div class="out" id="lab12out"><span class="dim">Fix the fields one by one and re-run to watch errors disappear.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Use the least powerful abstraction that works: applicative when effects are independent (better analysis, error accumulation, parallelism), monad only when later steps genuinely depend on earlier results.</div>
+    </div>
+  </article>
+</section>
+<!-- ==================== PART IV ==================== -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="pn">Part IV</span>
+    <h2>Effects and I/O</h2>
+    <span class="range">Chapters 13–15</span>
+  </div>
+  <p class="part-intro">The finale answers the obvious objection: real programs must print, read files and talk to networks. FP's answer isn't "no effects" — it's <em>effects as values</em>, pushed to a thin outer layer, with a pure core doing all the thinking.</p>
+
+  <!-- Chapter 13 -->
+  <article class="ch" id="ch13">
+    <div class="ch-plate"><span class="ch-num">13</span><h3>External effects and I/O</h3><span class="tag">IO monad · Free structures</span></div>
+    <div class="ch-body">
+      <p>The trick: an <code class="inl">IO[A]</code> value doesn't <em>do</em> anything — it's a <strong>description</strong> of an effectful program that will produce an A when someone finally runs it. Since IO is a monad, you compose whole programs with map and flatMap while staying pure; the single impure moment is one <code class="inl">unsafeRun</code> call at the very edge of your app (the "end of the world").</p>
+      <p>A naive IO overflows the stack on long programs, so the chapter rebuilds it as a data structure of instructions (<strong>trampolining</strong> with <code class="inl">Return</code> / <code class="inl">Suspend</code> / <code class="inl">FlatMap</code>), generalising to the <strong>Free monad</strong>. The deep idea: your program becomes <em>data describing effects</em>, and you write interpreters for that data — a test interpreter, a production interpreter, whatever you need.</p>
+      <div class="chips"><span class="chip">IO[A]</span><span class="chip">effects as values</span><span class="chip">unsafeRun at the edge</span><span class="chip">trampolining</span><span class="chip">Free monad &amp; interpreters</span></div>
+<pre class="code"><span class="kw">def</span> <span class="fn">greet</span>: <span class="ty">IO</span>[<span class="ty">Unit</span>] = <span class="kw">for</span> {
+  _    &lt;- printLine(<span class="st">"What's your name?"</span>)
+  name &lt;- readLine
+  _    &lt;- printLine(<span class="st">s"Hello, $name!"</span>)
+} <span class="kw">yield</span> ()
+<span class="cm">// greet is just a value. Nothing happens until: unsafeRun(greet)</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Build a program, then run it</span></div>
+        <p class="hint">Queue up effects — each click only <em>describes</em>. The console stays silent until you unsafeRun, when the whole description executes in order.</p>
+        <div class="row">
+          <button class="btn" onclick="lab13Add('print')">+ printLine("hello")</button>
+          <button class="btn" onclick="lab13Add('time')">+ printCurrentTime</button>
+          <button class="btn" onclick="lab13Add('rand')">+ printRandom</button>
+          <button class="btn danger" onclick="lab13Run()">unsafeRun(program)</button>
+          <button class="btn ghost" onclick="lab13Reset()">Reset</button>
+        </div>
+        <div class="viz" id="lab13viz"><span class="cell dead">IO.unit — empty program</span></div>
+        <div class="out" id="lab13out"><span class="dim">Console output appears here only after unsafeRun.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Keep a pure core and an impure shell. Programs-as-values can be composed, inspected, tested with fake interpreters, and executed exactly once, on purpose, at the edge.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 14 -->
+  <article class="ch" id="ch14">
+    <div class="ch-plate"><span class="ch-num">14</span><h3>Local effects and mutable state</h3><span class="tag">ST monad · Observability</span></div>
+    <div class="ch-body">
+      <p>A surprising refinement: purity is about what's <strong>observable from outside</strong>. A function that allocates a mutable array, scribbles all over it, and returns an immutable result is still pure — no caller can ever tell. In-place quicksort inside, referential transparency outside.</p>
+      <p>The chapter builds the <code class="inl">ST</code> monad ("state thread") to make this <em>compiler-enforced</em>: mutable references (<code class="inl">STRef</code>) are tagged with a type parameter that can't escape their scope, thanks to a clever use of Scala's type system (rank-2-style polymorphism via <code class="inl">RunnableST</code>). Try to leak a mutable ref out, and the code simply doesn't compile.</p>
+      <div class="chips"><span class="chip">observability defines purity</span><span class="chip">ST monad</span><span class="chip">STRef</span><span class="chip">type-level scoping</span></div>
+<pre class="code"><span class="kw">def</span> <span class="fn">quicksort</span>(xs: <span class="ty">List</span>[<span class="ty">Int</span>]): <span class="ty">List</span>[<span class="ty">Int</span>] = {
+  <span class="cm">// copies to an Array, sorts in place, returns a new List</span>
+  <span class="cm">// mutation is real — but sealed inside; the function is pure</span>
+  ...
+}</pre>
+      <div class="take"><span class="t">Takeaway</span>Purity is an external contract, not an internal style rule. Use local mutation for speed when you need it — and the ST monad shows the type system can guarantee the mutation never leaks.</div>
+    </div>
+  </article>
+
+  <!-- Chapter 15 -->
+  <article class="ch" id="ch15">
+    <div class="ch-plate"><span class="ch-num">15</span><h3>Stream processing and incremental I/O</h3><span class="tag">Process · Composable pipelines</span></div>
+    <div class="ch-body">
+      <p>Monolithic IO code for "read a huge file, count lines, check if > 40,000" mixes concerns and reads everything eagerly. The chapter's answer is <code class="inl">Process[I, O]</code>: a <strong>stream transducer</strong> — a state machine that repeatedly awaits an input, emits outputs, or halts. Transducers compose with <code class="inl">|></code> (pipe) into pipelines like <code class="inl">filter(nonEmpty) |> count |> exists(_ > 40000)</code>.</p>
+      <p>Each stage pulls only what it needs, so processing is <strong>incremental and constant-memory</strong> — a gigabyte log file streams through without ever being fully in memory, and the pipeline stops as soon as the answer is known. Generalised to carry effects, this design is the ancestor of modern streaming libraries like FS2.</p>
+      <div class="chips"><span class="chip">Process[I, O]</span><span class="chip">Await / Emit / Halt</span><span class="chip">pipe composition</span><span class="chip">constant memory</span><span class="chip">early termination</span></div>
+<pre class="code"><span class="kw">val</span> pipeline =
+  filter[<span class="ty">String</span>](_.nonEmpty) |&gt; lift(_.toUpperCase) |&gt; take(3)
+<span class="cm">// pulls at most 3 lines from the source, no matter how huge it is</span></pre>
+      <div class="lab">
+        <div class="lab-head"><span class="lbl">Lab</span><span class="ttl">Feed a pipeline one element at a time</span></div>
+        <p class="hint">The pipeline is <code class="inl">filter(even) |> map(x * 10) |> take(3)</code>. Feed numbers one by one and watch each stage pass, transform, drop — and finally Halt after 3 emissions, refusing further input.</p>
+        <div class="row">
+          <button class="btn" onclick="lab15Feed()">Feed next number</button>
+          <button class="btn ghost" onclick="lab15Reset()">Reset pipeline</button>
+        </div>
+        <div class="viz">
+          <span class="cell" id="l15src">source: 1,2,3,4,…</span><span class="arrow">|></span>
+          <span class="cell" id="l15f">filter(even)</span><span class="arrow">|></span>
+          <span class="cell" id="l15m">map(×10)</span><span class="arrow">|></span>
+          <span class="cell" id="l15t">take(3)</span>
+        </div>
+        <div class="out" id="lab15out"><span class="dim">Emitted: [] — feed the pipeline to see incremental processing.</span></div>
+      </div>
+      <div class="take"><span class="t">Takeaway</span>Streams turn I/O into composable, testable pipeline stages that use constant memory and stop early. The Process abstraction is the book's ideas — algebra, laziness, effects-as-values — all working together.</div>
+    </div>
+  </article>
+</section>
+
+<!-- ==================== GLOSSARY ==================== -->
+<section class="part gloss" id="glossary">
+  <div class="part-head">
+    <span class="pn">Appendix</span>
+    <h2>Pocket glossary</h2>
+    <span class="range">The 12 words to know</span>
+  </div>
+  <div class="gloss-grid">
+    <div class="gcard"><div class="gt">pure function</div><p>Output depends only on inputs; no observable side effects. Same call, same answer, forever.</p></div>
+    <div class="gcard"><div class="gt">referential transparency</div><p>An expression can be replaced by its value anywhere without changing the program's meaning.</p></div>
+    <div class="gcard"><div class="gt">higher-order function</div><p>A function that takes functions as arguments or returns one — the basic unit of reuse in FP.</p></div>
+    <div class="gcard"><div class="gt">algebraic data type</div><p>A type built from alternatives (Nil OR Cons) and combinations (head AND tail), taken apart by pattern matching.</p></div>
+    <div class="gcard"><div class="gt">fold</div><p>Collapse a structure into one value with a combining function and a starting value. Most list functions are folds in disguise.</p></div>
+    <div class="gcard"><div class="gt">Option / Either</div><p>Failure represented as data. Option says "maybe no answer"; Either says "an answer or a reason why not."</p></div>
+    <div class="gcard"><div class="gt">laziness</div><p>Delay evaluation until a value is actually needed — enabling infinite structures and fused, minimal-work pipelines.</p></div>
+    <div class="gcard"><div class="gt">combinator</div><p>A small function that builds bigger values of a library's core type out of smaller ones (map2, or, many, pipe).</p></div>
+    <div class="gcard"><div class="gt">monoid</div><p>A type with an associative combine and an identity element — the licence to chunk, parallelise and merge.</p></div>
+    <div class="gcard"><div class="gt">monad</div><p>An interface (unit + flatMap + laws) for sequencing computations where each step may depend on the last.</p></div>
+    <div class="gcard"><div class="gt">applicative</div><p>Combines independent effects (map2). Less powerful than a monad — which is exactly why it can accumulate errors and parallelise.</p></div>
+    <div class="gcard"><div class="gt">effects as values</div><p>Describe side effects as data (IO, Process), compose the descriptions purely, execute once at the program's edge.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span class="leaf">✦</span> A companion field guide to <em>Functional Programming in Scala</em> by Paul Chiusano &amp; Rúnar Bjørnason (Manning) — summaries and examples written independently for learning purposes. Read the book; do the exercises. That's where it really clicks.
+</footer>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* ---------- Lab 1: coffee ---------- */
+let l1 = {impureCharges: [], pureCharges: [], log: []};
+function lab1Render(){
+  const lines = l1.log.slice(-8).join('\n');
+  const summary = `\n<span class="dim">— payment system saw —</span>\n` +
+    `impure shop: <span class="bad">${l1.impureCharges.length} separate card charge${l1.impureCharges.length===1?'':'s'}</span> ($${l1.impureCharges.reduce((a,b)=>a+b,0).toFixed(2)} total, ${l1.impureCharges.length} network calls)\n` +
+    `pure shop:   <span class="ok">${l1.pureCharges.length} Charge value${l1.pureCharges.length===1?'':'s'} held in memory</span> — card untouched`;
+  $('lab1out').innerHTML = (lines || '<span class="dim">No purchases yet.</span>') + summary;
+}
+function lab1Buy(kind){
+  if(kind==='impure'){ l1.impureCharges.push(4.50); l1.log.push(`<span class="bad">⚡ impure buyCoffee → Coffee   [side effect: card charged $4.50 immediately]</span>`); }
+  else { l1.pureCharges.push(4.50); l1.log.push(`<span class="ok">✓ pure buyCoffee → (Coffee, Charge($4.50))   [just data returned]</span>`); }
+  lab1Render();
+}
+function lab1Settle(){
+  if(!l1.pureCharges.length){ l1.log.push(`<span class="dim">no pure charges to settle yet</span>`); }
+  else { const t=l1.pureCharges.reduce((a,b)=>a+b,0); l1.log.push(`<span class="g">★ coalesce(${l1.pureCharges.length} charges) → ONE card charge of $${t.toFixed(2)} — one network call, one fee</span>`); l1.pureCharges=[]; }
+  lab1Render();
+}
+function lab1Reset(){ l1={impureCharges:[],pureCharges:[],log:[]}; lab1Render(); }
+
+/* ---------- Lab 2: tail recursion ---------- */
+let l2 = {n:6, acc:1, steps:0, done:false};
+function lab2Render(hot){
+  $('lab2viz').innerHTML = `<span class="cell ${hot?'hot':''}">n = ${l2.n}</span><span class="cell ${hot?'hot':''}">acc = ${l2.acc}</span><span class="cell">stack depth: 1 (always)</span>`;
+}
+function lab2Step(){
+  if(l2.done) return;
+  if(l2.n<=0){
+    l2.done=true;
+    $('lab2out').innerHTML += `\n<span class="ok">n ≤ 0 → return acc = ${l2.acc}.  factorial(6) = ${l2.acc}</span>`;
+    $('lab2viz').innerHTML = `<span class="cell done">result = ${l2.acc}</span>`;
+    return;
+  }
+  const newAcc = l2.n*l2.acc;
+  if(l2.steps===0) $('lab2out').innerHTML='';
+  $('lab2out').innerHTML += `${l2.steps>0?'\n':''}go(${l2.n}, ${l2.acc}) → go(${l2.n-1}, <span class="g">${l2.n} × ${l2.acc} = ${newAcc}</span>)   <span class="dim">same stack frame reused</span>`;
+  l2.acc=newAcc; l2.n=l2.n-1; l2.steps++;
+  lab2Render(true); setTimeout(()=>lab2Render(false),250);
+}
+function lab2Reset(){ l2={n:6,acc:1,steps:0,done:false}; lab2Render(false); $('lab2out').innerHTML='<span class="dim">Press Step to begin: go(6, 1)</span>'; }
+lab2Render(false);
+
+/* ---------- Lab 3: fold visualizer ---------- */
+const l3xs=[1,2,3,4];
+const l3ops={ add:{f:(a,b)=>a+b,z:0,sym:'+',show:v=>v}, mul:{f:(a,b)=>a*b,z:1,sym:'*',show:v=>v}, cat:{f:(a,b)=>a+'·'+b,z:'z',sym:'·',show:v=>'"'+v+'"'} };
+function lab3Run(dir){
+  const op=l3ops[$('lab3op').value];
+  const cells=$('lab3viz').children;
+  for(const c of cells){c.className='cell';}
+  let lines=[], expr;
+  if(dir==='right'){
+    expr='f(1, f(2, f(3, f(4, z))))';
+    lines.push(`<span class="dim">foldRight builds the full nested expression first:</span>\n${expr.replaceAll('f','f').replaceAll('z',String(op.show(op.z)))}`);
+    let acc=op.z; const trace=[];
+    for(let i=l3xs.length-1;i>=0;i--){ const prev=acc; acc=op.f(l3xs[i],acc); trace.push(`f(${op.show(l3xs[i])}, ${op.show(prev)}) = <span class="g">${op.show(acc)}</span>`); }
+    lines.push('<span class="dim">…then collapses from the innermost (right) side:</span>\n'+trace.join('\n'));
+    lines.push(`<span class="ok">foldRight result: ${op.show(acc)}</span>`);
+    animate([3,2,1,0]);
+  } else {
+    expr='f(f(f(f(z, 1), 2), 3), 4)';
+    lines.push(`<span class="dim">foldLeft carries an accumulator through, left to right:</span>\n${expr.replaceAll('z',String(op.show(op.z)))}`);
+    let acc=op.z; const trace=[];
+    for(let i=0;i<l3xs.length;i++){ const prev=acc; acc=op.f(prev,l3xs[i]); trace.push(`f(${op.show(prev)}, ${op.show(l3xs[i])}) = <span class="g">${op.show(acc)}</span>`); }
+    lines.push(trace.join('\n'));
+    lines.push(`<span class="ok">foldLeft result: ${op.show(acc)}</span> <span class="dim">(tail-recursive — safe for huge lists)</span>`);
+    animate([0,1,2,3]);
+  }
+  $('lab3out').innerHTML=lines.join('\n\n');
+  function animate(order){ order.forEach((idx,k)=>{ setTimeout(()=>{cells[idx].className='cell hot'; setTimeout(()=>cells[idx].className='cell done',380);}, k*420); }); }
+}
+
+/* ---------- Lab 4: option pipeline ---------- */
+function lab4Run(){
+  const raw=$('lab4in').value.trim();
+  const stages=['l4s0','l4s1','l4s2','l4s3'].map($);
+  stages.forEach(s=>s.className='cell');
+  const log=[];
+  let alive=true, val=raw;
+  stages[0].className='cell done';
+  log.push(`input: "${esc(raw)}"`);
+  // stage 1
+  const n=/^-?\d+$/.test(raw)?parseInt(raw,10):null;
+  if(n===null){ alive=false; stages[1].className='cell hot'; log.push(`parseAge("${esc(raw)}") = <span class="bad">None</span>  ← pipeline short-circuits here`); }
+  else { stages[1].className='cell done'; log.push(`parseAge("${esc(raw)}") = <span class="ok">Some(${n})</span>`); val=n; }
+  // stage 2
+  if(alive){
+    if(val>=0 && val<=120){ stages[2].className='cell done'; log.push(`flatMap(validAge): ${val} is in [0,120] → <span class="ok">Some(${val})</span>`); }
+    else { alive=false; stages[2].className='cell hot'; log.push(`flatMap(validAge): ${val} out of range → <span class="bad">None</span>  ← short-circuits here`); }
+  } else { stages[2].className='cell dead'; log.push(`flatMap(validAge): <span class="dim">skipped — already None</span>`); }
+  // stage 3
+  if(alive){ const cat=val<18?'minor':'adult'; stages[3].className='cell done'; log.push(`map(category) → <span class="ok">Some("${cat}")</span>`); log.push(`<span class="ok">final: Some("${cat}")</span>`); }
+  else { stages[3].className='cell dead'; log.push(`map(category): <span class="dim">skipped — already None</span>`); log.push(`<span class="bad">final: None</span> <span class="dim">— and not a single null check written</span>`); }
+  $('lab4out').innerHTML=log.join('\n');
+}
+
+/* ---------- Lab 5: lazy stream ---------- */
+let l5={a:0,b:1,vals:[],evals:0};
+function lab5Pull(){
+  if(l5.vals.length>=12){ $('lab5out').innerHTML+='\n<span class="dim">(demo capped at 12 — the stream itself never ends)</span>'; return; }
+  l5.vals.push(l5.a); const next=l5.a+l5.b; l5.a=l5.b; l5.b=next; l5.evals++;
+  $('lab5viz').innerHTML = l5.vals.map(v=>`<span class="cell done">${v}</span>`).join('') + `<span class="cell dead">? tail: () => go(${l5.a}, ${l5.b}) — still a thunk ?</span>`;
+  $('lab5out').innerHTML = `Evaluations so far: <span class="g">${l5.evals}</span>\nfibs.take(${l5.evals}).toList = <span class="ok">List(${l5.vals.join(', ')})</span>\n<span class="dim">Everything past element ${l5.evals} remains an unevaluated thunk.</span>`;
+}
+function lab5Reset(){ l5={a:0,b:1,vals:[],evals:0}; $('lab5viz').innerHTML='<span class="cell dead">? unevaluated ?</span>'; $('lab5out').innerHTML='<span class="dim">Evaluations so far: 0. An infinite structure costs nothing until you look at it.</span>'; }
+
+/* ---------- Lab 6: RNG ---------- */
+function rngNext(seed){
+  // same LCG shape as the book, done in JS-safe arithmetic
+  let s = seed;
+  s = (Math.imul(s, 0x5DEECE6) + 0xB) >>> 0;
+  const val = ((s >>> 4) % 10000);
+  return [val, s];
+}
+let l6={seed:42, calls:0, history:[]};
+function lab6Seed(){
+  const s=parseInt($('lab6seed').value,10);
+  l6={seed:Number.isFinite(s)?(s>>>0):42, calls:0, history:[]};
+  $('lab6out').innerHTML=`<span class="g">rng = SimpleRNG(${l6.seed})</span>\n<span class="dim">Same seed will always produce the same sequence — try it.</span>`;
+}
+function lab6Next(){
+  const [v,ns]=rngNext(l6.seed);
+  l6.calls++; l6.history.push(`call ${l6.calls}: rng.nextInt = (<span class="ok">${v}</span>, SimpleRNG(<span class="g">${ns}</span>))`);
+  l6.seed=ns;
+  $('lab6out').innerHTML=l6.history.slice(-7).join('\n')+`\n<span class="dim">The next value is fully determined by the state you pass in.</span>`;
+}
+
+/* ---------- Lab 7: Par ---------- */
+let l7built=false;
+function lab7Build(){
+  l7built=true; $('lab7runbtn').disabled=false;
+  $('lab7out').innerHTML =
+`<span class="g">description built — pure data, zero threads:</span>
+map2(
+  fork(sum([3, 1, 4, 1])),      <span class="dim">// left half → own logical thread</span>
+  fork(sum([5, 9, 2, 6]))       <span class="dim">// right half → own logical thread</span>
+)(_ + _)
+<span class="dim">Nothing has executed. You can pass this value around, test it, transform it.</span>`;
+}
+function lab7Run(){
+  if(!l7built) return;
+  const steps=[
+    ['<span class="dim">run(pool)(description) …</span>',0],
+    ['thread-1: sum([3, 1, 4, 1]) → splits → 4 + 5 = <span class="ok">9</span>',450],
+    ['thread-2: sum([5, 9, 2, 6]) → splits → 14 + 8 = <span class="ok">22</span>',450],
+    ['main: map2 combines → 9 + 22 = <span class="g">31</span>',1000],
+    ['<span class="ok">result: 31</span>  <span class="dim">(threads existed only inside run — the API stayed pure)</span>',1400]
+  ];
+  $('lab7out').innerHTML='';
+  steps.forEach(([t,d])=>setTimeout(()=>{$('lab7out').innerHTML+= ($('lab7out').innerHTML?'\n':'')+t;},d));
+}
+
+/* ---------- Lab 8: property testing ---------- */
+function lab8Run(good){
+  const cases=100; let out=[]; let failed=null; const samples=[];
+  for(let i=0;i<cases;i++){
+    const len=Math.floor(Math.random()*6);
+    const xs=Array.from({length:len},()=>Math.floor(Math.random()*100));
+    if(i<3) samples.push(`[${xs.join(', ')}]`);
+    const rev=[...xs].reverse();
+    const pass = good ? JSON.stringify([...rev].reverse())===JSON.stringify(xs)
+                      : JSON.stringify(rev)===JSON.stringify(xs);
+    if(!pass){ failed={i,xs,rev}; break; }
+  }
+  out.push(`<span class="dim">sample generated inputs: ${samples.join('  ')} …</span>`);
+  if(!failed) out.push(`<span class="ok">+ OK, passed ${cases} tests.</span>\n<span class="dim">${good?'reverse ∘ reverse = identity holds for every list we threw at it.':'(all random lists happened to be palindromes — extremely unlikely; run again!)'}</span>`);
+  else out.push(`<span class="bad">! Falsified after ${failed.i+1} test${failed.i?'s':''}.</span>\ncounterexample: xs = [${failed.xs.join(', ')}]\n  xs.reverse = [${failed.rev.join(', ')}]  ≠  xs\n<span class="dim">One concrete counterexample is worth a thousand passing examples.</span>`);
+  $('lab8out').innerHTML=out.join('\n');
+}
+
+/* ---------- Lab 9: parser ---------- */
+function lab9Run(){
+  const s=$('lab9in').value;
+  let i=0, digits='';
+  while(i<s.length && /\d/.test(s[i])){ digits+=s[i]; i++; }
+  if(!digits.length){
+    $('lab9out').innerHTML=`<span class="bad">Parse error at position 0:</span> expected digit, found ${s.length? `'${esc(s[0])}'` : 'end of input'}\n<span class="dim">many(digit) needs at least the number part first — the 'number' label tells you which sub-parser failed.</span>`;
+    return;
+  }
+  let letters=''; const start=i;
+  while(i<s.length && /[a-zA-Z]/.test(s[i])){ letters+=s[i]; i++; }
+  if(i<s.length){
+    $('lab9out').innerHTML=`parsed number: <span class="ok">${parseInt(digits,10)}</span>, letters: <span class="ok">"${esc(letters)}"</span>\n<span class="bad">Parse error at position ${i}:</span> unexpected '${esc(s[i])}' — input not fully consumed`;
+    return;
+  }
+  $('lab9out').innerHTML=`<span class="ok">Success:</span> (number = ${parseInt(digits,10)}, letters = "${esc(letters)}")\n<span class="dim">Built entirely from char-level parsers composed with many, map and product.</span>`;
+}
+
+/* ---------- Lab 10: monoids ---------- */
+const l10xs=[2,3,4,5];
+const l10ms={
+  add:{f:(a,b)=>a+b, z:0, show:v=>v, name:'(Int, +, 0)'},
+  mul:{f:(a,b)=>a*b, z:1, show:v=>v, name:'(Int, ×, 1)'},
+  str:{f:(a,b)=>String(a)+String(b), z:'', show:v=>'"'+v+'"', name:'(String, ++, "")'},
+  max:{f:(a,b)=>Math.max(a,b), z:-Infinity, show:v=>v===-Infinity?'-∞':v, name:'(Int, max, -∞)'}
+};
+function lab10Run(par){
+  const m=l10ms[$('lab10m').value];
+  let out=[`monoid: <span class="g">${m.name}</span>   list: [${l10xs.join(', ')}]`];
+  if(!par){
+    let acc=m.z; const t=[];
+    for(const x of l10xs){ const p=acc; acc=m.f(acc,x); t.push(`combine(${m.show(p)}, ${m.show(x)}) = ${m.show(acc)}`); }
+    out.push(t.join('\n'), `<span class="ok">sequential result: ${m.show(acc)}</span>`);
+  } else {
+    const L=l10xs.slice(0,2), R=l10xs.slice(2);
+    const lv=L.reduce(m.f, m.z), rv=R.reduce(m.f, m.z);
+    out.push(`<span class="dim">worker A:</span> fold [${L.join(', ')}] = ${m.show(lv)}    <span class="dim">worker B:</span> fold [${R.join(', ')}] = ${m.show(rv)}`);
+    out.push(`merge: combine(${m.show(lv)}, ${m.show(rv)}) = <span class="ok">${m.show(m.f(lv,rv))}</span>`);
+    out.push(`<span class="dim">Associativity is what makes the split legal — any chunking gives the same answer.</span>`);
+  }
+  $('lab10out').innerHTML=out.join('\n');
+}
+
+/* ---------- Lab 11: monads ---------- */
+function lab11Run(kind){
+  const out=[];
+  if(kind==='option'){
+    out.push(`<span class="g">Option monad</span> — "and then" = "if it succeeded so far"`);
+    let v=20;
+    out.push(`unit(20) = Some(20)`);
+    let d=v*2; out.push(`flatMap(double): 20*2 = 40 ≤ 50 → <span class="ok">Some(40)</span>`);
+    out.push(`flatMap(addOne): → <span class="ok">Some(41)</span>`);
+    out.push(`\nnow with unit(30):`);
+    out.push(`flatMap(double): 30*2 = 60 > 50 → <span class="bad">None</span>`);
+    out.push(`flatMap(addOne): <span class="dim">skipped</span> → <span class="bad">None</span>`);
+  } else if(kind==='list'){
+    out.push(`<span class="g">List monad</span> — "and then" = "for each possible result"`);
+    out.push(`unit(20) = List(20)`);
+    out.push(`flatMap(double): each x → List(x*2, x*2+1) → <span class="ok">List(40, 41)</span>`);
+    out.push(`flatMap(addOne): each x → List(x+1) → <span class="ok">List(41, 42)</span>`);
+    out.push(`<span class="dim">The chain fanned out — nondeterminism as a monad.</span>`);
+  } else {
+    out.push(`<span class="g">State monad</span> — "and then" = "thread the state through"`);
+    out.push(`unit(20) run with log=[]         → (20, log=[])`);
+    out.push(`flatMap(double)  → (40, log=["doubled"])`);
+    out.push(`flatMap(addOne)  → (<span class="ok">41</span>, log=["doubled", "incremented"])`);
+    out.push(`<span class="dim">Value and state travel together; no mutation anywhere.</span>`);
+  }
+  out.push(`\n<span class="dim">Same shape every time: unit(x).flatMap(f).flatMap(g). Only the context changes.</span>`);
+  $('lab11out').innerHTML=out.join('\n');
+}
+
+/* ---------- Lab 12: validation ---------- */
+function lab12Checks(){
+  const name=$('lab12name').value.trim(), age=$('lab12age').value.trim(), email=$('lab12email').value.trim();
+  const errs=[];
+  const okName = name.length>0;         if(!okName) errs.push('name must not be empty');
+  const okAge  = /^\d{1,3}$/.test(age) && +age<=120; if(!okAge) errs.push(`"${esc(age)}" is not a valid age`);
+  const okEmail= /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email); if(!okEmail) errs.push(`"${esc(email)}" is not a valid email`);
+  return {errs, ok: okName&&okAge&&okEmail, name, age, email, flags:[okName,okAge,okEmail]};
+}
+function lab12Run(applicative){
+  const c=lab12Checks(); const out=[];
+  if(c.ok){ $('lab12out').innerHTML=`<span class="ok">Valid: User("${esc(c.name)}", ${c.age}, "${esc(c.email)}")</span>\n<span class="dim">Both styles agree when everything succeeds.</span>`; return; }
+  if(!applicative){
+    const labels=['checkName','checkAge','checkEmail'];
+    const idx=c.flags.findIndex(f=>!f);
+    out.push(`<span class="g">monadic (flatMap) — sequential, stops at first failure:</span>`);
+    for(let i=0;i<3;i++){
+      if(i<idx) out.push(`${labels[i]} → <span class="ok">Right</span>`);
+      else if(i===idx) out.push(`${labels[i]} → <span class="bad">Left("${c.errs[0]}")</span>  ← stops here`);
+      else out.push(`${labels[i]} → <span class="dim">never runs</span>`);
+    }
+    out.push(`\nresult: <span class="bad">Left("${c.errs[0]}")</span>  <span class="dim">— user fixes one field, resubmits, hits the next error. Frustrating.</span>`);
+  } else {
+    out.push(`<span class="g">applicative (map3) — independent checks, all errors gathered:</span>`);
+    out.push(`result: <span class="bad">Invalid(</span>`);
+    c.errs.forEach(e=>out.push(`  <span class="bad">"${e}"</span>`));
+    out.push(`<span class="bad">)</span>  <span class="dim">— one submit, complete feedback.</span>`);
+  }
+  $('lab12out').innerHTML=out.join('\n');
+}
+
+/* ---------- Lab 13: IO ---------- */
+let l13prog=[];
+const l13desc={print:'printLine("hello")', time:'printCurrentTime', rand:'printRandom'};
+function lab13Render(){
+  $('lab13viz').innerHTML = l13prog.length
+    ? l13prog.map((p,i)=>`<span class="cell">${i+1}. ${l13desc[p]}</span>`).join('<span class="arrow">flatMap</span>')
+    : '<span class="cell dead">IO.unit — empty program</span>';
+}
+function lab13Add(k){
+  l13prog.push(k); lab13Render();
+  $('lab13out').innerHTML=`<span class="dim">Program now has ${l13prog.length} step${l13prog.length===1?'':'s'} — still just a description. Console: silent.</span>`;
+}
+function lab13Run(){
+  if(!l13prog.length){ $('lab13out').innerHTML='<span class="dim">The empty program runs… and does nothing. Add some effects first.</span>'; return; }
+  const lines=[`<span class="g">unsafeRun(program) — the one impure moment:</span>`];
+  for(const p of l13prog){
+    if(p==='print') lines.push(`> hello`);
+    if(p==='time') lines.push(`> ${new Date().toLocaleTimeString()}`);
+    if(p==='rand') lines.push(`> ${Math.floor(Math.random()*1000)}`);
+  }
+  lines.push(`<span class="dim">Every effect executed in the order described. Run again — printCurrentTime/printRandom change, because effects live at run time, not build time.</span>`);
+  $('lab13out').innerHTML=lines.join('\n');
+}
+function lab13Reset(){ l13prog=[]; lab13Render(); $('lab13out').innerHTML='<span class="dim">Console output appears here only after unsafeRun.</span>'; }
+
+/* ---------- Lab 15: stream pipeline ---------- */
+let l15={next:1, emitted:[], halted:false};
+function lab15Feed(){
+  if(l15.halted){ $('lab15out').innerHTML+=`\n<span class="dim">Pipeline is Halt — it refuses input. This is early termination: the source can stop reading.</span>`; return; }
+  const x=l15.next++; const log=[`feed ${x} → source`];
+  flash('l15src');
+  if(x%2!==0){ log.push(`filter(even): ${x} is odd → <span class="bad">dropped</span> (no output, awaits next)`); flash('l15f'); }
+  else {
+    log.push(`filter(even): ${x} passes`); flash('l15f');
+    const y=x*10; log.push(`map(×10): ${x} → ${y}`); flash('l15m');
+    l15.emitted.push(y);
+    log.push(`take(3): <span class="ok">Emit(${y})</span> — ${l15.emitted.length}/3`); flash('l15t');
+    if(l15.emitted.length>=3){ l15.halted=true; log.push(`<span class="g">take(3) → Halt. Pipeline complete; upstream stops being pulled.</span>`); }
+  }
+  log.push(`emitted so far: <span class="ok">[${l15.emitted.join(', ')}]</span>`);
+  $('lab15out').innerHTML=log.join('\n');
+  function flash(id){ const el=$(id); el.classList.add('hot'); setTimeout(()=>el.classList.remove('hot'),400); }
+}
+function lab15Reset(){ l15={next:1,emitted:[],halted:false}; ['l15src','l15f','l15m','l15t'].forEach(id=>$(id).classList.remove('hot')); $('lab15out').innerHTML='<span class="dim">Emitted: [] — feed the pipeline to see incremental processing.</span>'; }
+</script>
+</body>
+</html>
