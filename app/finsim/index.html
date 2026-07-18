@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinSim — Live your financial life, fast-forwarded</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0c1310;          /* deep market-floor green-black */
+  --panel:#141d19;
+  --panel-2:#1a2620;
+  --line:#26352d;
+  --paper:#e9f0ea;        /* ivory text */
+  --dim:#8fa398;
+  --gain:#43d69a;         /* growth mint */
+  --loss:#f2635f;         /* drawdown coral */
+  --event:#f0b64b;        /* life-event amber */
+  --learn:#7ea8f8;        /* lesson blue */
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--paper);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:18px 10px 40px}
+h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif}
+.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+.demo-note{max-width:430px;text-align:center;color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:14px}
+.demo-note b{color:var(--paper)}
+/* ---------- phone frame ---------- */
+.frame{width:100%;max-width:430px;background:var(--panel);border:1px solid var(--line);border-radius:26px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5);position:relative;display:flex;flex-direction:column;min-height:760px}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex}
+/* ---------- header ---------- */
+.appbar{display:flex;justify-content:space-between;align-items:flex-end;padding:18px 18px 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#16211c, var(--panel))}
+.appbar .brand{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:.04em}
+.appbar .brand span{color:var(--gain)}
+.simdate{text-align:right}
+.simdate .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.simdate .val{font-family:'IBM Plex Mono';font-size:14px;font-weight:600}
+.simdate .age{font-size:11px;color:var(--dim)}
+/* ---------- views + nav ---------- */
+.viewwrap{flex:1;overflow-y:auto;padding:16px 16px 90px;scrollbar-width:thin}
+.bottomnav{position:absolute;bottom:0;left:0;right:0;display:flex;background:#101a15;border-top:1px solid var(--line)}
+.bottomnav button{flex:1;background:none;border:none;color:var(--dim);font-family:'Inter';font-size:11px;padding:10px 0 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bottomnav button .ic{font-size:17px;line-height:1}
+.bottomnav button.on{color:var(--gain)}
+.bottomnav button:disabled{opacity:.35;cursor:not-allowed}
+.badge-dot{position:relative}
+.badge-dot::after{content:"";position:absolute;top:-2px;right:-8px;width:7px;height:7px;border-radius:50%;background:var(--event)}
+/* ---------- cards & general ---------- */
+.card{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.card h3{font-size:14px;margin-bottom:10px;letter-spacing:.01em}
+.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.big{font-family:'IBM Plex Mono';font-size:30px;font-weight:600;letter-spacing:-.02em}
+.sub{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.5}
+.gain{color:var(--gain)} .loss{color:var(--loss)} .amber{color:var(--event)} .blue{color:var(--learn)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--gain);color:#06251a;border:none;border-radius:10px;font-family:'Space Grotesk';font-weight:700;font-size:14px;padding:12px 18px;cursor:pointer;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--paper);border:1px solid var(--line)}
+.btn.small{padding:8px 12px;font-size:12.5px;border-radius:8px}
+.btn.warn{background:var(--event);color:#2b1d04}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:10px}
+.grow{flex:1}
+hr.sep{border:none;border-top:1px solid var(--line);margin:12px 0}
+/* ---------- onboarding ---------- */
+.hero{padding:34px 22px 10px;text-align:center}
+.hero h1{font-size:27px;line-height:1.15;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--gain)}
+.hero p{margin-top:10px;color:var(--dim);font-size:13.5px;line-height:1.6}
+.persona{display:flex;flex-direction:column;gap:10px;padding:18px 18px 26px}
+.persona .p-card{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;cursor:pointer;text-align:left;color:var(--paper);font-family:'Inter',sans-serif;transition:border-color .15s}
+.persona .p-card:hover{border-color:var(--gain)}
+.persona .p-card .nm{font-family:'Space Grotesk';font-weight:700;font-size:15px}
+.persona .p-card .ds{font-size:12px;color:var(--dim);margin-top:3px;line-height:1.5}
+.persona .p-card .st{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--gain);margin-top:6px}
+/* ---------- budget sliders ---------- */
+.slider-row{margin-bottom:16px}
+.slider-row .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+input[type=range]{width:100%;accent-color:var(--gain)}
+/* ---------- time dial (signature) ---------- */
+.timedial{background:linear-gradient(160deg,#132019,#0f1713);border:1px solid #2c4437;border-radius:var(--radius);padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.timedial::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 120px at 50% -40px, rgba(67,214,154,.14), transparent)}
+.timedial .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.timedial .btns{display:flex;gap:8px;margin-top:10px}
+.timedial .btns .btn{flex:1}
+.timedial .hint{font-size:11px;color:var(--dim);margin-top:9px;position:relative}
+/* ---------- lists ---------- */
+.li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.li:last-child{border-bottom:none}
+.li .l{display:flex;flex-direction:column}
+.li .l .t{font-weight:600}
+.li .l .s{font-size:11px;color:var(--dim);margin-top:2px}
+.li .r{font-family:'IBM Plex Mono';font-size:13px;text-align:right}
+/* ---------- lessons ---------- */
+.lesson{display:flex;justify-content:space-between;align-items:center;background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer}
+.lesson.done{border-color:#28503f}
+.lesson.locked{opacity:.45;cursor:not-allowed}
+.lesson .t{font-weight:600;font-size:13.5px}
+.lesson .s{font-size:11px;color:var(--dim);margin-top:3px}
+.chip{font-size:10px;font-family:'IBM Plex Mono';padding:3px 8px;border-radius:20px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+.chip.done{color:var(--gain);border-color:#28503f}
+.chip.gate{color:var(--event);border-color:#5a4517}
+/* ---------- market ---------- */
+.asset{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;margin-bottom:10px}
+.asset .top{display:flex;justify-content:space-between;align-items:baseline}
+.asset .tick{font-family:'IBM Plex Mono';font-weight:600;font-size:13px}
+.asset .nm{font-size:11px;color:var(--dim)}
+.asset .px{font-family:'IBM Plex Mono';font-size:14px}
+.asset .chg{font-size:11px;font-family:'IBM Plex Mono'}
+.asset .hold{font-size:11px;color:var(--dim);margin-top:6px}
+.asset .act{display:flex;gap:8px;margin-top:9px}
+.asset.locked{opacity:.5}
+/* ---------- chart ---------- */
+.chart{width:100%;height:170px;display:block}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--dim);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+/* ---------- modal ---------- */
+.overlay{position:absolute;inset:0;background:rgba(5,9,7,.72);display:none;align-items:flex-end;z-index:50;backdrop-filter:blur(2px)}
+.overlay.show{display:flex}
+.sheet{background:var(--panel);border-top:1px solid var(--line);border-radius:20px 20px 0 0;width:100%;max-height:88%;overflow-y:auto;padding:20px 20px 26px;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.sheet .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.sheet h2{font-size:19px;line-height:1.25;margin-bottom:8px}
+.sheet p{font-size:13.5px;color:#c6d4ca;line-height:1.65;margin-bottom:10px}
+.sheet .q{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.sheet .q .qq{font-weight:600;font-size:13.5px;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;background:var(--ink);border:1px solid var(--line);color:var(--paper);border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:8px;cursor:pointer;font-family:'Inter'}
+.opt.correct{border-color:var(--gain);color:var(--gain)}
+.opt.wrong{border-color:var(--loss);color:var(--loss)}
+.toast{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#0f2b1f;border:1px solid var(--gain);color:var(--gain);font-size:12px;font-weight:600;padding:9px 16px;border-radius:30px;z-index:80;display:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.show{display:block;animation:pop .3s}
+@keyframes pop{from{transform:translate(-50%,-8px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.pill-stat{display:flex;gap:10px}
+.pill-stat .ps{flex:1;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+.pill-stat .ps .k{font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.pill-stat .ps .v{font-family:'IBM Plex Mono';font-size:14px;margin-top:3px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<p class="demo-note"><b>FinSim — interactive prototype.</b> One HTML file demonstrating the full app flow: onboarding → budget → gated lessons → investing → fast-forwarding time through life events, crashes and debriefs. All assets are fictional. Educational demo, not financial advice.</p>
+
+<div class="frame" id="frame">
+
+  <!-- ============ SCREEN: ONBOARDING ============ -->
+  <div class="screen active" id="screen-onboard">
+    <div class="hero">
+      <div class="eyebrow" style="color:var(--gain)">FINSIM</div>
+      <h1>Live your money life, <em>fast-forwarded.</em></h1>
+      <p>Earn, budget and invest in a simulated world where you control time. Make 30 years of decisions in 30 minutes — and learn from every one of them.</p>
+    </div>
+    <div class="persona">
+      <div class="eyebrow">Choose your starting life</div>
+      <button class="p-card" onclick="startGame('starter')">
+        <div class="nm">🌱 The Starter — age 22</div>
+        <div class="ds">First job out of school. Small salary, big time horizon.</div>
+        <div class="st">Take-home S$3,200/mo · Savings S$2,000</div>
+      </button>
+      <button class="p-card" onclick="startGame('builder')">
+        <div class="nm">🔨 The Builder — age 27</div>
+        <div class="ds">Stable career, rising expenses, ready to invest properly.</div>
+        <div class="st">Take-home S$5,400/mo · Savings S$18,000</div>
+      </button>
+      <button class="p-card" onclick="startGame('optimizer')">
+        <div class="nm">📈 The Optimizer — age 32</div>
+        <div class="ds">Good income, family plans, thinking about the long game.</div>
+        <div class="st">Take-home S$8,000/mo · Savings S$55,000</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: BUDGET SETUP ============ -->
+  <div class="screen" id="screen-budget">
+    <div class="hero" style="padding-bottom:0">
+      <div class="eyebrow" style="color:var(--gain)">STEP 2 OF 2</div>
+      <h1 style="font-size:22px">Set your monthly budget</h1>
+      <p>Every simulated month, your salary arrives and your budget decides what's left to invest. You can change this anytime.</p>
+    </div>
+    <div style="padding:18px 20px 26px">
+      <div class="card">
+        <div class="slider-row">
+          <div class="top"><span>🏠 Needs (rent, food, transport)</span><span class="mono" id="bNeedsV"></span></div>
+          <input type="range" id="bNeeds" min="30" max="70" value="55" oninput="budgetUI()">
+        </div>
+        <div class="slider-row">
+          <div class="top"><span>🎉 Wants (fun, travel, shopping)</span><span class="mono" id="bWantsV"></span></div>
+          <input type="range" id="bWants" min="5" max="50" value="25" oninput="budgetUI()">
+        </div>
+        <hr class="sep">
+        <div class="li" style="border:none;padding:4px 0">
+          <div class="l"><span class="t">💰 Left to save & invest</span><span class="s">Your monthly surplus</span></div>
+          <div class="r gain mono" id="bSaveV"></div>
+        </div>
+        <p class="sub" id="bTip"></p>
+      </div>
+      <button class="btn" style="width:100%" onclick="finishBudget()">Start my simulation →</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: MAIN APP ============ -->
+  <div class="screen" id="screen-app">
+    <div class="appbar">
+      <div>
+        <div class="brand">FIN<span>SIM</span></div>
+        <div class="sub" id="hdrName" style="margin-top:2px"></div>
+      </div>
+      <div class="simdate">
+        <div class="lbl">Simulated date</div>
+        <div class="val" id="hdrDate">Jan 2026</div>
+        <div class="age" id="hdrAge">Age 22</div>
+      </div>
+    </div>
+
+    <div class="viewwrap" id="viewwrap">
+
+      <!-- ---- VIEW: HOME ---- -->
+      <div class="view" id="view-home">
+        <div class="card">
+          <div class="eyebrow">Net worth</div>
+          <div class="big" id="nwBig">S$2,000</div>
+          <div class="sub" id="nwSub">Cash S$2,000 · Investments S$0</div>
+        </div>
+
+        <div class="timedial">
+          <div class="lbl">⏩ Advance time</div>
+          <div class="btns">
+            <button class="btn ghost" onclick="advance(1)">1 month</button>
+            <button class="btn ghost" onclick="advance(3)">3 months</button>
+            <button class="btn" onclick="advance(12)">1 year</button>
+          </div>
+          <div class="hint" id="dialHint">Each month: salary in, budget out, markets move, life happens.</div>
+        </div>
+
+        <div class="card">
+          <h3>This month's cash flow</h3>
+          <div class="li"><div class="l"><span class="t">Salary (take-home)</span></div><div class="r gain" id="cfIn"></div></div>
+          <div class="li"><div class="l"><span class="t">Needs</span></div><div class="r" id="cfNeeds"></div></div>
+          <div class="li"><div class="l"><span class="t">Wants</span></div><div class="r" id="cfWants"></div></div>
+          <div class="li"><div class="l"><span class="t">Surplus to save/invest</span></div><div class="r gain" id="cfSave"></div></div>
+        </div>
+
+        <div class="card" id="dcaCard">
+          <h3>Auto-invest (DCA) <span class="chip gate" id="dcaGate">unlock in Learn</span></h3>
+          <p class="sub">Automatically invest part of your surplus into the index fund every month — the habit that builds most wealth.</p>
+          <div class="row" style="margin-top:10px;align-items:center">
+            <input type="range" id="dcaSlider" min="0" max="100" value="0" style="flex:1" disabled oninput="dcaUI()">
+            <span class="mono" id="dcaPct" style="width:88px;text-align:right">Off</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Coach's nudge</h3>
+          <p class="sub" id="coachMsg">Start with the first lesson in <b>Learn</b> — it unlocks investing.</p>
+        </div>
+      </div>
+
+      <!-- ---- VIEW: LEARN ---- -->
+      <div class="view" id="view-learn" style="display:none">
+        <div class="eyebrow" style="margin-bottom:10px">Curriculum · complete lessons to unlock features</div>
+        <div id="lessonList"></div>
+      </div>
+
+      <!-- ---- VIEW: INVEST ---- -->
+      <div class="view" id="view-invest" style="display:none">
+        <div class="card" style="margin-bottom:14px">
+          <div class="eyebrow">Investable cash</div>
+          <div class="big" id="invCash">S$0</div>
+          <div class="sub">All tickers are fictional. Prices move only when you advance time.</div>
+        </div>
+        <div id="assetList"></div>
+      </div>
+
+      <!-- ---- VIEW: TIMELINE ---- -->
+      <div class="view" id="view-timeline" style="display:none">
+        <div class="card">
+          <h3>Your wealth over the years</h3>
+          <svg class="chart" id="chart" viewBox="0 0 360 170" preserveAspectRatio="none"></svg>
+          <div class="legend">
+            <span><i style="background:var(--gain)"></i>You</span>
+            <span><i style="background:#5c6f65"></i>All-cash you</span>
+            <span><i style="background:var(--learn)"></i>100% index DCA you</span>
+          </div>
+          <div class="pill-stat" style="margin-top:12px">
+            <div class="ps"><div class="k">Years simulated</div><div class="v" id="stYears">0.0</div></div>
+            <div class="ps"><div class="k">Total invested</div><div class="v" id="stInvested">S$0</div></div>
+            <div class="ps"><div class="k">Peak drawdown</div><div class="v loss" id="stDD">0%</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Achievements</h3>
+          <div id="achList" class="sub">None yet — go live a little.</div>
+        </div>
+        <div class="card">
+          <h3>Life & market log</h3>
+          <div id="logList" class="sub">Your story will appear here.</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottomnav">
+      <button id="nav-home" class="on" onclick="go('home')"><span class="ic">⌂</span>Home</button>
+      <button id="nav-learn" onclick="go('learn')"><span class="ic">📖</span>Learn</button>
+      <button id="nav-invest" onclick="go('invest')" disabled title="Complete 'Why invest?' to unlock"><span class="ic">📊</span>Invest</button>
+      <button id="nav-timeline" onclick="go('timeline')"><span class="ic">🕰</span>Timeline</button>
+    </nav>
+  </div>
+
+  <!-- ============ MODAL SHEET ============ -->
+  <div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============================================================
+   FinSim prototype engine — deterministic, month-stepped, client-side.
+   ============================================================ */
+"use strict";
+const $=id=>document.getElementById(id);
+const fmt=n=>"S$"+Math.round(n).toLocaleString("en-SG");
+const pct=n=>(n>=0?"+":"")+(n*100).toFixed(1)+"%";
+
+/* seeded RNG (mulberry32) + gaussian */
+let seed=20260101;
+function rnd(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}
+function randn(){let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* ---------- personas ---------- */
+const PERSONAS={
+  starter:  {name:"The Starter",  age:22, salary:3200, cash:2000},
+  builder:  {name:"The Builder",  age:27, salary:5400, cash:18000},
+  optimizer:{name:"The Optimizer",age:32, salary:8000, cash:55000},
+};
+
+/* ---------- assets: fictional tickers, monthly drift/vol ---------- */
+const ASSETS=[
+  {t:"VGX", name:"Vantage Global Index ETF", px:100, drift:.0072, vol:.040, lesson:"invest",
+   blurb:"Owns 3,000 companies worldwide. Boring on purpose."},
+  {t:"ORNG",name:"OrangeTech Inc.",          px:48,  drift:.0080, vol:.11,  lesson:"stocks",
+   blurb:"A single hot tech stock. Higher highs, deeper lows."},
+  {t:"GBND",name:"Gov 10-yr Bond Fund",      px:100, drift:.0028, vol:.012, lesson:"bonds",
+   blurb:"Steady coupons. Your portfolio's seatbelt."},
+  {t:"BTK", name:"BitToken",                 px:60,  drift:.012,  vol:.24,  lesson:"crypto",
+   blurb:"Crypto. Can double. Can drop 80%. Size accordingly."},
+];
+
+/* ---------- lessons (gating) ---------- */
+const LESSONS=[
+ {id:"budget",title:"Budgeting: pay yourself first",mins:2,unlocks:"Auto-invest (DCA)",
+  body:["Your surplus — what's left after needs and wants — is the raw material of wealth. The trick is to treat saving like a bill: move it out <b>before</b> you can spend it.",
+        "In FinSim, the Auto-invest slider does exactly that: a fixed share of your surplus flows into investments every month, rain or shine. That habit is called <b>dollar-cost averaging</b>."],
+  quiz:{q:"What does 'pay yourself first' mean?",opts:["Spend on wants before bills","Move savings out automatically before spending","Ask for a raise every month"],a:1}},
+ {id:"emergency",title:"Emergency fund: your crash helmet",mins:2,unlocks:"Life-event resilience",
+  body:["Life throws surprise bills — a dead laptop, a dental visit, a retrenchment. Without a buffer of <b>3–6 months of expenses</b> in cash, surprises force you to sell investments at the worst time or take on debt.",
+        "Rule of thumb: build the buffer first, invest properly second. Watch what happens in the sim when an emergency hits and you're not ready."],
+  quiz:{q:"How big should an emergency fund be?",opts:["One week of expenses","3–6 months of expenses","Ten years of salary"],a:1}},
+ {id:"invest",title:"Why invest? Compounding & inflation",mins:3,unlocks:"📊 Invest tab + VGX index fund",
+  body:["Cash quietly loses ~2–4% of buying power a year to <b>inflation</b>. Investing puts your money in things that grow faster than prices rise.",
+        "The engine is <b>compounding</b>: returns earning returns. S$300/month at 7% for 30 years ≈ S$367,000 — of which only S$108,000 was your money. Time does the heavy lifting, which is why starting in your 20s beats starting rich in your 40s.",
+        "Golden rule you'll test in this sim: <b>time in the market beats timing the market.</b>"],
+  quiz:{q:"What matters most for compounding?",opts:["Picking the single best stock","Starting early and staying invested","Checking prices daily"],a:1}},
+ {id:"stocks",title:"Stocks vs. index funds",mins:3,unlocks:"ORNG single stock",
+  body:["A stock is a slice of one company; an <b>index fund</b> is a slice of thousands. Single stocks can beat the market — and can also go to zero. Most professionals fail to beat the index over 15 years.",
+        "A sane pattern: a boring index <b>core</b>, plus small single-stock <b>satellites</b> if you enjoy it. Fees matter too: 1% extra in annual fees eats roughly a quarter of your wealth over 30 years."],
+  quiz:{q:"Why do index funds suit most people?",opts:["They're guaranteed by the government","Instant diversification at very low fees","They only go up"],a:1}},
+ {id:"bonds",title:"Bonds: the seatbelt",mins:2,unlocks:"GBND bond fund",
+  body:["Bonds are loans to governments or companies that pay steady interest. They usually wobble far less than stocks, cushioning your portfolio in crashes — the price of that safety is lower long-run returns.",
+        "As you age or near a goal, shifting some money from stocks to bonds trades growth for stability."],
+  quiz:{q:"What do bonds mainly add to a portfolio?",opts:["Maximum growth","Stability and income","Tax-free lottery tickets"],a:1}},
+ {id:"crypto",title:"Crypto & speculative bets",mins:3,unlocks:"BTK crypto",
+  body:["Crypto is the most volatile thing in this sim: BTK can double in a year and it can drop 80%. Volatility isn't a flaw to a speculator — but it is a portfolio-killer if the position is too big.",
+        "The professional habit is <b>position sizing</b>: cap speculative bets at ~5% of your portfolio, so being wrong stings but never sinks you. And if an influencer promises guaranteed returns — that's your cue to close the app."],
+  quiz:{q:"What's a sane cap for speculative bets like crypto?",opts:["Around 5% of your portfolio","Half your salary","Everything — fortune favours the bold"],a:0}},
+ {id:"behaviour",title:"The crash survival guide",mins:3,unlocks:"🏅 Diamond Hands achievement odds",
+  body:["Markets fall 30–50% every decade or so. The biggest destroyer of wealth isn't the crash — it's <b>selling during it</b> and missing the recovery.",
+        "Your brain will scream 'get out'. That's loss aversion, and it's why the best investors automate (DCA) and then do nothing. In this sim, try holding through the next crash and compare your line to the panic-seller's."],
+  quiz:{q:"Historically, what hurt long-term investors most in crashes?",opts:["Holding and waiting","Selling near the bottom","Buying a bit more"],a:1}},
+];
+
+/* ---------- life events ---------- */
+const EVENTS=[
+ {id:"laptop", chance:.030, minM:2,  title:"💻 Your laptop died",
+  text:"Repair shop says it's gone. A new one costs <b>S$1,800</b> and you need it for work.",
+  cost:1800},
+ {id:"dental", chance:.022, minM:5,  title:"🦷 Surprise dental bill",
+  text:"Root canal. Insurance covers some — you're out <b>S$950</b>.",
+  cost:950},
+ {id:"bonus",  chance:.028, minM:9,  title:"🎉 Performance bonus!",
+  text:"Your manager came through. <b>+S$2,500</b> lands in your account.",
+  cost:-2500},
+ {id:"raise",  chance:.018, minM:14, title:"📈 You got a raise",
+  text:"Take-home pay up <b>8%</b> from next month.",
+  raise:.08},
+ {id:"wedding",chance:.015, minM:20, title:"💍 Best friend's destination wedding",
+  text:"Flights, hotel, outfit, gift: <b>S$2,200</b>. (Skipping is… not an option.)",
+  cost:2200},
+ {id:"retrench",chance:.008,minM:30, title:"📦 Retrenchment",
+  text:"Your company restructured. <b>No salary for 2 months</b> while you job-hunt. This is what the emergency fund was for.",
+  gap:2},
+];
+
+/* ---------- state ---------- */
+let S=null;
+function newState(pKey){
+  const p=PERSONAS[pKey];
+  return {
+    persona:p, month:0, salary:p.salary, cash:p.cash,
+    needsPct:.55, wantsPct:.25, dca:0,
+    holdings:{}, invested:0, salaryGap:0,
+    prices:Object.fromEntries(ASSETS.map(a=>[a.t,a.px])),
+    lastPrices:Object.fromEntries(ASSETS.map(a=>[a.t,a.px])),
+    lessons:{}, ach:[], log:[],
+    hist:[], histCash:[], histDCA:[],       // net worth series
+    shadowCash:p.cash, shadowDCAcash:p.cash, shadowDCAunits:0,
+    crashDone:false, soldInCrash:false, crashStart:null, peakNW:p.cash,
+  };
+}
+
+/* ---------- flow: onboarding ---------- */
+function startGame(pKey){ S=newState(pKey); budgetUI();
+  $("screen-onboard").classList.remove("active"); $("screen-budget").classList.add("active"); }
+
+function budgetUI(){
+  let n=+$("bNeeds").value, w=+$("bWants").value;
+  if(n+w>95){w=95-n;$("bWants").value=w;}
+  const sal=S.persona.salary, save=Math.round(sal*(100-n-w)/100);
+  $("bNeedsV").textContent=fmt(sal*n/100)+" · "+n+"%";
+  $("bWantsV").textContent=fmt(sal*w/100)+" · "+w+"%";
+  $("bSaveV").textContent=fmt(save)+" /mo";
+  $("bTip").innerHTML= (100-n-w)>=20
+    ? "💚 Saving "+(100-n-w)+"% — a strong start. The 50/30/20 rule suggests at least 20%."
+    : "⚠️ Below the classic 20% savings target. It'll work, but wealth builds slower.";
+  S.needsPct=n/100; S.wantsPct=w/100;
+}
+function finishBudget(){
+  $("screen-budget").classList.remove("active"); $("screen-app").classList.add("active");
+  $("hdrName").textContent=S.persona.name+" · take-home "+fmt(S.salary)+"/mo";
+  snapshot(); renderAll(); renderLessons(); renderAssets();
+  toast("Welcome to your new life. Tip: open 📖 Learn first.");
+}
+
+/* ---------- navigation ---------- */
+function go(v){
+  ["home","learn","invest","timeline"].forEach(x=>{
+    $("view-"+x).style.display = x===v?"block":"none";
+    $("nav-"+x).classList.toggle("on",x===v);
+  });
+  $("nav-learn").classList.remove("badge-dot");
+  if(v==="timeline") drawChart();
+  $("viewwrap").scrollTop=0;
+}
+
+/* ---------- engine: one month ---------- */
+function stepMonth(){
+  S.month++;
+  // salary & budget
+  const paid = S.salaryGap>0 ? 0 : S.salary;
+  if(S.salaryGap>0) S.salaryGap--;
+  const spend = S.salary*(S.needsPct+S.wantsPct);       // life costs continue even unpaid
+  let surplus = paid - spend;
+  S.cash += surplus;
+
+  // DCA auto-invest
+  if(S.dca>0 && surplus>0 && S.cash>0){
+    const amt=Math.min(surplus*S.dca, S.cash);
+    buy("VGX", amt, true);
+  }
+
+  // markets move (with a scripted crash in year 3)
+  S.lastPrices={...S.prices};
+  const inCrash = (S.month>=34 && S.month<=39 && !S.crashDone);
+  const inRecovery = (S.month>=40 && S.month<=52);
+  ASSETS.forEach(a=>{
+    let r=a.drift + a.vol*randn();
+    if(inCrash) r = -0.09 + 0.03*randn() - (a.t==="BTK"?0.10:0) + (a.t==="GBND"?0.10:0);
+    else if(inRecovery && a.t!=="GBND") r += 0.02;   // recoveries reward those who stayed
+    S.prices[a.t]=Math.max(1,S.prices[a.t]*(1+r));
+  });
+  if(S.month===34 && !S.crashDone){ S.crashStart=netWorth(); }
+  if(S.month===40 && !S.crashDone){ S.crashDone=true; queueDebrief(); }
+
+  // benchmark shadows: same surplus, different behaviour
+  S.shadowCash += surplus;
+  S.shadowDCAcash += surplus;
+  const inv=Math.max(0,Math.min(surplus, S.shadowDCAcash));
+  if(inv>0){ S.shadowDCAunits += inv/S.lastPrices["VGX"]; S.shadowDCAcash-=inv; }
+
+  // random life event (max one per advance handled by caller)
+  snapshot();
+  return maybeEvent();
+}
+
+function maybeEvent(){
+  for(const e of EVENTS){
+    if(S.month>=e.minM && rnd()<e.chance && !S["ev_"+e.id]){
+      S["ev_"+e.id]=true; return e;
+    }
+  }
+  return null;
+}
+
+function snapshot(){
+  const nw=netWorth();
+  S.hist.push(nw);
+  S.histCash.push(S.shadowCash);
+  S.histDCA.push(S.shadowDCAcash + S.shadowDCAunits*S.prices["VGX"]);
+  S.peakNW=Math.max(S.peakNW,nw);
+}
+
+function netWorth(){
+  let v=S.cash;
+  for(const t in S.holdings) v+=S.holdings[t]*S.prices[t];
+  return v;
+}
+function investVal(){let v=0;for(const t in S.holdings)v+=S.holdings[t]*S.prices[t];return v;}
+
+/* ---------- advance with event pause ---------- */
+let pendingMonths=0;
+function advance(m){
+  pendingMonths=m; runMonths();
+}
+function runMonths(){
+  if(S.pendingDebrief){ renderAll(); showDebrief(); return; }
+  while(pendingMonths>0){
+    pendingMonths--;
+    const ev=stepMonth();
+    checkAchievements();
+    if(ev){ renderAll(); showEvent(ev); return; }   // pause on event
+    if(S.pendingDebrief){ renderAll(); showDebrief(); return; }
+  }
+  renderAll();
+}
+
+/* ---------- trading ---------- */
+function buy(t, amt, silent){
+  amt=Math.min(amt,S.cash); if(amt<=0)return;
+  S.holdings[t]=(S.holdings[t]||0)+amt/S.prices[t];
+  S.cash-=amt; S.invested+=amt;
+  if(!S.ach.includes("first")) grant("first","🏁 First trade","You put money to work.");
+  if(!silent){renderAll();renderAssets();toast("Bought "+fmt(amt)+" of "+t);}
+}
+function sell(t, amt){
+  const units=S.holdings[t]||0, val=units*S.prices[t];
+  amt=Math.min(amt,val); if(amt<=0)return;
+  S.holdings[t]-=amt/S.prices[t]; S.cash+=amt;
+  if(S.month>=34&&S.month<=40&&!S.crashDone) S.soldInCrash=true;
+  renderAll();renderAssets();toast("Sold "+fmt(amt)+" of "+t);
+}
+function promptTrade(t,side){
+  const a=prompt(side==="buy"?"Amount to invest in "+t+" (cash "+fmt(S.cash)+"):":"Amount of "+t+" to sell:", "1000");
+  const n=parseFloat(a); if(!n||n<=0)return;
+  side==="buy"?buy(t,n):sell(t,n);
+}
+
+/* ---------- lessons ---------- */
+function renderLessons(){
+  const el=$("lessonList"); el.innerHTML="";
+  LESSONS.forEach((L,i)=>{
+    const done=S.lessons[L.id];
+    const locked=i>0 && !S.lessons[LESSONS[i-1].id];
+    const d=document.createElement("div");
+    d.className="lesson"+(done?" done":"")+(locked?" locked":"");
+    d.innerHTML=`<div><div class="t">${L.title}</div><div class="s">${L.mins} min · unlocks: ${L.unlocks}</div></div>
+                 <span class="chip ${done?'done':(locked?'':'gate')}">${done?'✓ done':(locked?'🔒':'start')}</span>`;
+    if(!locked&&!done)d.onclick=()=>openLesson(L);
+    if(done)d.onclick=()=>openLesson(L,true);
+    el.appendChild(d);
+  });
+}
+function openLesson(L,review){
+  const body=L.body.map(p=>`<p>${p}</p>`).join("");
+  sheet(`
+    <div class="tag blue">📖 LESSON</div>
+    <h2>${L.title}</h2>${body}
+    <div class="q"><div class="qq">Quick check: ${L.quiz.q}</div>
+      ${L.quiz.opts.map((o,i)=>`<button class="opt" onclick="answer('${L.id}',${i},this)">${o}</button>`).join("")}
+    </div>
+    ${review?'<button class="btn ghost" style="width:100%" onclick="closeSheet()">Close</button>':''}
+  `);
+}
+function answer(id,i,btn){
+  const L=LESSONS.find(x=>x.id===id);
+  if(i===L.quiz.a){
+    btn.classList.add("correct");
+    if(!S.lessons[id]){
+      S.lessons[id]=true; applyUnlock(id);
+      log("📖 Completed lesson: "+L.title);
+      setTimeout(()=>{closeSheet();renderLessons();renderAssets();renderAll();toast("Unlocked: "+L.unlocks);},600);
+    } else setTimeout(closeSheet,600);
+  } else { btn.classList.add("wrong"); }
+}
+function applyUnlock(id){
+  if(id==="budget"){$("dcaSlider").disabled=false;$("dcaGate").textContent="ready";$("dcaGate").className="chip done";}
+  if(id==="invest"){$("nav-invest").disabled=false;$("nav-invest").classList.add("badge-dot");}
+}
+function dcaUI(){
+  S.dca=+$("dcaSlider").value/100;
+  $("dcaPct").textContent=S.dca?Math.round(S.dca*100)+"% of surplus":"Off";
+}
+
+/* ---------- markets UI ---------- */
+function renderAssets(){
+  const el=$("assetList"); el.innerHTML="";
+  ASSETS.forEach(a=>{
+    const unlocked=S.lessons[a.lesson];
+    const units=S.holdings[a.t]||0, val=units*S.prices[a.t];
+    const chg=(S.prices[a.t]-S.lastPrices[a.t])/S.lastPrices[a.t];
+    const d=document.createElement("div");
+    d.className="asset"+(unlocked?"":" locked");
+    d.innerHTML=`
+      <div class="top"><div><span class="tick">${a.t}</span> <span class="nm">${a.name}</span></div>
+        <div style="text-align:right"><div class="px">${fmt(S.prices[a.t])}</div>
+        <div class="chg ${chg>=0?'gain':'loss'}">${pct(chg)} /mo</div></div></div>
+      <div class="hold">${a.blurb}${units?` · <span class="mono" style="color:var(--paper)">You hold ${fmt(val)}</span>`:""}</div>
+      <div class="act">${unlocked
+        ?`<button class="btn small" onclick="promptTrade('${a.t}','buy')">Buy</button>
+          <button class="btn small ghost" onclick="promptTrade('${a.t}','sell')" ${units?"":"disabled"}>Sell</button>`
+        :`<span class="chip gate">🔒 Complete “${LESSONS.find(l=>l.id===a.lesson).title}” to unlock</span>`}</div>`;
+    el.appendChild(d);
+  });
+  $("invCash").textContent=fmt(S.cash);
+}
+
+/* ---------- events & debriefs ---------- */
+function showEvent(e){
+  let actions="";
+  if(e.cost>0){
+    const canCash=S.cash>=e.cost, canSell=investVal()>=e.cost;
+    actions=`<button class="btn" style="width:100%;margin-bottom:8px" ${canCash?"":"disabled"} onclick="resolveEvent('cash',${e.cost})">Pay from cash ${canCash?"":"(not enough!)"}</button>
+             <button class="btn warn" style="width:100%" ${canSell?"":"disabled"} onclick="resolveEvent('sell',${e.cost})">Sell investments to pay</button>`;
+    if(!canCash&&!canSell)actions+=`<p class="sub" style="margin-top:8px">You can't cover this… the sim will lend it to you at painful interest. (Lesson noted.)</p><button class="btn ghost" style="width:100%;margin-top:8px" onclick="resolveEvent('debt',${e.cost})">Borrow it 😬</button>`;
+  } else if(e.cost<0){
+    actions=`<button class="btn" style="width:100%" onclick="resolveEvent('gain',${e.cost})">Nice — collect it</button>`;
+  } else if(e.raise){
+    actions=`<button class="btn" style="width:100%" onclick="resolveEvent('raise',${e.raise})">Love that for me</button>`;
+  } else if(e.gap){
+    actions=`<button class="btn warn" style="width:100%" onclick="resolveEvent('gap',${e.gap})">Weather the storm</button>`;
+  }
+  sheet(`<div class="tag amber">⚡ LIFE HAPPENS · ${dateStr()}</div><h2>${e.title}</h2><p>${e.text}</p>${actions}`);
+  log("⚡ "+e.title);
+}
+function resolveEvent(kind,val){
+  if(kind==="cash"){S.cash-=val;}
+  if(kind==="sell"){ // sell proportionally
+    let need=val;
+    for(const t in S.holdings){ const v=S.holdings[t]*S.prices[t]; const take=Math.min(v,need);
+      S.holdings[t]-=take/S.prices[t]; need-=take; if(need<=0)break;}
+    log("💸 Sold investments to cover an emergency — this is why buffers matter.");
+  }
+  if(kind==="debt"){S.cash-=val*1.25;log("🕳️ Borrowed at 25% effective interest. Ouch.");}
+  if(kind==="gain"){S.cash-=val;log("🎉 Windfall banked "+fmt(-val)+".");}
+  if(kind==="raise"){S.salary=Math.round(S.salary*(1+val));$("hdrName").textContent=S.persona.name+" · take-home "+fmt(S.salary)+"/mo";log("📈 Raise! New take-home "+fmt(S.salary)+".");}
+  if(kind==="gap"){S.salaryGap=val;log("📦 Retrenched — "+val+" months without salary.");}
+  closeSheet(); renderAll(); runMonths();   // resume remaining months
+}
+function queueDebrief(){S.pendingDebrief=true;}
+function showDebrief(){
+  S.pendingDebrief=false;
+  const now=netWorth(), drop=S.crashStart?(now-S.crashStart)/S.crashStart:0;
+  const held=!S.soldInCrash&&S.invested>0;
+  if(held&&S.invested>0)grant("diamond","💎 Diamond hands","Held through your first bear market.");
+  sheet(`
+    <div class="tag ${held?'gain':'loss'}">🎓 TEACHABLE MOMENT</div>
+    <h2>You just lived through a market crash.</h2>
+    <p>Over the past 6 simulated months markets fell hard — the kind of drop that happens every decade or so in real life.</p>
+    <p>${held
+      ? "You <b>held on</b> (and kept auto-investing, if DCA was on). Historically that's exactly what recovers and compounds. Watch your Timeline over the next simulated years."
+      : S.invested>0
+        ? "You <b>sold during the fall</b>. Totally human — and historically the single most expensive mistake investors make, because recoveries arrive before confidence does. Compare your line with the blue DCA line in Timeline as years pass."
+        : "You were mostly in cash, so you dodged the drop — but cash also misses every recovery. Notice how the blue DCA line behaves from here."}</p>
+    <p class="sub">Lesson “The crash survival guide” is now highlighted in Learn.</p>
+    <button class="btn" style="width:100%" onclick="closeSheet();runMonths()">Continue</button>`);
+  log("🎓 Debrief: your first crash ("+pct(drop)+" from peak).");
+}
+
+/* ---------- achievements ---------- */
+function grant(id,name,desc){ if(S.ach.includes(id))return; S.ach.push(id);
+  toast(name+" unlocked"); log("🏅 "+name+" — "+desc); renderAch(); }
+function checkAchievements(){
+  const nw=netWorth();
+  if(nw>=100000)grant("100k","💰 First S$100k","The hardest hundred is done.");
+  if(S.month>=120)grant("decade","🕰 Ten years in","A decade of decisions.");
+  if(S.cash>=S.salary*(S.needsPct+S.wantsPct)*3&&!S.ach.includes("buffer"))grant("buffer","🛡 Buffer built","3+ months of expenses in cash.");
+}
+function renderAch(){
+  const M={first:"🏁 First trade",buffer:"🛡 Buffer built",diamond:"💎 Diamond hands","100k":"💰 First S$100k",decade:"🕰 Ten years in"};
+  $("achList").innerHTML=S.ach.length?S.ach.map(a=>`<span class="chip done" style="margin:0 6px 6px 0;display:inline-block">${M[a]}</span>`).join(""):"None yet — go live a little.";
+}
+
+/* ---------- log ---------- */
+function log(msg){S.log.unshift(dateStr()+" — "+msg);
+  $("logList").innerHTML=S.log.slice(0,14).map(l=>`<div style="padding:5px 0;border-bottom:1px solid var(--line)">${l}</div>`).join("");}
+
+/* ---------- render ---------- */
+function dateStr(){const d=new Date(2026,0+S.month,1);return d.toLocaleDateString("en-SG",{month:"short",year:"numeric"});}
+function renderAll(){
+  $("hdrDate").textContent=dateStr();
+  $("hdrAge").textContent="Age "+(S.persona.age+Math.floor(S.month/12));
+  const nw=netWorth(),inv=investVal();
+  $("nwBig").textContent=fmt(nw);
+  $("nwSub").innerHTML="Cash "+fmt(S.cash)+" · Investments "+fmt(inv)
+    +(S.salaryGap?` · <span class="loss">no salary (${S.salaryGap} mo left)</span>`:"");
+  const sal=S.salary;
+  $("cfIn").textContent=fmt(S.salaryGap?0:sal);
+  $("cfNeeds").textContent="−"+fmt(sal*S.needsPct);
+  $("cfWants").textContent="−"+fmt(sal*S.wantsPct);
+  $("cfSave").textContent=fmt(sal*(1-S.needsPct-S.wantsPct)*(S.salaryGap?0:1));
+  // coach
+  const c=$("coachMsg");
+  if(!S.lessons.invest)c.innerHTML="Start with <b>Learn → Why invest?</b> — it unlocks the Invest tab.";
+  else if(S.dca===0)c.innerHTML="Turn on <b>Auto-invest</b> above. Automatic beats heroic.";
+  else if(S.cash<sal*(S.needsPct+S.wantsPct)*3)c.innerHTML="Keep building your cash buffer to <b>3 months of expenses</b> before going heavier into markets.";
+  else c.innerHTML="Looking healthy. Advance a few years and watch compounding do its thing — then check <b>Timeline</b>.";
+  drawChart(); renderAssets();
+  $("stYears").textContent=(S.month/12).toFixed(1);
+  $("stInvested").textContent=fmt(S.invested);
+  const dd=S.peakNW>0?Math.min(0,(nw-S.peakNW)/S.peakNW):0;
+  $("stDD").textContent=(dd*100).toFixed(0)+"%";
+}
+
+/* ---------- chart (SVG) ---------- */
+function drawChart(){
+  const svg=$("chart"); if(!S||S.hist.length<2){svg.innerHTML="";return;}
+  const W=360,H=170,P=6;
+  const all=[...S.hist,...S.histCash,...S.histDCA];
+  const mx=Math.max(...all)*1.05, mn=Math.min(0,...all);
+  const X=i=>P+(W-2*P)*i/(S.hist.length-1);
+  const Y=v=>H-P-(H-2*P)*(v-mn)/(mx-mn||1);
+  const path=arr=>arr.map((v,i)=>(i?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1)).join(" ");
+  svg.innerHTML=`
+    <path d="${path(S.histCash)}" fill="none" stroke="#5c6f65" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <path d="${path(S.histDCA)}" fill="none" stroke="#7ea8f8" stroke-width="1.5"/>
+    <path d="${path(S.hist)}" fill="none" stroke="#43d69a" stroke-width="2.5"/>`;
+}
+
+/* ---------- sheet / toast ---------- */
+function sheet(html){$("sheet").innerHTML=html;$("overlay").classList.add("show");}
+function closeSheet(){$("overlay").classList.remove("show");}
+$("overlay").addEventListener("click",e=>{if(e.target.id==="overlay"&&!S?.pendingDebrief)closeSheet();});
+let toastT=null;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2600);}
+</script>
+</body>
+</html>
