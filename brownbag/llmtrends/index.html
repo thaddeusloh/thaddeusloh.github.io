@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond the Prompt — LLM Trends Brown Bag · July 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d1411;
+    --surface:#141d18;
+    --surface-2:#1a2620;
+    --line:#2a3a32;
+    --paper:#ece7d9;
+    --paper-dim:#b8b3a5;
+    --gold:#d9a441;
+    --mint:#a8c5ad;
+    --teal:#5fa88f;
+    --rust:#c4764a;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Newsreader',Georgia,serif;
+    font-size:17.5px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:var(--ink)}
+
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;line-height:1.15}
+  h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin:.5rem 0 1rem}
+  h3{font-size:1.15rem;font-weight:600}
+  p.lede{font-size:1.12rem;color:var(--paper-dim);max-width:62ch}
+  a{color:var(--teal)}
+
+  /* ---------- header ---------- */
+  header{
+    max-width:var(--maxw);margin:0 auto;padding:5.5rem 1.5rem 3.5rem;
+    position:relative;
+  }
+  header h1{
+    font-size:clamp(2.6rem,6.5vw,4.6rem);
+    font-weight:700;letter-spacing:-.015em;
+  }
+  header h1 .accent{color:var(--gold);font-style:italic;font-weight:400}
+  .session-meta{
+    display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.6rem;
+    font-family:'Space Grotesk',sans-serif;font-size:.8rem;color:var(--paper-dim);
+  }
+  .session-meta span b{color:var(--mint);font-weight:500}
+
+  /* ---------- sticky agenda ---------- */
+  nav.agenda{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,20,17,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  nav.agenda ul{
+    max-width:var(--maxw);margin:0 auto;padding:0 1.5rem;
+    display:flex;gap:.25rem;list-style:none;overflow-x:auto;
+  }
+  nav.agenda a{
+    display:block;padding:.85rem 1rem;white-space:nowrap;
+    font-family:'Space Grotesk',sans-serif;font-size:.78rem;letter-spacing:.06em;
+    color:var(--paper-dim);text-decoration:none;border-bottom:2px solid transparent;
+  }
+  nav.agenda a:hover{color:var(--gold);border-color:var(--gold)}
+
+  section{max-width:var(--maxw);margin:0 auto;padding:4.5rem 1.5rem}
+  section + section{border-top:1px solid var(--line)}
+
+  /* ---------- the layer rings (signature) ---------- */
+  .rings-wrap{display:grid;grid-template-columns:minmax(300px,460px) 1fr;gap:3rem;align-items:center;margin-top:2.5rem}
+  .rings-svg{width:100%;height:auto;display:block}
+  .ring{cursor:pointer;transition:opacity .25s, stroke-width .25s}
+  .ring circle{fill:none;stroke-width:34;transition:stroke .25s, opacity .25s}
+  .ring text{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;fill:var(--ink);font-weight:600}
+  .rings-svg .core-label{font-family:'Fraunces',serif;font-size:17px;fill:var(--ink);font-weight:700}
+  .ring.dim circle{opacity:.22}
+  .ring.dim text{opacity:.25}
+  .ring-detail{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:1.8rem 2rem;min-height:270px;
+  }
+  .ring-detail .eyebrow{margin-bottom:.4rem;display:block}
+  .ring-detail h3{font-size:1.5rem;margin-bottom:.7rem;font-family:'Fraunces',serif}
+  .ring-detail p{color:var(--paper-dim);margin-bottom:.8rem}
+  .ring-detail .quote{
+    border-left:2px solid var(--gold);padding-left:1rem;font-style:italic;
+    color:var(--mint);font-size:.98rem;
+  }
+  .hint{font-family:'Space Grotesk',sans-serif;font-size:.72rem;letter-spacing:.1em;color:var(--paper-dim);margin-top:.8rem;text-transform:uppercase}
+
+  /* ---------- trend cards ---------- */
+  .trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:2rem}
+  .trend{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:1.4rem 1.5rem;cursor:pointer;transition:border-color .2s, transform .2s;
+  }
+  .trend:hover{border-color:var(--teal)}
+  .trend .t-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+  .trend h3{color:var(--mint)}
+  .trend .tag{font-family:'Space Grotesk',sans-serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+  .trend .one-liner{color:var(--paper-dim);font-size:.98rem;margin-top:.5rem}
+  .trend .more{
+    max-height:0;overflow:hidden;transition:max-height .4s ease;
+    font-size:.95rem;color:var(--paper-dim);
+  }
+  .trend.open .more{max-height:420px}
+  .trend .more-inner{padding-top:.9rem;border-top:1px dashed var(--line);margin-top:.9rem}
+  .trend .more b{color:var(--paper);font-weight:500}
+  .trend .chev{font-family:'Space Grotesk',sans-serif;font-size:.7rem;color:var(--teal);margin-top:.7rem;letter-spacing:.1em;text-transform:uppercase}
+
+  /* ---------- workflow stepper ---------- */
+  .flow{margin-top:2.5rem}
+  .flow-track{
+    display:flex;gap:.4rem;flex-wrap:wrap;
+    font-family:'Space Grotesk',sans-serif;font-size:.72rem;letter-spacing:.05em;
+  }
+  .flow-track button{
+    background:var(--surface);border:1px solid var(--line);color:var(--paper-dim);
+    padding:.55rem .9rem;border-radius:999px;cursor:pointer;font:inherit;
+    transition:all .2s;
+  }
+  .flow-track button.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+  .flow-track button:hover:not(.active){border-color:var(--gold);color:var(--gold)}
+  .flow-stage{
+    margin-top:1.4rem;background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;padding:1.8rem 2rem;
+  }
+  .flow-stage .stage-label{color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+  .flow-stage h3{font-size:1.35rem;margin:.4rem 0 .8rem;font-family:'Fraunces',serif}
+  .flow-stage p{color:var(--paper-dim)}
+  .flow-stage .artefact{
+    margin-top:1rem;background:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:1rem 1.2rem;font-family:'Space Grotesk',monospace,sans-serif;font-size:.82rem;
+    color:var(--mint);white-space:pre-wrap;line-height:1.55;
+  }
+  .artefact .c{color:var(--paper-dim)}
+  .artefact .g{color:var(--gold)}
+  .flow-nav{display:flex;gap:.8rem;margin-top:1.2rem}
+  .flow-nav button{
+    font-family:'Space Grotesk',sans-serif;font-size:.78rem;letter-spacing:.08em;
+    background:none;border:1px solid var(--line);color:var(--paper);
+    padding:.55rem 1.2rem;border-radius:6px;cursor:pointer;
+  }
+  .flow-nav button:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* ---------- provider tabs ---------- */
+  .prov-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:2rem}
+  .prov-tabs button{
+    font-family:'Space Grotesk',sans-serif;font-size:.8rem;letter-spacing:.04em;
+    background:var(--surface);border:1px solid var(--line);color:var(--paper-dim);
+    padding:.6rem 1.1rem;border-radius:6px 6px 0 0;cursor:pointer;border-bottom:none;
+  }
+  .prov-tabs button.active{background:var(--surface-2);color:var(--gold);border-color:var(--gold)}
+  .prov-panel{
+    background:var(--surface-2);border:1px solid var(--gold);border-radius:0 8px 8px 8px;
+    padding:1.8rem;display:none;
+  }
+  .prov-panel.active{display:block}
+  .prov-panel .prov-intro{color:var(--paper-dim);font-size:1rem;max-width:70ch;margin-bottom:1.4rem}
+  .model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:.9rem}
+  .model{
+    background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.2rem;
+  }
+  .model .m-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.95rem;color:var(--paper)}
+  .model .m-role{font-family:'Space Grotesk',sans-serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:.25rem 0 .55rem}
+  .model p{font-size:.9rem;color:var(--paper-dim);line-height:1.55}
+  .model .m-spec{
+    margin-top:.6rem;padding-top:.55rem;border-top:1px dashed var(--line);
+    font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--teal);
+  }
+  .flagship{border-color:var(--gold)}
+  .flagship .m-name{color:var(--gold)}
+
+  /* ---------- world models ---------- */
+  .wm-toggle-wrap{margin-top:2.2rem}
+  .wm-toggle{
+    display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
+    font-family:'Space Grotesk',sans-serif;font-size:.8rem;
+  }
+  .wm-toggle button{
+    background:none;border:none;color:var(--paper-dim);padding:.65rem 1.4rem;cursor:pointer;font:inherit;
+  }
+  .wm-toggle button.active{background:var(--teal);color:var(--ink);font-weight:600}
+  .wm-panel{display:none;margin-top:1.4rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.8rem 2rem}
+  .wm-panel.active{display:block}
+  .wm-panel h3{color:var(--mint);margin-bottom:.6rem}
+  .wm-panel p{color:var(--paper-dim);margin-bottom:.7rem}
+  .pred-demo{
+    margin-top:1rem;background:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:1.2rem 1.4rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;
+  }
+  .pred-demo .lbl{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  .token{display:inline-block;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:.15rem .5rem;margin:.15rem .1rem;color:var(--paper)}
+  .token.next{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+  .frame{display:inline-block;width:64px;height:44px;border:1px solid var(--line);border-radius:4px;margin:.15rem;position:relative;background:var(--surface-2);overflow:hidden}
+  .frame .ball{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--mint)}
+  .frame.next{border-color:var(--gold)}
+  .frame.next .ball{background:var(--gold)}
+  .wm-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem;margin-top:2.2rem}
+
+  /* ---------- misc ---------- */
+  .note{
+    margin-top:2.5rem;padding:1.1rem 1.4rem;border:1px dashed var(--line);border-radius:8px;
+    font-size:.92rem;color:var(--paper-dim);
+  }
+  footer{
+    max-width:var(--maxw);margin:0 auto;padding:3rem 1.5rem 4rem;
+    border-top:1px solid var(--line);
+    font-family:'Space Grotesk',sans-serif;font-size:.75rem;color:var(--paper-dim);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+  }
+  @media (max-width:820px){
+    .rings-wrap{grid-template-columns:1fr}
+    body{font-size:16.5px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Brown Bag · AI &amp; Data Strategy</span>
+  <h1>Beyond the Prompt:<br>the <span class="accent">2026</span> LLM landscape</h1>
+  <p class="lede" style="margin-top:1.2rem">
+    In 2024 we learned to talk to models. In 2025 we learned to feed them.
+    In 2026 we're learning to build the machinery <em>around</em> them — and to ask
+    whether language is even the right substrate for the next leap.
+  </p>
+  <div class="session-meta">
+    <span><b>Format</b> · Lunch &amp; learn, 45 min</span>
+    <span><b>Snapshot</b> · July 2026</span>
+    <span><b>Audience</b> · Non-specialist welcome</span>
+  </div>
+</header>
+
+<nav class="agenda" aria-label="Agenda">
+  <ul>
+    <li><a href="#stack">01 · The Stack</a></li>
+    <li><a href="#trends">02 · Trend Radar</a></li>
+    <li><a href="#workflow">03 · One Workflow</a></li>
+    <li><a href="#providers">04 · Model Atlas</a></li>
+    <li><a href="#worldmodels">05 · World Models</a></li>
+  </ul>
+</nav>
+
+<!-- ========== 01 THE STACK ========== -->
+<section id="stack">
+  <span class="eyebrow">01 · The big idea</span>
+  <h2>Capability moved outward: from weights, to context, to harness, to loop</h2>
+  <p class="lede">
+    The story of the last four years is a progressive migration of "where the intelligence lives" —
+    away from the model itself and into the layers wrapped around it. Each ring below is a discipline
+    that emerged when the previous one hit a ceiling. <strong style="color:var(--mint)">Click a ring to explore it.</strong>
+  </p>
+
+  <div class="rings-wrap">
+    <svg class="rings-svg" viewBox="0 0 460 460" role="img" aria-label="Concentric rings: model weights at the core, wrapped by prompt, context, harness, and loop engineering">
+      <g class="ring" data-ring="loop">
+        <circle cx="230" cy="230" r="205" stroke="#d9a441"/>
+        <text x="230" y="38" text-anchor="middle">Loop · 2026</text>
+      </g>
+      <g class="ring" data-ring="harness">
+        <circle cx="230" cy="230" r="160" stroke="#5fa88f"/>
+        <text x="230" y="83" text-anchor="middle">Harness · 2025–26</text>
+      </g>
+      <g class="ring" data-ring="context">
+        <circle cx="230" cy="230" r="115" stroke="#a8c5ad"/>
+        <text x="230" y="128" text-anchor="middle">Context · 2024–25</text>
+      </g>
+      <g class="ring" data-ring="prompt">
+        <circle cx="230" cy="230" r="70" stroke="#c4764a"/>
+        <text x="230" y="173" text-anchor="middle">Prompt · 2023</text>
+      </g>
+      <g class="ring" data-ring="weights">
+        <circle cx="230" cy="230" r="30" stroke="#ece7d9" style="fill:#ece7d9"/>
+        <text class="core-label" x="230" y="236" text-anchor="middle">Model</text>
+      </g>
+    </svg>
+
+    <div class="ring-detail" id="ringDetail" aria-live="polite">
+      <span class="eyebrow" id="rdEra">The core</span>
+      <h3 id="rdTitle">The frozen model</h3>
+      <p id="rdBody">The pretrained weights. In 2026's framing, the model is increasingly treated as a "frozen utility" — a reasoning engine you don't retrain, you engineer around. Everything interesting happens in the rings.</p>
+      <p class="quote" id="rdQuote">"The recent history of LLM agents can be understood as a progressive movement outward from the model itself."</p>
+      <p class="hint">Click any ring on the diagram</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 02 TREND RADAR ========== -->
+<section id="trends">
+  <span class="eyebrow">02 · Trend radar</span>
+  <h2>The disciplines you named — and the ones you missed</h2>
+  <p class="lede">
+    Loop, harness, context, MCP: good instincts, all four are the headline acts of 2026.
+    Here's the full radar, including six you didn't mention. Tap any card to expand.
+  </p>
+
+  <div class="trend-grid" id="trendGrid"></div>
+
+  <div class="note">
+    <b style="color:var(--mint)">Mnemonic for the room:</b> prompt engineering asks
+    <em>"what do I say?"</em>, context engineering asks <em>"what does it see?"</em>,
+    harness engineering asks <em>"what can it touch?"</em>, and loop engineering asks
+    <em>"when does it stop?"</em>
+  </div>
+</section>
+
+<!-- ========== 03 ONE WORKFLOW ========== -->
+<section id="workflow">
+  <span class="eyebrow">03 · Putting it together</span>
+  <h2>One workflow, every discipline</h2>
+  <p class="lede">
+    A worked example our audience knows well: <em>"Generate the daily portfolio-drift
+    exceptions report and draft RM talking points."</em> Step through how each 2026
+    discipline shows up in a single agent run.
+  </p>
+
+  <div class="flow">
+    <div class="flow-track" id="flowTrack"></div>
+    <div class="flow-stage" id="flowStage" aria-live="polite"></div>
+    <div class="flow-nav">
+      <button id="flowPrev">← Back</button>
+      <button id="flowNext">Next step →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 04 MODEL ATLAS ========== -->
+<section id="providers">
+  <span class="eyebrow">04 · Model atlas</span>
+  <h2>Who ships what, and what each model is good at</h2>
+  <p class="lede">
+    A July 2026 snapshot of the major families. Gold border = current flagship.
+    Prices are per million tokens (input / output) where public, and change often — treat as directional.
+  </p>
+  <div class="prov-tabs" id="provTabs"></div>
+  <div id="provPanels"></div>
+</section>
+
+<!-- ========== 05 WORLD MODELS ========== -->
+<section id="worldmodels">
+  <span class="eyebrow">05 · The horizon</span>
+  <h2>World models: why "next token" may not be enough</h2>
+  <p class="lede">
+    The single biggest strategic debate in AI right now. LLMs predict the next word;
+    world models predict the next <em>state of reality</em> — learning physics, space,
+    and cause-and-effect from video and interaction rather than text. Toggle below to feel the difference.
+  </p>
+
+  <div class="wm-toggle-wrap">
+    <div class="wm-toggle" role="tablist">
+      <button class="active" data-wm="llm" role="tab">LLM: next token</button>
+      <button data-wm="wm" role="tab">World model: next state</button>
+    </div>
+
+    <div class="wm-panel active" data-wmpanel="llm">
+      <h3>Language models predict symbols</h3>
+      <p>Given a sequence of tokens, the model outputs a probability distribution over the next one. Astonishingly powerful — but the model's grasp of physics, space, and time is second-hand, inferred from descriptions of the world rather than the world itself. That's why LLMs can ace an exam question about gravity yet "hallucinate physics" in a dynamic scene.</p>
+      <div class="pred-demo">
+        <div class="lbl">Prediction target</div>
+        <span class="token">The</span><span class="token">ball</span><span class="token">rolls</span><span class="token">off</span><span class="token">the</span><span class="token">table</span><span class="token">and</span><span class="token next">falls ▾ 92%</span>
+        <span class="token" style="opacity:.5">flies · 4%</span><span class="token" style="opacity:.4">stops · 3%</span>
+      </div>
+    </div>
+
+    <div class="wm-panel" data-wmpanel="wm">
+      <h3>World models predict what happens next</h3>
+      <p>Trained on video and interaction, a world model builds an internal simulator: give it a scene and an action, and it predicts how the environment evolves. That unlocks the things language struggles with — planning, counterfactuals ("what if I grab it?"), and training agents safely "in imagination" before they act in the real world.</p>
+      <div class="pred-demo">
+        <div class="lbl">Prediction target — the next frame</div>
+        <span class="frame"><span class="ball" style="left:38px;top:6px"></span></span>
+        <span class="frame"><span class="ball" style="left:48px;top:10px"></span></span>
+        <span class="frame"><span class="ball" style="left:55px;top:18px"></span></span>
+        <span class="frame next"><span class="ball" style="left:58px;top:30px"></span></span>
+        <p style="margin-top:.6rem;font-size:.8rem;color:var(--paper-dim)">The model never read the word "gravity". It watched enough video to expect the arc.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:3rem;color:var(--mint)">Why the smart money says this is the next big thing</h3>
+  <p style="color:var(--paper-dim);max-width:70ch;margin-top:.6rem">
+    Three arguments, in ascending order of ambition: <b style="color:var(--paper)">(1) Robotics &amp; physical AI</b> — agents that act in the world need to predict consequences of actions, and simulators generate infinite safe training data. <b style="color:var(--paper)">(2) Economics</b> — as frontier LLMs commoditise and margins compress, investors are hunting the next defensible moat; over $3B of venture capital flowed to world-model startups in H1 2026 alone. <b style="color:var(--paper)">(3) The AGI bet</b> — Yann LeCun's camp argues text is a lossy shadow of reality and scaling LLMs will never yield general intelligence; his JEPA-style architectures predict in abstract representation space rather than pixels or tokens. The counterpoint: LLM labs argue reasoning + tools + loops gets there first. Both camps are now funded like they're right.
+  </p>
+
+  <div class="wm-players" id="wmPlayers"></div>
+
+  <div class="note">
+    <b style="color:var(--mint)">So what, for wealth management?</b> Near-term: nothing replaces your
+    LLM stack. Medium-term: world models power the simulation layer — synthetic environments for
+    training and stress-testing agents before they touch production systems. If "RL environments as
+    products" is a 2026 trend, world models are the factories that will build those environments.
+  </div>
+</section>
+
+<footer>
+  <span>Beyond the Prompt · internal brown bag · July 2026</span>
+  <span>Model specs &amp; prices verified against public sources, Jul 2026 — refresh before reuse</span>
+</footer>
+
+<script>
+/* ---------------- ring data ---------------- */
+const RINGS = {
+  weights:{era:"The core",title:"The frozen model",
+    body:"The pretrained weights. In 2026's framing, the model is increasingly treated as a frozen utility — a reasoning engine you don't retrain, you engineer around. Everything interesting happens in the rings.",
+    quote:"\u201CThe recent history of LLM agents can be understood as a progressive movement outward from the model itself.\u201D"},
+  prompt:{era:"2023 · Ring 1",title:"Prompt engineering",
+    body:"The founding craft: phrasing, few-shot examples, chain-of-thought. Still useful, no longer the bottleneck — models got robust enough that wording rarely decides success. Think of it as handwriting: necessary, but nobody's differentiator.",
+    quote:"\u201CPrompt phrasing stopped being the bottleneck somewhere in early 2026.\u201D"},
+  context:{era:"2024–25 · Ring 2",title:"Context engineering",
+    body:"Curating everything the model sees: retrieval, memory, tool definitions, history. The key 2025 lesson was 'context rot' — correctness degrades as context grows (one study saw drops around 32K tokens, far below the million-token ceiling), and mid-context information gets lost. The goal is the minimum set of high-signal tokens, not the biggest window.",
+    quote:"\u201CThe solution isn't bigger windows — it's better curation.\u201D"},
+  harness:{era:"2025–26 · Ring 3",title:"Harness engineering",
+    body:"The programmatic wrapper governing execution: tools, permissions, sandboxes, memory, state persistence, evaluation, guardrails. The harness treats the LLM as a reasoning calculator and makes failures structurally impossible to repeat — critical for regulated industries like ours. MCP is the connective tissue of this ring.",
+    quote:"\u201CThe model is the brain. The harness is the body.\u201D"},
+  loop:{era:"2026 · Ring 4",title:"Loop engineering",
+    body:"Named in June 2026 after essays by Addy Osmani and a viral line from Peter Steinberger: stop prompting agents, design the loops that prompt them. Gather context → act → verify → repeat, with triggers, stop rules and budgets. The scarce skill is defining what 'good' and 'done' mean — the verifier, not the model, is the bottleneck.",
+    quote:"\u201CI don't prompt Claude anymore. I have loops running that prompt Claude.\u201D — Boris Cherny, Claude Code"}
+};
+const ringDetail = {era:document.getElementById('rdEra'),title:document.getElementById('rdTitle'),body:document.getElementById('rdBody'),quote:document.getElementById('rdQuote')};
+document.querySelectorAll('.ring').forEach(r=>{
+  r.addEventListener('click',()=>{
+    const d = RINGS[r.dataset.ring];
+    ringDetail.era.textContent=d.era; ringDetail.title.textContent=d.title;
+    ringDetail.body.textContent=d.body; ringDetail.quote.textContent=d.quote;
+    document.querySelectorAll('.ring').forEach(x=>x.classList.toggle('dim', x!==r));
+    setTimeout(()=>document.querySelectorAll('.ring').forEach(x=>x.classList.remove('dim')),2200);
+  });
+});
+
+/* ---------------- trend cards ---------------- */
+const TRENDS = [
+ {tag:"You named it",name:"Loop engineering",one:"Design the loop that runs the agent — triggers, verifiers, stop conditions — instead of steering every step.",
+  more:"<b>Why it matters:</b> agents got reliable enough to run unattended; the failure mode moved from bad prompts to loops with no off-switch and no self-check. <b>Watch for:</b> verifier design becoming a formal role — in any loop, the verifier is the bottleneck. <b>Healthy skepticism:</b> critics note it's a while-loop with branding, and agent loops burn 10–100× the tokens of single calls. Budget caps are part of the discipline."},
+ {tag:"You named it",name:"Harness engineering",one:"The infrastructure around the model: tools, permissions, sandboxes, memory, evals, observability.",
+  more:"<b>Why it matters:</b> in fintech and other regulated industries, the harness — not the model — is what makes agents deployable: permission matrices, risk taxonomies (read-only vs financial vs destructive), audit trails. <b>Watch for:</b> 'harnessability' becoming a criterion in architecture decisions, and security evals that test the harness itself (injection, over-tooling, timeouts)."},
+ {tag:"You named it",name:"Context engineering",one:"Curate the minimum set of high-signal tokens: retrieval, compaction, memory hierarchies.",
+  more:"<b>Why it matters:</b> context rot is measurable — performance degrades long before the window fills, and mid-context content gets ignored. <b>Key patterns:</b> compaction (what survives compression?), hierarchical memory, keeping critical rules in system prompts where they survive any squeeze. <b>Failure modes to name-drop:</b> poisoning, distraction, confusion, clash."},
+ {tag:"You named it",name:"MCP",one:"Model Context Protocol — the USB-C of agent integrations; a standard for exposing tools and data to any model.",
+  more:"<b>Why it matters:</b> it collapsed the N×M integration problem. One MCP server for your CRM works with Claude, GPT, Gemini, open models. <b>2026 state:</b> broad industry adoption; registries and marketplaces of servers; sits alongside agent-to-agent protocols (A2A) and emerging agentic-payment rails. <b>For us:</b> the natural interface layer between agents and bank systems — with the harness enforcing who may call what."},
+ {tag:"You missed",name:"Agent skills",one:"Packaged expertise — folders of instructions and scripts an agent loads on demand, instead of fine-tuning.",
+  more:"<b>Why it matters:</b> skills make agent capability composable and versionable, like libraries for behaviour. A SKILL.md that encodes 'how we write a suitability memo' beats retraining. <b>Watch for:</b> skill marketplaces, meta-engineering where agents evolve their own skills, and skills as the unit of governance review."},
+ {tag:"You missed",name:"Evals & verifier engineering",one:"The discipline of defining 'good' and 'done' — LLM-as-judge, computational checks, regression suites.",
+  more:"<b>Why it matters:</b> every autonomous loop is only as strong as its verifier. Two flavours: computational controls (linters, tests, reconciliation checks) and inferential ones (LLM-as-judge). <b>For us:</b> this is where model risk management meets engineering — evals are the new UAT."},
+ {tag:"You missed",name:"Multi-agent orchestration",one:"Orchestrator + specialised sub-agents with isolated contexts, working in parallel.",
+  more:"<b>Why it matters:</b> complex tasks exceed one context window; splitting work across sub-agents defeats context rot and lets each subtask use the cheapest adequate model. <b>Watch for:</b> agent teams as a product primitive, and even model vendors shipping multi-agent systems natively (e.g. Grok's coordinator + specialist setup)."},
+ {tag:"You missed",name:"Memory engineering",one:"Persistent state across sessions: what to store, compress, retrieve, and forget.",
+  more:"<b>Why it matters:</b> stateless agents redo work and repeat mistakes; memory is what makes an agent feel like a colleague rather than a vending machine. <b>Patterns:</b> LLM-curated hierarchical memory, external state files, compaction strategies. <b>Governance angle:</b> memory is also a data-retention and PDPA question — design forgetting as deliberately as remembering."},
+ {tag:"You missed",name:"Computer use & browser agents",one:"Models that see screens and drive real UIs — clicking, typing, filling forms.",
+  more:"<b>Why it matters:</b> most enterprise workflows have no API; computer use is the universal adapter of last resort. 2026 models made this dramatically more reliable. <b>For us:</b> legacy platform automation without integration projects — inside a strict harness, given the obvious risks."},
+ {tag:"You missed",name:"RL environments & synthetic worlds",one:"Simulated environments for training and stress-testing agents are becoming products in their own right.",
+  more:"<b>Why it matters:</b> the frontier labs' appetite for agent training environments created a market for realistic simulations — and it's the bridge to world models. <b>For us:</b> imagine rehearsing a new advisory agent against a simulated client book and market regime before it ever meets production."}
+];
+const tGrid=document.getElementById('trendGrid');
+TRENDS.forEach(t=>{
+  const el=document.createElement('div');el.className='trend';
+  el.innerHTML=`<div class="t-head"><h3>${t.name}</h3><span class="tag">${t.tag}</span></div>
+  <p class="one-liner">${t.one}</p>
+  <div class="more"><div class="more-inner">${t.more}</div></div>
+  <div class="chev">Expand ▾</div>`;
+  el.addEventListener('click',()=>{el.classList.toggle('open');
+    el.querySelector('.chev').textContent=el.classList.contains('open')?'Collapse ▴':'Expand ▾';});
+  tGrid.appendChild(el);
+});
+
+/* ---------------- workflow stepper ---------------- */
+const FLOW=[
+ {chip:"1 · Trigger",label:"Loop engineering",title:"A schedule, not a human, starts the run",
+  body:"No one types a prompt. A cron trigger fires at 06:30 SGT each trading day with a standing instruction and a budget: max 40 tool calls, hard stop at 20 minutes, escalate to a human on any 'financial' risk-class action.",
+  art:`<span class="c"># loop definition (sketch)</span>
+trigger:   <span class="g">cron 06:30 Asia/Singapore, weekdays</span>
+goal:      drift exceptions report + RM talking points
+budget:    40 tool calls · 20 min · $1.80
+stop_when: report saved AND verifier passes
+on_risk:   financial|destructive → human approval`},
+ {chip:"2 · Gather",label:"Context engineering",title:"Curate what the model sees — not everything, the right things",
+  body:"The harness assembles a lean context: yesterday's positions delta, mandate thresholds per segment, the exceptions template, and a compacted memory of last week's edge cases. The full client book never enters the window — retrieval pulls only breaching accounts.",
+  art:`<span class="c"># context budget: ~28K tokens, deliberately small</span>
++ mandate_thresholds.yaml        <span class="g">(2K)</span>
++ drift_deltas_breaching_only    <span class="g">(11K — retrieved, not dumped)</span>
++ exceptions_report_template     <span class="g">(3K)</span>
++ memory/compacted_edge_cases    <span class="g">(4K)</span>
+- full_client_book               <span class="c">✗ excluded: context rot</span>`},
+ {chip:"3 · Act",label:"MCP + harness",title:"Tools are called through governed connectors",
+  body:"The agent reaches systems only through MCP servers the harness has whitelisted: portfolio store (read-only), market data, document store (write to drafts only). Permissions are enforced outside the model — a prompt injection can't grant itself new powers.",
+  art:`<span class="c"># harness permission matrix</span>
+mcp: portfolio-db     scope: <span class="g">read_only</span>
+mcp: market-data      scope: <span class="g">read_only</span>
+mcp: doc-store        scope: <span class="g">write:/drafts only</span>
+mcp: email            scope: <span class="c">✗ not mounted for this loop</span>`},
+ {chip:"4 · Delegate",label:"Multi-agent + skills",title:"Sub-agents split the work, skills encode the house style",
+  body:"An orchestrator spawns two sub-agents in isolated contexts: one computes and tabulates exceptions (cheap, fast model), one drafts RM talking points loading the 'advisory-tone' skill (stronger model). Each context stays small; each task gets the cheapest adequate model.",
+  art:`orchestrator
+ ├─ sub-agent A: exceptions table   <span class="g">model: fast tier</span>
+ └─ sub-agent B: RM talking points  <span class="g">model: frontier tier</span>
+      loads skill: <span class="g">advisory-tone/SKILL.md</span>
+      loads skill: <span class="g">compliance-language/SKILL.md</span>`},
+ {chip:"5 · Verify",label:"Evals / verifier",title:"The loop checks its own work before any human sees it",
+  body:"Computational checks first: totals reconcile to source, every breaching account appears exactly once, no client identifiers in the talking points. Then an LLM-as-judge scores tone and compliance language against a rubric. Fail → one revision cycle. Fail again → escalate, don't retry forever.",
+  art:`verifier:
+  ✓ reconciliation: table Σ == source Σ
+  ✓ coverage: 17/17 breaches present
+  ✓ pii_scan: 0 identifiers in narrative
+  ⚠ judge: tone score 3.6/5 → <span class="g">1 revision pass</span>
+  ✓ judge: tone score 4.4/5 → release`},
+ {chip:"6 · Deliver & learn",label:"Memory + loop close",title:"Ship, remember, stop",
+  body:"The report lands in drafts with a diff against yesterday; the RM lead gets a notification, not an email written in their name. The run's edge cases get compacted into memory for tomorrow's loop. Then — the underrated part — the agent stops, because 'done' was defined before it started.",
+  art:`output:  /drafts/drift-exceptions-2026-07-20.md
+notify:  rm-leads channel <span class="c">(human sends, agent doesn't)</span>
+memory:  +2 edge cases compacted
+status:  <span class="g">STOPPED — stop_when satisfied, 31/40 calls used</span>`}
+];
+let fi=0;
+const flowTrack=document.getElementById('flowTrack'),flowStage=document.getElementById('flowStage');
+FLOW.forEach((s,i)=>{
+  const b=document.createElement('button');b.textContent=s.chip;
+  b.addEventListener('click',()=>{fi=i;renderFlow();});
+  flowTrack.appendChild(b);
+});
+function renderFlow(){
+  [...flowTrack.children].forEach((b,i)=>b.classList.toggle('active',i===fi));
+  const s=FLOW[fi];
+  flowStage.innerHTML=`<span class="stage-label">${s.label}</span><h3>${s.title}</h3><p>${s.body}</p><div class="artefact">${s.art}</div>`;
+}
+document.getElementById('flowPrev').addEventListener('click',()=>{fi=(fi-1+FLOW.length)%FLOW.length;renderFlow();});
+document.getElementById('flowNext').addEventListener('click',()=>{fi=(fi+1)%FLOW.length;renderFlow();});
+renderFlow();
+
+/* ---------------- provider atlas ---------------- */
+const PROVIDERS=[
+ {id:"anthropic",name:"Anthropic · Claude",
+  intro:"Three classic tiers (Haiku / Sonnet / Opus) plus a new Mythos-class tier above Opus, introduced June 2026. The house strengths: coding, long-horizon agentic work, and the safety posture that makes Claude a common default in regulated enterprises.",
+  models:[
+   {n:"Claude Fable 5",r:"Flagship · Jun 2026",f:1,d:"Most capable generally available model; Mythos-class. Always-on adaptive thinking, state-of-the-art across most benchmarks; extra safeguards on dual-use capabilities.",s:"1M ctx · 128K out · ~$10/$50"},
+   {n:"Claude Mythos 5",r:"Restricted sibling",d:"Same underlying model as Fable 5 without the dual-use safety measures — available only to approved organisations.",s:"Limited availability"},
+   {n:"Claude Opus 4.8",r:"Heavyweight",d:"The Opus-tier workhorse for hard enterprise agents and gnarly coding when you don't need Fable pricing.",s:"~$5/$25 · May 2026"},
+   {n:"Claude Sonnet 5",r:"Default workhorse",d:"Released end-June 2026; near-Opus intelligence at Sonnet cost. The sensible default for 70–80% of tasks; now the default on Free/Pro.",s:"Intro ~$2/$10 → $3/$15"},
+   {n:"Claude Haiku 4.5",r:"Speed tier",d:"Fastest tier with near-frontier smarts: classification, extraction, summarisation, high-volume support flows.",s:"~$1/$5 · low latency"}
+  ]},
+ {id:"openai",name:"OpenAI · GPT",
+  intro:"July 2026 brought a naming reset: GPT-5.6 ships as three durable tiers — Sol, Terra, Luna — replacing the Instant/Thinking/Pro scheme. Strengths: math and science reasoning, cybersecurity, the Codex coding lane, and sheer ecosystem gravity.",
+  models:[
+   {n:"GPT-5.6 Sol",r:"Flagship · Jul 2026",f:1,d:"The frontier tier for the hardest professional work — math, science, cyber. Pitched as far more token-efficient than predecessors.",s:"~1.05M ctx · ~$5/$30"},
+   {n:"GPT-5.6 Terra",r:"Balanced",d:"Mid tier claimed to match GPT-5.5 quality at roughly half the cost — the everyday enterprise pick.",s:"~$2.50/$15"},
+   {n:"GPT-5.6 Luna",r:"Speed tier",d:"Fastest, most cost-efficient tier for high-volume workloads.",s:"Budget tier"},
+   {n:"GPT-5.5 / 5.5 Pro",r:"Prior flagship",d:"Still strong — 5.5 Pro holds notable published FrontierMath results; now sits just below the 5.6 line.",s:"Legacy-current"},
+   {n:"Codex lane",r:"Coding agents",d:"The dedicated coding-agent line powering OpenAI's agentic developer tooling.",s:"Agentic coding"}
+  ]},
+ {id:"google",name:"Google · Gemini",
+  intro:"The broadest surface area: frontier reasoning (3.1 Pro), an agent-first fast family (3.5 Flash), a new any-to-any creation model (Omni), open-weight Gemma, and Veo for video — all wired into Search, Workspace and Vertex.",
+  models:[
+   {n:"Gemini 3.5 Flash",r:"Agentic default · GA",f:1,d:"First of the 3.5 family — 'frontier intelligence with action.' Strong coding/agent workflows at Flash cost; the model most people touch first.",s:"1M ctx · agent-tuned"},
+   {n:"Gemini 3.1 Pro",r:"Reasoning flagship",d:"Top published scores on GPQA/ARC-AGI-2 among Google's line, with native Search grounding for factual work. 3.5 Pro is queued next.",s:"1M ctx"},
+   {n:"Gemini 3 Pro Deep Think",r:"Reasoning variant",d:"Extended-thinking variant for complex multimodal and visual reasoning.",s:"Slow · deliberate"},
+   {n:"Gemini Omni",r:"Any-to-any · I/O 2026",d:"'Create anything from any input, starting with video' — Google's push into unified multimodal generation and world understanding.",s:"Multimodal creation"},
+   {n:"Gemma 4",r:"Open weights",d:"The open family; the 31B punches near proprietary mid-tiers for teams wanting full control.",s:"Open · self-host"},
+   {n:"Veo 3.1",r:"Video",d:"The leading video generator after Sora 2's consumer retirement — native audio, 1080p, strong physics consistency.",s:"Video · Vertex/Gemini app"}
+  ]},
+ {id:"xai",name:"xAI · Grok",
+  intro:"Now under the SpaceX umbrella, with a compute-and-data flywheel story: Colossus superclusters plus real developer telemetry. Ships fast, prices aggressively, and leans into coding and agents.",
+  models:[
+   {n:"Grok 4.5",r:"Flagship · Jul 2026",f:1,d:"MoE model tuned on real developer activity; positioned as Opus-class on coding but faster and much cheaper. Built for tools, agents and long documents.",s:"500K ctx · ~$2/$6"},
+   {n:"Grok 4.3 / 4.20 beta",r:"Consumer line",d:"The chat flagship lineage; 4.20 introduced a native multi-agent setup — coordinator plus specialist agents that cross-verify answers.",s:"Multi-agent · low hallucination claim"},
+   {n:"Grok Build",r:"Coding agent",d:"Terminal-based coding agent and fast coding models, bundled with SuperGrok/X Premium subscriptions.",s:"Agentic coding"},
+   {n:"Grok Imagine Video 1.5",r:"Video",d:"Image-to-video model sitting atop the arena leaderboards — short clips with native audio.",s:"720p · 15s clips"},
+   {n:"Grok 5",r:"In training",d:"The next major model — rumoured ~6T-parameter MoE on Colossus 2; timeline has slipped through 2026.",s:"Unreleased"}
+  ]},
+ {id:"meta",name:"Meta · Llama",
+  intro:"The 2026 plot twist: Meta paused open-weight releases. Llama 4 Scout and Maverick (April 2025) remain the current open line; flagship Behemoth never shipped, and frontier attention moved to a closed 'Muse' line. The Western open-weights crown quietly changed hands.",
+  models:[
+   {n:"Llama 4 Maverick",r:"Open flagship",f:1,d:"MoE with ~400B total / 17B active parameters; native multimodality and the strongest MMLU among Western open models. Deep ecosystem, but a custom licence that has restricted EU use.",s:"MoE 17B active · multimodal"},
+   {n:"Llama 4 Scout",r:"Efficient sibling",d:"~109B total / 17B active — same architecture philosophy at a friendlier deployment size, famous for its very long context.",s:"MoE 17B active · long ctx"},
+   {n:"Llama 4 Behemoth",r:"Never shipped",d:"The teacher-scale flagship that stalled in training and never released — emblematic of Meta's 2026 strategic pivot.",s:"Unreleased"},
+   {n:"Muse line",r:"Closed frontier",d:"Meta's new closed frontier direction (Muse Spark first), marking the retreat from open-weights leadership.",s:"Closed"}
+  ]},
+ {id:"deepseek",name:"DeepSeek",
+  intro:"The efficiency insurgent that shocked the market in early 2025 keeps shipping: frontier-class reasoning and coding at a fraction of frontier prices, under permissive MIT licensing. V4 marked a genuine architectural reset.",
+  models:[
+   {n:"DeepSeek V4 / V4-Pro",r:"Flagship · Apr 2026",f:1,d:"Hybrid-attention reset enabling affordable 1M contexts; tops open leaderboards on agentic coding and graduate-level reasoning. MIT licence.",s:"1M ctx · MIT · price floor"},
+   {n:"DeepSeek V3.2 Speciale",r:"Competition beast",d:"The reasoning specialist that took gold-level results at IMO, IOI and ICPC 2026 — proof open weights can win the hardest formal benchmarks.",s:"Formal reasoning"},
+   {n:"DeepSeek R1 lineage",r:"Reasoning pioneers",d:"The models that proved RL-trained open reasoning at near-frontier level — the moment open weights stopped meaning second-best.",s:"Historic · open"}
+  ]},
+ {id:"qwen",name:"Alibaba · Qwen",
+  intro:"The widest family and the fastest cadence in open weights: from 0.5B edge models to 397B MoE flagships, most under Apache 2.0 — the most permissive licence at the frontier. Extremely strong in APAC languages, math and coding.",
+  models:[
+   {n:"Qwen 3.5 (397B-A17B)",r:"Open flagship · Feb 2026",f:1,d:"Sparse MoE flagship built for agents — tool calling and cheap long-context by design; among the best general open models.",s:"MoE · Apache 2.0"},
+   {n:"Qwen 3.6 (35B-A3B / 27B)",r:"Efficient tier · Apr 2026",d:"The deployment sweet spot — the 27B dense model is small enough to experiment with locally yet credible in production.",s:"Local-friendly"},
+   {n:"Qwen 3.7 Max",r:"Hosted frontier",d:"Alibaba's hosted top model — the value alternative to Western flagships, with standout math scores.",s:"Hosted · math"},
+   {n:"Qwen3-Coder",r:"Coding specialist",d:"Dedicated coding line that consistently ranks among the best open coding models.",s:"Agentic coding"}
+  ]},
+ {id:"others",name:"Rest of the field",
+  intro:"The 2026 story you can't tell with the big seven alone: Chinese labs Moonshot and Zhipu lead specific niches outright, Mistral holds Europe's flag, and NVIDIA's hybrid architectures point at where efficiency goes next.",
+  models:[
+   {n:"Kimi K2.6 / K2.7 (Moonshot)",r:"Agentic specialist",f:1,d:"Tuned specifically for long-running tool use and multi-step coding loops — the open model to beat for agents.",s:"Open · agent-tuned"},
+   {n:"GLM-5 / 5.2 (Zhipu)",r:"Coding value king",d:"Trades blows with Western frontier on long software-engineering benchmarks at bargain prices; flagship for long-running engineering agents.",s:"~78% SWE-bench V"},
+   {n:"Mistral Large 2.5",r:"European frontier",d:"Europe's strongest lab — competitive mid-frontier models with a sovereignty story that matters for EU-regulated clients.",s:"EU · enterprise"},
+   {n:"Nemotron 3 (NVIDIA)",r:"Architecture bellwether",d:"Hybrid Transformer + Mamba-2 layers for efficient long context — a preview of post-pure-attention designs, with a 4B Nano for edge.",s:"Hybrid SSM · open"}
+  ]}
+];
+const provTabs=document.getElementById('provTabs'),provPanels=document.getElementById('provPanels');
+PROVIDERS.forEach((p,i)=>{
+  const b=document.createElement('button');b.textContent=p.name;
+  if(i===0)b.classList.add('active');
+  b.addEventListener('click',()=>{
+    [...provTabs.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    [...provPanels.children].forEach((x,j)=>x.classList.toggle('active',j===i));
+  });
+  provTabs.appendChild(b);
+  const panel=document.createElement('div');panel.className='prov-panel'+(i===0?' active':'');
+  panel.innerHTML=`<p class="prov-intro">${p.intro}</p><div class="model-grid">`+
+    p.models.map(m=>`<div class="model ${m.f?'flagship':''}">
+      <div class="m-name">${m.n}</div><div class="m-role">${m.r}</div>
+      <p>${m.d}</p><div class="m-spec">${m.s}</div></div>`).join('')+`</div>`;
+  provPanels.appendChild(panel);
+});
+
+/* ---------------- world model toggle + players ---------------- */
+document.querySelectorAll('.wm-toggle button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.wm-toggle button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('.wm-panel').forEach(p=>p.classList.toggle('active',p.dataset.wmpanel===b.dataset.wm));
+  });
+});
+const WMP=[
+ {n:"Google DeepMind · Genie 3",r:"Interactive worlds",d:"Generates photorealistic, interactive 3D environments from text or images in real time (~24 fps), with object permanence and emergent physics. Powers agent training and Project Genie."},
+ {n:"AMI Labs · Yann LeCun",r:"The AGI bet",d:"LeCun left Meta after 12 years to found it; raised a record ~$1.03B seed at a ~$3.5B valuation. JEPA architectures that predict in abstract representation space — his explicit wager that scaling LLMs won't reach AGI."},
+ {n:"World Labs · Fei-Fei Li",r:"Spatial intelligence",d:"The ImageNet creator's ~$1B-funded lab; Marble generates and manipulates persistent 3D environments for creative and commercial use."},
+ {n:"NVIDIA · Cosmos",r:"Physical AI platform",d:"Open-weight world foundation models trained on robotics and driving data — millions of downloads; the picks-and-shovels play, again."},
+ {n:"Meta · V-JEPA 2",r:"Research lineage",d:"The self-supervised video world-model line LeCun championed inside Meta — now feeding its robotics models."},
+ {n:"OpenAI · Sora lineage",r:"Contested claim",d:"Sora was pitched as a 'world simulator'; researchers dispute whether video generation alone qualifies. The definitional fight is part of the story."}
+];
+const wmDiv=document.getElementById('wmPlayers');
+WMP.forEach(m=>{
+  const el=document.createElement('div');el.className='model';
+  el.innerHTML=`<div class="m-name">${m.n}</div><div class="m-role">${m.r}</div><p>${m.d}</p>`;
+  wmDiv.appendChild(el);
+});
+</script>
+</body>
+</html>
