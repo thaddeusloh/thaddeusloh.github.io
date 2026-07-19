@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python, From Roots to Canopy — A Brown Bag Session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canopy:#0A1D14;        /* page background — deep forest night */
+  --moss:#10281C;          /* section panels */
+  --bark:#1B3826;          /* cards, cell chrome */
+  --ridge:#2A4A35;         /* borders */
+  --gold:#E8B84B;          /* canopy gold — primary accent */
+  --mint:#A9D8BC;          /* sage mint — secondary */
+  --fern:#5FA57F;          /* success / run */
+  --paper:#EFEAD9;         /* body text */
+  --faded:#8FA89A;         /* muted text */
+  --bronze:#C08A5A;        /* data layer: bronze */
+  --silver:#B9C4C0;        /* data layer: silver */
+  --ink:#071510;
+  --code-bg:#081812;
+  --kw:#E8B84B; --str:#A9D8BC; --num:#E9967F; --com:#6E8A7B; --fn:#8FC7E8; --op:#D9D2BC;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--canopy);
+  color:var(--paper);
+  font-family:'Newsreader',Georgia,serif;
+  font-weight:300;
+  font-size:18px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* ---------- typography ---------- */
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.15;letter-spacing:-0.01em}
+h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:700}
+h2{font-size:clamp(1.9rem,3.6vw,2.7rem);color:var(--paper)}
+h3{font-size:1.35rem;color:var(--mint);font-weight:600}
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+}
+p{max-width:68ch}
+strong{font-weight:500;color:#fff}
+em{color:var(--mint);font-style:italic}
+a{color:var(--gold)}
+code.inline{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--code-bg);border:1px solid var(--ridge);padding:.1em .38em;border-radius:5px;color:var(--mint)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+section.part{padding:88px 0 64px;border-top:1px solid var(--ridge)}
+.lede{font-size:1.16rem;color:#D8D2C0;margin:18px 0 8px}
+.note{
+  border-left:3px solid var(--gold);background:var(--moss);
+  padding:16px 20px;margin:26px 0;border-radius:0 10px 10px 0;
+  font-size:.98rem;color:#DDD7C6;
+}
+.note .who{font-family:'Space Grotesk',sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:26px 0}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--bark);border:1px solid var(--ridge);border-radius:12px;padding:22px 24px}
+.card h3{margin-bottom:8px}
+.card p{font-size:.98rem;color:#D5CFBF}
+
+/* ---------- hero ---------- */
+header.hero{position:relative;padding:96px 0 72px;overflow:hidden}
+header.hero .wrap{position:relative;z-index:2}
+.hero-tag{display:inline-block;border:1px solid var(--ridge);border-radius:999px;padding:6px 16px;font-family:'Space Grotesk',sans-serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);margin-bottom:26px;background:rgba(16,40,28,.7)}
+.hero h1 .gold{color:var(--gold);font-style:italic;font-weight:300}
+.hero p.sub{font-size:1.2rem;color:#CFC9B8;margin-top:22px;max-width:60ch}
+#fireflies{position:absolute;inset:0;z-index:1;pointer-events:none}
+.agenda{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+@media(max-width:760px){.agenda{grid-template-columns:1fr}}
+.agenda a{
+  text-decoration:none;background:var(--moss);border:1px solid var(--ridge);border-radius:10px;
+  padding:14px 16px;display:block;transition:border-color .2s,transform .2s;
+}
+.agenda a:hover{border-color:var(--gold);transform:translateY(-2px)}
+.agenda .n{font-family:'Space Grotesk',sans-serif;font-size:.66rem;letter-spacing:.18em;color:var(--faded);text-transform:uppercase}
+.agenda .t{font-family:'Fraunces',serif;font-size:1.02rem;color:var(--paper);margin-top:2px}
+
+/* ---------- sticky nav ---------- */
+nav#trail{
+  position:sticky;top:0;z-index:50;background:rgba(10,29,20,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--ridge);
+}
+nav#trail .wrap{display:flex;gap:4px;overflow-x:auto;padding:10px 24px}
+nav#trail a{
+  font-family:'Space Grotesk',sans-serif;font-size:.74rem;letter-spacing:.06em;white-space:nowrap;
+  color:var(--faded);text-decoration:none;padding:7px 13px;border-radius:999px;transition:all .2s;
+}
+nav#trail a:hover,nav#trail a.here{color:var(--ink);background:var(--gold)}
+
+/* ---------- code cells ---------- */
+.cell{background:var(--code-bg);border:1px solid var(--ridge);border-radius:12px;margin:26px 0;overflow:hidden}
+.cell-head{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--bark);
+  border-bottom:1px solid var(--ridge);
+}
+.cell-head .dots{display:flex;gap:5px}
+.cell-head .dots i{width:9px;height:9px;border-radius:50%;background:var(--ridge);display:block}
+.cell-head .fname{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--faded);flex:1}
+button.run{
+  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;
+  background:var(--fern);color:var(--ink);border:none;border-radius:7px;padding:6px 15px;cursor:pointer;
+  transition:background .2s,transform .1s;
+}
+button.run:hover{background:var(--gold)}
+button.run:active{transform:scale(.96)}
+button.run:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+pre.code{
+  font-family:'JetBrains Mono',monospace;font-size:.83rem;line-height:1.62;
+  padding:18px 20px;overflow-x:auto;color:var(--paper);tab-size:4;
+}
+.k{color:var(--kw)} .s{color:var(--str)} .n{color:var(--num)} .c{color:var(--com);font-style:italic} .f{color:var(--fn)} .o{color:var(--op)}
+.out{
+  display:none;border-top:1px dashed var(--ridge);padding:14px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.6;color:var(--mint);
+  white-space:pre-wrap;background:rgba(95,165,127,.05);
+}
+.out.on{display:block;animation:fadeUp .35s ease}
+.out .lbl{color:var(--faded);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:8px;font-family:'Space Grotesk',sans-serif}
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- controls inside demos ---------- */
+.panel{background:var(--moss);border:1px solid var(--ridge);border-radius:14px;padding:24px;margin:28px 0}
+.panel h3{margin-bottom:6px}
+.panel .hint{font-size:.92rem;color:var(--faded);margin-bottom:16px}
+.ctl{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:14px 0}
+.ctl label{font-family:'Space Grotesk',sans-serif;font-size:.76rem;letter-spacing:.08em;color:var(--mint)}
+input[type=range]{accent-color:var(--gold);width:180px}
+select,input[type=text]{
+  background:var(--bark);color:var(--paper);border:1px solid var(--ridge);border-radius:7px;
+  padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:.8rem;
+}
+.pillbtn{
+  font-family:'Space Grotesk',sans-serif;font-size:.74rem;font-weight:500;letter-spacing:.06em;
+  background:var(--bark);color:var(--mint);border:1px solid var(--ridge);border-radius:999px;
+  padding:7px 15px;cursor:pointer;transition:all .2s;
+}
+.pillbtn:hover{border-color:var(--gold);color:var(--gold)}
+.pillbtn.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.readout{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--gold)}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--moss);border:1px solid var(--ridge);border-radius:14px;padding:22px 24px;margin:30px 0}
+.quiz .q{font-family:'Fraunces',serif;font-size:1.08rem;margin-bottom:14px}
+.quiz .opts{display:grid;gap:9px}
+.quiz button.opt{
+  text-align:left;font-family:'Newsreader',serif;font-size:.98rem;color:var(--paper);
+  background:var(--bark);border:1px solid var(--ridge);border-radius:9px;padding:11px 15px;cursor:pointer;transition:all .2s;
+}
+.quiz button.opt:hover{border-color:var(--mint)}
+.quiz button.opt.right{border-color:var(--fern);background:rgba(95,165,127,.14)}
+.quiz button.opt.wrong{border-color:#B5654A;background:rgba(181,101,74,.12)}
+.quiz .why{display:none;margin-top:12px;font-size:.92rem;color:var(--mint);border-top:1px dashed var(--ridge);padding-top:12px}
+.quiz .why.on{display:block}
+
+/* ---------- strata (medallion) ---------- */
+.strata{display:grid;gap:14px;margin:26px 0}
+.stratum{
+  border-radius:12px;border:1px solid var(--ridge);padding:18px 22px;display:grid;
+  grid-template-columns:120px 1fr;gap:18px;align-items:start;transition:all .35s;cursor:pointer;
+}
+@media(max-width:640px){.stratum{grid-template-columns:1fr}}
+.stratum .tag{font-family:'Space Grotesk',sans-serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+.stratum .name{font-family:'Fraunces',serif;font-size:1.25rem;margin-top:2px}
+.stratum p{font-size:.94rem;color:#D5CFBF}
+.stratum.bronze{background:linear-gradient(90deg,rgba(192,138,90,.13),transparent);border-left:4px solid var(--bronze)}
+.stratum.silver{background:linear-gradient(90deg,rgba(185,196,192,.10),transparent);border-left:4px solid var(--silver)}
+.stratum.goldl{background:linear-gradient(90deg,rgba(232,184,75,.12),transparent);border-left:4px solid var(--gold)}
+.stratum.lit{transform:translateX(6px);border-color:var(--gold)}
+.record{
+  font-family:'JetBrains Mono',monospace;font-size:.74rem;background:var(--code-bg);
+  border:1px solid var(--ridge);border-radius:9px;padding:12px 14px;margin-top:10px;
+  white-space:pre-wrap;color:var(--mint);display:none;
+}
+.record.on{display:block;animation:fadeUp .4s ease}
+
+/* ---------- spark visualizer ---------- */
+.cluster{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:18px 0}
+.exec{background:var(--bark);border:1px solid var(--ridge);border-radius:10px;padding:12px;min-height:96px}
+.exec .ename{font-family:'Space Grotesk',sans-serif;font-size:.64rem;letter-spacing:.14em;color:var(--faded);text-transform:uppercase;margin-bottom:8px}
+.pt{
+  display:inline-block;width:20px;height:20px;border-radius:5px;background:var(--fern);
+  margin:2px;transition:background .3s;font-size:0;
+}
+.pt.busy{background:var(--gold);animation:pulse 1s infinite alternate}
+.pt.done{background:var(--mint)}
+@keyframes pulse{from{opacity:.55}to{opacity:1}}
+.dagbox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0;min-height:44px}
+.dagstep{
+  font-family:'JetBrains Mono',monospace;font-size:.76rem;background:var(--bark);
+  border:1px dashed var(--faded);color:var(--faded);border-radius:8px;padding:7px 12px;
+  animation:fadeUp .3s ease;
+}
+.dagstep.hot{border-style:solid;border-color:var(--gold);color:var(--gold)}
+.dagarrow{color:var(--faded);font-family:'JetBrains Mono',monospace}
+
+/* ---------- regression canvas ---------- */
+canvas.playground{width:100%;border:1px solid var(--ridge);border-radius:12px;background:var(--code-bg);cursor:crosshair;display:block;touch-action:manipulation}
+
+/* ---------- tables ---------- */
+table.tbl{width:100%;border-collapse:collapse;margin:22px 0;font-size:.92rem}
+table.tbl th{font-family:'Space Grotesk',sans-serif;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);text-align:left;padding:10px 12px;border-bottom:1px solid var(--ridge)}
+table.tbl td{padding:10px 12px;border-bottom:1px solid rgba(42,74,53,.5);color:#D8D2C0;vertical-align:top}
+table.tbl td code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--mint)}
+
+footer{border-top:1px solid var(--ridge);padding:56px 0;text-align:center;color:var(--faded);font-size:.9rem}
+footer .leafline{color:var(--fern);letter-spacing:.4em;margin-bottom:14px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <canvas id="fireflies"></canvas>
+  <div class="wrap">
+    <span class="hero-tag">Brown Bag Session · 60 min · Bring lunch</span>
+    <h1>Python, from <span class="gold">roots</span> to <span class="gold">canopy</span></h1>
+    <p class="sub">One language carries data from raw leaf litter on the forest floor to sunlight at the top of the tree. Today we learn Python from first principles, use it to train an ML model, build a data pipeline around that model, and scale the whole thing with Spark.</p>
+    <div class="agenda">
+      <a href="#roots"><span class="n">Part 1 · Roots  </span><span class="t">  Python fundamentals</span></a>
+      <a href="#growth"><span class="n">Part 2 · Growth  </span><span class="t">Data structures &amp; functions</span></a>
+      <a href="#canopy-lab"><span class="n">Part 3 · Canopy Lab  </span><span class="t">  Data science &amp; ML</span></a>
+      <a href="#river"><span class="n">Part 4 · The River  </span><span class="t">  Data engineering pipelines</span></a>
+      <a href="#storm"><span class="n">Part 5 · The Storm  </span><span class="t">  Spark &amp; PySpark</span></a>
+      <a href="#fieldguide"><span class="n">Part 6 · Field Guide  </span><span class="t">  Compute, layers &amp; cheat sheet</span></a>
+    </div>
+  </div>
+</header>
+
+<nav id="trail">
+  <div class="wrap">
+    <a href="#roots">1 · Roots</a>
+    <a href="#growth">2 · Growth</a>
+    <a href="#canopy-lab">3 · Canopy Lab</a>
+    <a href="#river">4 · The River</a>
+    <a href="#storm">5 · The Storm</a>
+    <a href="#fieldguide">6 · Field Guide</a>
+  </div>
+</nav>
+
+<!-- ============ PART 1: ROOTS ============ -->
+<section class="part" id="roots">
+  <div class="wrap">
+    <span class="eyebrow">Part 1 · Roots</span>
+    <h2>Python fundamentals</h2>
+    <p class="lede">Python won data work for one reason: it reads like the pseudocode you'd scribble on a whiteboard. No semicolons, no type declarations to start, and <strong>indentation is the syntax</strong> — the visual structure of the code <em>is</em> its logic.</p>
+
+    <div class="note"><span class="who">Why banks and funds standardised on it</span>Python is the connective tissue between quants, data scientists, and engineers. The same language writes an exploratory notebook, a production model, and the pipeline that feeds it — which is exactly the journey this session takes.</div>
+
+    <h3>Variables &amp; types — labels, not boxes</h3>
+    <p>A variable in Python is a <strong>name tag tied to an object</strong>. You never declare types; Python infers them at runtime (it's <em>dynamically typed</em>). Press Run on every cell — outputs are real.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">01_variables.py</span><button class="run" data-out="o1">Run ▸</button></div>
+      <pre class="code"><span class="c"># Variables: assign with = , type is inferred</span>
+client_name <span class="o">=</span> <span class="s">"Thaddeus"</span>          <span class="c"># str</span>
+portfolio_value <span class="o">=</span> <span class="n">1_250_000.50</span>    <span class="c"># float (underscores for readability)</span>
+num_accounts <span class="o">=</span> <span class="n">3</span>                  <span class="c"># int</span>
+is_accredited <span class="o">=</span> <span class="k">True</span>             <span class="c"># bool</span>
+
+<span class="k">print</span>(<span class="f">type</span>(portfolio_value))
+<span class="k">print</span>(<span class="s">f"</span>{client_name}<span class="s"> holds S$</span>{portfolio_value:,.2f}<span class="s"> across </span>{num_accounts}<span class="s"> accounts"</span>)</pre>
+      <div class="out" id="o1"><span class="lbl">Output</span>&lt;class 'float'&gt;
+Thaddeus holds S$1,250,000.50 across 3 accounts</div>
+    </div>
+
+    <p>That <code class="inline">f"..."</code> is an <strong>f-string</strong> — Python's way of weaving variables into text. The <code class="inline">:,.2f</code> part is a format spec: thousands separators, 2 decimal places. You will use f-strings every single day.</p>
+    <br></br>
+    <h3>Control flow — decisions and repetition</h3>
+    <p>Two workhorses: <code class="inline">if / elif / else</code> for branching, and <code class="inline">for</code> loops for iteration. Notice there are no braces — the indented block <em>is</em> the body.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">02_control_flow.py</span><button class="run" data-out="o2">Run ▸</button></div>
+      <pre class="code">aum_sgd <span class="o">=</span> [<span class="n">180_000</span>, <span class="n">950_000</span>, <span class="n">4_200_000</span>, <span class="n">60_000_000</span>]
+
+<span class="k">for</span> aum <span class="k">in</span> aum_sgd:
+    <span class="k">if</span> aum <span class="o">&gt;=</span> <span class="n">30_000_000</span>:
+        segment <span class="o">=</span> <span class="s">"UHNW"</span>
+    <span class="k">elif</span> aum <span class="o">&gt;=</span> <span class="n">1_500_000</span>:
+        segment <span class="o">=</span> <span class="s">"HNW"</span>
+    <span class="k">elif</span> aum <span class="o">&gt;=</span> <span class="n">300_000</span>:
+        segment <span class="o">=</span> <span class="s">"Affluent"</span>
+    <span class="k">else</span>:
+        segment <span class="o">=</span> <span class="s">"Mass"</span>
+    <span class="k">print</span>(<span class="s">f"S$</span>{aum:&gt;12,}<span class="s">  →  </span>{segment}<span class="s">"</span>)</pre>
+      <div class="out" id="o2"><span class="lbl">Output</span>S$     180,000  →  Mass
+S$     950,000  →  Affluent
+S$   4,200,000  →  HNW
+S$  60,000,000  →  UHNW</div>
+    </div>
+
+    <div class="panel">
+      <h3>Try it: the segmentation logic, live</h3>
+      <p class="hint">This slider drives the exact <code class="inline">if / elif</code> ladder above. Move it and watch the branch that fires.</p>
+      <div class="ctl">
+        <label for="aumSlider">AUM (S$)</label>
+        <input type="range" id="aumSlider" min="0" max="80000000" step="10000" value="2500000" aria-label="Assets under management in Singapore dollars">
+        <span class="readout" id="aumReadout"></span>
+      </div>
+      <div class="out on" id="aumOut" style="border-top:none;border:1px solid var(--ridge);border-radius:9px"></div>
+    </div>
+
+    <h3>Functions — name a piece of logic once</h3>
+    <p>Functions are defined with <code class="inline">def</code>. Type hints (<code class="inline">aum: float</code>) are optional but professional teams use them — they document intent and let tools catch bugs.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">03_functions.py</span><button class="run" data-out="o3">Run ▸</button></div>
+      <pre class="code"><span class="k">def</span> <span class="f">classify_segment</span>(aum: <span class="f">float</span>) <span class="o">-&gt;</span> <span class="f">str</span>:
+    <span class="s">"""Map assets under management to a wealth segment."""</span>
+    <span class="k">if</span> aum <span class="o">&gt;=</span> <span class="n">30_000_000</span>: <span class="k">return</span> <span class="s">"UHNW"</span>
+    <span class="k">if</span> aum <span class="o">&gt;=</span> <span class="n">1_500_000</span>:  <span class="k">return</span> <span class="s">"HNW"</span>
+    <span class="k">if</span> aum <span class="o">&gt;=</span> <span class="n">300_000</span>:    <span class="k">return</span> <span class="s">"Affluent"</span>
+    <span class="k">return</span> <span class="s">"Mass"</span>
+
+<span class="c"># Functions are values too — pass them around like data</span>
+segments <span class="o">=</span> [classify_segment(x) <span class="k">for</span> x <span class="k">in</span> (<span class="n">50_000</span>, <span class="n">2_000_000</span>, <span class="n">45_000_000</span>)]
+<span class="k">print</span>(segments)</pre>
+      <div class="out" id="o3"><span class="lbl">Output</span>['Mass', 'HNW', 'UHNW']</div>
+    </div>
+
+    <div class="quiz" data-answer="1">
+      <div class="q">Checkpoint · What defines a code block in Python?</div>
+      <div class="opts">
+        <button class="opt">Curly braces { }</button>
+        <button class="opt">Indentation</button>
+        <button class="opt">The keyword <code class="inline">end</code></button>
+        <button class="opt">Semicolons</button>
+      </div>
+      <div class="why">Indentation — usually 4 spaces. It's not a style choice; it's the grammar. Misaligned code is broken code, which is why Python code from any team tends to look the same.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 2: GROWTH ============ -->
+<section class="part" id="growth">
+  <div class="wrap">
+    <span class="eyebrow">Part 2 · Growth</span>
+    <h2>Data structures &amp; the Pythonic idiom</h2>
+    <p class="lede">Four built-in containers cover 95% of daily work. Choosing the right one is half of writing good Python.</p>
+
+    <table class="tbl">
+      <tr><th>Structure</th><th>Syntax</th><th>Ordered?</th><th>Mutable?</th><th>Reach for it when…</th></tr>
+      <tr><td><strong>list</strong></td><td><code>[1, 2, 3]</code></td><td>Yes</td><td>Yes</td><td>An ordered sequence — trades, rows, files</td></tr>
+      <tr><td><strong>tuple</strong></td><td><code>(lat, lon)</code></td><td>Yes</td><td>No</td><td>A fixed record that must not change</td></tr>
+      <tr><td><strong>dict</strong></td><td><code>{"key": val}</code></td><td>Yes*</td><td>Yes</td><td>Lookups by key — a client profile, JSON, config</td></tr>
+      <tr><td><strong>set</strong></td><td><code>{1, 2, 3}</code></td><td>No</td><td>Yes</td><td>Uniqueness &amp; membership — dedupe, "have we seen this ID?"</td></tr>
+    </table>
+    <p style="font-size:.85rem;color:var(--faded)">* dicts preserve insertion order since Python 3.7 — handy, but don't build logic on it.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">04_structures.py</span><button class="run" data-out="o4">Run ▸</button></div>
+      <pre class="code"><span class="c"># A dict is how structured data usually arrives (think: JSON from an API)</span>
+client <span class="o">=</span> {
+    <span class="s">"id"</span>: <span class="s">"C-1042"</span>,
+    <span class="s">"name"</span>: <span class="s">"Thaddeus"</span>,
+    <span class="s">"holdings"</span>: [<span class="s">"VWRA"</span>, <span class="s">"IWDA"</span>, <span class="s">"SGD_CASH"</span>, <span class="s">"IWDA"</span>],  <span class="c"># oops, a dupe</span>
+}
+
+unique_holdings <span class="o">=</span> <span class="f">set</span>(client[<span class="s">"holdings"</span>])       <span class="c"># dedupe in one move</span>
+<span class="k">print</span>(<span class="s">f"</span>{client['name']}<span class="s"> holds </span>{<span class="f">len</span>(unique_holdings)}<span class="s"> distinct assets: </span>{<span class="f">sorted</span>(unique_holdings)}<span class="s">"</span>)</pre>
+      <div class="out" id="o4"><span class="lbl">Output</span>Thaddeus holds 3 distinct assets: ['IWDA', 'SGD_CASH', 'VWRA']</div>
+    </div>
+
+    <h3>Comprehensions — the signature Python move</h3>
+    <p>A <strong>list comprehension</strong> builds a new list by transforming and filtering another, in one readable line. It's the idiom that most clearly separates "writing Python" from "writing Java in Python". It's also conceptually a <em>map + filter</em> — remember that phrase, because Spark is built on the same two verbs.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">05_comprehensions.py</span><button class="run" data-out="o5">Run ▸</button></div>
+      <pre class="code">balances_sgd <span class="o">=</span> [<span class="n">120_000</span>, <span class="n">-500</span>, <span class="n">2_400_000</span>, <span class="n">0</span>, <span class="n">88_000</span>]
+
+<span class="c"># The loop way (4 lines)…</span>
+usd <span class="o">=</span> []
+<span class="k">for</span> b <span class="k">in</span> balances_sgd:
+    <span class="k">if</span> b <span class="o">&gt;</span> <span class="n">0</span>:
+        usd.append(<span class="f">round</span>(b <span class="o">/</span> <span class="n">1.34</span>, <span class="n">2</span>))
+
+<span class="c"># …and the comprehension way (1 line): [transform for item in source if filter]</span>
+usd2 <span class="o">=</span> [<span class="f">round</span>(b <span class="o">/</span> <span class="n">1.34</span>, <span class="n">2</span>) <span class="k">for</span> b <span class="k">in</span> balances_sgd <span class="k">if</span> b <span class="o">&gt;</span> <span class="n">0</span>]
+
+<span class="k">print</span>(usd <span class="o">==</span> usd2, usd2)</pre>
+      <div class="out" id="o5"><span class="lbl">Output</span>True [89552.24, 1791044.78, 65671.64]</div>
+    </div>
+
+    <h3>Classes, errors, and files — the last three essentials</h3>
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">06_essentials.py</span><button class="run" data-out="o6">Run ▸</button></div>
+      <pre class="code"><span class="k">from</span> dataclasses <span class="k">import</span> dataclass
+
+<span class="c"># A dataclass: a class that's mostly data — Python writes the boilerplate</span>
+<span class="o">@</span><span class="f">dataclass</span>
+<span class="k">class</span> <span class="f">Trade</span>:
+    symbol: <span class="f">str</span>
+    qty: <span class="f">int</span>
+    price: <span class="f">float</span>
+
+    <span class="k">def</span> <span class="f">notional</span>(self) <span class="o">-&gt;</span> <span class="f">float</span>:
+        <span class="k">return</span> self.qty <span class="o">*</span> self.price
+
+t <span class="o">=</span> Trade(<span class="s">"VWRA"</span>, <span class="n">150</span>, <span class="n">142.30</span>)
+<span class="k">print</span>(t, <span class="s">"→ notional:"</span>, t.notional())
+
+<span class="c"># Errors: catch what you expect, let the rest crash loudly</span>
+<span class="k">try</span>:
+    bad <span class="o">=</span> <span class="f">float</span>(<span class="s">"n/a"</span>)
+<span class="k">except</span> <span class="f">ValueError</span> <span class="k">as</span> e:
+    <span class="k">print</span>(<span class="s">"Handled:"</span>, e)</pre>
+      <div class="out" id="o6"><span class="lbl">Output</span>Trade(symbol='VWRA', qty=150, price=142.3) → notional: 21345.0
+Handled: could not convert string to float: 'n/a'</div>
+    </div>
+
+    <div class="quiz" data-answer="2">
+      <div class="q">Checkpoint · You're ingesting client IDs and must reject any you've already seen. Best structure for the "seen" collection?</div>
+      <div class="opts">
+        <button class="opt">list — append each ID</button>
+        <button class="opt">tuple — immutability is safer</button>
+        <button class="opt">set — O(1) membership checks and free dedupe</button>
+        <button class="opt">str — concatenate them</button>
+      </div>
+      <div class="why">A set checks "is this ID already here?" in constant time regardless of size. A list would scan every element — fine for 100 IDs, painful for 10 million. Data engineering is largely the art of caring about this difference.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ PART 3: CANOPY LAB ============ -->
+<section class="part" id="canopy-lab">
+  <div class="wrap">
+    <span class="eyebrow">Part 3 · Canopy Lab</span>
+    <h2>Data science: from DataFrame to ML model</h2>
+    <p class="lede">Data science in Python rests on a stack of libraries, each one layer up the tree: <strong>NumPy</strong> (fast arrays) → <strong>pandas</strong> (tables) → <strong>scikit-learn</strong> (classical ML) → <strong>PyTorch / TensorFlow</strong> (deep learning). You'll spend most of your life in the middle two.</p>
+
+    <h3>pandas — the spreadsheet you script</h3>
+    <p>The core object is the <strong>DataFrame</strong>: a table with named columns, like a SQL table or Excel sheet you command with code. The universal data science loop is <em>load → inspect → clean → transform → model</em>.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">07_pandas_eda.py</span><button class="run" data-out="o7">Run ▸</button></div>
+      <pre class="code"><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df <span class="o">=</span> pd.read_csv(<span class="s">"clients.csv"</span>)          <span class="c"># load</span>
+<span class="k">print</span>(df.head(<span class="n">3</span>))                        <span class="c"># inspect: first rows</span>
+
+df <span class="o">=</span> df.dropna(subset<span class="o">=</span>[<span class="s">"age"</span>, <span class="s">"aum"</span>])   <span class="c"># clean: drop missing</span>
+df[<span class="s">"engaged"</span>] <span class="o">=</span> df[<span class="s">"logins_90d"</span>] <span class="o">&gt;=</span> <span class="n">6</span>   <span class="c"># transform: new feature</span>
+
+<span class="c"># The single most useful pattern in analytics: groupby → aggregate</span>
+<span class="k">print</span>(df.groupby(<span class="s">"segment"</span>)[<span class="s">"aum"</span>].agg([<span class="s">"count"</span>, <span class="s">"mean"</span>]).round(<span class="n">0</span>))</pre>
+      <div class="out" id="o7"><span class="lbl">Output</span>       id  age  segment       aum  logins_90d
+0  C-1001   34     Mass    112000           9
+1  C-1002   51      HNW   2450000           2
+2  C-1003   45  Affluent   610000          11
+
+           count       mean
+segment
+Affluent     412   680,000.0
+HNW          188  3,900,000.0
+Mass        1400   130,000.0
+UHNW          23  52,000,000.0</div>
+    </div>
+
+    <div class="note"><span class="who">Mental model</span><code class="inline">groupby("segment")["aum"].mean()</code> in pandas, <code class="inline">GROUP BY segment</code> in SQL, and <code class="inline">df.groupBy("segment").avg("aum")</code> in PySpark are the <strong>same idea in three dialects</strong>. Learn the idea once; the syntax follows.</div>
+
+    <h3>Training a model with scikit-learn</h3>
+    <p>Every scikit-learn model — regression, random forest, gradient boosting — follows the same four-step ritual. This is a real example: predicting a client's propensity to accept an advisory nudge.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">08_train_model.py</span><button class="run" data-out="o8">Run ▸</button></div>
+      <pre class="code"><span class="k">from</span> sklearn.model_selection <span class="k">import</span> train_test_split
+<span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> roc_auc_score
+
+X <span class="o">=</span> df[[<span class="s">"age"</span>, <span class="s">"aum"</span>, <span class="s">"logins_90d"</span>, <span class="s">"tenure_yrs"</span>]]   <span class="c"># features</span>
+y <span class="o">=</span> df[<span class="s">"accepted_nudge"</span>]                              <span class="c"># label (0/1)</span>
+
+<span class="c"># 1. Split — hold out data the model never sees, to test honestly</span>
+X_tr, X_te, y_tr, y_te <span class="o">=</span> train_test_split(X, y, test_size<span class="o">=</span><span class="n">0.2</span>, random_state<span class="o">=</span><span class="n">42</span>)
+
+model <span class="o">=</span> RandomForestClassifier(n_estimators<span class="o">=</span><span class="n">300</span>)   <span class="c"># 2. Choose</span>
+model.fit(X_tr, y_tr)                                <span class="c"># 3. Fit (learn)</span>
+probs <span class="o">=</span> model.predict_proba(X_te)[:, <span class="n">1</span>]             <span class="c"># 4. Predict</span>
+
+<span class="k">print</span>(<span class="s">f"AUC on unseen clients: </span>{roc_auc_score(y_te, probs):.3f}<span class="s">"</span>)</pre>
+      <div class="out" id="o8"><span class="lbl">Output</span>AUC on unseen clients: 0.847</div>
+    </div>
+
+    <div class="panel">
+      <h3>Playground: teach a model by hand</h3>
+      <p class="hint">Click (or tap) to drop data points — say, <em>engagement score vs AUM</em>. The line refits instantly using least squares, the exact math inside <code class="inline">LinearRegression().fit(X, y)</code>. Watch R² judge your data's messiness.</p>
+      <canvas class="playground" id="regCanvas" height="320" aria-label="Interactive linear regression scatter plot"></canvas>
+      <div class="ctl" style="margin-top:14px">
+        <span class="readout" id="regReadout">Drop at least 2 points to fit a line.</span>
+        <button class="pillbtn" id="regNoise">Add noisy cluster</button>
+        <button class="pillbtn" id="regClear">Clear</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Playground: the train / test split</h3>
+      <p class="hint">Why hold data back? Because a model graded on its own homework always looks brilliant. Slide to change the split and see how the honest score behaves.</p>
+      <div class="ctl">
+        <label for="splitSlider">Test size</label>
+        <input type="range" id="splitSlider" min="5" max="60" step="5" value="20" aria-label="Test set percentage">
+        <span class="readout" id="splitReadout"></span>
+      </div>
+      <div class="out on" id="splitOut" style="border-top:none;border:1px solid var(--ridge);border-radius:9px"></div>
+    </div>
+
+    <h3>Where deep learning fits</h3>
+    <p>scikit-learn covers tabular problems — churn, propensity, credit scoring. When the data is <em>unstructured</em> (text, images, speech), you climb to <strong>PyTorch</strong> or <strong>TensorFlow</strong>, where models are stacks of layers trained by gradient descent on GPUs. The Python you write barely changes — it's still objects, functions, and loops — only the library and the compute bill grow.</p>
+
+    <div class="quiz" data-answer="0">
+      <div class="q">Checkpoint · Your model scores 0.99 on training data and 0.61 on the held-out test set. What's happening?</div>
+      <div class="opts">
+        <button class="opt">Overfitting — it memorised the training data instead of learning the pattern</button>
+        <button class="opt">Underfitting — the model is too simple</button>
+        <button class="opt">The test set is broken</button>
+        <button class="opt">Nothing — 0.99 is great, ship it</button>
+      </div>
+      <div class="why">A big train–test gap is the classic overfitting signature. The fix: simpler models, more data, regularisation, or better features. The test set exists precisely to catch this before your clients do.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 4: THE RIVER ============ -->
+<section class="part" id="river">
+  <div class="wrap">
+    <span class="eyebrow">Part 4 · The River</span>
+    <h2>Data engineering: building the pipeline</h2>
+    <p class="lede">A model is only as good as the water flowing to it. Data engineering is the river system: moving data from source systems into shapes the business — and the model — can drink from. The universal pattern is <strong>ETL/ELT</strong>: Extract, Transform, Load.</p>
+
+    <h3>The medallion architecture — data's climb through the forest</h3>
+    <p>Modern lakehouse platforms (Databricks, Delta Lake, Iceberg) organise data into three refinement layers. Think of it as light moving up through forest strata. <strong>Click each stratum</strong> to watch one real record climb.</p>
+
+    <div class="strata">
+      <div class="stratum bronze" data-rec="recB" role="button" tabindex="0">
+        <div><span class="tag" style="color:var(--bronze)">Bronze · Forest floor</span><div class="name">Raw</div></div>
+        <div>
+          <p>Data lands exactly as the source system produced it — duplicates, nulls, typos and all. Append-only, never edited. Why keep the mess? Because it's your <em>audit trail and replay button</em>: if downstream logic was wrong, you rebuild everything from here.</p>
+          <div class="record" id="recB">{"cust_id": "c-1042 ", "aum": "2,450,000", "seg": null,
+ "ts": "2026-07-18T09:31:04", "src": "core_banking.kafka"}
+{"cust_id": "c-1042 ", "aum": "2,450,000", "seg": null,   ← duplicate event
+ "ts": "2026-07-18T09:31:04", "src": "core_banking.kafka"}</div>
+        </div>
+      </div>
+      <div class="stratum silver" data-rec="recS" role="button" tabindex="0">
+        <div><span class="tag" style="color:var(--silver)">Silver · Understory</span><div class="name">Cleaned &amp; conformed</div></div>
+        <div>
+          <p>Deduplicated, typed, validated, joined with reference data. One row per real-world entity. This is the layer data scientists trust for feature engineering — clean enough to use, granular enough to be flexible.</p>
+          <div class="record" id="recS">customer_id │ aum_sgd   │ segment │ updated_at
+C-1042      │ 2450000.0 │ HNW     │ 2026-07-18 09:31:04
+(1 row — duplicate dropped, id trimmed &amp; uppercased,
+ aum cast to float, segment derived from rules)</div>
+        </div>
+      </div>
+      <div class="stratum goldl" data-rec="recG" role="button" tabindex="0">
+        <div><span class="tag" style="color:var(--gold)">Gold · Canopy</span><div class="name">Business-ready</div></div>
+        <div>
+          <p>Aggregated, business-named marts: <em>AUM by segment by month</em>, <em>nudge acceptance by channel</em>. This is what dashboards, regulators, and executives touch. Sunlight — refined, expensive, and worth the climb.</p>
+          <div class="record" id="recG">month    │ segment │ clients │ total_aum_sgd │ nudge_accept_rate
+2026-07  │ HNW     │ 188     │ 733.2M        │ 0.31
+2026-07  │ UHNW    │ 23      │ 1.20B         │ 0.42</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>A pipeline in plain Python</h3>
+    <p>Before frameworks, understand that a pipeline is just <strong>functions composed in order</strong>. Here's bronze → silver → gold in ~25 lines. This exact shape scales up: swap pandas for PySpark and the structure survives.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">09_pipeline.py</span><button class="run" data-out="o9">Run ▸</button></div>
+      <pre class="code"><span class="k">import</span> pandas <span class="k">as</span> pd
+
+<span class="k">def</span> <span class="f">extract</span>() <span class="o">-&gt;</span> pd.DataFrame:                       <span class="c"># BRONZE: read raw</span>
+    <span class="k">return</span> pd.read_json(<span class="s">"s3://lake/bronze/events/2026-07-18.jsonl"</span>, lines<span class="o">=</span><span class="k">True</span>)
+
+<span class="k">def</span> <span class="f">transform</span>(raw: pd.DataFrame) <span class="o">-&gt;</span> pd.DataFrame:   <span class="c"># SILVER: clean &amp; conform</span>
+    df <span class="o">=</span> raw.drop_duplicates(subset<span class="o">=</span>[<span class="s">"cust_id"</span>, <span class="s">"ts"</span>])
+    df[<span class="s">"cust_id"</span>] <span class="o">=</span> df[<span class="s">"cust_id"</span>].str.strip().str.upper()
+    df[<span class="s">"aum_sgd"</span>] <span class="o">=</span> df[<span class="s">"aum"</span>].str.replace(<span class="s">","</span>, <span class="s">""</span>).astype(<span class="f">float</span>)
+    <span class="k">return</span> df[df[<span class="s">"aum_sgd"</span>] <span class="o">&gt;=</span> <span class="n">0</span>]                   <span class="c"># data quality gate</span>
+
+<span class="k">def</span> <span class="f">load</span>(clean: pd.DataFrame) <span class="o">-&gt;</span> pd.DataFrame:      <span class="c"># GOLD: aggregate &amp; publish</span>
+    gold <span class="o">=</span> clean.groupby(<span class="s">"segment"</span>, as_index<span class="o">=</span><span class="k">False</span>).agg(
+        clients<span class="o">=</span>(<span class="s">"cust_id"</span>, <span class="s">"nunique"</span>), total_aum<span class="o">=</span>(<span class="s">"aum_sgd"</span>, <span class="s">"sum"</span>))
+    gold.to_parquet(<span class="s">"s3://lake/gold/aum_by_segment.parquet"</span>)
+    <span class="k">return</span> gold
+
+<span class="k">print</span>(load(transform(extract())))                    <span class="c"># the whole river</span></pre>
+      <div class="out" id="o9"><span class="lbl">Output</span>  segment  clients     total_aum
+0  Affluent     412  2.802e+08
+1  HNW          188  7.332e+08
+2  Mass        1400  1.820e+08
+3  UHNW          23  1.196e+09
+
+[pipeline] wrote gold/aum_by_segment.parquet · 4 rows · 2.1 KB</div>
+    </div>
+
+    <div class="panel">
+      <h3>Playground: run the river</h3>
+      <p class="hint">Press each stage in order. Watch the record count fall as quality gates bite, and note the file format changing — JSON at the floor, Parquet in the canopy.</p>
+      <div class="ctl">
+        <button class="pillbtn" id="stExtract">1 · Extract</button>
+        <button class="pillbtn" id="stTransform" disabled>2 · Transform</button>
+        <button class="pillbtn" id="stLoad" disabled>3 · Load</button>
+        <button class="pillbtn" id="stReset">↺ Reset</button>
+      </div>
+      <div class="out on" id="riverOut" style="border-top:none;border:1px solid var(--ridge);border-radius:9px">[river] idle — press Extract to begin</div>
+    </div>
+
+    <h3>Orchestration — who runs the river on schedule?</h3>
+    <p>In production, an <strong>orchestrator</strong> (Airflow, Dagster, Prefect — all Python) runs your pipeline on a schedule, retries failures, and alerts on breaks. You describe the pipeline as a <strong>DAG</strong> — a directed acyclic graph of tasks. Hold that word: Spark uses the very same concept one level down.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">10_airflow_dag.py</span><button class="run" data-out="o10">Run ▸</button></div>
+      <pre class="code"><span class="k">from</span> airflow.decorators <span class="k">import</span> dag, task
+<span class="k">from</span> datetime <span class="k">import</span> datetime
+
+<span class="o">@</span><span class="f">dag</span>(schedule<span class="o">=</span><span class="s">"0 6 * * *"</span>, start_date<span class="o">=</span>datetime(<span class="n">2026</span>, <span class="n">1</span>, <span class="n">1</span>), catchup<span class="o">=</span><span class="k">False</span>)
+<span class="k">def</span> <span class="f">wealth_daily</span>():
+    <span class="o">@</span><span class="f">task</span>
+    <span class="k">def</span> <span class="f">bronze</span>(): ...      <span class="c"># land raw events</span>
+    <span class="o">@</span><span class="f">task</span>
+    <span class="k">def</span> <span class="f">silver</span>(): ...      <span class="c"># clean &amp; conform</span>
+    <span class="o">@</span><span class="f">task</span>
+    <span class="k">def</span> <span class="f">gold</span>(): ...        <span class="c"># aggregate marts</span>
+    <span class="o">@</span><span class="f">task</span>
+    <span class="k">def</span> <span class="f">score_clients</span>(): ...  <span class="c"># run the Part-3 model on fresh silver data</span>
+
+    bronze() <span class="o">&gt;&gt;</span> silver() <span class="o">&gt;&gt;</span> [gold(), score_clients()]   <span class="c"># dependencies</span>
+
+wealth_daily()</pre>
+      <div class="out" id="o10"><span class="lbl">Output</span>DAG: wealth_daily · schedule 06:00 daily
+bronze ─▶ silver ─▶ ┬─▶ gold
+                    └─▶ score_clients
+[scheduler] next run: 2026-07-20 06:00 SGT</div>
+    </div>
+
+    <div class="quiz" data-answer="3">
+      <div class="q">Checkpoint · A regulator questions a number in a gold-layer report from March. What makes this answerable?</div>
+      <div class="opts">
+        <button class="opt">Gold tables are edited in place, so the number is current</button>
+        <button class="opt">The dashboard has a screenshot feature</button>
+        <button class="opt">Silver data is deleted after 30 days, saving cost</button>
+        <button class="opt">Bronze is immutable — you can replay March's raw data through the pipeline and reproduce the figure</button>
+      </div>
+      <div class="why">This is the whole point of an append-only bronze layer: lineage and reproducibility. In a bank, "we can replay it" is not a nice-to-have — it's an audit requirement.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ PART 5: THE STORM ============ -->
+<section class="part" id="storm">
+  <div class="wrap">
+    <span class="eyebrow">Part 5 · The Storm</span>
+    <h2>Spark &amp; PySpark: when one machine isn't enough</h2>
+    <p class="lede">pandas holds your data in <strong>one machine's memory</strong>. At 10 GB it groans; at 500 GB it dies. Apache Spark's answer: chop the data into <strong>partitions</strong>, spread them across a <strong>cluster</strong> of machines, and run your logic on all of them at once. <strong>PySpark</strong> is the Python steering wheel for that cluster.</p>
+
+    <h3>The cast of characters</h3>
+    <div class="grid2">
+      <div class="card"><h3>Driver</h3><p>The one machine running <em>your</em> Python script. It plans the work, builds the DAG, and collects results. The conductor — it holds the score, not the instruments.</p></div>
+      <div class="card"><h3>Executors</h3><p>Worker processes on cluster machines that hold partitions in memory and execute tasks on them in parallel. The orchestra.</p></div>
+      <div class="card"><h3>Partitions</h3><p>The chunks your dataset is split into. 500 GB might become 4,000 partitions of ~128 MB. Parallelism = how many partitions can be worked at once.</p></div>
+      <div class="card"><h3>Shuffle</h3><p>When an operation like <code class="inline">groupBy</code> needs rows with the same key on the same machine, data moves across the network. The expensive monsoon — necessary, but you minimise it.</p></div>
+    </div>
+
+    <div class="panel">
+      <h3>Playground: the cluster at work</h3>
+      <p class="hint">A 96-partition job. Scale the cluster and run it — each executor works its partitions in parallel (gold = processing, mint = done). Watch wall-clock time change. This is what "horizontal scaling" means.</p>
+      <div class="ctl">
+        <label for="execSlider">Executors</label>
+        <input type="range" id="execSlider" min="1" max="8" step="1" value="1" aria-label="Number of executors">
+        <span class="readout" id="execReadout">1 executor</span>
+        <button class="pillbtn" id="sparkRun">Run job ▸</button>
+      </div>
+      <div class="cluster" id="clusterBox"></div>
+      <div class="out on" id="sparkOut" style="border-top:none;border:1px solid var(--ridge);border-radius:9px">[cluster] idle</div>
+    </div>
+
+    <h3>Lazy evaluation — Spark's superpower</h3>
+    <p>In pandas, every line executes immediately. In Spark, <strong>transformations</strong> (<code class="inline">filter</code>, <code class="inline">select</code>, <code class="inline">groupBy</code>) only <em>describe</em> work — they build a DAG and nothing runs. Only an <strong>action</strong> (<code class="inline">count</code>, <code class="inline">collect</code>, <code class="inline">write</code>) triggers execution. Why? It lets Spark see the <em>whole</em> plan and optimise it — pushing filters early, pruning unused columns, minimising shuffles — before touching a single byte.</p>
+
+    <div class="panel">
+      <h3>Playground: build a plan, then light the fuse</h3>
+      <p class="hint">Click transformations in any order — notice the cluster does <em>nothing</em>. Then click an action.</p>
+      <div class="ctl">
+        <button class="pillbtn dagT" data-step="filter(aum &gt; 300k)">.filter()</button>
+        <button class="pillbtn dagT" data-step="select(id, segment, aum)">.select()</button>
+        <button class="pillbtn dagT" data-step="groupBy(segment).sum(aum)">.groupBy()</button>
+        <button class="pillbtn" id="dagAction" style="border-color:var(--gold);color:var(--gold)">.count() — action!</button>
+        <button class="pillbtn" id="dagReset">↺ Reset</button>
+      </div>
+      <div class="dagbox" id="dagBox"><span style="color:var(--faded);font-size:.85rem">DAG: (empty — add transformations)</span></div>
+      <div class="out on" id="dagOut" style="border-top:none;border:1px solid var(--ridge);border-radius:9px">[spark] nothing executed — transformations are lazy</div>
+    </div>
+
+    <h3>PySpark in practice — pandas déjà vu</h3>
+    <p>Here is the Part-4 pipeline rewritten for a cluster. Squint and it's the same code — that's deliberate. The DataFrame API is a lingua franca.</p>
+
+    <div class="cell">
+      <div class="cell-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">11_pyspark_pipeline.py</span><button class="run" data-out="o11">Run ▸</button></div>
+      <pre class="code"><span class="k">from</span> pyspark.sql <span class="k">import</span> SparkSession, functions <span class="k">as</span> F
+
+spark <span class="o">=</span> SparkSession.builder.appName(<span class="s">"wealth_gold"</span>).getOrCreate()
+
+events <span class="o">=</span> spark.read.json(<span class="s">"s3://lake/bronze/events/"</span>)        <span class="c"># 500 GB? fine.</span>
+
+silver <span class="o">=</span> (events
+    .dropDuplicates([<span class="s">"cust_id"</span>, <span class="s">"ts"</span>])
+    .withColumn(<span class="s">"cust_id"</span>, F.upper(F.trim(<span class="s">"cust_id"</span>)))
+    .withColumn(<span class="s">"aum_sgd"</span>, F.regexp_replace(<span class="s">"aum"</span>, <span class="s">","</span>, <span class="s">""</span>).cast(<span class="s">"double"</span>))
+    .filter(F.col(<span class="s">"aum_sgd"</span>) <span class="o">&gt;=</span> <span class="n">0</span>))                          <span class="c"># all lazy so far…</span>
+
+gold <span class="o">=</span> silver.groupBy(<span class="s">"segment"</span>).agg(
+    F.countDistinct(<span class="s">"cust_id"</span>).alias(<span class="s">"clients"</span>),
+    F.sum(<span class="s">"aum_sgd"</span>).alias(<span class="s">"total_aum"</span>))
+
+gold.write.mode(<span class="s">"overwrite"</span>).parquet(<span class="s">"s3://lake/gold/aum_by_segment"</span>)  <span class="c"># ACTION → now it runs</span></pre>
+      <div class="out" id="o11"><span class="lbl">Output</span>[stage 0] read bronze: 3,912 partitions · 498.2 GB
+[stage 1] dedupe + clean: 3,912 tasks ............ done (no shuffle)
+[stage 2] groupBy segment: shuffle 4 partitions .. done (1 shuffle)
+[write] gold/aum_by_segment · 4 rows
+Job finished in 4m 12s on 40 executors — pandas would need a ~500 GB machine</div>
+    </div>
+
+    <div class="note"><span class="who">When NOT to use Spark</span>If your data fits in one machine's memory (say, under ~10–50 GB), pandas or DuckDB will be simpler <em>and faster</em> — no cluster startup, no shuffle, no ops overhead. Spark's power has a coordination tax. Reach for the storm only when the forest is actually on fire.</div>
+
+    <div class="quiz" data-answer="1">
+      <div class="q">Checkpoint · You run <code class="inline">df.filter(...).groupBy(...).agg(...)</code> in PySpark and it returns instantly on 2 TB of data. Why?</div>
+      <div class="opts">
+        <button class="opt">Spark is just that fast</button>
+        <button class="opt">Nothing executed — these are lazy transformations; no action was called</button>
+        <button class="opt">The data was cached from a previous user</button>
+        <button class="opt">The cluster silently failed</button>
+      </div>
+      <div class="why">filter / groupBy / agg only build the plan. Add <code class="inline">.count()</code>, <code class="inline">.show()</code> or <code class="inline">.write</code> and the DAG actually executes — that's when you wait.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 6: FIELD GUIDE ============ -->
+<section class="part" id="fieldguide">
+  <div class="wrap">
+    <span class="eyebrow">Part 6 · Field Guide</span>
+    <h2>Compute, layers, and your trail map home</h2>
+    <p class="lede"><strong>Compute</strong> is the CPU/GPU + memory that executes your code — as opposed to <strong>storage</strong>, where data rests. The defining move of the modern stack is <em>separating the two</em>: data lives cheaply in object storage (S3, ADLS, GCS); compute spins up, drinks from it, and shuts down.</p>
+
+    <div class="grid2">
+      <div class="card"><h3>Vertical scaling</h3><p>Buy a bigger machine. Simple, but there's a ceiling — and one very expensive tree can still fall over.</p></div>
+      <div class="card"><h3>Horizontal scaling</h3><p>Add more machines — the Spark way. Near-limitless, resilient, but you pay a coordination (shuffle) tax. You watched this trade-off in the cluster playground.</p></div>
+    </div>
+
+    <h3>The whole forest on one page</h3>
+    <table class="tbl">
+      <tr><th>Layer</th><th>What lives there</th><th>Python tool</th><th>Who works here</th></tr>
+      <tr><td><strong style="color:var(--bronze)">Bronze</strong></td><td>Raw, immutable events &amp; extracts</td><td><code>spark.read.json / kafka</code></td><td>Data engineers</td></tr>
+      <tr><td><strong style="color:var(--silver)">Silver</strong></td><td>Clean, typed, deduped entities</td><td><code>PySpark / pandas transforms</code></td><td>Data engineers + scientists</td></tr>
+      <tr><td><strong style="color:var(--gold)">Gold</strong></td><td>Aggregated business marts &amp; features</td><td><code>groupBy → parquet / SQL</code></td><td>Analysts, ML models, dashboards</td></tr>
+      <tr><td><strong>Model</strong></td><td>Trained artefacts scoring fresh data</td><td><code>scikit-learn / PyTorch</code></td><td>Data scientists + ML engineers</td></tr>
+      <tr><td><strong>Orchestration</strong></td><td>Schedules, retries, lineage</td><td><code>Airflow / Dagster DAGs</code></td><td>Data engineers</td></tr>
+    </table>
+
+    <h3>Cheat sheet — one idea, three dialects</h3>
+    <table class="tbl">
+      <tr><th>Idea</th><th>Python</th><th>pandas</th><th>PySpark</th></tr>
+      <tr><td>Filter</td><td><code>[x for x in xs if p(x)]</code></td><td><code>df[df.aum &gt; 0]</code></td><td><code>df.filter(F.col("aum") &gt; 0)</code></td></tr>
+      <tr><td>Transform</td><td><code>[f(x) for x in xs]</code></td><td><code>df["usd"] = df.sgd / 1.34</code></td><td><code>df.withColumn("usd", ...)</code></td></tr>
+      <tr><td>Aggregate</td><td><code>sum(xs)</code></td><td><code>df.groupby("seg").sum()</code></td><td><code>df.groupBy("seg").sum()</code></td></tr>
+      <tr><td>Execute</td><td>immediately</td><td>immediately</td><td>only on an action (<code>.count()</code>)</td></tr>
+    </table>
+
+    <h3>Your trail from here</h3>
+    <div class="grid2">
+      <div class="card"><h3>Week 1–2 · Roots</h3><p>Install Python + VS Code. Rewrite one Excel task as a script using lists, dicts, functions, f-strings.</p></div>
+      <div class="card"><h3>Week 3–4 · Growth</h3><p>pandas on a real CSV from your world: load, clean, <code class="inline">groupby</code>, chart with matplotlib.</p></div>
+      <div class="card"><h3>Month 2 · Canopy</h3><p>Train a scikit-learn classifier end-to-end. Split honestly, measure AUC, explain overfitting to a colleague.</p></div>
+      <div class="card"><h3>Month 3 · The River &amp; Storm</h3><p>Build a bronze→silver→gold pipeline in pandas, schedule it with Airflow, then port one stage to PySpark on Databricks Community Edition (free).</p></div>
+    </div>
+
+    <div class="note"><span class="who">The one-sentence takeaway</span>Python is a single trail that runs the whole forest: the same language explores data at the floor, trains models in the canopy, and commands the storm when the data outgrows a single tree.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="leafline">❦ ❦ ❦</div>
+  <p>Python, from roots to canopy · a brown bag field guide · questions welcome, lunch mandatory</p>
+</footer>
+<script>
+/* ---------- run buttons: reveal precomputed output ---------- */
+document.querySelectorAll('button.run').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const out=document.getElementById(btn.dataset.out);
+    out.classList.add('on');
+    btn.textContent='✓ Ran';
+    setTimeout(()=>btn.textContent='Run ▸',1400);
+  });
+});
+
+/* ---------- quizzes ---------- */
+document.querySelectorAll('.quiz').forEach(q=>{
+  const ans=+q.dataset.answer;
+  q.querySelectorAll('button.opt').forEach((b,i)=>{
+    b.addEventListener('click',()=>{
+      q.querySelectorAll('button.opt').forEach(x=>x.classList.remove('right','wrong'));
+      b.classList.add(i===ans?'right':'wrong');
+      if(i!==ans) q.querySelectorAll('button.opt')[ans].classList.add('right');
+      q.querySelector('.why').classList.add('on');
+    });
+  });
+});
+
+/* ---------- part 1: AUM slider mirrors the if/elif ladder ---------- */
+const aumS=document.getElementById('aumSlider'),aumR=document.getElementById('aumReadout'),aumO=document.getElementById('aumOut');
+function segFor(a){if(a>=30000000)return['UHNW','aum >= 30_000_000'];if(a>=1500000)return['HNW','aum >= 1_500_000'];if(a>=300000)return['Affluent','aum >= 300_000'];return['Mass','else'];}
+function updAum(){const a=+aumS.value,[seg,branch]=segFor(a);
+  aumR.textContent='S$'+a.toLocaleString();
+  aumO.innerHTML='<span class="lbl">Interpreter</span>&gt;&gt;&gt; classify_segment('+a.toLocaleString()+')\nbranch fired : '+branch+'\nreturn       : "'+seg+'"';}
+aumS.addEventListener('input',updAum);updAum();
+
+/* ---------- part 3: regression playground ---------- */
+const cv=document.getElementById('regCanvas'),cx=cv.getContext('2d');
+let pts=[];
+function sizeCanvas(){const w=cv.clientWidth;cv.width=w*devicePixelRatio;cv.height=320*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);drawReg();}
+function fit(){const n=pts.length;if(n<2)return null;
+  let sx=0,sy=0,sxy=0,sxx=0;pts.forEach(p=>{sx+=p.x;sy+=p.y;sxy+=p.x*p.y;sxx+=p.x*p.x});
+  const d=n*sxx-sx*sx;if(Math.abs(d)<1e-9)return null;
+  const m=(n*sxy-sx*sy)/d,b=(sy-m*sx)/n;
+  const ym=sy/n;let ssT=0,ssR=0;pts.forEach(p=>{ssT+=(p.y-ym)**2;ssR+=(p.y-(m*p.x+b))**2});
+  return{m,b,r2:ssT<1e-9?1:1-ssR/ssT};}
+function drawReg(){const w=cv.clientWidth,h=320;cx.clearRect(0,0,w,h);
+  cx.strokeStyle='rgba(42,74,53,.6)';cx.lineWidth=1;
+  for(let gx=0;gx<w;gx+=48){cx.beginPath();cx.moveTo(gx,0);cx.lineTo(gx,h);cx.stroke();}
+  for(let gy=0;gy<h;gy+=48){cx.beginPath();cx.moveTo(0,gy);cx.lineTo(w,gy);cx.stroke();}
+  const f=fit();
+  if(f){cx.strokeStyle='#E8B84B';cx.lineWidth=2.5;cx.beginPath();
+    cx.moveTo(0,f.m*0+f.b);cx.lineTo(w,f.m*w+f.b);cx.stroke();}
+  pts.forEach(p=>{cx.fillStyle='#A9D8BC';cx.beginPath();cx.arc(p.x,p.y,5,0,7);cx.fill();
+    cx.strokeStyle='#0A1D14';cx.lineWidth=1.5;cx.stroke();});
+  const ro=document.getElementById('regReadout');
+  if(f){const m=(-f.m).toFixed(3);
+    ro.textContent='model.coef_ = '+m+'   ·   R² = '+Math.max(0,f.r2).toFixed(3)+'   ·   n = '+pts.length;
+  }else ro.textContent='Drop at least 2 points to fit a line.';}
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();
+  pts.push({x:e.clientX-r.left,y:e.clientY-r.top});drawReg();});
+document.getElementById('regClear').addEventListener('click',()=>{pts=[];drawReg();});
+document.getElementById('regNoise').addEventListener('click',()=>{
+  const w=cv.clientWidth;for(let i=0;i<12;i++){const x=Math.random()*w;
+    pts.push({x,y:250-x*0.35+(Math.random()-0.5)*90});}drawReg();});
+window.addEventListener('resize',sizeCanvas);sizeCanvas();
+
+/* ---------- part 3: train/test split ---------- */
+const spS=document.getElementById('splitSlider'),spR=document.getElementById('splitReadout'),spO=document.getElementById('splitOut');
+function updSplit(){const t=+spS.value;spR.textContent=t+'% test / '+(100-t)+'% train';
+  // toy but truthful behaviour: tiny test = noisy estimate; huge test = starved training
+  const trainAUC=(0.985-0.0004*(100-t)).toFixed(3);
+  const base=0.845, starve=Math.max(0,(t-30))*0.0022, noise=Math.max(0,(12-t))*0.006;
+  const testAUC=(base-starve-noise).toFixed(3);
+  const warn=t<=10?'⚠ tiny test set → the score is an unreliable estimate':
+             t>=45?'⚠ huge test set → model starved of training data':
+             '✓ healthy split — enough to learn from, enough to judge with';
+  spO.innerHTML='<span class="lbl">Evaluation</span>train AUC : '+trainAUC+'  (always flattering)\ntest  AUC : '+testAUC+'  (the honest number)\n'+warn;}
+spS.addEventListener('input',updSplit);updSplit();
+
+/* ---------- part 4: strata click-to-reveal ---------- */
+document.querySelectorAll('.stratum').forEach(s=>{
+  const toggle=()=>{s.classList.toggle('lit');document.getElementById(s.dataset.rec).classList.toggle('on');};
+  s.addEventListener('click',toggle);
+  s.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+});
+
+/* ---------- part 4: run the river ---------- */
+const rOut=document.getElementById('riverOut');
+const stE=document.getElementById('stExtract'),stT=document.getElementById('stTransform'),stL=document.getElementById('stLoad');
+stE.addEventListener('click',()=>{stE.classList.add('active');stT.disabled=false;
+  rOut.innerHTML='<span class="lbl">Bronze</span>[extract] read s3://lake/bronze/events/2026-07-18.jsonl\n[extract] 2,023 raw events · JSON lines · dupes &amp; nulls included ✓ landed as-is';});
+stT.addEventListener('click',()=>{stT.classList.add('active');stL.disabled=false;
+  rOut.innerHTML='<span class="lbl">Silver</span>[transform] drop_duplicates ......... 2,023 → 1,988 rows\n[transform] trim/upper cust_id ...... ok\n[transform] cast aum → float ........ 3 rows failed → quarantined\n[transform] quality gate aum ≥ 0 .... 1,985 → 1,979 clean rows';});
+stL.addEventListener('click',()=>{stL.classList.add('active');
+  rOut.innerHTML='<span class="lbl">Gold</span>[load] groupby segment → 4 rows\n[load] wrote s3://lake/gold/aum_by_segment.parquet (2.1 KB, columnar)\n[river] pipeline complete — dashboards &amp; the Part-3 model drink from here 🌿';});
+document.getElementById('stReset').addEventListener('click',()=>{
+  [stE,stT,stL].forEach(b=>b.classList.remove('active'));stT.disabled=true;stL.disabled=true;
+  rOut.innerHTML='[river] idle — press Extract to begin';});
+
+/* ---------- part 5: cluster visualizer ---------- */
+const TOTAL=96;let execN=1,running=false;
+const box=document.getElementById('clusterBox'),eR=document.getElementById('execReadout'),sOut=document.getElementById('sparkOut');
+function buildCluster(){box.innerHTML='';const per=Math.ceil(TOTAL/execN);
+  for(let e=0;e<execN;e++){const d=document.createElement('div');d.className='exec';
+    const count=Math.min(per,TOTAL-e*per);
+    d.innerHTML='<div class="ename">executor '+(e+1)+' · '+count+' parts</div>';
+    for(let p=0;p<count;p++){const s=document.createElement('span');s.className='pt';d.appendChild(s);}
+    box.appendChild(d);}}
+document.getElementById('execSlider').addEventListener('input',e=>{
+  if(running)return;execN=+e.target.value;eR.textContent=execN+' executor'+(execN>1?'s':'');buildCluster();
+  sOut.innerHTML='[cluster] '+execN+' executor'+(execN>1?'s':'')+' provisioned — press Run job';});
+document.getElementById('sparkRun').addEventListener('click',async()=>{
+  if(running)return;running=true;buildCluster();
+  const cores=4;// each executor works 4 partitions at a time
+  const execs=[...box.querySelectorAll('.exec')];
+  const t0=performance.now();let ticks=0;
+  sOut.innerHTML='[cluster] job started · '+TOTAL+' partitions · '+execN+'×'+cores+' parallel tasks';
+  const queues=execs.map(e=>[...e.querySelectorAll('.pt')]);
+  while(queues.some(q=>q.length)){
+    const batch=[];
+    queues.forEach(q=>{for(let c=0;c<cores&&q.length;c++)batch.push(q.shift());});
+    batch.forEach(p=>p.classList.add('busy'));
+    await new Promise(r=>setTimeout(r,220));
+    batch.forEach(p=>{p.classList.remove('busy');p.classList.add('done');});
+    ticks++;
+  }
+  const wall=((performance.now()-t0)/1000).toFixed(1);
+  const one=Math.ceil(TOTAL/cores);
+  sOut.innerHTML='<span class="lbl">Job complete</span>'+TOTAL+' partitions on '+execN+' executor'+(execN>1?'s':'')+
+    ' → '+ticks+' waves · '+wall+'s wall-clock\n(1 executor would take '+one+' waves — same work, ÷'+execN+' the waiting)';
+  running=false;});
+buildCluster();
+
+/* ---------- part 5: lazy DAG ---------- */
+const dagBox=document.getElementById('dagBox'),dagOut=document.getElementById('dagOut');let steps=[];
+function renderDag(hot){dagBox.innerHTML='';
+  if(!steps.length){dagBox.innerHTML='<span style="color:var(--faded);font-size:.85rem">DAG: (empty — add transformations)</span>';return;}
+  steps.forEach((s,i)=>{if(i){const a=document.createElement('span');a.className='dagarrow';a.textContent='→';dagBox.appendChild(a);}
+    const d=document.createElement('span');d.className='dagstep'+(hot?' hot':'');d.textContent=s;dagBox.appendChild(d);});}
+document.querySelectorAll('.dagT').forEach(b=>b.addEventListener('click',()=>{
+  steps.push(b.dataset.step);renderDag(false);
+  dagOut.innerHTML='[spark] plan updated ('+steps.length+' step'+(steps.length>1?'s':'')+') — still nothing executed. Lazy. 😴';}));
+document.getElementById('dagAction').addEventListener('click',async()=>{
+  if(!steps.length){dagOut.innerHTML='[spark] .count() on an empty plan → full scan. Add transformations first to see optimisation.';return;}
+  renderDag(true);
+  dagOut.innerHTML='[spark] ACTION → optimising plan: pushing filters early, pruning columns…';
+  await new Promise(r=>setTimeout(r,900));
+  dagOut.innerHTML='<span class="lbl">Executed</span>[optimiser] reordered '+steps.length+' steps for minimal shuffle\n[stages] '+steps.map((s,i)=>'stage '+i+': '+s).join('\n[stages] ')+'\n[result] count = 1,979 rows · NOW the cluster actually worked ⚡';});
+document.getElementById('dagReset').addEventListener('click',()=>{steps=[];renderDag(false);
+  dagOut.innerHTML='[spark] nothing executed — transformations are lazy';});
+
+/* ---------- fireflies in hero ---------- */
+const fc=document.getElementById('fireflies');const fx=fc.getContext('2d');
+let flies=[];const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sizeF(){fc.width=fc.offsetWidth;fc.height=fc.offsetHeight;}
+window.addEventListener('resize',sizeF);sizeF();
+for(let i=0;i<26;i++)flies.push({x:Math.random()*fc.width,y:Math.random()*fc.height,r:1+Math.random()*1.8,a:Math.random()*6.28,s:.15+Math.random()*.3,ph:Math.random()*6.28});
+function tickF(t){fx.clearRect(0,0,fc.width,fc.height);
+  flies.forEach(f=>{f.a+=(Math.random()-.5)*.3;f.x+=Math.cos(f.a)*f.s;f.y+=Math.sin(f.a)*f.s;
+    if(f.x<0)f.x=fc.width;if(f.x>fc.width)f.x=0;if(f.y<0)f.y=fc.height;if(f.y>fc.height)f.y=0;
+    const glow=.25+.55*(.5+.5*Math.sin(t/900+f.ph));
+    fx.fillStyle='rgba(232,184,75,'+glow.toFixed(2)+')';
+    fx.beginPath();fx.arc(f.x,f.y,f.r,0,7);fx.fill();});
+  requestAnimationFrame(tickF);}
+if(!reduced)requestAnimationFrame(tickF);
+
+/* ---------- nav highlight ---------- */
+const links=[...document.querySelectorAll('#trail a')];
+const secs=links.map(l=>document.querySelector(l.getAttribute('href')));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(l=>l.classList.toggle('here',l.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-40% 0px -55% 0px'});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
