@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Seed to Canopy — A JavaScript → Mobile Brown Bag</title>
+<meta name="description" content="An interactive brown bag session: learn JavaScript hands-on, grow into React Native, build towards a PWA, and weigh it all against Flutter & Dart.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B1712;           /* deep forest floor */
+  --panel:#12241B;        /* understory panel */
+  --panel-2:#0E1D15;
+  --code-bg:#081109;      /* night canopy */
+  --ink:#EDE7D8;          /* cream */
+  --ink-dim:#B8C4B4;      /* misted sage */
+  --mint:#9FC5AD;         /* sage mint */
+  --gold:#D9A441;         /* canopy gold */
+  --gold-soft:#E8C57A;
+  --moss:#2E4A3A;         /* moss border */
+  --moss-2:#1C3427;
+  --leaf:#7FB98A;         /* console output green */
+  --warn:#E58B6B;
+  --radius:14px;
+  --disp:'Fraunces',serif;
+  --body:'Newsreader',serif;
+  --ui:'Space Grotesk',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:1.06rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold);color:#12241B}
+
+/* ---------- nav ---------- */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,23,18,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--moss-2);
+}
+.nav-inner{
+  max-width:1040px;margin:0 auto;padding:.65rem 1.25rem;
+  display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
+}
+.nav-mark{font-family:var(--disp);font-weight:600;color:var(--gold);font-size:1.02rem;letter-spacing:.01em}
+.nav-links{display:flex;gap:1rem;flex-wrap:wrap;margin-left:auto}
+.nav-links a{
+  font-family:var(--ui);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-dim);text-decoration:none;padding:.25rem 0;border-bottom:2px solid transparent;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--gold);border-bottom-color:var(--gold)}
+a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- hero ---------- */
+header{
+  position:relative;overflow:hidden;
+  padding:5.5rem 1.25rem 4.25rem;
+  background:
+    radial-gradient(ellipse 70% 55% at 78% -10%, rgba(217,164,65,.13), transparent 60%),
+    radial-gradient(ellipse 55% 60% at 8% 110%, rgba(127,185,138,.08), transparent 60%),
+    var(--bg);
+  border-bottom:1px solid var(--moss-2);
+}
+.hero-inner{max-width:1040px;margin:0 auto}
+.eyebrow{
+  font-family:var(--ui);font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.1rem;
+}
+h1{
+  font-family:var(--disp);font-weight:300;font-size:clamp(2.4rem,6vw,4.4rem);
+  line-height:1.05;letter-spacing:-.015em;max-width:19ch;
+}
+h1 em{font-style:italic;font-weight:600;color:var(--gold-soft)}
+.hero-sub{
+  margin-top:1.4rem;max-width:58ch;color:var(--ink-dim);font-size:1.12rem;font-weight:300;
+}
+.hero-meta{
+  margin-top:2rem;display:flex;gap:1.75rem;flex-wrap:wrap;
+  font-family:var(--ui);font-size:.8rem;letter-spacing:.06em;color:var(--ink-dim);
+}
+.hero-meta strong{color:var(--mint);font-weight:500}
+
+/* ---------- layout ---------- */
+main{max-width:1040px;margin:0 auto;padding:0 1.25rem}
+section{padding:4.25rem 0 1.5rem;border-bottom:1px solid var(--moss-2)}
+section:last-of-type{border-bottom:none}
+.part-label{
+  font-family:var(--ui);font-size:.76rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;
+}
+.part-label::after{content:"";height:1px;flex:1;background:var(--moss-2)}
+h2{
+  font-family:var(--disp);font-weight:400;font-size:clamp(1.8rem,3.4vw,2.6rem);
+  line-height:1.15;letter-spacing:-.01em;margin-bottom:1rem;max-width:24ch;
+}
+h3{
+  font-family:var(--disp);font-weight:600;font-size:1.3rem;margin:2.6rem 0 .7rem;color:var(--gold-soft);
+}
+p{max-width:68ch;margin-bottom:1rem;color:var(--ink)}
+p.dim,.dim{color:var(--ink-dim)}
+strong{color:var(--mint);font-weight:500}
+code.inline{
+  font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+  border:1px solid var(--moss-2);border-radius:5px;padding:.1em .4em;color:var(--gold-soft);
+}
+.note{
+  border-left:3px solid var(--gold);background:var(--panel-2);
+  padding:.9rem 1.1rem;border-radius:0 var(--radius) var(--radius) 0;
+  margin:1.4rem 0;max-width:70ch;font-size:.98rem;color:var(--ink-dim);
+}
+.note b{color:var(--gold-soft);font-weight:600}
+
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:2rem 0 1rem}
+.agenda a{
+  text-decoration:none;background:var(--panel);border:1px solid var(--moss-2);
+  border-radius:var(--radius);padding:1.15rem 1.2rem;display:block;transition:border-color .2s;
+}
+.agenda a:hover{border-color:var(--gold)}
+.agenda .num{font-family:var(--disp);font-style:italic;color:var(--gold);font-size:1.5rem}
+.agenda .t{font-family:var(--ui);font-weight:600;color:var(--ink);margin:.3rem 0 .2rem;font-size:.98rem}
+.agenda .d{font-size:.9rem;color:var(--ink-dim);line-height:1.45}
+
+/* ---------- interactive code cell (the signature) ---------- */
+.cell{
+  background:var(--panel);border:1px solid var(--moss);border-radius:var(--radius);
+  margin:1.5rem 0 2.2rem;overflow:hidden;
+}
+.cell-head{
+  display:flex;align-items:center;gap:.75rem;padding:.6rem .9rem;
+  border-bottom:1px solid var(--moss-2);background:var(--panel-2);
+}
+.cell-title{
+  font-family:var(--ui);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);
+}
+.cell-btns{margin-left:auto;display:flex;gap:.5rem}
+button.run,button.ghost{
+  font-family:var(--ui);font-size:.78rem;letter-spacing:.06em;cursor:pointer;
+  border-radius:8px;padding:.42rem .95rem;border:1px solid transparent;font-weight:600;
+}
+button.run{background:var(--gold);color:#14100a}
+button.run:hover{background:var(--gold-soft)}
+button.ghost{background:transparent;color:var(--ink-dim);border-color:var(--moss)}
+button.ghost:hover{color:var(--ink);border-color:var(--ink-dim)}
+textarea.code{
+  width:100%;display:block;background:var(--code-bg);color:#CBE3CF;border:none;resize:vertical;
+  font-family:var(--mono);font-size:.88rem;line-height:1.6;padding:1rem 1.1rem;min-height:120px;
+  tab-size:2;
+}
+.console{
+  border-top:1px dashed var(--moss-2);background:#060B07;padding:.8rem 1.1rem;
+  font-family:var(--mono);font-size:.85rem;line-height:1.7;min-height:2.4rem;color:var(--leaf);
+  white-space:pre-wrap;word-break:break-word;
+}
+.console:empty::before{content:"▸ output appears here — press Run";color:#3E5747;font-style:italic}
+.console .err{color:var(--warn)}
+.console .sys{color:#5B7A66;font-style:italic}
+
+/* ---------- static code block ---------- */
+pre.static{
+  background:var(--code-bg);border:1px solid var(--moss-2);border-radius:var(--radius);
+  padding:1.1rem 1.2rem;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.65;
+  color:#CBE3CF;margin:1.2rem 0 1.8rem;
+}
+pre.static .c{color:#5B7A66;font-style:italic}
+pre.static .k{color:var(--gold-soft)}
+pre.static .s{color:#A8D2B0}
+
+/* ---------- tabs ---------- */
+.tabs{margin:1.4rem 0 2rem;border:1px solid var(--moss);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+.tab-row{display:flex;border-bottom:1px solid var(--moss-2);background:var(--panel-2)}
+.tab-row button{
+  font-family:var(--ui);font-size:.82rem;letter-spacing:.05em;padding:.7rem 1.2rem;cursor:pointer;
+  background:transparent;border:none;color:var(--ink-dim);border-bottom:2px solid transparent;font-weight:600;
+}
+.tab-row button[aria-selected="true"]{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.tab-panel pre{margin:0;border:none;border-radius:0}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;margin:1.4rem 0 2rem;font-size:.95rem}
+.tbl th{
+  font-family:var(--ui);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
+  text-align:left;padding:.7rem .8rem;border-bottom:1px solid var(--moss);
+}
+.tbl td{padding:.65rem .8rem;border-bottom:1px solid var(--moss-2);vertical-align:top;color:var(--ink-dim)}
+.tbl td:first-child{color:var(--mint);font-family:var(--ui);font-size:.88rem}
+.tbl code{font-family:var(--mono);font-size:.84em;color:var(--gold-soft)}
+.tbl-wrap{overflow-x:auto}
+
+/* ---------- checklist ---------- */
+.check{background:var(--panel);border:1px solid var(--moss);border-radius:var(--radius);padding:1.4rem 1.5rem;margin:1.5rem 0 2rem}
+.check label{
+  display:flex;gap:.8rem;align-items:flex-start;padding:.55rem 0;cursor:pointer;color:var(--ink-dim);
+  border-bottom:1px dashed var(--moss-2);font-size:.98rem;
+}
+.check label:last-of-type{border-bottom:none}
+.check input{accent-color:var(--gold);margin-top:.35rem;width:1rem;height:1rem;flex-shrink:0}
+.check label span b{color:var(--mint);font-weight:500}
+.meter{height:8px;background:var(--moss-2);border-radius:99px;overflow:hidden;margin-top:1.1rem}
+.meter div{height:100%;width:0;background:linear-gradient(90deg,var(--leaf),var(--gold));border-radius:99px;transition:width .3s}
+.meter-label{font-family:var(--ui);font-size:.78rem;letter-spacing:.08em;color:var(--ink-dim);margin-top:.5rem}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--panel);border:1px solid var(--moss);border-radius:var(--radius);padding:1.5rem;margin:1.5rem 0 2rem}
+.q{margin-bottom:1.6rem}
+.q .qt{font-family:var(--ui);font-weight:600;color:var(--ink);margin-bottom:.6rem;font-size:.98rem}
+.q button{
+  display:block;width:100%;text-align:left;font-family:var(--body);font-size:.96rem;
+  background:var(--panel-2);color:var(--ink-dim);border:1px solid var(--moss-2);border-radius:9px;
+  padding:.6rem .9rem;margin-bottom:.45rem;cursor:pointer;
+}
+.q button:hover:not(:disabled){border-color:var(--gold)}
+.q button.correct{border-color:var(--leaf);color:var(--leaf)}
+.q button.wrong{border-color:var(--warn);color:var(--warn)}
+.q .why{display:none;font-size:.9rem;color:var(--ink-dim);border-left:2px solid var(--gold);padding-left:.8rem;margin-top:.5rem}
+.q .why.show{display:block}
+.quiz-score{font-family:var(--disp);font-style:italic;color:var(--gold);font-size:1.2rem;margin-top:.5rem}
+
+/* ---------- two-col ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.4rem 0 2rem}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--moss-2);border-radius:var(--radius);padding:1.25rem 1.4rem}
+.card h4{font-family:var(--ui);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+.card ul{list-style:none}
+.card li{padding:.32rem 0;color:var(--ink-dim);font-size:.96rem;padding-left:1.1rem;position:relative}
+.card li::before{content:"◆";position:absolute;left:0;color:var(--gold);font-size:.55rem;top:.72rem}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--moss-2);margin-top:3rem;padding:2.5rem 1.25rem 3rem;text-align:center;
+  color:var(--ink-dim);font-size:.92rem;
+}
+footer .leafline{font-family:var(--disp);font-style:italic;color:var(--gold);font-size:1.05rem;margin-bottom:.4rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-mark">Seed → Canopy</span>
+    <div class="nav-links">
+      <a href="#js">I · JavaScript</a>
+      <a href="#rn">II · React Native</a>
+      <a href="#pwa">III · PWA</a>
+      <a href="#flutter">IV · Flutter &amp; Dart</a>
+      <a href="#quiz">Field Check</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero-inner">
+    <p class="eyebrow">Brown Bag Session · Bring Your Own Lunch</p>
+    <h1>From seed to canopy: JavaScript, <em>grown</em> into mobile apps.</h1>
+    <p class="hero-sub">One language, three habitats. In the next hour we plant JavaScript fundamentals with live, editable code you can run right on this page — then grow that knowledge into React Native, reach the canopy with a Progressive Web App, and look across the valley at Flutter &amp; Dart to see how the other forest grows.</p>
+    <div class="hero-meta">
+      <span><strong>Format</strong> · interactive, run-as-we-go</span>
+      <span><strong>Level</strong> · beginner-friendly</span>
+      <span><strong>Duration</strong> · ~60 min + Q&amp;A</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================= AGENDA ======================= -->
+<section id="agenda" style="padding-top:3rem">
+  <p class="part-label">Today's Trail Map</p>
+  <div class="agenda">
+    <a href="#js"><span class="num">I.</span><p class="t">JavaScript, hands-on</p><p class="d">Variables, functions, arrays, objects, closures, async — every example is editable and runnable.</p></a>
+    <a href="#rn"><span class="num">II.</span><p class="t">React Native</p><p class="d">Your JS transfers almost wholesale: components, props, state, hooks — and what changes on mobile.</p></a>
+    <a href="#pwa"><span class="num">III.</span><p class="t">Building towards a PWA</p><p class="d">The ladder from web page to installable, offline-capable app: manifest, service worker, caching.</p></a>
+    <a href="#flutter"><span class="num">IV.</span><p class="t">Flutter &amp; Dart, compared</p><p class="d">The same counter app in both worlds, plus an honest decision table for choosing a stack.</p></a>
+  </div>
+  <div class="note"><b>House rule for today:</b> every dark editor box below is live. Change the code, break it, press <b>Run</b>, see what happens. Breaking things on purpose is the fastest way to learn a language.</div>
+</section>
+<!-- ======================= PART I : JAVASCRIPT ======================= -->
+<section id="js">
+  <p class="part-label">Part I · The Forest Floor</p>
+  <h2>JavaScript, learned by running it</h2>
+  <p>JavaScript is the language of the web — the only language every browser speaks natively. It's <strong>dynamically typed</strong> (variables can hold anything), <strong>single-threaded</strong> (one thing at a time, but very good at waiting), and <strong>event-driven</strong> (code reacts to clicks, timers, and network replies). Master roughly eight ideas and you can read most JavaScript in the wild. Here they are — live.</p>
+
+  <h3>1 · Variables &amp; types — the soil</h3>
+  <p>Use <code class="inline">const</code> by default (the label can't be reassigned), <code class="inline">let</code> when a value must change, and forget <code class="inline">var</code> exists (it's the legacy way, with confusing scoping). JavaScript's core types: string, number, boolean, <code class="inline">undefined</code>, <code class="inline">null</code>, object, and array.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 01 · variables &amp; typeof</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="10" spellcheck="false">const name = "Bukit Timah";   // string — can't be reassigned
+let visitors = 420;           // number — can change
+let raining = true;           // boolean
+
+visitors = visitors + 35;     // let allows this
+
+console.log("Park:", name);
+console.log("Visitors today:", visitors);
+console.log("Type of name:", typeof name);
+console.log("Type of visitors:", typeof visitors);
+
+// Try it: uncomment the next line — const will refuse!
+// name = "MacRitchie";</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>2 · Functions — reusable machinery</h3>
+  <p>Functions are values in JavaScript: you can store them in variables, pass them around, and return them from other functions. The modern <strong>arrow function</strong> <code class="inline">(x) =&gt; x * 2</code> is the compact form you'll see everywhere — especially in React.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 02 · functions, three ways</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="12" spellcheck="false">// Classic declaration
+function greet(person) {
+  return "Hello, " + person + "!";
+}
+
+// Arrow function — same idea, compact
+const greetArrow = (person) => "Hello, " + person + "!";
+
+// One-liner arrows return automatically (no braces, no `return`)
+const double = n => n * 2;
+
+console.log(greet("Ted"));
+console.log(greetArrow("audience"));
+console.log("double(21) =", double(21));
+
+// Functions as values: pass one into another
+const shout = fn => fn("everyone").toUpperCase();
+console.log(shout(greet));</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>3 · Arrays &amp; the big three: map, filter, reduce</h3>
+  <p>Arrays are ordered lists. The three methods below are the workhorses of modern JavaScript — and the literal syntax of React lists. <strong>map</strong> transforms every item, <strong>filter</strong> keeps some, <strong>reduce</strong> boils everything down to one value.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 03 · map / filter / reduce</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="13" spellcheck="false">const trailKm = [2.2, 5.4, 1.1, 8.7, 3.3];
+
+// map: transform each item → new array, same length
+const inMetres = trailKm.map(km => km * 1000);
+console.log("metres:", inMetres);
+
+// filter: keep items that pass a test
+const longHikes = trailKm.filter(km => km > 3);
+console.log("hikes over 3 km:", longHikes);
+
+// reduce: fold everything into a single value
+const totalKm = trailKm.reduce((sum, km) => sum + km, 0);
+console.log("total distance:", totalKm.toFixed(1), "km");
+
+// They chain beautifully:
+const longTotal = trailKm.filter(km => km > 3).reduce((s, k) => s + k, 0);
+console.log("total of long hikes:", longTotal, "km");</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>4 · Objects, destructuring &amp; spread</h3>
+  <p>Objects group related data under named keys — they're JavaScript's everything-container. <strong>Destructuring</strong> unpacks them into variables; <strong>spread</strong> (<code class="inline">...</code>) copies and merges them. React props are literally destructured objects, so this syntax pays off double later.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 04 · objects &amp; destructuring</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="14" spellcheck="false">const park = {
+  name: "Bukit Timah Nature Reserve",
+  heightM: 163,
+  trails: ["Summit", "Dairy Farm", "Hindhede"],
+};
+
+// Dot access
+console.log(park.name, "—", park.heightM + "m");
+
+// Destructuring: unpack keys into variables
+const { heightM, trails } = park;
+console.log("Height:", heightM, "| Trails:", trails.length);
+
+// Spread: copy an object and override one field (immutable update —
+// this exact pattern is how React state is updated)
+const updated = { ...park, heightM: 164 };
+console.log("Original still:", park.heightM, "| Updated copy:", updated.heightM);</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>5 · Template literals &amp; modern niceties</h3>
+  <p>Backtick strings interpolate variables with <code class="inline">${…}</code>, and two tiny operators save whole if-statements: <strong>optional chaining</strong> <code class="inline">?.</code> (reach safely into maybe-missing data) and <strong>nullish coalescing</strong> <code class="inline">??</code> (fallback only when a value is null/undefined).</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 05 · template literals · ?. · ??</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="12" spellcheck="false">const user = { name: "Ted", prefs: { theme: "forest" } };
+const guest = { name: "Visitor" };   // no prefs at all
+
+// Template literal: `${}` slots values into strings
+console.log(`Welcome back, ${user.name}!`);
+
+// Optional chaining: stop safely if a link in the chain is missing
+console.log("Ted's theme:", user.prefs?.theme);
+console.log("Guest's theme:", guest.prefs?.theme);  // undefined, no crash
+
+// Nullish coalescing: fallback for null/undefined only
+const theme = guest.prefs?.theme ?? "default";
+console.log(`Guest gets the ${theme} theme.`);</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>6 · Closures — functions that remember</h3>
+  <p>A <strong>closure</strong> is a function that keeps access to the variables of the place it was born, even after that place has finished running. It's how JavaScript does private state — and it's the invisible machinery behind React hooks.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 06 · closures</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="13" spellcheck="false">function makeCounter(label) {
+  let count = 0;               // private — nothing outside can touch it
+  return function () {         // this inner function "closes over" count
+    count = count + 1;
+    console.log(`${label}: ${count}`);
+  };
+}
+
+const summitSteps = makeCounter("Summit trail");
+const coastSteps  = makeCounter("Coastal walk");
+
+summitSteps();  // each counter remembers ITS OWN count
+summitSteps();
+coastSteps();
+summitSteps();  // → 3, not affected by coastSteps</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>7 · Async — promises &amp; await</h3>
+  <p>JavaScript never blocks: slow work (network calls, timers) hands back a <strong>Promise</strong> — an IOU for a future value. <code class="inline">async/await</code> lets you write asynchronous code that reads top-to-bottom like normal code. This is the single most important concept for real-world apps, where nearly everything involves waiting for a server.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 07 · async / await (watch the timing)</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="14" spellcheck="false">// A fake API call: resolves after `ms` milliseconds
+const fetchSpecies = (name, ms) =>
+  new Promise(resolve => setTimeout(() => resolve(`🌿 ${name} data loaded`), ms));
+
+console.log("1. Request sent…");
+
+const data = await fetchSpecies("Oriental Pied Hornbill", 900);
+console.log("2.", data);
+
+// Parallel requests: start both, await both — total wait ≈ the slower one
+const [a, b] = await Promise.all([
+  fetchSpecies("Long-tailed Macaque", 600),
+  fetchSpecies("Malayan Colugo", 600),
+]);
+console.log("3.", a);
+console.log("4.", b);
+console.log("5. Done — notice nothing froze while we waited.");</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <h3>8 · Classes — blueprints (you'll mostly read them)</h3>
+  <p>Classes bundle data and behaviour into blueprints for objects. Modern JS (and React) leans functional, so you'll <em>write</em> classes rarely but <em>read</em> them often — and Dart, later today, is built almost entirely from them.</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 08 · classes</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="14" spellcheck="false">class Trail {
+  constructor(name, km) {
+    this.name = name;
+    this.km = km;
+  }
+  describe() {
+    return `${this.name} — ${this.km} km`;
+  }
+}
+
+class LoopTrail extends Trail {          // inheritance
+  describe() {
+    return super.describe() + " (loops back to start)";
+  }
+}
+
+const t1 = new Trail("Summit Path", 1.2);
+const t2 = new LoopTrail("Hindhede Loop", 0.7);
+console.log(t1.describe());
+console.log(t2.describe());</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <div class="note"><b>Where JavaScript runs:</b> in the browser (manipulating the page via the DOM), on servers via <b>Node.js</b>, and — as we'll see next — inside native mobile apps via React Native. One language, many habitats. That leverage is the whole reason today's session exists.</div>
+</section>
+
+<!-- ======================= PART II : REACT NATIVE ======================= -->
+<section id="rn">
+  <p class="part-label">Part II · The Understory</p>
+  <h2>React Native: your JavaScript, on a phone</h2>
+  <p><strong>React Native</strong> lets you build genuinely native iOS and Android apps in JavaScript. You describe the UI as <strong>components</strong> — JavaScript functions that return markup — and React Native renders them as <em>real native widgets</em>, not a webpage in a wrapper. Everything from Part I transfers: arrow functions, destructuring, map, closures, async. What changes is the vocabulary of the UI.</p>
+
+  <h3>The mental model: UI = f(state)</h3>
+  <p>React's core idea in one line: <strong>your UI is a function of your data</strong>. You never manually update the screen ("find that label, change its text"). Instead you change the <em>state</em>, and React re-runs your component function and redraws whatever differs. This inversion is 80% of learning React — the rest is vocabulary.</p>
+
+  <h3>Web words → React Native words</h3>
+  <div class="tbl-wrap"><table class="tbl">
+    <tr><th>Web / HTML</th><th>React Native</th><th>Notes</th></tr>
+    <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;View&gt;</code></td><td>The universal container. Flexbox layout by default.</td></tr>
+    <tr><td><code>&lt;p&gt;</code>, <code>&lt;span&gt;</code></td><td><code>&lt;Text&gt;</code></td><td>All text must live inside a <code>&lt;Text&gt;</code> — no loose strings.</td></tr>
+    <tr><td><code>&lt;img&gt;</code></td><td><code>&lt;Image&gt;</code></td><td>Requires explicit width/height.</td></tr>
+    <tr><td><code>&lt;button&gt;</code></td><td><code>&lt;Pressable&gt;</code> / <code>&lt;Button&gt;</code></td><td><code>onPress</code> instead of <code>onclick</code>.</td></tr>
+    <tr><td><code>&lt;input&gt;</code></td><td><code>&lt;TextInput&gt;</code></td><td><code>onChangeText</code> hands you the string directly.</td></tr>
+    <tr><td>CSS files</td><td><code>StyleSheet.create</code></td><td>Styles are JS objects: <code>camelCase</code> keys, no units (numbers = density-independent pixels).</td></tr>
+    <tr><td>Scrolling page</td><td><code>&lt;ScrollView&gt;</code> / <code>&lt;FlatList&gt;</code></td><td>Nothing scrolls unless you ask. <code>FlatList</code> virtualises long lists.</td></tr>
+    <tr><td>URL routing</td><td>React Navigation / Expo Router</td><td>Screens on a stack you push and pop, like a deck of cards.</td></tr>
+  </table></div>
+
+  <h3>The same counter, web vs native</h3>
+  <p>Below is one component written twice. Click between the tabs — notice the <em>logic</em> (state, handler, JSX shape) is identical; only the tags and styling dialect change.</p>
+  <div class="tabs" data-tabs>
+    <div class="tab-row" role="tablist">
+      <button role="tab" aria-selected="true">React (web)</button>
+      <button role="tab" aria-selected="false">React Native</button>
+    </div>
+    <div class="tab-panel active" role="tabpanel"><pre class="static">import { useState } from "react";
+
+export default function Counter() {
+  <span class="c">// useState: give React a value to remember + a setter to change it</span>
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div style={{ padding: 24 }}&gt;
+      &lt;p&gt;You tapped {count} times&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Tap me
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre></div>
+    <div class="tab-panel" role="tabpanel"><pre class="static">import { useState } from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);   <span class="c">// identical!</span>
+
+  return (
+    &lt;View style={styles.wrap}&gt;
+      &lt;Text&gt;You tapped {count} times&lt;/Text&gt;
+      &lt;Pressable onPress={() =&gt; setCount(count + 1)}&gt;
+        &lt;Text style={styles.btn}&gt;Tap me&lt;/Text&gt;
+      &lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  wrap: { padding: 24 },                    <span class="c">// numbers, not "24px"</span>
+  btn:  { color: "#D9A441", fontWeight: "600" },
+});</pre></div>
+  </div>
+
+  <h3>The four ideas that carry every React Native app</h3>
+  <div class="cols">
+    <div class="card"><h4>Components</h4><ul>
+      <li>Plain functions returning JSX (HTML-ish syntax inside JS).</li>
+      <li>Compose like Lego: <code class="inline">&lt;ProfileCard&gt;</code> inside <code class="inline">&lt;Screen&gt;</code>.</li>
+      <li>Capitalised names = your components; lowercase = built-ins.</li>
+    </ul></div>
+    <div class="card"><h4>Props</h4><ul>
+      <li>Inputs passed down from parent to child — read-only.</li>
+      <li>Received as one object, destructured: <code class="inline">function Card({ title })</code>.</li>
+      <li>That's cell 04's destructuring, earning its keep.</li>
+    </ul></div>
+    <div class="card"><h4>State &amp; hooks</h4><ul>
+      <li><code class="inline">useState</code> = memory that survives re-renders.</li>
+      <li>Change state only via the setter — never mutate directly.</li>
+      <li>Immutable updates use spread: <code class="inline">setUser({ ...user, name })</code>.</li>
+    </ul></div>
+    <div class="card"><h4>Effects &amp; data</h4><ul>
+      <li><code class="inline">useEffect</code> runs side-effects (fetching, subscriptions) after render.</li>
+      <li>Data loading = cell 07's async/await + a loading state flag.</li>
+      <li>Pattern: <code class="inline">loading → data | error</code>, render each case.</li>
+    </ul></div>
+  </div>
+
+  <h3>Rendering a list — Part I pays off</h3>
+  <p>Remember <code class="inline">map</code> from cell 03? In React it is literally how lists become UI: map data to components. This runnable cell simulates what React does under the hood — mapping an array of objects into rendered "views".</p>
+  <div class="cell">
+    <div class="cell-head"><span class="cell-title">cell 09 · data → UI, the react way (simulated)</span>
+      <div class="cell-btns"><button class="ghost" data-reset>Reset</button><button class="run" data-run>Run ▸</button></div></div>
+    <textarea class="code" rows="13" spellcheck="false">const species = [
+  { name: "Crimson Sunbird", seen: true  },
+  { name: "Malayan Colugo",  seen: false },
+  { name: "Plantain Squirrel", seen: true },
+];
+
+// In React Native this would be:
+//   {species.map(s => <Text key={s.name}>…</Text>)}
+// Here we simulate the render with strings:
+const rendered = species.map(s =>
+  `<Text> ${s.seen ? "✅" : "◻️"} ${s.name} </Text>`
+);
+
+rendered.forEach(line => console.log(line));
+console.log("→ change `seen` above and re-run: new data, new UI. That's React.");</textarea>
+    <div class="console" aria-live="polite"></div>
+  </div>
+
+  <div class="note"><b>Getting started for real:</b> the community-standard path is <b>Expo</b> — <code class="inline">npx create-expo-app my-app</code>, then scan a QR code with the Expo Go app and your code hot-reloads on your actual phone in seconds. No Xcode or Android Studio needed until you ship.</div>
+</section>
+
+<!-- ======================= PART III : PWA ======================= -->
+<section id="pwa">
+  <p class="part-label">Part III · Reaching the Canopy</p>
+  <h2>Building towards a Progressive Web App</h2>
+  <p>A <strong>PWA</strong> is a normal website that has climbed high enough to behave like an app: installable to the home screen, launchable full-screen, working offline, optionally sending push notifications. No app store, no review queue, one codebase — your Part I JavaScript, plus two small files. The climb has five rungs:</p>
+
+  <h3>The ladder</h3>
+  <div class="tbl-wrap"><table class="tbl">
+    <tr><th>Rung</th><th>What you add</th><th>What you gain</th></tr>
+    <tr><td>1 · Solid web page</td><td>HTML + CSS + your JavaScript</td><td>Works everywhere with a URL.</td></tr>
+    <tr><td>2 · Responsive + HTTPS</td><td>Viewport meta, flexible layout, TLS</td><td>Phone-friendly; HTTPS is mandatory for everything below.</td></tr>
+    <tr><td>3 · Web App Manifest</td><td>One JSON file + a link tag</td><td>Name, icons, theme colour — the browser can now offer “Install”.</td></tr>
+    <tr><td>4 · Service Worker</td><td>One JS file registered from your page</td><td>A background proxy that can cache and serve your app offline.</td></tr>
+    <tr><td>5 · App behaviours</td><td>Caching strategy, offline fallback, (push)</td><td>Loads instantly, survives airplane mode, feels native.</td></tr>
+  </table></div>
+
+  <h3>Rung 3 — the manifest</h3>
+  <p>A single JSON file that tells the browser "this site is an app". Link it from your HTML head with <code class="inline">&lt;link rel="manifest" href="/manifest.json"&gt;</code>.</p>
+  <pre class="static"><span class="c">// manifest.json</span>
+{
+  <span class="s">"name"</span>: <span class="s">"Canopy & Coast Field Guide"</span>,
+  <span class="s">"short_name"</span>: <span class="s">"Canopy"</span>,
+  <span class="s">"start_url"</span>: <span class="s">"/"</span>,
+  <span class="s">"display"</span>: <span class="s">"standalone"</span>,        <span class="c">// launches without browser chrome</span>
+  <span class="s">"background_color"</span>: <span class="s">"#0B1712"</span>,
+  <span class="s">"theme_color"</span>: <span class="s">"#0B1712"</span>,
+  <span class="s">"icons"</span>: [
+    { <span class="s">"src"</span>: <span class="s">"/icon-192.png"</span>, <span class="s">"sizes"</span>: <span class="s">"192x192"</span>, <span class="s">"type"</span>: <span class="s">"image/png"</span> },
+    { <span class="s">"src"</span>: <span class="s">"/icon-512.png"</span>, <span class="s">"sizes"</span>: <span class="s">"512x512"</span>, <span class="s">"type"</span>: <span class="s">"image/png"</span> }
+  ]
+}</pre>
+
+  <h3>Rung 4 — the service worker</h3>
+  <p>A service worker is JavaScript that lives <em>between your app and the network</em>, even when the tab is closed. It intercepts every request your app makes, so it can answer from a cache when the network is gone. It's Part I's async and events, in a new habitat:</p>
+  <pre class="static"><span class="c">// in your page: register the worker (async/await from cell 07!)</span>
+<span class="k">if</span> (<span class="s">"serviceWorker"</span> <span class="k">in</span> navigator) {
+  navigator.serviceWorker.register(<span class="s">"/sw.js"</span>);
+}
+
+<span class="c">// sw.js — cache-first strategy</span>
+<span class="k">const</span> CACHE = <span class="s">"canopy-v1"</span>;
+<span class="k">const</span> ASSETS = [<span class="s">"/"</span>, <span class="s">"/index.html"</span>, <span class="s">"/app.js"</span>, <span class="s">"/styles.css"</span>];
+
+self.addEventListener(<span class="s">"install"</span>, e =&gt; {
+  <span class="c">// pre-cache the app shell at install time</span>
+  e.waitUntil(caches.open(CACHE).then(c =&gt; c.addAll(ASSETS)));
+});
+
+self.addEventListener(<span class="s">"fetch"</span>, e =&gt; {
+  <span class="c">// cache first, network as fallback → instant loads, offline support</span>
+  e.respondWith(
+    caches.match(e.request).then(hit =&gt; hit || fetch(e.request))
+  );
+});</pre>
+  <p class="dim">Strategy vocabulary worth knowing: <strong>cache-first</strong> (speed, for the app shell), <strong>network-first</strong> (freshness, for API data), <strong>stale-while-revalidate</strong> (serve cache instantly, refresh it in the background — the crowd favourite).</p>
+
+  <h3>Your PWA readiness checklist</h3>
+  <p>Tick off what your current project already has — the meter tells you how far up the ladder you are. (Audit real projects with Lighthouse in Chrome DevTools.)</p>
+  <div class="check" id="pwa-check">
+    <label><input type="checkbox"><span><b>Served over HTTPS</b> — service workers refuse to run without it (localhost is exempt for dev).</span></label>
+    <label><input type="checkbox"><span><b>Responsive layout</b> — viewport meta tag, works from 360px phones to desktop.</span></label>
+    <label><input type="checkbox"><span><b>Web app manifest</b> — name, icons (192 &amp; 512px), start_url, display: standalone.</span></label>
+    <label><input type="checkbox"><span><b>Service worker registered</b> — controls the page after first load.</span></label>
+    <label><input type="checkbox"><span><b>App shell pre-cached</b> — core HTML/CSS/JS served from cache.</span></label>
+    <label><input type="checkbox"><span><b>Offline fallback</b> — something sensible renders in airplane mode.</span></label>
+    <label><input type="checkbox"><span><b>Installable</b> — browser shows the install prompt; app launches standalone.</span></label>
+    <div class="meter"><div id="pwa-bar"></div></div>
+    <p class="meter-label" id="pwa-label">0 / 7 — forest floor</p>
+  </div>
+
+  <div class="note"><b>PWA or React Native?</b> Same JavaScript, different trade. PWA: one URL, zero install friction, instant updates — but limited deep-device access and a second-class citizen on iOS (installed via Share → Add to Home Screen; some capabilities restricted). React Native: full native APIs, app-store presence and trust — but store review cycles and per-platform builds. Many teams ship both from shared logic.</div>
+</section>
+
+<!-- ======================= PART IV : FLUTTER & DART ======================= -->
+<section id="flutter">
+  <p class="part-label">Part IV · The Other Forest</p>
+  <h2>Flutter &amp; Dart: how the neighbouring valley grows</h2>
+  <p><strong>Flutter</strong> is Google's cross-platform toolkit; you write it in <strong>Dart</strong>. The philosophical split from React Native: instead of translating your UI into each platform's native widgets, Flutter <em>paints every pixel itself</em> with its own rendering engine — like a game engine for apps. Result: pixel-identical UI on iOS, Android, web, and desktop, at the cost of leaving the platform's native look behind.</p>
+
+  <h3>Dart for JavaScript eyes</h3>
+  <p>Dart will look familiar — C-family syntax, async/await, arrow functions — but it's <strong>statically typed</strong> (the compiler checks types before you run), <strong>class-first</strong> (cell 08 everywhere), and <strong>null-safe</strong> (a variable can't be null unless its type says <code class="inline">String?</code>).</p>
+  <div class="tabs" data-tabs>
+    <div class="tab-row" role="tablist">
+      <button role="tab" aria-selected="true">JavaScript</button>
+      <button role="tab" aria-selected="false">Dart</button>
+    </div>
+    <div class="tab-panel active" role="tabpanel"><pre class="static"><span class="c">// dynamic types, runtime surprises possible</span>
+const name = "Ted";
+let hikes = [2.2, 5.4, 8.7];
+
+const long = hikes.filter(km =&gt; km &gt; 3);
+const total = long.reduce((s, k) =&gt; s + k, 0);
+
+const fetchPark = async () =&gt; {
+  const res = await fetch("/api/park");
+  return res.json();
+};</pre></div>
+    <div class="tab-panel" role="tabpanel"><pre class="static"><span class="c">// static types, checked at compile time</span>
+<span class="k">final</span> String name = "Ted";
+<span class="k">final</span> List&lt;double&gt; hikes = [2.2, 5.4, 8.7];
+
+<span class="k">final</span> long = hikes.where((km) =&gt; km &gt; 3);      <span class="c">// filter → where</span>
+<span class="k">final</span> total = long.fold(0.0, (s, k) =&gt; s + k); <span class="c">// reduce → fold</span>
+
+Future&lt;Park&gt; fetchPark() <span class="k">async</span> {              <span class="c">// Promise → Future</span>
+  <span class="k">final</span> res = <span class="k">await</span> http.get(Uri.parse("/api/park"));
+  <span class="k">return</span> Park.fromJson(jsonDecode(res.body));
+}</pre></div>
+  </div>
+
+  <h3>The counter, one last time — React Native vs Flutter</h3>
+  <p>Same app, third dialect. Flutter's "everything is a widget" means even padding and centring are classes you nest — verbose, but relentlessly consistent.</p>
+  <div class="tabs" data-tabs>
+    <div class="tab-row" role="tablist">
+      <button role="tab" aria-selected="true">React Native</button>
+      <button role="tab" aria-selected="false">Flutter</button>
+    </div>
+    <div class="tab-panel active" role="tabpanel"><pre class="static">function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;View style={styles.wrap}&gt;
+      &lt;Text&gt;You tapped {count} times&lt;/Text&gt;
+      &lt;Pressable onPress={() =&gt; setCount(count + 1)}&gt;
+        &lt;Text&gt;Tap me&lt;/Text&gt;
+      &lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}</pre></div>
+    <div class="tab-panel" role="tabpanel"><pre class="static"><span class="k">class</span> Counter <span class="k">extends</span> StatefulWidget {
+  <span class="k">@override</span>
+  State&lt;Counter&gt; createState() =&gt; _CounterState();
+}
+
+<span class="k">class</span> _CounterState <span class="k">extends</span> State&lt;Counter&gt; {
+  <span class="k">int</span> count = 0;
+
+  <span class="k">@override</span>
+  Widget build(BuildContext context) {
+    <span class="k">return</span> Column(children: [
+      Text(<span class="s">"You tapped $count times"</span>),
+      ElevatedButton(
+        onPressed: () =&gt; setState(() =&gt; count++),
+        child: <span class="k">const</span> Text(<span class="s">"Tap me"</span>),
+      ),
+    ]);
+  }
+}</pre></div>
+  </div>
+
+  <h3>The honest comparison table</h3>
+  <div class="tbl-wrap"><table class="tbl">
+    <tr><th>Dimension</th><th>JavaScript · React Native</th><th>Dart · Flutter</th></tr>
+    <tr><td>Language</td><td>Dynamic, huge existing talent pool, same language as your web app.</td><td>Static types catch bugs early; smaller pool, but easy to learn from JS.</td></tr>
+    <tr><td>Rendering</td><td>Translates to real native widgets — apps inherit platform look &amp; feel.</td><td>Paints its own pixels — identical everywhere, but not "native-feeling" by default.</td></tr>
+    <tr><td>Performance</td><td>Excellent for most apps; JS↔native bridge work continues to shrink overhead.</td><td>Compiles ahead-of-time to machine code — very strong, especially for heavy animation.</td></tr>
+    <tr><td>Code sharing</td><td>Massive if you already have React web — components, logic, and developers transfer.</td><td>iOS + Android + web + desktop from one Dart codebase.</td></tr>
+    <tr><td>Ecosystem</td><td>npm — the largest package registry anywhere; quality varies.</td><td>pub.dev — smaller, but curated and consistently high quality.</td></tr>
+    <tr><td>Dev experience</td><td>Fast Refresh; Expo makes day one delightful.</td><td>Hot reload is superb; tooling is famously cohesive.</td></tr>
+    <tr><td>Hiring (esp. fintech/APAC)</td><td>Every web dev is 70% of the way there.</td><td>Dedicated hires or upskilling time required.</td></tr>
+  </table></div>
+
+  <h3>A decision guide, plainly</h3>
+  <div class="cols">
+    <div class="card"><h4>Lean JavaScript / RN / PWA when…</h4><ul>
+      <li>Your team already lives in JavaScript or React.</li>
+      <li>You want web + mobile sharing one brain (and much code).</li>
+      <li>Distribution friction matters — a PWA needs only a URL.</li>
+      <li>Platform-native look and feel is a feature, not a bug.</li>
+    </ul></div>
+    <div class="card"><h4>Lean Flutter / Dart when…</h4><ul>
+      <li>Pixel-perfect, custom-branded UI must match on every device.</li>
+      <li>Animation-heavy or graphically rich interfaces are core.</li>
+      <li>You're starting fresh with no web-React investment.</li>
+      <li>Compile-time type safety across a large team appeals.</li>
+    </ul></div>
+  </div>
+  <div class="note"><b>The unsexy truth:</b> both stacks ship world-class apps. The dominant factors are your team's existing skills and your distribution strategy — not benchmark charts. For a JavaScript-fluent team, RN + PWA compounds what you already know; Flutter is a deliberate second forest to settle.</div>
+</section>
+
+<!-- ======================= QUIZ ======================= -->
+<section id="quiz">
+  <p class="part-label">Field Check · Before Q&amp;A</p>
+  <h2>Five quick questions to lock it in</h2>
+  <div class="quiz" id="quizbox">
+    <div class="q"><p class="qt">1 · Which array method turns data into UI lists in React?</p>
+      <button data-ok="0">filter</button>
+      <button data-ok="1">map</button>
+      <button data-ok="0">reduce</button>
+      <p class="why">map transforms each data item into a component — one array in, one array of UI out.</p></div>
+    <div class="q"><p class="qt">2 · In React Native, all visible text must be wrapped in…</p>
+      <button data-ok="0">&lt;View&gt;</button>
+      <button data-ok="0">&lt;div&gt;</button>
+      <button data-ok="1">&lt;Text&gt;</button>
+      <p class="why">Unlike HTML, loose strings aren't allowed — every character on screen lives inside a &lt;Text&gt; component.</p></div>
+    <div class="q"><p class="qt">3 · A closure is a function that…</p>
+      <button data-ok="1">remembers variables from where it was created</button>
+      <button data-ok="0">runs on a separate thread</button>
+      <button data-ok="0">can only be called once</button>
+      <p class="why">The inner function keeps live access to its birth scope — that's how makeCounter's count stayed private in cell 06.</p></div>
+    <div class="q"><p class="qt">4 · The two files that upgrade a website into an installable PWA are…</p>
+      <button data-ok="0">robots.txt + sitemap.xml</button>
+      <button data-ok="1">manifest.json + a service worker</button>
+      <button data-ok="0">package.json + index.js</button>
+      <p class="why">The manifest describes the app (name, icons, display mode); the service worker enables offline caching. Plus HTTPS underneath.</p></div>
+    <div class="q"><p class="qt">5 · Flutter differs from React Native mainly because it…</p>
+      <button data-ok="0">runs JavaScript on the phone</button>
+      <button data-ok="0">only works on Android</button>
+      <button data-ok="1">paints its own pixels instead of using native widgets</button>
+      <p class="why">Flutter ships its own rendering engine for identical UI everywhere; React Native drives each platform's real native widgets.</p></div>
+    <p class="quiz-score" id="quizscore"></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p class="leafline">“The best time to plant a tree was twenty years ago. The second best time is <code style="font-family:var(--mono);font-size:.9em">npm init</code>.”</p>
+  <p>Brown bag session · From seed to canopy · Edit any cell above and press Run — the page is the playground.</p>
+</footer>
+
+<script>
+/* ---------- interactive code cells ---------- */
+document.querySelectorAll('.cell').forEach(cell => {
+  const ta = cell.querySelector('textarea.code');
+  const out = cell.querySelector('.console');
+  const original = ta.value;
+  const fmt = v => {
+    if (typeof v === 'string') return v;
+    if (v === undefined) return 'undefined';
+    try { return JSON.stringify(v); } catch { return String(v); }
+  };
+  const write = (txt, cls) => {
+    const line = document.createElement('div');
+    if (cls) line.className = cls;
+    line.textContent = txt;
+    out.appendChild(line);
+  };
+  cell.querySelector('[data-reset]').addEventListener('click', () => {
+    ta.value = original; out.textContent = '';
+  });
+  cell.querySelector('[data-run]').addEventListener('click', async () => {
+    out.textContent = '';
+    const fakeConsole = {
+      log:   (...a) => write(a.map(fmt).join(' ')),
+      warn:  (...a) => write('⚠ ' + a.map(fmt).join(' '), 'err'),
+      error: (...a) => write('✖ ' + a.map(fmt).join(' '), 'err'),
+    };
+    try {
+      const fn = new Function('console', '"use strict"; return (async () => {\n' + ta.value + '\n})();');
+      await fn(fakeConsole);
+      write('— done —', 'sys');
+    } catch (e) {
+      write('✖ ' + e.constructor.name + ': ' + e.message, 'err');
+    }
+  });
+});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('[data-tabs]').forEach(tabs => {
+  const btns = tabs.querySelectorAll('[role="tab"]');
+  const panels = tabs.querySelectorAll('.tab-panel');
+  btns.forEach((btn, i) => btn.addEventListener('click', () => {
+    btns.forEach(b => b.setAttribute('aria-selected', 'false'));
+    panels.forEach(p => p.classList.remove('active'));
+    btn.setAttribute('aria-selected', 'true');
+    panels[i].classList.add('active');
+  }));
+});
+
+/* ---------- PWA checklist meter ---------- */
+(() => {
+  const box = document.getElementById('pwa-check');
+  if (!box) return;
+  const boxes = box.querySelectorAll('input[type="checkbox"]');
+  const bar = document.getElementById('pwa-bar');
+  const label = document.getElementById('pwa-label');
+  const stages = ['forest floor','forest floor','understory','understory','mid-canopy','mid-canopy','upper canopy','emergent — installable! 🌳'];
+  const update = () => {
+    const n = [...boxes].filter(b => b.checked).length;
+    bar.style.width = (n / boxes.length * 100) + '%';
+    label.textContent = n + ' / ' + boxes.length + ' — ' + stages[n];
+  };
+  boxes.forEach(b => b.addEventListener('change', update));
+})();
+
+/* ---------- quiz ---------- */
+(() => {
+  const qs = document.querySelectorAll('#quizbox .q');
+  const score = document.getElementById('quizscore');
+  let answered = 0, correct = 0;
+  qs.forEach(q => {
+    const btns = q.querySelectorAll('button');
+    btns.forEach(btn => btn.addEventListener('click', () => {
+      if (q.dataset.done) return;
+      q.dataset.done = '1';
+      answered++;
+      const ok = btn.dataset.ok === '1';
+      if (ok) correct++;
+      btn.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) btns.forEach(b => { if (b.dataset.ok === '1') b.classList.add('correct'); });
+      btns.forEach(b => b.disabled = true);
+      q.querySelector('.why').classList.add('show');
+      if (answered === qs.length) {
+        score.textContent = 'Score: ' + correct + ' / ' + qs.length +
+          (correct === qs.length ? ' — a perfect canopy. 🌿' :
+           correct >= 3 ? ' — solid roots; re-run the cells you missed.' :
+           ' — good start; scroll back up and play with the code.');
+      }
+    }));
+  });
+})();
+</script>
+</body>
+</html>
