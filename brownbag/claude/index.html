@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working with Claude — A Brown Bag Session</title>
+<meta name="description" content="An interactive brown bag guide to Claude Code, Claude Cowork, and getting the most out of Claude.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canopy:#0B1911;
+  --moss:#122419;
+  --fern:#1D3A28;
+  --leaf:#28503A;
+  --sage:#A9C9B2;
+  --sage-dim:#7B9C86;
+  --mint:#6FD39B;
+  --gold:#D9A441;
+  --gold-soft:#E8C57C;
+  --cream:#F2EDE0;
+  --ink:#081209;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--canopy);
+  color:var(--sage);
+  font-family:'Newsreader',Georgia,serif;
+  font-size:18px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* ---------- progress + nav ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--mint),var(--gold));width:0%;z-index:60;transition:width .1s linear}
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,25,17,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--fern);
+}
+.nav-inner{max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:12px 24px;overflow-x:auto}
+.nav-brand{font-family:'Fraunces',serif;font-weight:700;color:var(--cream);font-size:15px;white-space:nowrap;margin-right:10px}
+.nav-brand span{color:var(--gold)}
+nav a{
+  font-family:'Space Grotesk',sans-serif;font-size:12.5px;letter-spacing:.04em;
+  color:var(--sage-dim);text-decoration:none;padding:6px 11px;border-radius:99px;white-space:nowrap;
+  transition:color .2s,background .2s;
+}
+nav a:hover{color:var(--cream)}
+nav a.active{background:var(--fern);color:var(--gold-soft)}
+nav a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- layout primitives ---------- */
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+section{padding:84px 0 30px;scroll-margin-top:70px}
+.eyebrow{
+  font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.eyebrow::after{content:"";height:1px;flex:0 0 48px;background:var(--leaf)}
+.eyebrow .clock{color:var(--sage-dim);letter-spacing:.08em}
+h1{font-family:'Fraunces',serif;font-weight:600;color:var(--cream);font-size:clamp(38px,6.4vw,68px);line-height:1.05;letter-spacing:-.01em}
+h2{font-family:'Fraunces',serif;font-weight:600;color:var(--cream);font-size:clamp(28px,4vw,40px);line-height:1.12;margin-bottom:18px}
+h3{font-family:'Fraunces',serif;font-weight:600;color:var(--cream);font-size:21px;margin-bottom:8px}
+.lede{font-size:clamp(19px,2.2vw,22px);color:var(--sage);max-width:640px}
+p+p{margin-top:14px}
+em{color:var(--gold-soft);font-style:italic}
+strong{color:var(--cream);font-weight:500}
+code{font-family:var(--mono);font-size:.82em;background:var(--moss);border:1px solid var(--fern);border-radius:5px;padding:2px 7px;color:var(--mint)}
+
+/* ---------- hero ---------- */
+header.hero{padding:96px 0 40px;position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:2}
+.hero-meta{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage-dim);margin-top:26px;display:flex;flex-wrap:wrap;gap:8px 28px}
+.hero-meta b{color:var(--gold);font-weight:500}
+.fronds{position:absolute;inset:0;z-index:1;opacity:.5;pointer-events:none}
+
+/* ---------- cards / grids ---------- */
+.grid{display:grid;gap:16px;margin-top:30px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.card{
+  background:var(--moss);border:1px solid var(--fern);border-radius:14px;padding:24px;
+  transition:border-color .25s, transform .25s;
+}
+.card:hover{border-color:var(--leaf)}
+.card .k{font-family:'Space Grotesk',sans-serif;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.card p{font-size:16.5px;color:var(--sage)}
+.card ul{margin:8px 0 0 18px;font-size:16px}
+.card li{margin-top:6px}
+.card li::marker{color:var(--gold)}
+
+/* ---------- terminal (signature) ---------- */
+.term{
+  margin-top:34px;background:#07110B;border:1px solid var(--fern);border-radius:14px;overflow:hidden;
+  box-shadow:0 24px 60px -30px rgba(0,0,0,.8);
+}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 16px;background:var(--moss);border-bottom:1px solid var(--fern)}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--fern)}
+.dot.g{background:var(--mint)}
+.dot.y{background:var(--gold)}
+.term-bar .title{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--sage-dim);margin-left:8px;letter-spacing:.06em}
+.term-bar button{
+  margin-left:auto;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.06em;
+  background:var(--fern);color:var(--gold-soft);border:1px solid var(--leaf);border-radius:99px;padding:5px 14px;cursor:pointer;transition:background .2s;
+}
+.term-bar button:hover{background:var(--leaf)}
+.term-body{font-family:var(--mono);font-size:13.5px;line-height:1.7;padding:20px 22px;min-height:300px;white-space:pre-wrap;color:#C7DCCB}
+.t-prompt{color:var(--gold)}
+.t-user{color:var(--cream)}
+.t-claude{color:var(--mint)}
+.t-dim{color:#5E7A67}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--mint);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:8px;margin:26px 0 0;flex-wrap:wrap}
+.tab-btn{
+  font-family:'Space Grotesk',sans-serif;font-size:13.5px;letter-spacing:.05em;
+  background:transparent;color:var(--sage-dim);border:1px solid var(--fern);border-radius:99px;
+  padding:9px 20px;cursor:pointer;transition:all .2s;
+}
+.tab-btn:hover{color:var(--cream);border-color:var(--leaf)}
+.tab-btn.on{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:500}
+.tab-pane{display:none;margin-top:22px}
+.tab-pane.on{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- accordion ---------- */
+.acc{margin-top:26px;border-top:1px solid var(--fern)}
+.acc-item{border-bottom:1px solid var(--fern)}
+.acc-head{
+  width:100%;text-align:left;background:none;border:none;cursor:pointer;
+  display:flex;align-items:baseline;gap:16px;padding:19px 4px;
+  font-family:'Fraunces',serif;font-size:19px;color:var(--cream);
+}
+.acc-head:hover .acc-t{color:var(--gold-soft)}
+.acc-head .n{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--gold);letter-spacing:.1em;flex:0 0 auto}
+.acc-head .chev{margin-left:auto;color:var(--sage-dim);transition:transform .3s;font-family:'Space Grotesk',sans-serif}
+.acc-item.open .chev{transform:rotate(45deg);color:var(--gold)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.acc-body-in{padding:0 4px 22px 46px;font-size:16.5px;color:var(--sage)}
+.acc-body-in ul{margin:6px 0 0 18px}
+.acc-body-in li{margin-top:6px}
+.acc-body-in li::marker{color:var(--gold)}
+
+/* ---------- picker ---------- */
+.picker{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.picker-tasks{display:flex;flex-direction:column;gap:9px}
+.task-btn{
+  text-align:left;font-family:'Newsreader',serif;font-size:16.5px;color:var(--sage);
+  background:var(--moss);border:1px solid var(--fern);border-radius:11px;padding:13px 17px;cursor:pointer;transition:all .2s;
+}
+.task-btn:hover{border-color:var(--leaf);color:var(--cream)}
+.task-btn.on{border-color:var(--gold);color:var(--cream);background:var(--fern)}
+.picker-result{
+  background:var(--moss);border:1px solid var(--fern);border-radius:14px;padding:26px;
+  display:flex;flex-direction:column;justify-content:center;min-height:220px;
+}
+.picker-result .verdict{font-family:'Fraunces',serif;font-size:26px;color:var(--gold);margin-bottom:8px}
+.picker-result .why{font-size:16.5px}
+.picker-result .hint{font-family:'Space Grotesk',sans-serif;font-size:12.5px;letter-spacing:.06em;color:var(--sage-dim);margin-top:16px;padding-top:14px;border-top:1px dashed var(--fern)}
+.picker-result .hint code{font-size:12px}
+
+/* ---------- prompt cards ---------- */
+.prompt-card{position:relative;background:var(--moss);border:1px solid var(--fern);border-radius:12px;padding:18px 18px 16px;margin-top:14px}
+.prompt-card .tag{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.prompt-card pre{font-family:var(--mono);font-size:13px;line-height:1.6;color:#C7DCCB;white-space:pre-wrap}
+.copy-btn{
+  position:absolute;top:14px;right:14px;font-family:'Space Grotesk',sans-serif;font-size:11.5px;letter-spacing:.05em;
+  background:var(--fern);color:var(--sage);border:1px solid var(--leaf);border-radius:99px;padding:4px 12px;cursor:pointer;transition:all .2s;
+}
+.copy-btn:hover{color:var(--cream);background:var(--leaf)}
+.copy-btn.done{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+
+/* ---------- table-ish compare ---------- */
+.compare{margin-top:28px;border:1px solid var(--fern);border-radius:14px;overflow:hidden}
+.compare-row{display:grid;grid-template-columns:180px 1fr 1fr 1fr;border-bottom:1px solid var(--fern)}
+.compare-row:last-child{border-bottom:none}
+.compare-row>div{padding:14px 16px;font-size:15.5px}
+.compare-row.head>div{font-family:'Space Grotesk',sans-serif;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--moss);color:var(--gold)}
+.compare-row>div:first-child{font-family:'Space Grotesk',sans-serif;font-size:12.5px;letter-spacing:.08em;color:var(--sage-dim);background:var(--moss)}
+
+/* ---------- footer ---------- */
+footer{margin-top:80px;border-top:1px solid var(--fern);padding:36px 0 48px;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--sage-dim)}
+footer a{color:var(--gold-soft);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.links{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 22px}
+
+@media (max-width:820px){
+  .g3,.g2,.picker{grid-template-columns:1fr}
+  .compare-row{grid-template-columns:110px 1fr}
+  .compare-row>div:nth-child(3),.compare-row>div:nth-child(4){border-top:1px dashed var(--fern)}
+  section{padding:64px 0 20px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav aria-label="Session agenda">
+  <div class="nav-inner">
+    <div class="nav-brand">Working with <span>Claude</span></div>
+    <a href="#lay" data-spy>The lay of the land</a>
+    <a href="#code" data-spy>Claude Code</a>
+    <a href="#cowork" data-spy>Claude Cowork</a>
+    <a href="#which" data-spy>Which tool?</a>
+    <a href="#maximise" data-spy>Maximising Claude</a>
+    <a href="#prompts" data-spy>Prompt shelf</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="fronds" viewBox="0 0 1200 500" preserveAspectRatio="xMaxYMin slice" aria-hidden="true">
+    <g stroke="#1D3A28" fill="none" stroke-width="1.4">
+      <path d="M1150 -20 C 1020 120, 980 260, 1010 480"/>
+      <path d="M1150 -20 C 1060 100, 1040 220, 1080 420"/>
+      <path d="M1230 40 C 1100 140, 1070 300, 1120 500"/>
+    </g>
+    <g fill="#122419">
+      <ellipse cx="1015" cy="150" rx="52" ry="15" transform="rotate(-38 1015 150)"/>
+      <ellipse cx="1060" cy="235" rx="58" ry="16" transform="rotate(-30 1060 235)"/>
+      <ellipse cx="1035" cy="330" rx="64" ry="17" transform="rotate(-22 1035 330)"/>
+      <ellipse cx="1105" cy="120" rx="46" ry="13" transform="rotate(-45 1105 120)"/>
+      <ellipse cx="1140" cy="300" rx="60" ry="16" transform="rotate(-26 1140 300)"/>
+    </g>
+    <circle cx="920" cy="80" r="2.5" fill="#D9A441" opacity=".7"/>
+    <circle cx="870" cy="180" r="1.8" fill="#D9A441" opacity=".45"/>
+    <circle cx="960" cy="260" r="2" fill="#6FD39B" opacity=".4"/>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">Brown bag session <span class="clock">· bring your lunch</span></div>
+    <h1>Working with Claude:<br>Code, Cowork &amp; beyond</h1>
+    <p class="lede" style="margin-top:22px">A one-lunch tour of the two agentic surfaces most people underuse — and the habits that separate "asked a chatbot" from "delegated real work."</p>
+    <div class="hero-meta">
+      <div><b>45 min</b> incl. Q&amp;A</div>
+      <div><b>Audience</b> mixed technical</div>
+      <div><b>Format</b> interactive — click things</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================= 1. LAY OF THE LAND ======================= -->
+<section id="lay">
+  <div class="wrap">
+    <div class="eyebrow">Segment 01 <span class="clock">· 12:00</span></div>
+    <h2>One Claude, several rooms</h2>
+    <p class="lede">Same model underneath — different surfaces for different kinds of work. The skill is knowing which room to walk into.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="k">Chat</div>
+        <h3>The conversation</h3>
+        <p>Thinking, drafting, analysing, learning. You steer turn by turn. Best when the value is in the <em>exchange</em> — exploring options, refining an argument, reviewing a document.</p>
+      </div>
+      <div class="card">
+        <div class="k">Claude Code</div>
+        <h3>The workshop</h3>
+        <p>An agentic coding tool in your terminal, IDE, desktop app, or browser. It reads your codebase, edits files, runs commands, and commits — you describe outcomes, it does the work.</p>
+      </div>
+      <div class="card">
+        <div class="k">Claude Cowork</div>
+        <h3>The colleague</h3>
+        <p>Claude Code's agent architecture, pointed at knowledge work instead of code. Give it folders, connectors, and a task; it plans, executes end-to-end, and hands back finished files.</p>
+      </div>
+    </div>
+    <div class="compare" role="table" aria-label="Comparing Chat, Code and Cowork">
+      <div class="compare-row head"><div></div><div>Chat</div><div>Claude Code</div><div>Cowork</div></div>
+      <div class="compare-row"><div>You provide</div><div>Questions, drafts</div><div>A repo + an outcome</div><div>Folders, tools + a task</div></div>
+      <div class="compare-row"><div>Claude returns</div><div>Answers, artifacts</div><div>Working code, commits</div><div>Docs, decks, sheets, done-ness</div></div>
+      <div class="compare-row"><div>Interaction</div><div>Turn by turn</div><div>Delegate, review diffs</div><div>Delegate, steer checkpoints</div></div>
+      <div class="compare-row"><div>Best when</div><div>Value is in dialogue</div><div>Output is software</div><div>Output is a deliverable</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2. CLAUDE CODE ======================= -->
+<section id="code">
+  <div class="wrap">
+    <div class="eyebrow">Segment 02 <span class="clock">· 12:08</span></div>
+    <h2>Claude Code: an agent in your terminal</h2>
+    <p class="lede">Not a chat window bolted onto an editor. It takes action — edits files, runs tests, resolves conflicts, writes release notes — from wherever you already work.</p>
+
+    <div class="term" aria-label="Simulated Claude Code session">
+      <div class="term-bar">
+        <span class="dot g"></span><span class="dot y"></span><span class="dot"></span>
+        <span class="title">~/house-of-wealth — claude</span>
+        <button id="term-play" aria-label="Play the demo session">▸ Run demo</button>
+      </div>
+      <div class="term-body" id="term-body"><span class="t-dim">A 60-second feel for the loop: describe → plan → act → verify.
+Press “Run demo”.</span></div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="k">Getting started</div>
+        <h3>Install in a minute</h3>
+        <ul>
+          <li>Native installer or <code>npm install -g @anthropic-ai/claude-code</code> (Node.js 18+)</li>
+          <li>Sign in with your Claude account, <code>cd</code> into a project, run <code>claude</code></li>
+          <li>Also available as VS Code / JetBrains extensions, in the desktop app, and on the web</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="k">The core loop</div>
+        <h3>Describe outcomes, not steps</h3>
+        <ul>
+          <li><em>Build:</em> "Add an endpoint returning user risk profiles, with tests"</li>
+          <li><em>Debug:</em> paste the stack trace, ask it to find and fix the cause</li>
+          <li><em>Navigate:</em> "Walk me through how auth works in this repo"</li>
+          <li><em>Automate:</em> lint fixes, merge conflicts, release notes, CI chores</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="acc" id="code-acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">CC·01</span><span class="acc-t">CLAUDE.md — teach it your house rules</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">
+          A <code>CLAUDE.md</code> file in your repo acts as persistent memory: build commands, code style, branch conventions, gotchas. Claude reads it every session, so you stop re-explaining your project. Keep it short and ruthlessly curated — it's loaded into context every time.
+          <ul>
+            <li>Project-level: <code>./CLAUDE.md</code> — team conventions, checked into git</li>
+            <li>Personal: <code>~/.claude/CLAUDE.md</code> — your own preferences, everywhere</li>
+            <li>Ask Claude to maintain it: <em>"Add what we just learned about the build to CLAUDE.md"</em></li>
+          </ul>
+        </div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">CC·02</span><span class="acc-t">Plan first on anything non-trivial</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">
+          For multi-file changes, ask for a plan before any edits (plan mode). Reviewing a five-line plan is cheaper than reviewing a five-hundred-line diff — and steering happens where it's cheapest. Approve, adjust, then let it run.
+        </div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">CC·03</span><span class="acc-t">MCP — plug in your real context</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">
+          The Model Context Protocol connects Claude Code to external systems: design docs in Google Drive, tickets in Jira, messages in Slack, your own internal tooling. The agent stops guessing at context it can simply go and read — or update.
+        </div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">CC·04</span><span class="acc-t">It's Unix-philosophy scriptable</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">
+          Claude Code composes with pipes and runs headless in scripts and CI. One documented example: <code>tail -f app.log | claude -p "Slack me if anomalies appear in this stream"</code>. Anywhere you'd write a fiddly script, consider writing a sentence instead.
+        </div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">CC·05</span><span class="acc-t">Not just for "real" engineers</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">
+          If you build anything — analysis notebooks, internal dashboards, a personal site — Claude Code is the fastest way to iterate. Tech-savvy non-coders were using it for file wrangling and research long before Cowork existed; that usage is literally why Cowork was built.
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 3. COWORK ======================= -->
+<section id="cowork">
+  <div class="wrap">
+    <div class="eyebrow">Segment 03 <span class="clock">· 12:20</span></div>
+    <h2>Claude Cowork: hand off the work itself</h2>
+    <p class="lede">Cowork sits next to Chat. You point it at folders and tools, describe the deliverable, and it runs the task end-to-end — no copying out of a chat window.</p>
+
+    <div class="tabs" role="tablist" aria-label="Cowork topics">
+      <button class="tab-btn on" data-tab="cw1" role="tab" aria-selected="true">How a session runs</button>
+      <button class="tab-btn" data-tab="cw2" role="tab" aria-selected="false">Connectors</button>
+      <button class="tab-btn" data-tab="cw3" role="tab" aria-selected="false">Skills &amp; plugins</button>
+      <button class="tab-btn" data-tab="cw4" role="tab" aria-selected="false">Good first tasks</button>
+    </div>
+
+    <div class="tab-pane on" id="cw1">
+      <div class="grid g3">
+        <div class="card"><div class="k">1 · Brief</div><p>Tell Claude what you need, not how. Give it the folder with the raw material and name the output format: deck, doc, spreadsheet, tidy folder.</p></div>
+        <div class="card"><div class="k">2 · Plan &amp; run</div><p>Claude analyses the request, shows a plan, then executes — opening files, using tools, browsing when needed. Every step is visible; redirect any time.</p></div>
+        <div class="card"><div class="k">3 · Review</div><p>You get finished files for review, not a wall of chat text. Start at your desk, check in from your phone; the session keeps going with your laptop closed.</p></div>
+      </div>
+      <p style="margin-top:20px;font-size:16px" class="card">⚠ <strong>Worth knowing:</strong> Cowork tasks consume noticeably more usage than chat — batch related work into one session, keep quick questions in Chat, and watch Settings → Usage. Claude's shell work runs in an isolated environment on Anthropic's servers, reaching your local files only through the desktop app with the access you grant.</p>
+    </div>
+
+    <div class="tab-pane" id="cw2">
+      <p>Connectors plug Cowork into where your work already lives — Slack, Microsoft 365, Jira, Salesforce, Google Drive, internal tools. With one enabled, Claude can <strong>read and act</strong>: update a ticket, draft a reply, post to a channel, save a file. Authorise once from the Customize panel; use it in any session. On enterprise plans, admins control which connectors exist and whether each is read-only or can write.</p>
+      <p><em>The unlock:</em> a connector plus your filesystem means Claude can pull data from a system <strong>and</strong> save it locally, or use local files to drive external actions — the two halves of most real workflows.</p>
+    </div>
+
+    <div class="tab-pane" id="cw3">
+      <p><strong>Skills</strong> are packaged procedures — a folder of instructions and templates Claude loads when relevant. Invoke one by name (<code>/skill-name</code>) or just describe the task. The compounding trick: finish a workflow once, then say <em>"Package what we just did into a skill"</em> — the built-in skill-creator captures the steps so next month's version is one prompt.</p>
+      <p style="margin-top:14px"><strong>Plugins</strong> bundle connectors + skills so a whole team starts from the same setup. Anthropic ships role-based ones — e.g. Product (Jira, Confluence, Slack with skills for feedback clustering, PRDs, sprint updates) and Sales (Salesforce, Outlook with meeting prep and pipeline reviews).</p>
+    </div>
+
+    <div class="tab-pane" id="cw4">
+      <div class="grid g2">
+        <div class="card"><div class="k">Recurring reporting</div><p>"Every weekday at 5pm, read the six squad standup notes in this folder and produce the consolidated status report in our template, flagging blockers." Schedule it daily, weekly, or monthly.</p></div>
+        <div class="card"><div class="k">Folder archaeology</div><p>"Sort this downloads folder", "pull the expense lines out of these receipt screenshots into a spreadsheet", "rename these 200 files to our convention."</p></div>
+        <div class="card"><div class="k">Deck &amp; doc assembly</div><p>"Turn these meeting notes, this data extract and last quarter's deck into a first-draft steering committee update."</p></div>
+        <div class="card"><div class="k">Cross-tool chores</div><p>"Read this week's Jira movement for the platform project and draft the stakeholder email; save a copy to the project folder."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 4. WHICH TOOL ======================= -->
+<section id="which">
+  <div class="wrap">
+    <div class="eyebrow">Segment 04 <span class="clock">· 12:30 · audience participation</span></div>
+    <h2>Which Claude for this?</h2>
+    <p class="lede">Click a task. Argue with the verdict — that's the point of a brown bag.</p>
+    <div class="picker">
+      <div class="picker-tasks" id="task-list" role="list"></div>
+      <div class="picker-result" id="task-result" aria-live="polite">
+        <div class="verdict">Pick a task ↖</div>
+        <div class="why">The honest answer to "which tool?" is almost always about <em>where the output lives</em> and <em>how much back-and-forth you want</em>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 5. MAXIMISE ======================= -->
+<section id="maximise">
+  <div class="wrap">
+    <div class="eyebrow">Segment 05 <span class="clock">· 12:38</span></div>
+    <h2>Maximising Claude — the habits</h2>
+    <p class="lede">Beyond picking the right surface, a handful of habits compound. These are the ones that change how much you get back.</p>
+    <div class="acc" id="max-acc">
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·01</span><span class="acc-t">Projects: stop re-explaining context</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">Create a Project per workstream and load it with the standing context — style guides, templates, key docs, custom instructions. Every chat inside it starts warm. One for your platform programme, one for your writing, one for hiring.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·02</span><span class="acc-t">Brief like a manager, not a search box</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">The quality ceiling is set by the brief. State the audience, the format, the constraints, and what "good" looks like — ideally with an example. Ask for a plan or outline first on big deliverables; iterate on structure before prose. Positive and negative examples beat adjectives every time.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·03</span><span class="acc-t">Make Claude ask *you* questions</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">End big briefs with: <em>"Before you start, ask me anything that would change your approach."</em> Cheap insurance against confident work in the wrong direction — exactly what you'd want from a new hire.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·04</span><span class="acc-t">Use Artifacts &amp; file creation for real deliverables</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">Interactive HTML pages, working prototypes, Word docs, decks, spreadsheets — ask for the finished artefact, not text to paste somewhere. If you're demoing an AI concept to stakeholders, a clickable artifact lands harder than any slide.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·05</span><span class="acc-t">Turn repetition into Skills and schedules</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">Anything you've asked for three times is a candidate: package it as a skill, or make it a scheduled Cowork task. Your prompt library should shrink over time as it graduates into automation.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·06</span><span class="acc-t">Research mode &amp; search for anything current</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">For market scans, vendor comparisons, or regulatory questions, use web search or the deeper Research feature rather than trusting trained knowledge. You get citations you can check — which matters in a bank.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·07</span><span class="acc-t">Let it critique, not just create</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">Some of the highest-value prompts are adversarial: <em>"Red-team this proposal as a sceptical risk officer." "What would a regulator flag here?" "Argue the opposite."</em> Cheaper than learning it in the steering committee.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" aria-expanded="false"><span class="n">H·08</span><span class="acc-t">Know the trust boundaries</span><span class="chev">+</span></button>
+        <div class="acc-body"><div class="acc-body-in">Verify numbers, citations and legal claims before they leave the building; keep client-identifying data out of prompts unless your deployment is approved for it; review agent actions with write access the way you'd review a junior's. Delegation without review isn't leverage, it's exposure.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 6. PROMPTS ======================= -->
+<section id="prompts">
+  <div class="wrap">
+    <div class="eyebrow">Segment 06 <span class="clock">· 12:44 · take-away</span></div>
+    <h2>The prompt shelf</h2>
+    <p class="lede">Copy these on your way out. Adapt freely — they're patterns, not incantations.</p>
+
+    <div class="prompt-card">
+      <div class="tag">Claude Code · onboarding a repo</div>
+      <pre>I'm new to this codebase. Give me a guided tour: what it does, the architecture,
+the 5 files that matter most, and how a request flows through the system.
+Then add a CLAUDE.md capturing build/test commands and conventions you observed.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="tag">Claude Code · safe delegation</div>
+      <pre>Plan first, don't edit yet: [describe feature]. List the files you'd touch,
+the approach, the tests you'd add, and any risks. Wait for my go-ahead.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="tag">Cowork · recurring status report</div>
+      <pre>Every weekday at 17:00: read the standup notes in /ProjectX/standups added today,
+produce the daily status report using /ProjectX/templates/status.docx,
+flag blockers and cross-squad dependencies at the top, save to /ProjectX/reports.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="tag">Cowork · workflow → skill</div>
+      <pre>Package what we just did into a skill called weekly-steerco-pack:
+capture the steps, the template locations, and the formatting rules,
+so next week this is a single prompt.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="tag">Chat · pre-mortem critique</div>
+      <pre>Here's a proposal I'm presenting to [audience]. Red-team it as a sceptical
+[risk officer / regulator / CFO]: the 5 hardest questions I'll get,
+the weakest claim, and what evidence would strengthen it.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="tag">Any surface · better briefs</div>
+      <pre>Before you start, ask me up to 5 questions whose answers would
+materially change your approach. Then proceed.</pre>
+      <button class="copy-btn">Copy</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>Q&amp;A over coffee · Details drift fast — trust the official docs over this page.</div>
+    <div class="links">
+      <a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code docs</a>
+      <a href="https://support.claude.com" target="_blank" rel="noopener">Claude.ai Help Center</a>
+      <a href="https://www.anthropic.com/learn/claude-for-work" target="_blank" rel="noopener">Anthropic Academy courses</a>
+      <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Prompting guide</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- progress bar + scroll spy ---------- */
+const prog=document.getElementById('progress');
+const spyLinks=[...document.querySelectorAll('a[data-spy]')];
+const sections=spyLinks.map(a=>document.querySelector(a.getAttribute('href')));
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  let cur=0;
+  sections.forEach((s,i)=>{if(s.getBoundingClientRect().top<120)cur=i});
+  spyLinks.forEach((a,i)=>a.classList.toggle('active',i===cur));
+},{passive:true});
+
+/* ---------- terminal demo ---------- */
+const script=[
+  ['t-prompt','~/house-of-wealth $ ','claude\n',0],
+  ['t-dim','╭─ Claude Code · type a request, or /help ─╮\n\n',300],
+  ['t-user','> Our nudge API is returning 500s for UHNW segment users.\n  Here\u2019s the trace: KeyError: \u2019risk_band\u2019 in nudges/rank.py:88\n\n',650],
+  ['t-claude','● Reading nudges/rank.py and the segment config\u2026\n',700],
+  ['t-claude','● Found it: rank.py assumes every segment defines risk_band,\n  but segments/uhnw.yaml was added without one.\n\n',900],
+  ['t-claude','● Plan:\n   1. Default risk_band to \u2019balanced\u2019 with a warning log\n   2. Add schema validation so bad segment files fail at load\n   3. Regression test for the UHNW path\n  Proceed? (y)\n\n',1000],
+  ['t-user','> y\n\n',600],
+  ['t-claude','✓ Edited nudges/rank.py        (+6 −1)\n✓ Edited nudges/schema.py      (+11)\n✓ Added tests/test_uhnw.py     (3 tests)\n✓ pytest \u2026 42 passed\n\n',1100],
+  ['t-claude','Committed: fix(nudges): default risk_band + segment schema validation\n',700],
+  ['t-dim','\n— that\u2019s the loop: describe → plan → act → verify —',600],
+];
+const tb=document.getElementById('term-body');
+const playBtn=document.getElementById('term-play');
+let playing=false;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+playBtn.addEventListener('click',async()=>{
+  if(playing)return;playing=true;playBtn.textContent='Running…';
+  tb.innerHTML='';
+  const cur=document.createElement('span');cur.className='cursor';tb.appendChild(cur);
+  for(const [cls,pre,txt,delay] of script){
+    await new Promise(r=>setTimeout(r,reduce?0:delay));
+    if(pre){const s=document.createElement('span');s.className=cls==='t-prompt'?'t-prompt':cls;s.textContent=pre;tb.insertBefore(s,cur);}
+    const span=document.createElement('span');span.className=cls;tb.insertBefore(span,cur);
+    if(reduce){span.textContent=txt;}
+    else{for(const ch of txt){span.textContent+=ch;await new Promise(r=>setTimeout(r,ch==='\n'?24:10));}}
+    tb.parentElement&&(tb.scrollTop=tb.scrollHeight);
+  }
+  cur.remove();playing=false;playBtn.textContent='↺ Replay';
+});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('on');b.setAttribute('aria-selected','false')});
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+    btn.classList.add('on');btn.setAttribute('aria-selected','true');
+    document.getElementById(btn.dataset.tab).classList.add('on');
+  });
+});
+
+/* ---------- accordions ---------- */
+document.querySelectorAll('.acc-head').forEach(head=>{
+  head.addEventListener('click',()=>{
+    const item=head.parentElement,body=item.querySelector('.acc-body'),open=item.classList.contains('open');
+    item.classList.toggle('open');
+    head.setAttribute('aria-expanded',String(!open));
+    body.style.maxHeight=open?'0':body.scrollHeight+'px';
+  });
+});
+
+/* ---------- which-tool picker ---------- */
+const tasks=[
+  {t:'Fix a bug from a stack trace in our repo',v:'Claude Code',w:'The output is code and the context is your codebase. Paste the trace, let it find the cause, review the diff.',h:'Ask for a plan before edits on anything multi-file.'},
+  {t:'Draft the weekly multi-squad status report',v:'Claude Cowork',w:'Multi-file input, templated output, recurring cadence — the textbook Cowork task. Point it at the standup notes folder and the template.',h:'Schedule it, then package it as a skill.'},
+  {t:'Pressure-test a strategy doc before steerco',v:'Chat',w:'The value is in the dialogue: red-teaming, counterarguments, sharpening claims. You want turns, not delegation.',h:'Use a Project so the standing context is already loaded.'},
+  {t:'Build an interactive demo for a stakeholder session',v:'Claude Code (or an Artifact)',w:'A self-contained HTML artifact from Chat works for one page; for anything you\u2019ll iterate on across files, Claude Code in the project folder is faster.',h:'This very page is that pattern.'},
+  {t:'Turn 40 receipt screenshots into an expense sheet',v:'Claude Cowork',w:'Filesystem in, spreadsheet out, zero conversation needed. Grant folder access and step away.',h:'Batch it with related admin in one session — Cowork burns usage faster than Chat.'},
+  {t:'Understand an unfamiliar codebase you\u2019ve inherited',v:'Claude Code',w:'It reads the whole project and answers questions grounded in the actual files — then persists what it learns to CLAUDE.md.',h:'"Give me a guided tour" is a legitimate first prompt.'},
+  {t:'Compare vendors for a build-vs-buy decision',v:'Chat + Research',w:'Current market info needs web search or Research mode with citations; the synthesis benefits from back-and-forth on your criteria.',h:'Hand the final write-up to Cowork if it needs to become a formatted deck.'},
+];
+const list=document.getElementById('task-list'),res=document.getElementById('task-result');
+tasks.forEach((task,i)=>{
+  const b=document.createElement('button');b.className='task-btn';b.textContent=task.t;b.setAttribute('role','listitem');
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.task-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    res.innerHTML='<div class="verdict">'+task.v+'</div><div class="why">'+task.w+'</div><div class="hint">↳ '+task.h+'</div>';
+  });
+  list.appendChild(b);
+});
+
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    const txt=btn.parentElement.querySelector('pre').textContent;
+    try{await navigator.clipboard.writeText(txt);}catch(e){
+      const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    }
+    btn.textContent='Copied ✓';btn.classList.add('done');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('done')},1800);
+  });
+});
+</script>
+</body>
+</html>
