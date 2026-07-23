@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discrete Mathematics — a field guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canopy:#07120D; --understory:#0C1B14; --panel:#112418; --panel2:#16301F;
+  --line:rgba(157,198,168,.16); --line-strong:rgba(157,198,168,.34);
+  --mint:#9DC6A8; --gold:#D4A04C; --moss:#3FA678; --clay:#C97B5A;
+  --text:#E7F1E7; --dim:#8CA595; --faint:#5F7568;
+  --display:'Fraunces',Georgia,serif; --body:'Newsreader',Georgia,serif; --ui:'Space Grotesk',system-ui,sans-serif;
+  --maxw:820px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0; background:var(--canopy); color:var(--text);
+  font-family:var(--body); font-size:18px; line-height:1.65; font-weight:300;
+  background-image:radial-gradient(circle at 1px 1px, rgba(157,198,168,.055) 1px, transparent 0);
+  background-size:26px 26px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:56px}
+main{max-width:var(--maxw);padding-bottom:140px}
+/* ---------- nav ---------- */
+nav.rail{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:34px 0 60px;font-family:var(--ui);font-size:12.5px;scrollbar-width:thin}
+nav.rail .brand{font-family:var(--display);font-size:16px;font-weight:500;letter-spacing:.01em;color:var(--mint);margin-bottom:22px;display:block;line-height:1.3}
+nav.rail a{display:block;color:var(--faint);text-decoration:none;padding:5px 10px 5px 0;border-left:2px solid transparent;padding-left:12px;transition:color .18s,border-color .18s}
+nav.rail a:hover{color:var(--mint)}
+nav.rail a.on{color:var(--text);border-left-color:var(--gold)}
+nav.rail a .n{color:var(--faint);font-variant-numeric:tabular-nums;margin-right:8px;font-size:11px}
+nav.rail a.on .n{color:var(--gold)}
+/* ---------- type ---------- */
+h1{font-family:var(--display);font-weight:300;font-size:clamp(40px,7vw,74px);line-height:1.02;letter-spacing:-.025em;margin:0 0 18px}
+h1 em{font-style:italic;color:var(--gold)}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(27px,3.6vw,38px);line-height:1.12;letter-spacing:-.018em;margin:0 0 6px}
+h3{font-family:var(--display);font-weight:500;font-size:21px;margin:38px 0 8px;letter-spacing:-.01em}
+h4{font-family:var(--ui);font-weight:500;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mint);margin:26px 0 8px}
+p{margin:0 0 17px}
+a{color:var(--mint)}
+.lede{font-size:21px;line-height:1.6;color:#D6E4D8}
+.eyebrow{font-family:var(--ui);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;display:flex;align-items:center;gap:12px}
+.eyebrow:after{content:'';height:1px;flex:1;background:linear-gradient(90deg,var(--line-strong),transparent)}
+section{padding:76px 0 8px;border-top:1px solid var(--line);margin-top:56px}
+section:first-of-type{border-top:none}
+.sub{color:var(--dim);font-size:17px;margin:-2px 0 26px}
+strong{font-weight:400;color:#fff}
+em.term{font-style:normal;color:var(--gold);font-family:var(--ui);font-size:.87em;letter-spacing:.02em}
+code,.mono{font-family:var(--ui);font-size:.86em;background:rgba(157,198,168,.09);padding:1px 6px;border-radius:4px;color:var(--mint)}
+.math{font-family:var(--body);font-style:italic;font-size:1.03em}
+ul,ol{padding-left:22px;margin:0 0 18px}
+li{margin-bottom:7px}
+blockquote{margin:24px 0;padding:2px 0 2px 20px;border-left:2px solid var(--gold);color:#D6E4D8;font-style:italic}
+/* ---------- panels ---------- */
+.lab{background:linear-gradient(180deg,var(--panel),var(--understory));border:1px solid var(--line);border-radius:14px;padding:22px;margin:26px 0 30px;position:relative}
+.lab:before{content:attr(data-label);position:absolute;top:-9px;left:18px;background:var(--canopy);border:1px solid var(--line);border-radius:20px;padding:2px 11px;font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lab h5{font-family:var(--ui);font-size:14px;font-weight:500;margin:6px 0 4px;color:var(--text);letter-spacing:.01em}
+.hint{font-family:var(--ui);font-size:12.5px;color:var(--dim);line-height:1.55;margin:10px 0 0}
+.note{background:rgba(212,160,76,.06);border:1px solid rgba(212,160,76,.22);border-radius:12px;padding:16px 18px;margin:24px 0;font-size:16.5px;color:#E4DCC8}
+.note b{color:var(--gold);font-weight:400;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:5px}
+/* ---------- controls ---------- */
+button,select,input[type=text],input[type=number]{font-family:var(--ui);font-size:13px}
+.btn{background:rgba(157,198,168,.08);color:var(--mint);border:1px solid var(--line-strong);border-radius:7px;padding:7px 13px;cursor:pointer;transition:.15s}
+.btn:hover{background:rgba(157,198,168,.18);color:#fff}
+.btn.active{background:var(--moss);border-color:var(--moss);color:#04120B;font-weight:500}
+.btn.gold{border-color:rgba(212,160,76,.5);color:var(--gold)}
+.btn.gold:hover{background:rgba(212,160,76,.16)}
+.btns{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+input[type=text],input[type=number],select{background:rgba(7,18,13,.7);color:var(--text);border:1px solid var(--line-strong);border-radius:7px;padding:8px 11px}
+input[type=range]{-webkit-appearance:none;appearance:none;height:3px;background:var(--line-strong);border-radius:3px;outline:none;flex:1;min-width:90px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--gold);cursor:pointer;border:none}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--gold);cursor:pointer;border:none}
+.row{display:flex;align-items:center;gap:12px;margin:9px 0;flex-wrap:wrap}
+.row label{font-family:var(--ui);font-size:12px;color:var(--dim);min-width:118px}
+.val{font-family:var(--ui);font-size:12px;color:var(--gold);font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+.out.fixed{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;letter-spacing:-.01em}
+.out{font-family:var(--ui);font-size:13px;line-height:1.75;background:rgba(7,18,13,.55);border:1px solid var(--line);border-radius:9px;padding:12px 14px;margin-top:12px;white-space:pre-wrap;overflow-x:auto}
+.ok{color:var(--moss)} .no{color:var(--clay)} .hi{color:var(--gold)}
+table.tt{border-collapse:collapse;font-family:var(--ui);font-size:12.5px;margin-top:12px;width:100%}
+table.tt th,table.tt td{border:1px solid var(--line);padding:5px 9px;text-align:center}
+table.tt th{color:var(--mint);font-weight:500;background:rgba(157,198,168,.06)}
+table.tt td.T{color:var(--moss)} table.tt td.F{color:var(--clay)}
+table.tt tr.res td{background:rgba(212,160,76,.07)}
+svg{max-width:100%;width:100%;height:auto;display:block}
+canvas{max-width:100%;display:block;border-radius:9px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--ui);font-size:12px}
+.chip{border:1px solid var(--line-strong);border-radius:20px;padding:3px 10px;color:var(--dim)}
+.chip.on{background:rgba(63,166,120,.16);border-color:var(--moss);color:var(--mint)}
+.links{font-family:var(--ui);font-size:12.5px;line-height:2;border-top:1px solid var(--line);margin-top:26px;padding-top:14px}
+.links b{color:var(--faint);font-weight:400;letter-spacing:.1em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:4px}
+.links a{color:var(--dim);text-decoration:none;border-bottom:1px solid transparent}
+.links a:hover{color:var(--mint);border-bottom-color:var(--line-strong)}
+.links span{color:var(--faint);margin:0 7px}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 18px}
+  nav.rail{position:static;height:auto;padding:20px 0 0;display:flex;gap:4px;overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--line)}
+  nav.rail .brand{display:none}
+  nav.rail a{border-left:none;border-bottom:2px solid transparent;padding:8px 10px}
+  nav.rail a.on{border-left-color:transparent;border-bottom-color:var(--gold)}
+  body{font-size:17px}
+  .grid2{grid-template-columns:1fr}
+  .toc{columns:1}
+  .lab{padding:18px 14px}
+  section{padding-top:56px}
+}
+/* ---------- hero ---------- */
+header.hero{padding:80px 0 20px}
+.heroTag{font-family:var(--ui);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+.heroCanvasWrap{margin:34px 0 8px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--understory));padding:18px}
+.toc{font-family:var(--ui);font-size:13px;color:var(--dim);columns:2;column-gap:34px;margin-top:34px;border-top:1px solid var(--line);padding-top:20px}
+.toc a{display:block;color:var(--dim);text-decoration:none;padding:3px 0;break-inside:avoid}
+.toc a:hover{color:var(--gold)}
+.toc a i{font-style:normal;color:var(--faint);margin-right:9px;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="rail" id="rail">
+  <span class="brand">Discrete<br>Mathematics</span>
+</nav>
+<main>
+
+<header class="hero">
+  <div class="heroTag">A field guide · built for Ted</div>
+  <h1>The mathematics of things you can <em>count</em>.</h1>
+  <p class="lede">Calculus asks what happens as the gaps close. Discrete mathematics asks what happens when the gaps never close — when the world arrives in whole units: vertices, bits, integers, moves, states, people. Everything a computer does lives on this side of the line.</p>
+
+  <div class="heroCanvasWrap">
+    <canvas id="heroCv" width="1500" height="440" style="width:100%;height:auto"></canvas>
+    <div class="row" style="margin-top:14px">
+      <label>Resolution</label>
+      <input type="range" id="heroN" min="3" max="120" value="9">
+      <span class="val" id="heroNv">9</span>
+      <button class="btn" id="heroPlay">Close the gaps</button>
+    </div>
+    <p class="hint" id="heroTxt"></p>
+  </div>
+
+  <div class="toc" id="toc"></div>
+</header>
+<section id="s0">
+  <p class="eyebrow">Orientation</p>
+  <h2>Two mathematics, one border</h2>
+  <p class="sub">Where discrete ends, continuous begins — and why the border is the most interesting place to stand.</p>
+
+  <p>Pick up any mathematical object and ask one question: <strong>between any two of its points, is there always another point?</strong> If yes, you are in <em class="term">continuous</em> territory. Between 0.1 and 0.2 sits 0.15; between 0.15 and 0.2 sits 0.175, forever. If no — if there is a next thing, and nothing in between — you are in <em class="term">discrete</em> territory. Between the integers 3 and 4 there is no integer. Between two adjacent vertices of a graph there is no half-vertex. Between bit patterns <code>1011</code> and <code>1100</code> there is nothing at all.</p>
+
+  <p>That single distinction reorganises the whole subject. Continuous mathematics is built on <strong>limits</strong> — the machinery for talking about what happens as gaps shrink to nothing. Discrete mathematics has no gaps to shrink, so it is built on <strong>counting, structure and case analysis</strong> instead. Different questions, different tools, different proofs.</p>
+
+  <div class="lab" data-label="Side by side">
+    <h5>The same four ideas, translated across the border</h5>
+    <div id="bridgeTable"></div>
+    <p class="hint">Every row is a genuine translation, not an analogy. Sums <em>are</em> the discrete integral; finite differences <em>are</em> the discrete derivative; generating functions <em>are</em> Taylor series read backwards. This is why the two halves keep borrowing from each other.</p>
+  </div>
+
+  <h3>So where does calculus fit?</h3>
+  <p>Calculus is the flagship of the continuous side, and it is not the enemy — it is the other half of your toolkit. Three honest relationships:</p>
+  <ul>
+    <li><strong>Calculus approximates discrete things.</strong> You cannot easily compute 100! but Stirling's formula — pure calculus — tells you it is about <span class="math">√(2πn)·(n/e)<sup>n</sup></span>. Half of algorithm analysis is replacing an ugly sum with a smooth integral you can actually evaluate.</li>
+    <li><strong>Discrete things approximate calculus.</strong> Every derivative your computer has ever taken was a subtraction of two nearby values. Every integral was a sum. Numerical methods are the act of pushing continuous mathematics back across the border so a finite machine can hold it.</li>
+    <li><strong>They answer different questions.</strong> "How fast is this changing?" is a calculus question. "How many ways can this be arranged, and is any of them optimal?" is a discrete question. Machine learning needs both in the same breath: gradients are continuous, the graph they flow through is discrete.</li>
+  </ul>
+
+  <div class="note"><b>A useful mental rule</b>Continuous mathematics is about <strong>magnitude and change</strong>. Discrete mathematics is about <strong>structure and possibility</strong>. When you ask "how much", reach for calculus. When you ask "how many, in what arrangement, and can I get there from here", reach for discrete.</div>
+
+  <h3>How the branches actually connect</h3>
+  <p>Discrete mathematics is not a list of ten unrelated topics, even though every syllabus presents it that way. It is a small number of ideas wearing different costumes. Drag the nodes around; click one to see what it depends on and what it feeds.</p>
+
+  <div class="lab" data-label="The map is itself a graph">
+    <canvas id="mapCv" width="1500" height="900" style="width:100%;height:auto;cursor:grab"></canvas>
+    <div id="mapInfo" class="out" style="min-height:86px">Click a node.</div>
+    <p class="hint">Yes — the diagram of discrete mathematics is a graph, drawn with a force-directed layout, which is itself an application of discrete mathematics. That recursion is the point.</p>
+  </div>
+
+  <p>Read the map in one sentence: <strong>logic gives you the right to make claims; set theory gives you the objects to make claims about; relations put structure on those objects; graphs are the most useful structure; counting tells you how big everything is; probability is counting with weights; number theory is what happens when the objects are integers; algebra is what happens when you notice the same structure in all of the above.</strong></p>
+
+  <h3>What people mean by "pure math"</h3>
+  <p>The pure/applied split is not about usefulness, and anyone who tells you otherwise is selling something. It is about <strong>what counts as a finished piece of work</strong>.</p>
+  <ul>
+    <li><strong>Pure mathematics</strong> is finished when the theorem is proved. The object of study is the structure itself. A pure mathematician asks "what is true about all groups?" — and the answer must hold for every group that could ever exist, established by proof, not by testing a thousand of them.</li>
+    <li><strong>Applied mathematics</strong> is finished when the real question is answered. The structure is a means. An applied mathematician asks "which group models this crystal / this cipher / this error-correcting code, and what does that let me compute?"</li>
+  </ul>
+  <p>The joke that writes itself: number theory was the proudest example of useless pure mathematics for two thousand years — G.H. Hardy boasted in 1940 that nothing he had done was of the slightest practical use. Roughly thirty-five years later it became RSA, and now it protects every payment you have ever made. Graph theory started as a puzzle about bridges in a Prussian town. Boolean algebra was one man's attempt to formalise the laws of thought, decades before there was anything electrical to switch.</p>
+  <blockquote>Discrete mathematics is the subject where "pure" turned out to mean "applied, but you have to wait a century."</blockquote>
+  <p>Studying pure mathematics trains a specific reflex: <strong>never accept a claim without a reason that covers every case.</strong> That reflex is the actual transferable skill. It is why the subject appears in interviews and why it makes people better engineers even when they never write down a proof again.</p>
+</section>
+
+<section id="s1">
+  <p class="eyebrow">01 · Motivation</p>
+  <h2>Why learn discrete mathematics</h2>
+  <p class="sub">Not "because it is on the syllabus" — because it is the substrate.</p>
+
+  <p>Every claim below is load-bearing. Hover a card to see the concrete thing it buys you.</p>
+  <div id="whyCards"></div>
+
+  <p>The honest summary: <strong>continuous mathematics describes the world; discrete mathematics describes the machine that models the world.</strong> If you write software, design systems, reason about data, or build anything with AI in it, you are doing applied discrete mathematics whether or not you use the vocabulary. Learning the vocabulary turns intuition into something you can prove, communicate and optimise.</p>
+
+  <div class="links"><b>Further reading</b>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/proposition-logic/">Discrete math overview →</a>
+  </div>
+</section>
+<section id="s2">
+  <p class="eyebrow">02 · Logic and proof</p>
+  <h2>Logic and proof techniques</h2>
+  <p class="sub">The rules that decide which sentences you are allowed to write down next.</p>
+
+  <p>Logic is the operating system of mathematics. A <em class="term">proposition</em> is a sentence that is definitely true or definitely false — "7 is prime" qualifies, "x &gt; 3" does not until you say what <span class="math">x</span> is, and "this sentence is false" is not a proposition at all. From atoms like <code>p</code>, <code>q</code> you build compounds with five connectives:</p>
+
+  <div id="connTable"></div>
+
+  <p>The one that trips everyone is implication. <strong><span class="math">p → q</span> is false in exactly one situation: <span class="math">p</span> true and <span class="math">q</span> false.</strong> "If it rains, I take an umbrella" is not broken on a sunny day, whatever I carry. A promise about a case that never arose was never broken. That is why <em class="term">vacuous truth</em> — "every unicorn in this room is green" — is true.</p>
+
+  <h3>Build a truth table</h3>
+  <p>Type any formula in <code>p q r s</code> using <code>~ &amp; | -&gt; &lt;-&gt;</code> (or the symbols <code>¬ ∧ ∨ → ↔</code>). The table is computed by an actual parser, so try to break it.</p>
+
+  <div class="lab" data-label="Truth table engine">
+    <div class="row">
+      <input type="text" id="ttInput" value="(p -> q) & (q -> r) -> (p -> r)" style="flex:1;min-width:240px;font-size:14px">
+      <button class="btn gold" id="ttGo">Evaluate</button>
+    </div>
+    <div class="btns" id="ttPresets"></div>
+    <div id="ttOut"></div>
+  </div>
+
+  <h4>The verdicts</h4>
+  <p>A formula true in every row is a <em class="term">tautology</em> (a law of logic). False in every row: a <em class="term">contradiction</em>. Mixed: <em class="term">contingent</em>. Two formulas are <em class="term">logically equivalent</em> — written <span class="math">≡</span> — exactly when <span class="math">P ↔ Q</span> is a tautology, i.e. their columns match everywhere. Load the presets above to meet the equivalences you will use constantly:</p>
+  <ul>
+    <li><strong>De Morgan:</strong> <span class="math">¬(p ∧ q) ≡ ¬p ∨ ¬q</span> — the rule you use every time you invert an <code>if</code> condition.</li>
+    <li><strong>Implication as disjunction:</strong> <span class="math">p → q ≡ ¬p ∨ q</span>. This is why implication has no dedicated hardware gate: it is already NOT-OR.</li>
+    <li><strong>Contrapositive:</strong> <span class="math">p → q ≡ ¬q → ¬p</span>. Always valid. Its evil twins, the converse <span class="math">q → p</span> and inverse <span class="math">¬p → ¬q</span>, are not.</li>
+    <li><strong>Distribution, absorption, double negation</strong> — the same laws you will meet again as Boolean algebra in section 11 and as set identities in section 03. That repetition is not coincidence; see the closing section.</li>
+  </ul>
+
+  <h4>Normal forms</h4>
+  <p>Every formula can be rewritten in a canonical shape. <em class="term">CNF</em> (conjunctive normal form) is an AND of ORs; <em class="term">DNF</em> (disjunctive normal form) is an OR of ANDs. The <em class="term">principal</em> or canonical forms use every variable in every term: read the true rows of the truth table off as minterms and you have principal DNF for free; read the false rows as maxterms and you have principal CNF. This is not decoration — SAT solvers, the engines behind program verification and modern scheduling, take CNF as input, and section 11's Karnaugh maps are DNF minimisation drawn as a picture.</p>
+
+  <div class="lab" data-label="Canonical forms">
+    <p class="hint" style="margin:0 0 8px">Generated live from whatever formula is in the truth table above.</p>
+    <div id="nfOut" class="out">—</div>
+  </div>
+
+  <h3>Predicates and quantifiers</h3>
+  <p>Propositional logic cannot say "every". For that you need <em class="term">predicates</em> — propositions with holes, like <span class="math">P(x)</span> = "<span class="math">x</span> is prime" — plus two quantifiers: <span class="math">∀</span> (for all) and <span class="math">∃</span> (there exists). Negation flips them and pushes inwards: <span class="math">¬∀x P(x) ≡ ∃x ¬P(x)</span>. "Not everyone came" means "someone didn't."</p>
+  <p><strong>Order matters, and this is the single most common mistake in the subject.</strong> Toggle the quantifiers below and watch the meaning move.</p>
+
+  <div class="lab" data-label="Nested quantifiers">
+    <div class="btns">
+      <button class="btn" data-q="AA">∀x ∀y</button>
+      <button class="btn active" data-q="AE">∀x ∃y</button>
+      <button class="btn" data-q="EA">∃x ∀y</button>
+      <button class="btn" data-q="EE">∃x ∃y</button>
+    </div>
+    <div class="row"><label>Relation L(x,y)</label>
+      <select id="qRel">
+        <option value="likes">x likes y</option>
+        <option value="beats">x beats y (rock-paper-scissors)</option>
+        <option value="lt">x &lt; y (on 1…5)</option>
+      </select>
+    </div>
+    <svg id="qSvg" viewBox="0 0 700 300"></svg>
+    <div id="qOut" class="out"></div>
+    <p class="hint">The classic trap: "∀x ∃y (y loves x)" — everybody is loved by somebody, possibly a different somebody each time. "∃y ∀x (y loves x)" — one single person loves everybody. Same words, different worlds.</p>
+  </div>
+
+  <h3>Rules of inference</h3>
+  <p>A rule of inference is a licence: given these premises, you may write that conclusion. Each one is a tautology in disguise. Click to see it fire.</p>
+  <div class="lab" data-label="Inference rules">
+    <div id="infList"></div>
+  </div>
+
+  <h3>Proof techniques</h3>
+  <p>Four techniques cover almost everything you will meet:</p>
+  <ul>
+    <li><strong>Direct.</strong> Assume <span class="math">p</span>, argue to <span class="math">q</span>. Works when the hypothesis gives you something to hold.</li>
+    <li><strong>Contraposition.</strong> Prove <span class="math">¬q → ¬p</span> instead. Try this the moment the hypothesis is useless but the negated conclusion is concrete — "if <span class="math">n²</span> is even then <span class="math">n</span> is even" is painful directly and trivial contrapositively.</li>
+    <li><strong>Contradiction.</strong> Assume <span class="math">p ∧ ¬q</span> and derive an absurdity. The proof that <span class="math">√2</span> is irrational, and Euclid's proof that primes never run out.</li>
+    <li><strong>Induction.</strong> Prove the first case; prove that each case forces the next. Then all of them fall. This is <em>the</em> discrete technique, because it needs a "next" — which is exactly what continuous mathematics doesn't have. Section 07 has a live one.</li>
+  </ul>
+  <p>Two others worth naming: <strong>proof by cases</strong> (exhaust the possibilities) and <strong>proof by construction</strong> (to show something exists, build it — often the most useful kind for an engineer, since the proof <em>is</em> an algorithm).</p>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/proposition-logic/">Propositional logic</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/difference-between-propositional-logic-and-predicate-logic/">Propositional vs predicate</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematical-logic-propositional-equivalences/">Equivalences</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/normal-and-principal-forms/">Normal &amp; principal forms</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematic-logic-predicates-quantifiers/">Predicates &amp; quantifiers</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematics-theorems-nested-quantifiers/">Nested quantifiers</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/rules-of-inference/">Rules of inference</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/mathematics-introduction-to-proofs/">Introduction to proofs</a>
+  </div>
+</section>
+
+<section id="s3">
+  <p class="eyebrow">03 · Sets, relations, functions</p>
+  <h2>Sets, relations and functions</h2>
+  <p class="sub">The nouns, the verbs and the machines.</p>
+
+  <p>A <em class="term">set</em> is an unordered collection of distinct things. That is the entire definition, and it is enough to build all of mathematics on. <code>{3,1,3}</code> is the same set as <code>{1,3}</code> — no order, no duplicates, which is exactly the contract of a hash set in any language you use.</p>
+  <p>Key vocabulary: <span class="math">|A|</span> is cardinality; <span class="math">∅</span> is the empty set; <span class="math">A ⊆ B</span> means every element of A is in B; the <em class="term">power set</em> <span class="math">P(A)</span> is the set of all subsets and has <span class="math">2<sup>|A|</sup></span> members — the first real theorem of the course, and the reason an <span class="math">n</span>-bit register has <span class="math">2<sup>n</sup></span> states.</p>
+
+  <div class="lab" data-label="Set algebra">
+    <h5>Type an expression over three sets</h5>
+    <div class="row">
+      <input type="text" id="setExpr" value="(A | B) - C" style="flex:1;min-width:220px;font-size:14px">
+      <button class="btn gold" id="setGo">Shade it</button>
+    </div>
+    <div class="btns" id="setPresets"></div>
+    <div class="grid2" style="align-items:center">
+      <canvas id="vennCv" width="840" height="680" style="width:100%;height:auto"></canvas>
+      <div>
+        <div id="setOut" class="out" style="margin-top:0"></div>
+        <p class="hint">Operators: <code>|</code> union, <code>&amp;</code> intersection, <code>-</code> difference, <code>^</code> symmetric difference, <code>~</code> complement. Universe is 1…12; A = multiples of 2, B = multiples of 3, C = 1…6.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note"><b>Notice the shape</b>Set identities are logic identities in a costume. <span class="math">¬(p ∧ q) ≡ ¬p ∨ ¬q</span> is De Morgan for propositions; <span class="math">(A ∩ B)ᶜ = Aᶜ ∪ Bᶜ</span> is De Morgan for sets; <code>~(a &amp; b) == ~a | ~b</code> is De Morgan for bitmasks. One theorem, three notations. Section 13 explains why.</div>
+
+  <h3>Relations</h3>
+  <p>A <em class="term">relation</em> on a set A is any subset of <span class="math">A × A</span> — any collection of ordered pairs. That's it. "Is a friend of", "divides", "≤", "has an edge to", "is in the same equivalence class as" are all relations, and once you see that, a relation is just a boolean matrix, a graph, or a set of tuples in a database table, depending on which room you're standing in.</p>
+  <p>Four properties do most of the work. Click cells to toggle pairs and watch the verdicts change live:</p>
+
+  <div class="lab" data-label="Relation inspector">
+    <div class="grid2">
+      <div>
+        <svg id="relSvg" viewBox="0 0 300 300"></svg>
+        <div class="btns">
+          <button class="btn" id="relClear">Clear</button>
+          <button class="btn" id="relDiag">Add diagonal</button>
+          <button class="btn" id="relDiv">≤ on {1,2,3,4}</button>
+          <button class="btn gold" id="relWarshall">Transitive closure</button>
+        </div>
+      </div>
+      <div>
+        <div id="relOut" class="out" style="margin-top:0"></div>
+        <svg id="relGraph" viewBox="0 0 300 220"></svg>
+      </div>
+    </div>
+    <p class="hint">Row <span class="math">i</span>, column <span class="math">j</span> shaded means <span class="math">(i,j) ∈ R</span>. The same relation is drawn as a matrix and as a directed graph — those are the two standard representations, and Warshall's algorithm for transitive closure is just repeatedly asking "if I can reach k, and k reaches j, can I reach j?"</p>
+  </div>
+
+  <ul>
+    <li><strong>Reflexive:</strong> every element relates to itself — the whole diagonal is filled.</li>
+    <li><strong>Symmetric:</strong> the matrix equals its own transpose. <strong>Antisymmetric:</strong> never both <span class="math">(a,b)</span> and <span class="math">(b,a)</span> off the diagonal.</li>
+    <li><strong>Transitive:</strong> shortcuts always exist — if <span class="math">a→b</span> and <span class="math">b→c</span> then <span class="math">a→c</span>.</li>
+  </ul>
+  <p>A <em class="term">closure</em> is the smallest superset with a wanted property: add the diagonal for reflexive closure, add all mirrored pairs for symmetric closure, run Warshall for transitive closure. Reachability in a network is literally the transitive closure of "has a direct link".</p>
+
+  <h4>The two great specialisations</h4>
+  <p>Take reflexive + transitive, then add one of two things and you get the two most important relation families in the subject:</p>
+  <ul>
+    <li>+ <strong>symmetric</strong> → <em class="term">equivalence relation</em>. It carves the set into disjoint <em class="term">equivalence classes</em>, a <em class="term">partition</em>. "Same remainder mod 5" splits the integers into 5 classes; that partition <em>is</em> modular arithmetic (section 10). Every equivalence relation is secretly the sentence "these things are the same for my purposes."</li>
+    <li>+ <strong>antisymmetric</strong> → <em class="term">partial order</em>. That's section 04.</li>
+  </ul>
+
+  <h3>Functions</h3>
+  <p>A <em class="term">function</em> is a relation where every input has exactly one output. Three properties matter, and they are the same three properties that decide whether your data pipeline loses information:</p>
+  <div class="lab" data-label="Injective, surjective, bijective">
+    <p class="hint" style="margin:0 0 10px">Click a domain node then a codomain node to set where it maps. The verdict updates live.</p>
+    <svg id="fnSvg" viewBox="0 0 420 300"></svg>
+    <div class="btns">
+      <button class="btn" id="fnBij">Identity</button>
+      <button class="btn" id="fnSur">Shift permutation</button>
+      <button class="btn" id="fnInj">Make two collide</button>
+      <button class="btn" id="fnConst">Constant map</button>
+    </div>
+    <div id="fnOut" class="out"></div>
+  </div>
+  <ul>
+    <li><strong>Injective</strong> (one-to-one): different inputs give different outputs — nothing collides. A hash function that is injective on your keys has no collisions.</li>
+    <li><strong>Surjective</strong> (onto): every possible output is actually hit — no wasted codomain.</li>
+    <li><strong>Bijective</strong>: both. Only bijections have inverses, which is why encryption must be bijective and lossy compression must not be.</li>
+  </ul>
+  <p>The pigeonhole principle (section 07) is one sentence about injections: <strong>if the domain is bigger than the codomain, no function between them can be injective.</strong> That is the whole reason hash collisions are unavoidable.</p>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/maths/sets/">Sets</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/set-operations/">Operations</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/relation-in-maths/">Relations</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/what-is-a-function/">Functions</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/relation-and-their-representations/">Representations</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/closure-relations/">Closures</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/equivalence-relations/">Equivalence relations</a>
+  </div>
+</section>
+<section id="s4">
+  <p class="eyebrow">04 · Order</p>
+  <h2>Partial orders and lattices</h2>
+  <p class="sub">What to do when "bigger" is only sometimes defined.</p>
+
+  <p>A <em class="term">partial order</em> is a relation that is reflexive, antisymmetric and transitive. The word <strong>partial</strong> is the whole point: some pairs are simply <em class="term">incomparable</em>. On the numbers, <span class="math">≤</span> compares everything — that's a <em class="term">total order</em>. But "divides" doesn't: 2 and 3 are incomparable, neither divides the other. Neither does "is a subset of", or "must finish before", or "is a stricter type than". A set with a partial order is a <em class="term">poset</em>.</p>
+  <p>This describes reality more often than total order does. Task dependencies, class inheritance, permission levels, git commits, package versions: all posets. Every build system you have used is computing a <em class="term">topological sort</em> — flattening a partial order into some total order consistent with it.</p>
+
+  <h3>Hasse diagrams</h3>
+  <p>Drawing every arrow of a partial order is unreadable, because reflexive and transitive edges are implied. A <em class="term">Hasse diagram</em> strips them: draw only the <em class="term">covering</em> relations (<span class="math">a &lt; b</span> with nothing strictly between), put bigger elements higher, drop the arrowheads. What remains is the skeleton.</p>
+
+  <div class="lab" data-label="Hasse diagram + lattice check">
+    <div class="row">
+      <label>Poset</label>
+      <select id="hasseSel">
+        <option value="d12">Divisors of 12, ordered by "divides"</option>
+        <option value="d30">Divisors of 30</option>
+        <option value="d36">Divisors of 36</option>
+        <option value="p3">Subsets of {a,b,c}, ordered by ⊆</option>
+        <option value="n5">Butterfly — a poset that is NOT a lattice</option>
+        <option value="chain">Chain 1&lt;2&lt;3&lt;4 (total order)</option>
+      </select>
+    </div>
+    <svg id="hasseSvg" viewBox="0 0 640 420"></svg>
+    <p class="hint">Click any two elements to compute their meet (∧, greatest lower bound) and join (∨, least upper bound).</p>
+    <div id="hasseOut" class="out"></div>
+  </div>
+
+  <h4>Elements of a poset</h4>
+  <ul>
+    <li><strong>Maximal / minimal:</strong> nothing above / below it. There can be many.</li>
+    <li><strong>Greatest / least:</strong> above / below <em>everything</em>. There can be at most one, and often there is none.</li>
+    <li><strong>Upper bound</strong> of a subset: an element above all of them. The <strong>least upper bound</strong> (join, <span class="math">∨</span>) is the tightest such. Dually, <strong>greatest lower bound</strong> (meet, <span class="math">∧</span>).</li>
+  </ul>
+  <p>A <em class="term">lattice</em> is a poset where <strong>every pair</strong> has both a meet and a join. Load the butterfly example above and hunt for the pair that fails — that is what non-lattice looks like.</p>
+  <p>Why care? Because lattices are where order becomes algebra. In the divisor lattice, meet is <span class="math">gcd</span> and join is <span class="math">lcm</span> (section 10). In the subset lattice, meet is <span class="math">∩</span> and join is <span class="math">∪</span> (section 03). In the truth lattice, meet is AND and join is OR (sections 02 and 11). <strong>Three subjects, one structure.</strong> Compiler optimisation, static type systems and program analysis all run on lattices for exactly this reason: they need a principled way to merge two branches of information.</p>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/partial-orders-lattices/">Partial orders &amp; lattices</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/elements-of-poset/">Elements of a poset</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/discrete-mathematics-hasse-diagrams/">Hasse diagrams</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/lattices/">Lattices</a>
+  </div>
+</section>
+
+<section id="s5">
+  <p class="eyebrow">05 · Algebraic structures</p>
+  <h2>Monoids and groups</h2>
+  <p class="sub">Stripping an operation down to the properties that actually matter.</p>
+
+  <p>Here is the move that makes someone a mathematician. You notice that adding integers, multiplying matrices, composing functions, concatenating strings and rotating a square are all "the same shape of thing". So you throw away what they're made of and keep only the rules. What is left is an <em class="term">algebraic structure</em>: a set <span class="math">S</span> with a binary operation <span class="math">∗</span>, plus a shopping list of axioms.</p>
+
+  <div id="structLadder"></div>
+
+  <p>Each rung buys you something concrete:</p>
+  <ul>
+    <li><strong>Closure</strong> means the operation never escapes the set. <code>int8 + int8</code> is closed only because it wraps — that wrap-around is arithmetic mod 256.</li>
+    <li><strong>Associativity</strong> means you may re-bracket freely. This is why <code>reduce</code> can be parallelised: <code>(a∗b)∗(c∗d)</code> equals <code>a∗(b∗(c∗d))</code>, so split the work across cores. MapReduce is a theorem about monoids.</li>
+    <li><strong>Identity</strong> gives you a safe starting value for an empty fold — <code>0</code> for sum, <code>1</code> for product, <code>""</code> for concat, <code>∅</code> for union.</li>
+    <li><strong>Inverses</strong> give you undo. Groups are the mathematics of reversibility, which is why they run cryptography, error correction and every symmetry in physics.</li>
+  </ul>
+
+  <h3>Cayley tables</h3>
+  <p>A finite group is completely described by its multiplication table. Look for the tell-tale pattern: <strong>every row and every column is a permutation of the elements</strong> — each appears exactly once. That is a theorem (the Latin square property), and it follows directly from inverses existing.</p>
+
+  <div class="lab" data-label="Group explorer">
+    <div class="row">
+      <label>Group</label>
+      <select id="grpSel">
+        <option value="z6">ℤ₆ — integers mod 6 under +</option>
+        <option value="z5">ℤ₅ — integers mod 5 under +</option>
+        <option value="u8">U(8) — units mod 8 under ×</option>
+        <option value="u7">U(7) — units mod 7 under ×</option>
+        <option value="d3">D₃ — symmetries of a triangle</option>
+        <option value="s3">S₃ — permutations of 3 items</option>
+      </select>
+    </div>
+    <div class="grid2">
+      <div><div id="cayleyOut"></div></div>
+      <div><div id="grpInfo" class="out" style="margin-top:0"></div></div>
+    </div>
+    <p class="hint">Click any element to see the subgroup it generates and its left cosets. Abelian groups have a table symmetric about the main diagonal — check D₃ and S₃ and see that they aren't.</p>
+  </div>
+
+  <h4>Subgroups, orders, cosets</h4>
+  <p>A <em class="term">subgroup</em> is a subset that is itself a group under the same operation. The <em class="term">order</em> of a group is how many elements it has; the order of an <em>element</em> is how many times you apply it before returning to the identity. If a single element generates everything, the group is <em class="term">cyclic</em> — click 1 in ℤ₆, or 3 in U(7).</p>
+  <p>Pick a subgroup <span class="math">H</span> and it tiles the group into equal-sized <em class="term">cosets</em> <span class="math">gH</span>. Equal-sized, disjoint, covering everything — so:</p>
+  <blockquote>Lagrange's theorem: the order of a subgroup always divides the order of the group.</blockquote>
+  <p>That one line has enormous consequences. A group of order 7 has no proper subgroups at all, so it must be cyclic. And a corollary — <span class="math">a<sup>|G|</sup> = e</span> for every element — is <strong>exactly Fermat's little theorem</strong> when the group is the units mod <span class="math">p</span>. The theorem that makes RSA work is a fact about cosets. That is the payoff of abstraction: prove it once, harvest it everywhere.</p>
+
+  <h4>Homomorphism, isomorphism, automorphism</h4>
+  <p>These are the structure-respecting maps — the functions of section 03 applied to groups:</p>
+  <ul>
+    <li><strong>Homomorphism:</strong> <span class="math">f(a∗b) = f(a)·f(b)</span>. Operate then map = map then operate. <code>log</code> is the famous one: it turns multiplication into addition, which is why slide rules worked.</li>
+    <li><strong>Isomorphism:</strong> a bijective homomorphism. The two groups are <em>the same group in different clothes</em>. ℤ₄ and U(5) are isomorphic — different elements, identical table once relabelled.</li>
+    <li><strong>Automorphism:</strong> an isomorphism from a group to itself — a symmetry of the structure. The set of them forms a group in its own right, which is where the subject starts eating its own tail in the best way.</li>
+  </ul>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/groups-discrete-mathematics/">Groups, subgroups, semigroups</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/cayley-table-and-cyclic-group-mathematics/">Cyclic groups</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/cayley-table/">Cayley table</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/cosets-in-mathematics/">Cosets</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/subgroup-and-order-of-group-mathematics/">Subgroup &amp; order</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/homomorphism-isomorphism-of-group/">Homomorphism &amp; isomorphism</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/group-isomorphisms-and-automorphisms/">Automorphisms</a>
+  </div>
+</section>
+
+<section id="s6">
+  <p class="eyebrow">06 · Graphs</p>
+  <h2>Graph theory</h2>
+  <p class="sub">Dots and lines — and somehow half of computer science.</p>
+
+  <p>A <em class="term">graph</em> is a set of vertices plus a set of edges between them. That is an absurdly thin definition for something this powerful. The reason it works: an enormous number of real problems are secretly "things and connections between things", and once you translate into graph language you inherit seventy years of algorithms for free.</p>
+  <p>The subject was born in 1736 when Euler asked whether you could walk all seven bridges of Königsberg exactly once. His answer invented the field: <strong>it doesn't matter where the bridges are, only how many meet at each landmass.</strong> Throw away the geography, keep the connections. That is the founding act of discrete mathematics.</p>
+
+  <div class="lab" data-label="Graph laboratory">
+    <p class="hint" style="margin:0 0 10px">Click empty space to add a vertex · click two vertices to toggle an edge · drag to move · shift-click to delete.</p>
+    <canvas id="gCv" width="1400" height="760" style="width:100%;height:auto;cursor:crosshair;background:rgba(7,18,13,.5);border:1px solid var(--line)"></canvas>
+    <div class="btns">
+      <button class="btn gold" data-gp="k5">K₅</button>
+      <button class="btn gold" data-gp="k33">K₃,₃</button>
+      <button class="btn gold" data-gp="petersen">Petersen</button>
+      <button class="btn gold" data-gp="tree">Tree</button>
+      <button class="btn gold" data-gp="bridge">Bridged pair</button>
+      <button class="btn gold" data-gp="cycle">C₆</button>
+      <button class="btn" data-gp="clear">Clear</button>
+    </div>
+    <div class="btns" style="border-top:1px solid var(--line);padding-top:12px">
+      <button class="btn" data-ga="none">Plain</button>
+      <button class="btn" data-ga="comp">Components</button>
+      <button class="btn" data-ga="bridges">Bridges &amp; cut vertices</button>
+      <button class="btn" data-ga="bip">Bipartite?</button>
+      <button class="btn" data-ga="color">Greedy colouring</button>
+      <button class="btn" data-ga="match">Maximum matching</button>
+      <button class="btn" data-ga="cover">Independent set &amp; cover</button>
+      <button class="btn" data-ga="euler">Euler / Hamilton</button>
+      <button class="btn" data-ga="bfs">BFS layers</button>
+    </div>
+    <div id="gOut" class="out"></div>
+  </div>
+
+  <h4>The vocabulary</h4>
+  <ul>
+    <li><strong>Degree</strong> — edges touching a vertex. Handshake lemma: the degrees sum to twice the edge count, so the number of odd-degree vertices is always even. Your first graph proof, and it is one line.</li>
+    <li><strong>Walk</strong> — any sequence of adjacent vertices. <strong>Trail</strong> — no repeated edge. <strong>Path</strong> — no repeated vertex. <strong>Circuit</strong> — closed trail. <strong>Cycle</strong> — closed path. The distinctions look pedantic until you meet Euler and Hamilton, whose entire difference is edges-vs-vertices.</li>
+    <li><strong>Connected</strong> — a path exists between every pair. Components are the maximal connected chunks.</li>
+  </ul>
+
+  <h4>Where a graph is fragile</h4>
+  <p>A <em class="term">bridge</em> is an edge whose removal disconnects the graph; a <em class="term">cut vertex</em> (articulation point) is a vertex whose removal does. Load "Bridged pair" and run the analysis. This is not academic: in a network topology, bridges and cut vertices are your single points of failure, and Tarjan's algorithm finds all of them in one depth-first pass.</p>
+
+  <h4>Independence, covering, matching</h4>
+  <p>Three intertwined notions. An <em class="term">independent set</em> is vertices with no edge between any two — think mutually non-conflicting tasks. A <em class="term">vertex cover</em> is a set of vertices touching every edge — think guards on corridors. They are exact complements: <strong><span class="math">S</span> is independent ⟺ its complement is a cover</strong>, so maximising one minimises the other. A <em class="term">matching</em> is a set of edges with no shared endpoint — pairing people to tasks, students to projects, kidneys to patients.</p>
+
+  <h4>Bipartite graphs</h4>
+  <p>A graph is <em class="term">bipartite</em> if you can 2-colour it: two teams, edges only between teams. The clean theorem: <strong>bipartite ⟺ no odd cycle.</strong> Bipartite graphs are where matching becomes tractable — König's theorem says maximum matching = minimum vertex cover there, and Hall's theorem tells you exactly when everyone can be matched. Every assignment problem you meet at work is this.</p>
+
+  <h4>Planarity and colouring</h4>
+  <p>A graph is <em class="term">planar</em> if it can be drawn with no edges crossing — the question a PCB designer asks about a single-layer board. Euler's formula for connected planar graphs: <strong><span class="math">V − E + F = 2</span></strong>. From it falls <span class="math">E ≤ 3V − 6</span>, which instantly proves <span class="math">K₅</span> is not planar. Kuratowski's theorem completes the story: a graph is planar exactly when it contains no <span class="math">K₅</span> or <span class="math">K₃,₃</span> hiding inside it. Both are loaded as presets above — the two smallest obstructions in all of graph theory.</p>
+  <p><em class="term">Graph colouring</em> asks for the fewest colours such that adjacent vertices differ. It is register allocation in a compiler, exam timetabling, and frequency assignment for cell towers, all the same problem. Every planar graph needs at most four colours — proved in 1976, the first major theorem to require a computer, which caused a philosophical argument that hasn't fully ended.</p>
+
+  <div class="note"><b>Euler vs Hamilton — the cruellest asymmetry in the subject</b>An <strong>Euler circuit</strong> uses every <em>edge</em> once: exists iff the graph is connected and every vertex has even degree. Checkable in linear time. A <strong>Hamiltonian cycle</strong> uses every <em>vertex</em> once: no such criterion is known, and deciding it is NP-complete. Two questions one word apart; one is trivial and one is, for all practical purposes, hopeless. Learning to feel that boundary is one of the real skills the subject teaches.</div>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/maths/mathematics-graph-theory-basics-set-1/">Basic terminology</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/walks-trails-paths-cycles-and-circuits-in-graph/">Walks, trails, paths, circuits</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/dsa/articulation-points-or-cut-vertices-in-a-graph/">Cut vertices</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/dsa/bridge-in-a-graph/">Bridges</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematics-independent-sets-covering-and-matching/">Independent sets &amp; covering</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/matching-graph-theory/">Matching</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/dsa/bipartite-graph/">Bipartite graphs</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematics-planar-graphs-graph-coloring/">Planar graphs &amp; colouring</a>
+  </div>
+</section>
+<section id="s7">
+  <p class="eyebrow">07 · Counting</p>
+  <h2>Combinatorics</h2>
+  <p class="sub">"How many?" — the question underneath complexity analysis, probability and optimisation.</p>
+
+  <p>Counting sounds like the easiest thing in mathematics and is reliably the hardest to get right. Everything rests on two rules. <strong>Product rule:</strong> independent choices multiply — <span class="math">m</span> shirts and <span class="math">n</span> trousers give <span class="math">mn</span> outfits. <strong>Sum rule:</strong> disjoint alternatives add. Almost every counting error in existence is either multiplying when you should add, or forgetting that your cases overlap.</p>
+
+  <h3>Mathematical induction</h3>
+  <p>Before counting, the tool for proving counting claims. Induction has exactly two obligations: the <strong>base case</strong> (the first domino falls) and the <strong>inductive step</strong> (each domino knocks the next). Both, or nothing.</p>
+  <div class="lab" data-label="Induction, one domino at a time">
+    <div class="row"><label>Claim</label>
+      <select id="indSel">
+        <option value="sum">1 + 2 + … + n = n(n+1)/2</option>
+        <option value="sq">1 + 3 + 5 + … + (2n−1) = n²</option>
+        <option value="pow">2ⁿ &gt; n for all n ≥ 1</option>
+      </select>
+    </div>
+    <svg id="indSvg" viewBox="0 0 660 190"></svg>
+    <div class="row"><label>n</label><input type="range" id="indN" min="1" max="12" value="4"><span class="val" id="indNv">4</span></div>
+    <div id="indOut" class="out"></div>
+    <p class="hint">Watch the step: the proof never checks n = 1000. It checks that <em>if</em> the claim holds at n, it must hold at n+1 — then the base case does the rest, forever. This is the discrete replacement for a limit argument.</p>
+  </div>
+
+  <h3>Permutations and combinations</h3>
+  <p>Two questions, one distinction: <strong>does order matter?</strong></p>
+  <ul>
+    <li><span class="math">P(n,r) = n!/(n−r)!</span> — ordered selections. Podium finishes, passwords, rankings.</li>
+    <li><span class="math">C(n,r) = n!/(r!(n−r)!)</span> — unordered selections. Committees, hands of cards, subsets. Written <span class="math">ⁿCᵣ</span> or <span class="math">(n choose r)</span>.</li>
+  </ul>
+  <p>The relationship is worth internalising: <span class="math">C(n,r) = P(n,r)/r!</span> — count the ordered ways, then divide out the <span class="math">r!</span> orderings you didn't care about. That "overcount then divide by the symmetry" move is the single most reusable trick in combinatorics.</p>
+
+  <div class="lab" data-label="Counting calculator + Pascal's triangle">
+    <div class="row"><label>n</label><input type="range" id="cbN" min="0" max="14" value="6"><span class="val" id="cbNv">6</span></div>
+    <div class="row"><label>r</label><input type="range" id="cbR" min="0" max="14" value="3"><span class="val" id="cbRv">3</span></div>
+    <div id="cbOut" class="out" style="margin-bottom:14px"></div>
+    <svg id="pascalSvg" viewBox="0 0 700 330"></svg>
+    <p class="hint">Pascal's identity <span class="math">C(n,r) = C(n−1,r−1) + C(n−1,r)</span> is the triangle's construction rule and also a proof: to choose r from n, either you take the last item (and choose r−1 from the rest) or you don't. Row sums are 2ⁿ — every subset counted once, which recovers the power set theorem from section 03.</p>
+  </div>
+
+  <h3>The pigeonhole principle</h3>
+  <p>If <span class="math">n</span> items go into <span class="math">k</span> boxes and <span class="math">n &gt; k</span>, some box holds at least two. It is so obvious it feels like cheating, and it proves startling things: any 13 people share a birth month; in London at least two people have exactly the same number of hairs; any 5 points in a unit square include a pair within <span class="math">√2/2</span>. Generalised form: some box holds at least <span class="math">⌈n/k⌉</span>.</p>
+  <div class="lab" data-label="Pigeonhole">
+    <div class="row"><label>Items</label><input type="range" id="phN" min="1" max="24" value="9"><span class="val" id="phNv">9</span></div>
+    <div class="row"><label>Boxes</label><input type="range" id="phK" min="1" max="12" value="4"><span class="val" id="phKv">4</span></div>
+    <svg id="phSvg" viewBox="0 0 660 220"></svg>
+    <div id="phOut" class="out"></div>
+    <p class="hint">Its real-world form: hash tables have finite buckets and infinite possible keys, so collisions are not a bug in your hash function — they are a theorem.</p>
+  </div>
+
+  <h3>Inclusion–exclusion</h3>
+  <p>The fix for double-counting. For two sets <span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span>; for three, add the singles, subtract the pairs, add the triple back. In general alternate signs across all intersections. Drag the sizes and watch the arithmetic:</p>
+  <div class="lab" data-label="Inclusion–exclusion, live">
+    <div id="ieCtl"></div>
+    <svg id="ieSvg" viewBox="0 0 420 300"></svg>
+    <div id="ieOut" class="out fixed"></div>
+    <p class="hint">Every "count the numbers under 1000 divisible by 2, 3 or 5" problem, every SQL <code>OR</code> cardinality estimate, and the derangement formula ("no one gets their own gift") are this principle.</p>
+  </div>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/maths/principle-of-mathematical-induction/">Mathematical induction</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/mathematics-combinatorics-basics/">Basics of counting</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/discrete-mathematics-the-pigeonhole-principle/">Pigeonhole principle</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/permutations-and-combinations/">Permutations &amp; combinations</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/inclusion-exclusion-various-applications/">Inclusion–exclusion</a>
+  </div>
+</section>
+
+<section id="s8">
+  <p class="eyebrow">08 · Sequences</p>
+  <h2>Recurrence relations and generating functions</h2>
+  <p class="sub">Two ways to turn "it depends on the previous one" into a formula.</p>
+
+  <p>A <em class="term">recurrence relation</em> defines each term from earlier terms plus a base case. <span class="math">F(n) = F(n−1) + F(n−2)</span>, <span class="math">F(0)=0, F(1)=1</span> is Fibonacci. Recurrences are how recursive algorithms describe their own cost: merge sort satisfies <span class="math">T(n) = 2T(n/2) + n</span>, and solving that recurrence <em>is</em> proving it runs in <span class="math">n log n</span>.</p>
+  <p>To solve a linear homogeneous recurrence, guess <span class="math">aⁿ</span>, substitute, and you get the <em class="term">characteristic equation</em>. Its roots give the closed form. Distinct roots <span class="math">r₁, r₂</span> give <span class="math">A r₁ⁿ + B r₂ⁿ</span>; a repeated root <span class="math">r</span> gives <span class="math">(A + Bn) rⁿ</span>. The constants come from the base cases.</p>
+
+  <div class="lab" data-label="Recurrence solver">
+    <p class="hint" style="margin:0 0 12px">f(n) = a·f(n−1) + b·f(n−2), with f(0) and f(1) given.</p>
+    <div class="row"><label>a</label><input type="range" id="rcA" min="-3" max="4" step="1" value="1"><span class="val" id="rcAv">1</span></div>
+    <div class="row"><label>b</label><input type="range" id="rcB" min="-4" max="4" step="1" value="1"><span class="val" id="rcBv">1</span></div>
+    <div class="row"><label>f(0)</label><input type="range" id="rcF0" min="0" max="5" value="0"><span class="val" id="rcF0v">0</span></div>
+    <div class="row"><label>f(1)</label><input type="range" id="rcF1" min="0" max="5" value="1"><span class="val" id="rcF1v">1</span></div>
+    <div class="btns">
+      <button class="btn gold" data-rc="1,1,0,1">Fibonacci</button>
+      <button class="btn gold" data-rc="2,0,1,2">Powers of 2</button>
+      <button class="btn gold" data-rc="2,-1,0,1">Repeated root</button>
+      <button class="btn gold" data-rc="2,1,0,1">Pell</button>
+    </div>
+    <canvas id="rcCv" width="1300" height="420" style="width:100%;height:auto"></canvas>
+    <div id="rcOut" class="out"></div>
+  </div>
+
+  <p>Notice what happens with Fibonacci: the roots are <span class="math">(1±√5)/2</span> — the golden ratio walks out of a purely discrete question. And notice the growth rate is governed entirely by the largest root. That is the general lesson: <strong>the characteristic root is the growth rate</strong>, which is exactly what you want to know about an algorithm.</p>
+
+  <h3>Generating functions</h3>
+  <p>The slickest idea in elementary combinatorics. Take a sequence <span class="math">a₀, a₁, a₂, …</span> and hang it on the coefficients of a formal power series:</p>
+  <p style="text-align:center;font-size:20px;color:var(--gold)" class="math">G(x) = a₀ + a₁x + a₂x² + a₃x³ + ⋯</p>
+  <p>You never evaluate <span class="math">x</span>. It is a clothes hanger — a way to carry an infinite sequence as a single algebraic object, so that <em>operations on sequences become operations on functions</em>. Shifting a sequence becomes multiplying by <span class="math">x</span>. Convolving two sequences (the sum-over-all-splits that appears everywhere in counting) becomes plain multiplication. Suddenly a recurrence becomes an equation you can solve with school algebra.</p>
+
+  <div class="lab" data-label="Generating function dictionary">
+    <div class="row"><label>Sequence</label>
+      <select id="gfSel">
+        <option value="ones">1, 1, 1, 1, … (all ones)</option>
+        <option value="pow2">1, 2, 4, 8, … (powers of 2)</option>
+        <option value="nat">0, 1, 2, 3, … (naturals)</option>
+        <option value="fib">Fibonacci</option>
+        <option value="binom">Binomial coefficients C(5,k)</option>
+        <option value="dice">Sum of two dice</option>
+      </select>
+    </div>
+    <div id="gfOut" class="out"></div>
+    <svg id="gfSvg" viewBox="0 0 660 200"></svg>
+    <p class="hint">The dice example is the whole idea in one line: one die is <span class="math">x+x²+x³+x⁴+x⁵+x⁶</span>, two dice is that <em>squared</em>, and the coefficient of <span class="math">x⁷</span> — namely 6 — is the number of ways to roll seven. Multiplying polynomials performed the counting for you.</p>
+  </div>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/dsa/recurrence-relations-a-complete-guide/">Recurrence relations</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/discrete-maths-generating-functions-introduction-prerequisites/">Generating functions</a>
+  </div>
+</section>
+
+<section id="s9">
+  <p class="eyebrow">09 · Uncertainty</p>
+  <h2>Discrete probability</h2>
+  <p class="sub">Counting, but the outcomes have weights.</p>
+
+  <p>Probability begins as combinatorics with a denominator. A <em class="term">sample space</em> <span class="math">S</span> is the set of possible outcomes; an <em class="term">event</em> is a subset of it — so events are sets and all of section 03 applies unchanged. When outcomes are equally likely, <span class="math">P(E) = |E|/|S|</span>, and you are back to counting.</p>
+  <p>Kolmogorov's three <em class="term">axioms</em> are all you need to assume: probabilities are non-negative; <span class="math">P(S) = 1</span>; and disjoint events add. Everything else is a theorem, including <span class="math">P(Aᶜ) = 1 − P(A)</span> and the inclusion–exclusion rule <span class="math">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</span> — the very same principle from section 07, now with weights.</p>
+
+  <h3>Conditional probability and Bayes</h3>
+  <p><span class="math">P(A|B) = P(A ∩ B)/P(B)</span> — restrict the universe to B and re-normalise. Independence means <span class="math">P(A|B) = P(A)</span>: learning B told you nothing. Rearranging the definition twice gives Bayes' theorem, which reverses the direction of a conditional:</p>
+  <p style="text-align:center;font-size:20px;color:var(--gold)" class="math">P(H|E) = P(E|H) · P(H) / P(E)</p>
+  <p>This is the mathematics of updating a belief when evidence arrives — the engine under spam filters, medical screening, A/B tests and every Bayesian model in your stack. Its most famous lesson is that <strong>a very accurate test for a very rare condition still produces mostly false positives</strong>, and no amount of intuition prepares people for it. Move the sliders:</p>
+
+  <div class="lab" data-label="Bayes, drawn as 10,000 people">
+    <div class="row"><label>Base rate</label><input type="range" id="byPrev" min="1" max="500" value="10"><span class="val" id="byPrevv">0.1%</span></div>
+    <div class="row"><label>Sensitivity</label><input type="range" id="bySens" min="50" max="100" value="99"><span class="val" id="bySensv">99%</span></div>
+    <div class="row"><label>Specificity</label><input type="range" id="bySpec" min="50" max="100" value="99"><span class="val" id="bySpecv">99%</span></div>
+    <canvas id="byCv" width="1200" height="480" style="width:100%;height:auto"></canvas>
+    <div id="byOut" class="out"></div>
+    <p class="hint">Each dot is a person. Gold = has the condition, mint = doesn't; filled = tested positive. The answer everyone wants — "I tested positive, what now?" — is the ratio of filled gold to all filled dots, and at low base rates it is shockingly small.</p>
+  </div>
+
+  <h3>Random variables and distributions</h3>
+  <p>A <em class="term">random variable</em> assigns a number to each outcome, so you can average it. <em class="term">Expectation</em> <span class="math">E[X] = Σ x·P(x)</span> is the long-run mean; <em class="term">variance</em> measures spread. Expectation is <strong>linear even when variables are dependent</strong> — <span class="math">E[X+Y] = E[X] + E[Y]</span> always — which is the workhorse behind average-case algorithm analysis.</p>
+  <p>Four distributions cover most of what you will meet. The first three are discrete; the last is the continuous one that keeps showing up as a limit of the others — the border from section 00, crossed in plain sight.</p>
+
+  <div class="lab" data-label="Distribution studio">
+    <div class="btns" id="distTabs">
+      <button class="btn active" data-d="unif">Uniform</button>
+      <button class="btn" data-d="binom">Binomial</button>
+      <button class="btn" data-d="pois">Poisson</button>
+      <button class="btn" data-d="exp">Exponential</button>
+      <button class="btn" data-d="norm">Normal</button>
+    </div>
+    <div id="distCtl"></div>
+    <canvas id="distCv" width="1300" height="440" style="width:100%;height:auto"></canvas>
+    <div id="distOut" class="out"></div>
+  </div>
+
+  <ul>
+    <li><strong>Uniform:</strong> every outcome equally likely. Fair dice, random array index.</li>
+    <li><strong>Binomial:</strong> number of successes in <span class="math">n</span> independent trials, <span class="math">P(k) = C(n,k)p<sup>k</sup>(1−p)<sup>n−k</sup></span> — note the combination from section 07 sitting inside it. Conversions, retries, coin flips.</li>
+    <li><strong>Poisson:</strong> count of rare events in a fixed window. It <em>is</em> the binomial as <span class="math">n→∞, p→0</span> with <span class="math">np = λ</span> fixed. Requests per second, defects per batch, arrivals per minute.</li>
+    <li><strong>Exponential:</strong> the waiting <em>time</em> between Poisson events — continuous, memoryless, and the standard model for time-to-failure and inter-arrival gaps.</li>
+    <li><strong>Normal:</strong> the limit of sums. The central limit theorem says almost anything built by adding many independent contributions ends up here, which is why the bell curve appears in places that have nothing to do with each other.</li>
+  </ul>
+  <p>Set the binomial to <span class="math">n = 50</span> and watch it grow a bell shape; set Poisson's <span class="math">λ</span> high and watch the same thing. That convergence is the clearest single picture of discrete becoming continuous.</p>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/maths/probability-theory/">Probability theory</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/basic-concepts-of-probability/">Basic concepts</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/axiomatic-approach-to-probability/">Axioms</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/conditional-probability/">Conditional probability</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/bayes-theorem/">Bayes' theorem</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/data-science/mathematics-probability-distributions-set-1/">Uniform</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/data-science/probability-distributions-exponential-distribution/">Exponential</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/data-science/mathematics-probability-distributions-set-3-normal-distribution/">Normal</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/data-science/mathematics-probability-distributions-set-5-poisson-distribution/">Poisson</a>
+  </div>
+</section>
+<section id="s10">
+  <p class="eyebrow">10 · Integers</p>
+  <h2>Number theory and modular arithmetic</h2>
+  <p class="sub">The oldest pure mathematics, now guarding your bank account.</p>
+
+  <p>Number theory studies the integers, and its central fact is the <em class="term">fundamental theorem of arithmetic</em>: every integer above 1 factors into primes in exactly one way. Primes are the atoms; there are infinitely many (Euclid, by contradiction, in four lines); and finding them inside a large number is so hard that we have built the entire internet's security on that difficulty.</p>
+
+  <h3>Division, gcd, and Euclid's algorithm</h3>
+  <p>The <em class="term">division algorithm</em> says any <span class="math">a, b</span> give unique <span class="math">q, r</span> with <span class="math">a = bq + r</span> and <span class="math">0 ≤ r &lt; b</span>. From it comes the observation that powers the oldest non-trivial algorithm still in daily use: <strong><span class="math">gcd(a,b) = gcd(b, a mod b)</span></strong>. Any common divisor of <span class="math">a</span> and <span class="math">b</span> divides the remainder too, so replace the pair with a smaller pair and repeat. It terminates in <span class="math">O(log)</span> steps — a fact first proved via Fibonacci numbers, connecting straight back to section 08.</p>
+
+  <div class="lab" data-label="Euclid's algorithm, geometrically">
+    <div class="row">
+      <label>a</label><input type="number" id="euA" value="252" min="1" max="999" style="width:90px">
+      <label style="min-width:20px">b</label><input type="number" id="euB" value="198" min="1" max="999" style="width:90px">
+      <button class="btn gold" id="euGo">Run</button>
+    </div>
+    <svg id="euSvg" viewBox="0 0 660 260"></svg>
+    <div id="euOut" class="out fixed"></div>
+    <p class="hint">Geometrically: tile an a×b rectangle with the largest squares that fit, then repeat on what's left. The final square's side is the gcd. The extended version also finds <span class="math">x, y</span> with <span class="math">ax + by = gcd(a,b)</span> — Bézout's identity — which is how modular inverses get computed, and therefore how RSA decrypts.</p>
+  </div>
+
+  <h3>Modular arithmetic</h3>
+  <p>Work with remainders and the integers collapse into a finite wheel. <span class="math">a ≡ b (mod n)</span> means <span class="math">n</span> divides <span class="math">a − b</span>. This is an equivalence relation (section 03) whose classes are the <span class="math">n</span> possible remainders — and those classes form a group under addition (section 05). Clocks, hashing, checksums, cyclic buffers, ISBN and NRIC check digits are all arithmetic mod something.</p>
+
+  <div class="lab" data-label="The modular clock">
+    <div class="row"><label>Modulus n</label><input type="range" id="mcN" min="3" max="24" value="12"><span class="val" id="mcNv">12</span></div>
+    <div class="row"><label>Base a</label><input type="range" id="mcA" min="1" max="23" value="2"><span class="val" id="mcAv">2</span></div>
+    <div class="row"><label>Mode</label>
+      <select id="mcMode">
+        <option value="pow">Powers: a, a², a³, … mod n</option>
+        <option value="mul">Multiples: a, 2a, 3a, … mod n</option>
+      </select>
+    </div>
+    <svg id="mcSvg" viewBox="0 0 420 420"></svg>
+    <div id="mcOut" class="out"></div>
+    <p class="hint">Set n prime and try each base: some bases sweep out every non-zero residue before returning to 1 — those are <em>primitive roots</em>, the generators of a cyclic group. Diffie–Hellman key exchange is a bet that this path is easy to walk forwards and infeasible to walk backwards.</p>
+  </div>
+
+  <h3>Fermat's little theorem</h3>
+  <p>If <span class="math">p</span> is prime and <span class="math">p ∤ a</span>, then <strong><span class="math">a<sup>p−1</sup> ≡ 1 (mod p)</span></strong>. Section 05 already explained why: the non-zero residues mod <span class="math">p</span> form a group of order <span class="math">p−1</span>, and Lagrange's theorem forces every element to the identity when raised to the group's order. Two consequences you will actually use:</p>
+  <ul>
+    <li><strong>Modular inverses:</strong> <span class="math">a<sup>p−2</sup></span> is the inverse of <span class="math">a</span> mod <span class="math">p</span>. Every competitive programmer's "divide under a prime modulus" trick.</li>
+    <li><strong>Primality testing:</strong> if <span class="math">a<sup>n−1</sup> ≢ 1 (mod n)</span> then <span class="math">n</span> is definitely composite — no factoring required. Miller–Rabin refines this into the test that generates the primes in your TLS certificates.</li>
+  </ul>
+
+  <div class="lab" data-label="Fermat test + a toy RSA">
+    <div class="row">
+      <label>Test n</label><input type="number" id="fmN" value="561" min="3" max="9999" style="width:100px">
+      <button class="btn gold" id="fmGo">Run Fermat test</button>
+    </div>
+    <div id="fmOut" class="out fixed"></div>
+    <h5 style="margin-top:22px">RSA in miniature</h5>
+    <div class="row">
+      <label>p, q (primes)</label>
+      <input type="number" id="rsaP" value="17" style="width:70px"><input type="number" id="rsaQ" value="23" style="width:70px">
+      <label style="min-width:60px">message</label><input type="number" id="rsaM" value="42" style="width:80px">
+      <button class="btn gold" id="rsaGo">Encrypt &amp; decrypt</button>
+    </div>
+    <div id="rsaOut" class="out fixed"></div>
+    <p class="hint">Try n = 561 in the Fermat test — it passes for many bases despite being 3 × 11 × 17. Those are Carmichael numbers, the reason we use Miller–Rabin instead. The RSA demo uses genuinely the same arithmetic as the real thing, just with primes small enough to read; the security comes only from p and q being 300 digits long.</p>
+  </div>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/maths/number-theory-in-mathematics/">Number theory</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/modular-arithmetic/">Modular arithmetic</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/how-to-find-the-gcd-greatest-common-divisor/">GCD</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/euclid-s-division-algorithm/">Euclid's division algorithm</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/fermat-little-theorem/">Fermat's little theorem</a>
+  </div>
+</section>
+
+<section id="s11">
+  <p class="eyebrow">11 · Two values</p>
+  <h2>Boolean algebra</h2>
+  <p class="sub">Where logic becomes hardware.</p>
+
+  <p>Boolean algebra is section 02's propositional logic, rewritten as arithmetic on <span class="math">{0,1}</span> and equipped with a purpose: describing circuits. Shannon's 1937 master's thesis — the most consequential ever written — noticed that a relay network obeys exactly the laws Boole had written for the "laws of thought" a century earlier. AND is a series pair of switches; OR is parallel; NOT is an inverter. All of digital computing follows.</p>
+  <p>The laws should look familiar by now, because they are the set identities and the logical equivalences again: commutative, associative, distributive (<em>both</em> ways, unlike ordinary arithmetic), identity, complement, idempotence <span class="math">A + A = A</span>, absorption <span class="math">A + AB = A</span>, and De Morgan <span class="math">(AB)' = A' + B'</span>.</p>
+  <p>Two structural facts. Every Boolean expression has a <strong>dual</strong>, obtained by swapping AND↔OR and 0↔1; if a theorem is true, so is its dual — you get half your results free. And every Boolean function of <span class="math">n</span> variables is one of <span class="math">2^(2ⁿ)</span> possibilities: <span class="math">2ⁿ</span> input rows, each independently mapped to 0 or 1. For <span class="math">n = 2</span> that's 16 functions; for <span class="math">n = 4</span>, 65,536; for <span class="math">n = 6</span>, more than the atoms in a small mountain.</p>
+
+  <h3>Minimisation with a Karnaugh map</h3>
+  <p>A Boolean function has infinitely many equivalent expressions and you want a small one, because small means fewer gates, less power, less delay. A <em class="term">K-map</em> rearranges the truth table so that adjacent cells differ in exactly one variable (Gray code order) — then any rectangular block of <span class="math">2ᵏ</span> ones is a term with <span class="math">k</span> variables eliminated. Bigger blocks, simpler expression.</p>
+
+  <div class="lab" data-label="Karnaugh map minimiser">
+    <div class="row"><label>Variables</label>
+      <select id="kmVars"><option value="3">3 (A B C)</option><option value="4" selected>4 (A B C D)</option></select>
+      <button class="btn" id="kmRand">Random function</button>
+      <button class="btn" id="kmClear">Clear</button>
+    </div>
+    <p class="hint" style="margin:2px 0 12px">Click cells to set outputs to 1. Minimisation runs live via Quine–McCluskey.</p>
+    <div id="kmGrid"></div>
+    <div id="kmOut" class="out"></div>
+    <svg id="kmCircuit" viewBox="0 0 700 260"></svg>
+    <p class="hint">The grid wraps around — the left column is adjacent to the right, and the top row to the bottom, because the Gray code is a cycle. Blocks that wrap are legal and often the ones that save the most gates. This is a torus drawn flat, which is a genuinely topological reason your circuit gets smaller.</p>
+  </div>
+
+  <div class="links"><b>Go deeper</b>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/representation-of-boolean-functions/">Boolean functions</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/boolean-algebraic-theorems/">Algebraic theorems</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/maths/properties-of-boolean-algebra/">Properties</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/engineering-mathematics/number-of-boolean-functions/">Number of Boolean functions</a><span>·</span>
+    <a href="https://www.geeksforgeeks.org/digital-logic/minimization-of-boolean-functions/">Minimisation</a>
+  </div>
+</section>
+
+<section id="s12">
+  <p class="eyebrow">12 · Strategy</p>
+  <h2>Game theory</h2>
+  <p class="sub">Discrete mathematics when the other side is also thinking.</p>
+
+  <p>You asked where game theory fits, and the answer is: it is what happens when you point combinatorics and probability at a situation containing <em>other decision-makers</em>. Every other section assumes the world is indifferent to your choices. Game theory drops that assumption, and everything gets harder and more interesting.</p>
+  <p>A <em class="term">game</em> is players, strategies, and a payoff function — a function (section 03) from strategy profiles to outcomes. A <em class="term">Nash equilibrium</em> is a profile where no single player can improve by changing alone. Its existence is guaranteed (allowing randomised strategies) by a fixed-point theorem, which is continuous mathematics quietly paying a debt to the discrete side.</p>
+
+  <div class="lab" data-label="2×2 game solver">
+    <div class="btns" id="gtPresets">
+      <button class="btn active" data-g="pd">Prisoner's dilemma</button>
+      <button class="btn" data-g="chicken">Chicken</button>
+      <button class="btn" data-g="stag">Stag hunt</button>
+      <button class="btn" data-g="mp">Matching pennies</button>
+      <button class="btn" data-g="coord">Coordination</button>
+    </div>
+    <div id="gtGrid"></div>
+    <div id="gtOut" class="out"></div>
+    <p class="hint">Cells show (row payoff, column payoff). Underlines mark each player's best response; a cell underlined twice is a pure Nash equilibrium. Matching pennies has none — which is exactly why bluffing exists, and why the equilibrium there must be a mixed strategy.</p>
+  </div>
+
+  <p>Three connections worth holding onto:</p>
+  <ul>
+    <li><strong>To graphs:</strong> combinatorial games (Nim, chess, Go) are directed graphs of positions, and solving them is a labelling problem on that graph. Sprague–Grundy theory says every impartial game is equivalent to a single pile of Nim — an isomorphism, in the exact sense of section 05.</li>
+    <li><strong>To probability:</strong> mixed strategies are probability distributions over moves, and equilibrium is found by making your opponent indifferent — an expectation calculation from section 09.</li>
+    <li><strong>To your work:</strong> auction design, incentive schemes, adversarial machine learning, and multi-agent AI systems are all applied game theory. So is every "if we nudge this way, how do people respond" question in product design.</li>
+  </ul>
+</section>
+
+<section id="s13">
+  <p class="eyebrow">13 · Synthesis</p>
+  <h2>How it all comes together</h2>
+  <p class="sub">The same handful of ideas, met in different rooms.</p>
+
+  <p>Here is the honest structure of the subject, once the syllabus stops pretending these are ten separate topics.</p>
+  <p><strong>Logic is the floor.</strong> It licenses every step of every argument in every other section. <strong>Set theory is the ground.</strong> Every object — a graph, a group, a sample space, a Boolean function — is defined as a set with structure imposed on it. <strong>Relations are the first structure</strong>, and everything after that is a relation with adjectives: make it symmetric and you get an equivalence (modular arithmetic); make it antisymmetric and you get an order (lattices, dependencies); draw it and you get a graph.</p>
+  <p><strong>Counting is the measuring tape.</strong> It sizes everything else — how many subsets, how many colourings, how many keys an attacker must try. Add weights and it becomes probability. <strong>Algebra is the compression.</strong> Once you have met union, gcd, AND and join in four separate sections and noticed they obey identical laws, you name the pattern (lattice, monoid, group), prove things once, and inherit them everywhere.</p>
+
+  <div class="lab" data-label="One theorem, four rooms">
+    <div id="synthTabs" class="btns">
+      <button class="btn active" data-sy="demorgan">De Morgan's law</button>
+      <button class="btn" data-sy="lagrange">Lagrange → Fermat → RSA</button>
+      <button class="btn" data-sy="pigeon">Pigeonhole → hashing</button>
+      <button class="btn" data-sy="euler">Euler's formula → circuits</button>
+    </div>
+    <div id="synthOut" class="out fixed"></div>
+  </div>
+
+  <h3>A single worked chain</h3>
+  <p>To see all of it at once, follow RSA end to end. <strong>Number theory</strong> supplies primes and the difficulty of factoring. <strong>Euclid's algorithm</strong> computes the private key from the public one. <strong>Group theory</strong> — Lagrange's theorem — proves that decryption actually undoes encryption. <strong>Combinatorics</strong> tells you the key space is too large to search. <strong>Probability</strong> bounds the error of the primality test that generated the keys. <strong>Logic</strong> holds the security proof together. <strong>Graph theory and Boolean algebra</strong> describe the circuit that executes it. Six branches, one padlock, and until 1977 not one of them was considered useful.</p>
+
+  <div class="note"><b>And the continuous half?</b>Still there, doing the parts discrete mathematics can't: Stirling's approximation for factorials, integrals for asymptotics, gradients for optimisation, fixed-point theorems for equilibrium, the central limit theorem for the bell curve, spectral methods for graphs. The two halves are not rivals. The border is where most modern work actually happens — and machine learning, which is continuous optimisation over discrete structures, is the clearest example currently running.</div>
+</section>
+
+<section id="s14">
+  <p class="eyebrow">14 · Practice</p>
+  <h2>How to actually learn this</h2>
+  <p class="sub">An order that works, and the honest reason for it.</p>
+
+  <div id="pathway"></div>
+
+  <h3>Three habits that separate people who get it from people who don't</h3>
+  <ul>
+    <li><strong>Compute small cases obsessively.</strong> Before proving anything about <span class="math">n</span>, do <span class="math">n = 1, 2, 3</span> by hand. Almost every theorem in this subject was noticed as a pattern in small cases first. If you cannot count the subsets of {a,b,c} on paper, the formula will never be more than a formula.</li>
+    <li><strong>Write the proof out, badly, then fix it.</strong> Reading a proof teaches you nothing you can reuse; the understanding lives in the failure to write it. Aim for "would a sceptical reader have to agree?" rather than elegance.</li>
+    <li><strong>Translate everything into code once.</strong> Implement Warshall, greedy colouring, extended Euclid, a K-map minimiser. The implementation forces the edge cases into the open, and it is the fastest route from "I've seen this" to "I own this."</li>
+  </ul>
+
+  <p>For exams like GATE or UGC NET, the weighting is predictable: logic, sets and relations, counting, graph theory and modular arithmetic carry the most marks and are the most mechanical. For interviews and competitive programming, the return concentrates in counting, recurrences, graphs and number theory. For actual engineering work, the highest-leverage sections are graphs, probability and Boolean algebra — but the ones that quietly change how you think are logic and algebra.</p>
+
+  <blockquote>Discrete mathematics rewards a specific kind of stubbornness: refusing to accept a claim until you can see why it could not be otherwise. Everything else in the subject is vocabulary.</blockquote>
+</section>
+
+<footer style="border-top:1px solid var(--line);padding:40px 0 90px;font-family:var(--ui);font-size:12.5px;color:var(--faint);line-height:1.9">
+  <div>A self-contained interactive field guide. Every widget on this page runs on hand-written vanilla JavaScript — no libraries, no build step, no network calls.</div>
+  <div style="margin-top:8px">Further-reading links throughout point to GeeksforGeeks. Built for ted.sg.</div>
+</footer>
+</main>
+</div>
+<script>
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const CSS=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C={mint:'#9DC6A8',gold:'#D4A04C',moss:'#3FA678',clay:'#C97B5A',dim:'#8CA595',faint:'#5F7568',text:'#E7F1E7',line:'rgba(157,198,168,.20)'};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+/* ============ NAV + TOC ============ */
+const SECTIONS=[["s0","Orientation",""],["s1","Why learn it","01"],["s2","Logic & proof","02"],["s3","Sets, relations, functions","03"],
+["s4","Order & lattices","04"],["s5","Monoids & groups","05"],["s6","Graph theory","06"],["s7","Combinatorics","07"],
+["s8","Recurrences","08"],["s9","Probability","09"],["s10","Number theory","10"],["s11","Boolean algebra","11"],
+["s12","Game theory","12"],["s13","Synthesis","13"],["s14","How to learn it","14"]];
+{
+ const rail=$('#rail'),toc=$('#toc');
+ SECTIONS.forEach(([id,t,n])=>{
+   rail.insertAdjacentHTML('beforeend',`<a href="#${id}" data-t="${id}"><span class="n">${n||'·'}</span>${t}</a>`);
+   toc.insertAdjacentHTML('beforeend',`<a href="#${id}"><i>${n||'—'}</i>${t}</a>`);
+ });
+ const links=$$('#rail a');
+ const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.dataset.t===e.target.id));}});},{rootMargin:'-15% 0px -70% 0px'});
+ SECTIONS.forEach(([id])=>{const el=document.getElementById(id); if(el) io.observe(el);});
+}
+
+/* ============ HERO: continuous -> discrete ============ */
+(function(){
+ const cv=$('#heroCv'),x=cv.getContext('2d'),W=cv.width,H=cv.height;
+ const f=t=>0.5+0.34*Math.sin(t*2.4)*Math.exp(-t*0.18)+0.10*Math.sin(t*5.1);
+ let N=9,anim=null;
+ const slider=$('#heroN');
+ function draw(){
+   x.clearRect(0,0,W,H);
+   const pad=54,w=W-pad*2,h=H-pad*2;
+   const X=t=>pad+t/6*w, Y=v=>pad+h-v*h;
+   // grid
+   x.strokeStyle='rgba(157,198,168,.07)';x.lineWidth=1;
+   for(let i=0;i<=6;i++){x.beginPath();x.moveTo(X(i),pad);x.lineTo(X(i),pad+h);x.stroke();}
+   // bars
+   const dt=6/N;
+   for(let i=0;i<N;i++){
+     const t=i*dt+dt/2,v=f(t);
+     const g=x.createLinearGradient(0,Y(v),0,pad+h);
+     g.addColorStop(0,'rgba(212,160,76,.5)');g.addColorStop(1,'rgba(212,160,76,.05)');
+     x.fillStyle=g; x.fillRect(X(i*dt)+1.5,Y(v),w/N-3,h-(Y(v)-pad));
+     x.strokeStyle='rgba(212,160,76,.75)';x.lineWidth=2;
+     x.beginPath();x.moveTo(X(i*dt)+1.5,Y(v));x.lineTo(X((i+1)*dt)-1.5,Y(v));x.stroke();
+     if(N<=26){x.fillStyle=C.gold;x.beginPath();x.arc(X(t),Y(v),4.5,0,7);x.fill();}
+   }
+   // smooth curve
+   x.strokeStyle=C.mint;x.lineWidth=2.5;x.beginPath();
+   for(let i=0;i<=600;i++){const t=i/100;const px=X(t),py=Y(f(t));i?x.lineTo(px,py):x.moveTo(px,py);}
+   x.stroke();
+   // labels
+   x.font='500 22px Space Grotesk, sans-serif';
+   x.fillStyle=C.mint;x.fillText('continuous  ∫ f(t) dt',pad,pad-20);
+   x.fillStyle=C.gold;x.textAlign='right';x.fillText('discrete  Σ f(tᵢ)·Δt',W-pad,pad-20);x.textAlign='left';
+   // sum readout
+   let S=0;for(let i=0;i<N;i++)S+=f(i*dt+dt/2)*dt;
+   let I=0;for(let i=0;i<20000;i++)I+=f(i*6/20000+3/20000)*6/20000;
+   $('#heroTxt').innerHTML=`With <span class="hi">${N}</span> samples the discrete sum is <span class="hi">${S.toFixed(5)}</span>; the true integral is <span class="ok">${I.toFixed(5)}</span>. Error <span class="no">${Math.abs(S-I).toExponential(2)}</span>. `+
+   (N<14?'At low resolution you are doing discrete mathematics — finitely many objects, each countable.':N<60?'The two are converging. This is numerical integration: the continuous world approximated by a finite machine.':'In the limit the gaps vanish and you have calculus. A computer never actually gets here — it always stops at some finite N.');
+ }
+ slider.oninput=()=>{N=+slider.value;$('#heroNv').textContent=N;draw();};
+ $('#heroPlay').onclick=function(){
+   if(anim){clearInterval(anim);anim=null;this.textContent='Close the gaps';return;}
+   this.textContent='Stop';N=3;
+   anim=setInterval(()=>{N+=Math.max(1,Math.floor(N/12));if(N>=120){N=120;clearInterval(anim);anim=null;$('#heroPlay').textContent='Close the gaps';}
+     slider.value=N;$('#heroNv').textContent=N;draw();},60);
+ };
+ draw();
+})();
+
+/* ============ BRIDGE TABLE ============ */
+(function(){
+ const rows=[
+  ['The core idea','Limits — what happens as gaps shrink','Induction — what happens at the next step'],
+  ['Accumulating','Integral <span class="math">∫ f(x) dx</span>','Summation <span class="math">Σ f(k)</span>'],
+  ['Rate of change','Derivative <span class="math">f′(x)</span>','Finite difference <span class="math">f(n+1) − f(n)</span>'],
+  ['Encoding a whole object','Taylor series','Generating function'],
+  ['Typical question','How fast? How much?','How many? Which arrangement? Reachable?'],
+  ['Typical objects','Real numbers, curves, fields','Integers, sets, graphs, bit strings'],
+  ['Lives in','Physics, signals, optimisation','Algorithms, cryptography, databases, logic'],
+ ];
+ $('#bridgeTable').innerHTML='<table class="tt" style="text-align:left"><tr><th style="text-align:left"></th><th style="color:'+C.mint+'">Continuous</th><th style="color:'+C.gold+'">Discrete</th></tr>'+
+  rows.map(r=>`<tr><td style="text-align:left;color:${C.faint};font-size:11.5px;letter-spacing:.04em;text-transform:uppercase">${r[0]}</td><td style="text-align:left">${r[1]}</td><td style="text-align:left">${r[2]}</td></tr>`).join('')+'</table>';
+})();
+
+/* ============ FIELD MAP (force-directed) ============ */
+(function(){
+ const NODES=[
+  {id:'Logic',x:.5,y:.10,d:'Propositions, quantifiers, proof. The rules that say which sentences may follow which.',dep:'Nothing — this is bedrock.',feed:'Everything. Every proof in every other node is licensed here.'},
+  {id:'Sets',x:.5,y:.28,d:'Unordered collections. The universal container for mathematical objects.',dep:'Logic (a set is defined by a predicate).',feed:'Relations, probability, and the definition of literally every structure below.'},
+  {id:'Relations',x:.30,y:.44,d:'Any subset of A×A. Reflexive, symmetric, antisymmetric, transitive.',dep:'Sets.',feed:'Equivalences → modular arithmetic. Orders → lattices. Drawn → graphs.'},
+  {id:'Functions',x:.70,y:.44,d:'Relations where every input has exactly one output. Injective, surjective, bijective.',dep:'Sets, Relations.',feed:'Group homomorphisms, random variables, hash functions, Boolean functions.'},
+  {id:'Order & Lattices',x:.14,y:.60,d:'Partial orders, Hasse diagrams, meet and join.',dep:'Relations (reflexive + antisymmetric + transitive).',feed:'Type systems, dependency resolution, program analysis. gcd/lcm form a lattice.'},
+  {id:'Graphs',x:.36,y:.66,d:'Vertices and edges. Connectivity, colouring, matching, planarity.',dep:'Relations (a graph IS a symmetric relation drawn).',feed:'Networks, scheduling, compilers, game trees, everything in CS.'},
+  {id:'Algebra',x:.72,y:.63,d:'Semigroups, monoids, groups. Structure stripped to its axioms.',dep:'Sets + a closed associative operation.',feed:'Fermat via Lagrange → cryptography. Symmetry. Parallel reduction.'},
+  {id:'Counting',x:.50,y:.80,d:'Permutations, combinations, pigeonhole, inclusion–exclusion, induction.',dep:'Sets, Functions (injections and the pigeonhole).',feed:'Probability, complexity analysis, key-space sizing.'},
+  {id:'Recurrences',x:.30,y:.90,d:'Sequences defined by their own past. Characteristic roots, generating functions.',dep:'Counting, Induction.',feed:'Algorithm running times, dynamic programming.'},
+  {id:'Probability',x:.68,y:.88,d:'Counting with weights. Conditioning, Bayes, distributions.',dep:'Sets (events), Counting.',feed:'ML, randomised algorithms, risk, game theory mixed strategies.'},
+  {id:'Number Theory',x:.88,y:.76,d:'Primes, gcd, congruences, Fermat.',dep:'Relations (congruence is an equivalence), Algebra (units form a group).',feed:'RSA, hashing, checksums, error correction.'},
+  {id:'Boolean Algebra',x:.86,y:.36,d:'Logic as arithmetic on {0,1}. Minimisation, gates.',dep:'Logic, Lattices (it is a complemented distributive lattice).',feed:'Every digital circuit ever built. SAT solvers.'},
+  {id:'Game Theory',x:.14,y:.80,d:'Payoffs, best responses, equilibrium.',dep:'Functions (payoffs), Probability (mixed strategies), Graphs (game trees).',feed:'Auctions, incentives, multi-agent AI, adversarial ML.'},
+ ];
+ const EDGES=[['Logic','Sets'],['Sets','Relations'],['Sets','Functions'],['Relations','Order & Lattices'],['Relations','Graphs'],
+ ['Functions','Algebra'],['Sets','Counting'],['Counting','Probability'],['Counting','Recurrences'],['Relations','Number Theory'],
+ ['Algebra','Number Theory'],['Logic','Boolean Algebra'],['Order & Lattices','Boolean Algebra'],['Graphs','Counting'],
+ ['Probability','Game Theory'],['Graphs','Game Theory'],['Functions','Probability'],['Algebra','Order & Lattices'],['Recurrences','Graphs'],['Functions','Boolean Algebra']];
+ const cv=$('#mapCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+ const P=NODES.map(n=>({...n,px:n.x*W,py:n.y*H,vx:0,vy:0}));
+ const idx=Object.fromEntries(P.map((n,i)=>[n.id,i]));
+ const E=EDGES.map(([a,b])=>[idx[a],idx[b]]);
+ let sel=null,drag=null,hover=null;
+ function step(){
+  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+    const a=P[i],b=P[j];let dx=b.px-a.px,dy=b.py-a.py,d=Math.hypot(dx,dy)||1;
+    const f=26000/(d*d);a.vx-=dx/d*f;a.vy-=dy/d*f;b.vx+=dx/d*f;b.vy+=dy/d*f;}
+  E.forEach(([i,j])=>{const a=P[i],b=P[j];let dx=b.px-a.px,dy=b.py-a.py,d=Math.hypot(dx,dy)||1;
+    const f=(d-215)*0.012;a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;});
+  P.forEach((n,i)=>{ n.vx+=(n.x*W-n.px)*0.006; n.vy+=(n.y*H-n.py)*0.006;
+    if(drag===i){n.vx=n.vy=0;return;} n.vx*=.86;n.vy*=.86;n.px+=n.vx;n.py+=n.vy;
+    n.px=Math.max(90,Math.min(W-90,n.px));n.py=Math.max(40,Math.min(H-40,n.py));});
+ }
+ function draw(){
+  g.clearRect(0,0,W,H);
+  E.forEach(([i,j])=>{const a=P[i],b=P[j];
+    const act=sel!==null&&(i===sel||j===sel);
+    g.strokeStyle=act?'rgba(212,160,76,.75)':'rgba(157,198,168,.16)';g.lineWidth=act?3:1.6;
+    g.beginPath();g.moveTo(a.px,a.py);g.lineTo(b.px,b.py);g.stroke();});
+  P.forEach((n,i)=>{
+    const act=i===sel,near=sel!==null&&E.some(([a,b])=>(a===sel&&b===i)||(b===sel&&a===i));
+    g.font='500 21px Space Grotesk, sans-serif';const w=g.measureText(n.id).width+34,h=42;
+    g.fillStyle=act?'rgba(212,160,76,.9)':near?'rgba(63,166,120,.28)':'rgba(17,36,24,.95)';
+    g.strokeStyle=act?C.gold:near?C.moss:(i===hover?C.mint:'rgba(157,198,168,.3)');g.lineWidth=act?3:1.8;
+    const r=21,X0=n.px-w/2,Y0=n.py-h/2;
+    g.beginPath();g.moveTo(X0+r,Y0);g.arcTo(X0+w,Y0,X0+w,Y0+h,r);g.arcTo(X0+w,Y0+h,X0,Y0+h,r);g.arcTo(X0,Y0+h,X0,Y0,r);g.arcTo(X0,Y0,X0+w,Y0,r);g.closePath();
+    g.fill();g.stroke();
+    g.fillStyle=act?'#07120D':C.text;g.textAlign='center';g.textBaseline='middle';g.fillText(n.id,n.px,n.py+1);});
+  g.textAlign='left';g.textBaseline='alphabetic';
+ }
+ let frames=0;
+ (function loop(){step();draw();if(frames++<100000)requestAnimationFrame(loop);})();
+ function pos(e){const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*W/r.width,(t.clientY-r.top)*H/r.height];}
+ function hit(mx,my){for(let i=0;i<P.length;i++){const n=P[i];g.font='500 21px Space Grotesk, sans-serif';const w=g.measureText(n.id).width+34;
+   if(Math.abs(mx-n.px)<w/2&&Math.abs(my-n.py)<22)return i;}return null;}
+ cv.addEventListener('mousedown',e=>{const[mx,my]=pos(e);const i=hit(mx,my);if(i!==null){drag=i;sel=i;show(i);cv.style.cursor='grabbing';}});
+ window.addEventListener('mousemove',e=>{if(drag!==null){const[mx,my]=pos(e);P[drag].px=mx;P[drag].py=my;}else{const[mx,my]=pos(e);hover=hit(mx,my);cv.style.cursor=hover!==null?'pointer':'grab';}});
+ window.addEventListener('mouseup',()=>{drag=null;cv.style.cursor='grab';});
+ cv.addEventListener('touchstart',e=>{const[mx,my]=pos(e);const i=hit(mx,my);if(i!==null){drag=i;sel=i;show(i);e.preventDefault();}},{passive:false});
+ cv.addEventListener('touchmove',e=>{if(drag!==null){const[mx,my]=pos(e);P[drag].px=mx;P[drag].py=my;e.preventDefault();}},{passive:false});
+ cv.addEventListener('touchend',()=>{drag=null;});
+ function show(i){const n=P[i];
+  $('#mapInfo').innerHTML=`<span class="hi" style="font-size:15px">${n.id}</span>\n${n.d}\n<span class="ok">Builds on:</span> ${n.dep}\n<span class="ok">Feeds:</span> ${n.feed}`;}
+})();
+
+/* ============ WHY CARDS ============ */
+(function(){
+ const cards=[
+  ['Algorithms & data structures','Every structure you use is a discrete object with a proof attached. A binary search tree is a graph; its <span class="math">O(log n)</span> depth is a recurrence; a hash table\'s collisions are the pigeonhole principle; a database index is a B-tree whose balance is proved by induction.'],
+  ['Logical & analytical reasoning','Interviews and competitive programming test one thing: can you convert an informal problem into a precise structure and reason about all cases without hand-waving? That is the entire skill this subject drills.'],
+  ['Cryptography, AI, ML, networks','RSA is number theory plus group theory. Graph neural networks are graphs. Probabilistic models are discrete probability. Routing protocols are shortest-path algorithms. Error-correcting codes are finite fields.'],
+  ['University and GATE / UGC NET','It is a core paper because everything downstream assumes it — automata, compilers, DBMS, networks and algorithms all open by assuming you can read a proof and manipulate a set.'],
+  ['Social networks, search, circuits','PageRank is a random walk on a graph. Friend recommendation is graph neighbourhood similarity. Every chip on your desk is minimised Boolean algebra. Community detection is graph partitioning.'],
+ ];
+ $('#whyCards').innerHTML=cards.map((c,i)=>
+  `<div class="lab" data-label="${String(i+1).padStart(2,'0')}" style="margin:16px 0"><h5>${c[0]}</h5><p style="margin:6px 0 0;font-size:16.5px;color:#D6E4D8">${c[1]}</p></div>`).join('');
+})();
+/* ============ LOGIC: parser + truth tables ============ */
+const LOGIC=(function(){
+ function tokenize(s){
+  s=s.replace(/¬/g,'~').replace(/[∧]/g,'&').replace(/[∨]/g,'|').replace(/↔/g,'<->').replace(/→/g,'->')
+     .replace(/<=>/g,'<->').replace(/=>/g,'->').replace(/\/\\/g,'&').replace(/\\\//g,'|').replace(/!/g,'~');
+  const t=[];let i=0;
+  while(i<s.length){const c=s[i];
+   if(/\s/.test(c)){i++;continue;}
+   if(s.startsWith('<->',i)){t.push('<->');i+=3;continue;}
+   if(s.startsWith('->',i)){t.push('->');i+=2;continue;}
+   if('~&|()'.includes(c)){t.push(c);i++;continue;}
+   if(/[a-zA-Z]/.test(c)){let v='';while(i<s.length&&/[a-zA-Z0-9]/.test(s[i]))v+=s[i++];
+     if(v==='T'||v==='F'||v==='true'||v==='false')t.push({k:'const',v:(v==='T'||v==='true')});
+     else t.push({k:'var',v});continue;}
+   throw new Error('Unexpected character "'+c+'"');}
+  return t;}
+ function parse(str){
+  const t=tokenize(str);let p=0;
+  const peek=()=>t[p], eat=x=>{if(t[p]===x){p++;return true}return false};
+  function atom(){
+   const c=peek();
+   if(c==='('){p++;const e=iff();if(!eat(')'))throw new Error('Missing ")"');return e;}
+   if(c==='~'){p++;return{op:'~',a:atom()};}
+   if(c&&c.k==='var'){p++;return{op:'var',v:c.v};}
+   if(c&&c.k==='const'){p++;return{op:'const',v:c.v};}
+   throw new Error(c===undefined?'Formula ends too early':'Unexpected token');}
+  function and(){let l=atom();while(peek()==='&'){p++;l={op:'&',a:l,b:atom()};}return l;}
+  function or(){let l=and();while(peek()==='|'){p++;l={op:'|',a:l,b:and()};}return l;}
+  function imp(){let l=or();if(peek()==='->'){p++;return{op:'->',a:l,b:imp()};}return l;}
+  function iff(){let l=imp();while(peek()==='<->'){p++;l={op:'<->',a:l,b:imp()};}return l;}
+  const e=iff();if(p<t.length)throw new Error('Unexpected extra input');return e;}
+ function vars(n,s){s=s||new Set();(function w(n){if(n.op==='var')s.add(n.v);if(n.a)w(n.a);if(n.b)w(n.b);})(n);
+  return [...s].sort();}
+ function evl(n,env){switch(n.op){
+   case 'var':return !!env[n.v];case 'const':return n.v;case '~':return !evl(n.a,env);
+   case '&':return evl(n.a,env)&&evl(n.b,env);case '|':return evl(n.a,env)||evl(n.b,env);
+   case '->':return !evl(n.a,env)||evl(n.b,env);case '<->':return evl(n.a,env)===evl(n.b,env);}}
+ function show(n,top){const S={'&':'∧','|':'∨','->':'→','<->':'↔'};
+  if(n.op==='var')return n.v; if(n.op==='const')return n.v?'T':'F';
+  if(n.op==='~')return '¬'+show(n.a); const s=show(n.a)+' '+S[n.op]+' '+show(n.b);return top?s:'('+s+')';}
+ function subs(n,acc){acc=acc||[];if(n.op==='var'||n.op==='const')return acc;
+  if(n.a)subs(n.a,acc);if(n.b)subs(n.b,acc);const s=show(n,false);if(!acc.includes(s))acc.push(s);return acc;}
+ return {parse,vars,evl,show,subs};
+})();
+
+(function(){
+ const inp=$('#ttInput');
+ const presets=[['(p -> q) & (q -> r) -> (p -> r)','Hypothetical syllogism'],['~(p & q) <-> (~p | ~q)','De Morgan'],
+  ['(p -> q) <-> (~p | q)','Implication'],['(p -> q) <-> (~q -> ~p)','Contrapositive'],['(p -> q) <-> (q -> p)','Converse (not valid!)'],
+  ['p & ~p','Contradiction'],['p | ~p','Excluded middle'],['(p & (p -> q)) -> q','Modus ponens'],['p & (q | r) <-> (p&q)|(p&r)','Distributive']];
+ $('#ttPresets').innerHTML=presets.map((x,i)=>`<button class="btn" data-f="${esc(x[0])}">${x[1]}</button>`).join('');
+ $$('#ttPresets .btn').forEach(b=>b.onclick=()=>{inp.value=b.dataset.f;run();});
+ function run(){
+  let ast;
+  try{ast=LOGIC.parse(inp.value);}catch(e){$('#ttOut').innerHTML=`<div class="out no">Parse error: ${esc(e.message)}<br><span style="color:${C.dim}">Use variables p q r s and operators ~ &amp; | -&gt; &lt;-&gt;</span></div>`;$('#nfOut').textContent='—';return;}
+  const V=LOGIC.vars(ast);
+  if(V.length>4){$('#ttOut').innerHTML='<div class="out no">Up to 4 variables please — 2⁵ rows gets unreadable fast.</div>';return;}
+  const sub=LOGIC.subs(ast).filter(s=>s!==LOGIC.show(ast,false)).slice(-3);
+  const full=LOGIC.show(ast,true);
+  const rows=[],n=V.length,total=1<<n;
+  for(let m=0;m<total;m++){const env={};V.forEach((v,i)=>env[v]=!!(m>>(n-1-i)&1));
+   rows.push({env,sub:sub.map(s=>LOGIC.evl(LOGIC.parse(s),env)),val:LOGIC.evl(ast,env)});}
+  const T=rows.filter(r=>r.val).length;
+  let html='<table class="tt"><tr>'+V.map(v=>`<th>${v}</th>`).join('')+
+   sub.map(s=>`<th style="color:${C.dim};font-weight:400">${esc(s)}</th>`).join('')+
+   `<th style="color:${C.gold}">${esc(full)}</th></tr>`;
+  rows.forEach(r=>{html+='<tr class="res">'+V.map(v=>`<td class="${r.env[v]?'T':'F'}">${r.env[v]?'T':'F'}</td>`).join('')+
+   r.sub.map(b=>`<td class="${b?'T':'F'}" style="opacity:.6">${b?'T':'F'}</td>`).join('')+
+   `<td class="${r.val?'T':'F'}" style="font-weight:700">${r.val?'T':'F'}</td></tr>`;});
+  html+='</table>';
+  const verdict=T===total?`<span class="ok">TAUTOLOGY</span> — true in all ${total} rows. This is a law of logic; you may use it as a rewriting rule anywhere.`
+   :T===0?`<span class="no">CONTRADICTION</span> — false in all ${total} rows. Unsatisfiable: no assignment makes it true.`
+   :`<span class="hi">CONTINGENT</span> — true in ${T} of ${total} rows. Satisfiable but not valid.`;
+  $('#ttOut').innerHTML=html+`<div class="out">${verdict}</div>`;
+  // normal forms
+  const mins=rows.filter(r=>r.val),maxs=rows.filter(r=>!r.val);
+  const dnf=mins.length?mins.map(r=>'('+V.map(v=>r.env[v]?v:'¬'+v).join(' ∧ ')+')').join(' ∨ '):'F  (contradiction — empty DNF)';
+  const cnf=maxs.length?maxs.map(r=>'('+V.map(v=>r.env[v]?'¬'+v:v).join(' ∨ ')+')').join(' ∧ '):'T  (tautology — empty CNF)';
+  $('#nfOut').innerHTML=`<span class="hi">Principal DNF</span>  (one term per TRUE row — sum of minterms)\n${esc(dnf)}\n\n<span class="hi">Principal CNF</span>  (one clause per FALSE row — product of maxterms)\n${esc(cnf)}\n\n<span style="color:${C.dim}">Minterms: ${mins.length} · Maxterms: ${maxs.length} · A SAT solver would be handed the CNF above.</span>`;
+ }
+ $('#ttGo').onclick=run; inp.onkeydown=e=>{if(e.key==='Enter')run();}; run();
+})();
+
+/* connective table */
+(function(){
+ const rows=[['¬p','NOT','negation','flips the value'],['p ∧ q','AND','conjunction','true only if both are'],
+ ['p ∨ q','OR','disjunction','true if at least one is — inclusive, unlike English "or"'],
+ ['p → q','IMPLIES','implication','false only when p is true and q is false'],
+ ['p ↔ q','IFF','biconditional','true when both sides agree']];
+ $('#connTable').innerHTML='<table class="tt" style="text-align:left"><tr><th>Symbol</th><th>Name</th><th>Called</th><th style="text-align:left">Reads as</th></tr>'+
+ rows.map(r=>`<tr><td class="hi" style="font-size:15px">${r[0]}</td><td>${r[1]}</td><td style="color:${C.dim}">${r[2]}</td><td style="text-align:left">${r[3]}</td></tr>`).join('')+'</table>';
+})();
+
+/* ============ QUANTIFIERS ============ */
+(function(){
+ const REL={
+  likes:{L:['Ana','Ben','Cai','Dee'],R:['Ana','Ben','Cai','Dee'],pairs:[[0,1],[1,2],[2,3],[3,1],[0,3]],txt:(a,b)=>`${a} likes ${b}`},
+  beats:{L:['Rock','Paper','Scissors'],R:['Rock','Paper','Scissors'],pairs:[[0,2],[1,0],[2,1]],txt:(a,b)=>`${a} beats ${b}`},
+  lt:{L:['1','2','3','4','5'],R:['1','2','3','4','5'],pairs:(()=>{const p=[];for(let i=0;i<5;i++)for(let j=0;j<5;j++)if(i<j)p.push([i,j]);return p;})(),txt:(a,b)=>`${a} < ${b}`}
+ };
+ let mode='AE',rel='likes';
+ function has(r,i,j){return REL[r].pairs.some(p=>p[0]===i&&p[1]===j);}
+ function evalQ(){
+  const R=REL[rel],n=R.L.length,m=R.R.length;const H=(i,j)=>has(rel,i,j);
+  const A=(f,k)=>{for(let i=0;i<k;i++)if(!f(i))return false;return true;};
+  const E=(f,k)=>{for(let i=0;i<k;i++)if(f(i))return true;return false;};
+  const wit=[];
+  let v,expl;
+  if(mode==='AA'){v=A(i=>A(j=>H(i,j),m),n);expl='every pair is related — the relation is total';}
+  if(mode==='AE'){v=A(i=>{const ok=E(j=>H(i,j),m);if(ok){for(let j=0;j<m;j++)if(H(i,j)){wit.push([i,j]);break;}}else wit.push([i,-1]);return ok;},n);expl='each x gets its own y — the witness may differ for every x';}
+  if(mode==='EA'){v=E(i=>{const ok=A(j=>H(i,j),m);if(ok)for(let j=0;j<m;j++)wit.push([i,j]);return ok;},n);expl='one single x works for every y — a universal witness';}
+  if(mode==='EE'){v=E(i=>E(j=>{if(H(i,j)){wit.push([i,j]);return true}return false;},m),n);expl='at least one related pair exists anywhere';}
+  return {v,expl,wit};
+ }
+ function draw(){
+  const R=REL[rel],r=evalQ();
+  const n=R.L.length,W=700,H=300,gap=H/(n+1);
+  let s=`<rect width="${W}" height="${H}" fill="none"/>`;
+  const lit=new Set(r.wit.filter(w=>w[1]>=0).map(w=>w[0]+','+w[1]));
+  R.pairs.forEach(([i,j])=>{
+   const on=lit.has(i+','+j);
+   s+=`<line x1="200" y1="${(i+1)*gap}" x2="500" y2="${(j+1)*(H/(R.R.length+1))}" stroke="${on?C.gold:'rgba(157,198,168,.22)'}" stroke-width="${on?3:1.4}"/>`;});
+  R.L.forEach((t,i)=>{s+=`<circle cx="200" cy="${(i+1)*gap}" r="9" fill="${C.moss}"/><text x="185" y="${(i+1)*gap+5}" text-anchor="end" fill="${C.text}" font-family="Space Grotesk" font-size="14">${t}</text>`;});
+  R.R.forEach((t,i)=>{const gy=H/(R.R.length+1);s+=`<circle cx="500" cy="${(i+1)*gy}" r="9" fill="${C.mint}" opacity=".8"/><text x="515" y="${(i+1)*gy+5}" fill="${C.text}" font-family="Space Grotesk" font-size="14">${t}</text>`;});
+  s+=`<text x="200" y="24" text-anchor="middle" fill="${C.faint}" font-family="Space Grotesk" font-size="12">x</text><text x="500" y="24" text-anchor="middle" fill="${C.faint}" font-family="Space Grotesk" font-size="12">y</text>`;
+  $('#qSvg').innerHTML=s;
+  const q=mode[0]==='A'?'∀x':'∃x', q2=mode[1]==='A'?'∀y':'∃y';
+  const eng={AA:'every x is related to every y',AE:'every x is related to at least one y',EA:'some single x is related to every y',EE:'some x is related to some y'}[mode];
+  $('#qOut').innerHTML=`<span class="hi" style="font-size:16px">${q} ${q2} L(x,y)</span>  —  "${eng}"\n\nVerdict: ${r.v?'<span class="ok">TRUE</span>':'<span class="no">FALSE</span>'} for this relation.\n<span style="color:${C.dim}">Reading: ${r.expl}.</span>`+
+   (r.wit.length&&r.v?`\n<span style="color:${C.dim}">Highlighted edges are the witnesses that make it true.</span>`:'');
+ }
+ $$('[data-q]').forEach(b=>b.onclick=()=>{$$('[data-q]').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.q;draw();});
+ $('#qRel').onchange=e=>{rel=e.target.value;draw();};
+ draw();
+})();
+
+/* ============ INFERENCE RULES ============ */
+(function(){
+ const R=[
+ ['Modus ponens','p → q,  p','q','If it rains the ground is wet. It is raining. ⟹ The ground is wet.','The single most used rule in mathematics.'],
+ ['Modus tollens','p → q,  ¬q','¬p','If it rains the ground is wet. The ground is dry. ⟹ It is not raining.','This is the contrapositive in action — and the logic of falsification in science.'],
+ ['Hypothetical syllogism','p → q,  q → r','p → r','Chaining implications. Transitivity of →.','Every multi-step proof is repeated application of this.'],
+ ['Disjunctive syllogism','p ∨ q,  ¬p','q','Either the server or the network is down. The server is fine. ⟹ Network.','Elimination — how debugging works.'],
+ ['Addition','p','p ∨ q','It is raining ⟹ it is raining or snowing.','Looks useless, sets up disjunctive syllogism later.'],
+ ['Simplification','p ∧ q','p','Extract one conjunct.','Trivial but needed formally.'],
+ ['Conjunction','p,  q','p ∧ q','Combine two established facts.','The dual of simplification.'],
+ ['Resolution','p ∨ q,  ¬p ∨ r','q ∨ r','The one rule a machine needs.','Prolog and every SAT solver run on resolution alone.'],
+ ];
+ const FAL=[['Affirming the consequent','p → q,  q','p','Invalid. The ground is wet, so it rained? A sprinkler also makes it wet.'],
+ ['Denying the antecedent','p → q,  ¬p','¬q','Invalid. It didn\'t rain, so the ground is dry? Sprinkler again.']];
+ $('#infList').innerHTML=R.map((r,i)=>`
+  <div style="border-bottom:1px solid var(--line);padding:11px 0;cursor:pointer" data-inf="${i}">
+   <div style="display:flex;gap:16px;align-items:baseline;font-family:var(--ui);font-size:13px">
+     <span style="color:${C.gold};min-width:190px">${r[0]}</span>
+     <span style="color:${C.dim}">${r[1]}</span>
+     <span style="color:${C.mint}">∴ ${r[2]}</span>
+   </div>
+   <div class="infX" style="display:none;font-size:15px;color:#D6E4D8;margin-top:8px;padding-left:6px;border-left:2px solid var(--line)">${r[3]}<br><span style="color:${C.dim};font-size:13.5px;font-family:var(--ui)">${r[4]}</span></div>
+  </div>`).join('')+
+  `<div style="margin-top:20px"><h5 style="color:${C.clay}">Two that look like rules and are not</h5>`+
+  FAL.map(f=>`<div style="font-family:var(--ui);font-size:13px;padding:8px 0;border-bottom:1px solid var(--line)">
+   <span style="color:${C.clay};min-width:190px;display:inline-block">${f[0]}</span><span style="color:${C.dim}">${f[1]}</span> <span class="no">∴ ${f[2]}</span>
+   <div style="font-size:14px;color:#D6E4D8;font-family:var(--body);margin-top:4px">${f[3]}</div></div>`).join('')+'</div>';
+ $$('[data-inf]').forEach(d=>d.onclick=()=>{const x=$('.infX',d);x.style.display=x.style.display==='none'?'block':'none';});
+})();
+/* ============ SET ALGEBRA + VENN ============ */
+(function(){
+ const U=[...Array(12)].map((_,i)=>i+1);
+ const SETS={A:U.filter(n=>n%2===0),B:U.filter(n=>n%3===0),C:U.filter(n=>n<=6)};
+ function parseSet(s){
+  let i=0;const t=[];
+  s=s.replace(/∪/g,'|').replace(/∩/g,'&').replace(/∖/g,'-').replace(/Δ/g,'^').replace(/'/g,'~');
+  while(i<s.length){const c=s[i];
+   if(/\s/.test(c)){i++;continue;}
+   if('|&-^~()'.includes(c)){t.push(c);i++;continue;}
+   if(/[A-Za-z]/.test(c)){t.push({v:c.toUpperCase()});i++;continue;}
+   throw new Error('bad character "'+c+'"');}
+  let p=0;
+  const peek=()=>t[p];
+  function atom(){const c=peek();
+   if(c==='('){p++;const e=expr();if(t[p]!==')')throw new Error('missing )');p++;return e;}
+   if(c==='~'){p++;return{op:'~',a:atom()};}
+   if(c&&c.v){p++;if(!['A','B','C','U'].includes(c.v))throw new Error('unknown set '+c.v);return{op:'set',v:c.v};}
+   throw new Error('unexpected end');}
+  function post(){let n=atom();while(peek()==='~'){p++;n={op:'~',a:n};}return n;}
+  function inter(){let l=post();while(peek()==='&'){p++;l={op:'&',a:l,b:post()};}return l;}
+  function expr(){let l=inter();while(peek()==='|'||peek()==='-'||peek()==='^'){const o=peek();p++;l={op:o,a:l,b:inter()};}return l;}
+  const e=expr();if(p<t.length)throw new Error('unexpected extra input');return e;}
+ function ev(n,m){switch(n.op){
+  case 'set':return n.v==='U'?true:m[n.v];
+  case '~':return !ev(n.a,m);
+  case '&':return ev(n.a,m)&&ev(n.b,m);
+  case '|':return ev(n.a,m)||ev(n.b,m);
+  case '-':return ev(n.a,m)&&!ev(n.b,m);
+  case '^':return ev(n.a,m)!==ev(n.b,m);}}
+ const cv=$('#vennCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+ const R=150*2,cx=[W/2-78*2,W/2+78*2,W/2],cy=[H/2-46*2,H/2-46*2,H/2+72*2];
+ function draw(ast){
+  const img=g.createImageData(W,H);const d=img.data;
+  for(let y=0;y<H;y++)for(let x2=0;x2<W;x2++){
+   const inC=[0,1,2].map(k=>(x2-cx[k])**2+(y-cy[k])**2<=R*R);
+   const any=inC[0]||inC[1]||inC[2];const o=(y*W+x2)*4;
+   if(!any){d[o+3]=0;continue;}
+   const on=ast?ev(ast,{A:inC[0],B:inC[1],C:inC[2]}):false;
+   if(on){d[o]=212;d[o+1]=160;d[o+2]=76;d[o+3]=110;}
+   else{d[o]=157;d[o+1]=198;d[o+2]=168;d[o+3]=18;}}
+  g.putImageData(img,0,0);
+  g.lineWidth=3;g.strokeStyle='rgba(157,198,168,.55)';
+  [0,1,2].forEach(k=>{g.beginPath();g.arc(cx[k],cy[k],R,0,7);g.stroke();});
+  g.font='500 34px Space Grotesk, sans-serif';g.fillStyle=C.mint;g.textAlign='center';
+  g.fillText('A',cx[0]-R*0.72,cy[0]-R*0.55);g.fillText('B',cx[1]+R*0.72,cy[1]-R*0.55);g.fillText('C',cx[2],cy[2]+R*0.88);
+  // elements
+  g.font='500 26px Space Grotesk, sans-serif';
+  const slots={};
+  U.forEach(n=>{const m={A:SETS.A.includes(n),B:SETS.B.includes(n),C:SETS.C.includes(n)};
+   const key=(m.A?'A':'')+(m.B?'B':'')+(m.C?'C':'')||'out';
+   slots[key]=(slots[key]||0)+1;const k=slots[key];
+   const P={'A':[cx[0]-R*.45,cy[0]-R*.05],'B':[cx[1]+R*.45,cy[1]-R*.05],'C':[cx[2],cy[2]+R*.42],
+    'AB':[W/2,cy[0]-R*.2],'AC':[cx[0]+R*.1,cy[2]-R*.35],'BC':[cx[1]-R*.1,cy[2]-R*.35],'ABC':[W/2,H/2+8],'out':[70,H-40]}[key]||[W/2,H/2];
+   const ang=k*2.1, rad=k>1?34:0;
+   g.fillStyle=ast&&ev(ast,m)?'#FFF3DC':C.dim;
+   g.fillText(n,P[0]+Math.cos(ang)*rad,P[1]+Math.sin(ang)*rad);});
+  g.textAlign='left';
+ }
+ const presets=[['(A | B) - C','difference'],['A & B & C','triple intersection'],['~(A & B)','De Morgan LHS'],['~A | ~B','De Morgan RHS'],['A ^ B','symmetric difference'],['(A|B|C) - (A&B)','union minus overlap'],['A - (B|C)','only A']];
+ $('#setPresets').innerHTML=presets.map(p=>`<button class="btn" data-s="${esc(p[0])}">${p[1]}</button>`).join('');
+ $$('#setPresets .btn').forEach(b=>b.onclick=()=>{$('#setExpr').value=b.dataset.s;run();});
+ function run(){
+  let ast;
+  try{ast=parseSet($('#setExpr').value);}catch(e){$('#setOut').innerHTML=`<span class="no">Parse error: ${esc(e.message)}</span>`;draw(null);return;}
+  const res=U.filter(n=>ev(ast,{A:SETS.A.includes(n),B:SETS.B.includes(n),C:SETS.C.includes(n)}));
+  $('#setOut').innerHTML=`<span class="hi">A</span> = {${SETS.A}}   <span class="hi">B</span> = {${SETS.B}}   <span class="hi">C</span> = {${SETS.C}}\n\nResult = <span class="ok">{${res.join(', ')||'∅'}}</span>\nCardinality = ${res.length}   ·   Power set of the result has 2^${res.length} = ${Math.pow(2,res.length).toLocaleString()} members`;
+  draw(ast);
+ }
+ $('#setGo').onclick=run;$('#setExpr').onkeydown=e=>{if(e.key==='Enter')run();};run();
+})();
+
+/* ============ RELATION INSPECTOR ============ */
+(function(){
+ const n=4;let M=[[1,1,0,0],[0,1,1,0],[0,0,1,1],[0,0,0,1]];
+ function props(){
+  let refl=true,sym=true,anti=true,trans=true,irr=true;
+  for(let i=0;i<n;i++){if(!M[i][i]){refl=false}else{irr=false}}
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+   if(M[i][j]&&!M[j][i])sym=false;
+   if(i!==j&&M[i][j]&&M[j][i])anti=false;}
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(M[i][j])for(let k=0;k<n;k++)if(M[j][k]&&!M[i][k])trans=false;
+  return{refl,sym,anti,trans,irr};}
+ function drawM(){
+  const S=300,cell=52,off=54;let s='';
+  for(let i=0;i<n;i++){
+   s+=`<text x="${off-14}" y="${off+i*cell+cell/2+5}" text-anchor="end" fill="${C.dim}" font-family="Space Grotesk" font-size="13">${i+1}</text>`;
+   s+=`<text x="${off+i*cell+cell/2}" y="${off-12}" text-anchor="middle" fill="${C.dim}" font-family="Space Grotesk" font-size="13">${i+1}</text>`;}
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+   s+=`<rect data-i="${i}" data-j="${j}" x="${off+j*cell}" y="${off+i*cell}" width="${cell-3}" height="${cell-3}" rx="6"
+     fill="${M[i][j]?(i===j?'rgba(212,160,76,.75)':'rgba(63,166,120,.7)'):'rgba(157,198,168,.07)'}" stroke="${i===j?'rgba(212,160,76,.5)':'rgba(157,198,168,.18)'}" style="cursor:pointer"/>`;
+   s+=`<text x="${off+j*cell+(cell-3)/2}" y="${off+i*cell+(cell-3)/2+5}" text-anchor="middle" pointer-events="none" font-family="Space Grotesk" font-size="13" fill="${M[i][j]?'#07120D':'rgba(157,198,168,.25)'}">${M[i][j]?1:0}</text>`;}
+  $('#relSvg').innerHTML=s;
+  $$('#relSvg rect').forEach(r=>r.onclick=()=>{M[+r.dataset.i][+r.dataset.j]^=1;render();});
+ }
+ function drawG(){
+  const pts=[[60,50],[240,50],[240,170],[60,170]];let s='';
+  s+=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${C.moss}"/></marker></defs>`;
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){if(!M[i][j])continue;
+   if(i===j){const[x,y]=pts[i];s+=`<circle cx="${x}" cy="${y-26}" r="15" fill="none" stroke="${C.gold}" stroke-width="1.8"/>`;continue;}
+   const[x1,y1]=pts[i],[x2,y2]=pts[j];const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+   const ox=-dy/L*9,oy=dx/L*9;
+   s+=`<line x1="${x1+dx/L*17+ox}" y1="${y1+dy/L*17+oy}" x2="${x2-dx/L*20+ox}" y2="${y2-dy/L*20+oy}" stroke="${C.moss}" stroke-width="1.8" marker-end="url(#ah)"/>`;}
+  pts.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="17" fill="#112418" stroke="${C.mint}" stroke-width="1.8"/><text x="${p[0]}" y="${p[1]+5}" text-anchor="middle" fill="${C.text}" font-family="Space Grotesk" font-size="13">${i+1}</text>`;});
+  $('#relGraph').innerHTML=s;
+ }
+ function render(){
+  drawM();drawG();
+  const p=props(),tag=(b,t,f)=>b?`<span class="ok">✓ ${t}</span>`:`<span class="no">✗ ${f||t}</span>`;
+  let verdict='';
+  if(p.refl&&p.sym&&p.trans)verdict='\n<span class="hi">→ This is an EQUIVALENCE RELATION.</span> It partitions {1,2,3,4} into equivalence classes.';
+  else if(p.refl&&p.anti&&p.trans)verdict='\n<span class="hi">→ This is a PARTIAL ORDER.</span> Draw its Hasse diagram in section 04.';
+  else verdict=`\n<span style="color:${C.dim}">→ Neither an equivalence nor a partial order yet. Add the diagonal, then make it symmetric (equivalence) or antisymmetric (order).</span>`;
+  const cnt=M.flat().reduce((a,b)=>a+b,0);
+  $('#relOut').innerHTML=`${cnt} of 16 possible pairs · there are 2^16 = 65,536 relations on a 4-element set\n\n`+
+   [tag(p.refl,'Reflexive'),tag(p.sym,'Symmetric'),tag(p.anti,'Antisymmetric'),tag(p.trans,'Transitive')].join('   ')+verdict;
+ }
+ $('#relClear').onclick=()=>{M=M.map(r=>r.map(()=>0));render();};
+ $('#relDiag').onclick=()=>{for(let i=0;i<n;i++)M[i][i]=1;render();};
+ $('#relDiv').onclick=()=>{M=[...Array(n)].map((_,i)=>[...Array(n)].map((_,j)=>i<=j?1:0));render();};
+ $('#relWarshall').onclick=()=>{for(let k=0;k<n;k++)for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(M[i][k]&&M[k][j])M[i][j]=1;render();};
+ render();
+})();
+
+/* ============ FUNCTIONS ============ */
+(function(){
+ const D=['1','2','3','4'],Co=['a','b','c','d'];
+ let f=[0,1,2,3],pending=null;
+ function render(){
+  const H=300,gy=H/(D.length+1);let s='';
+  f.forEach((t,i)=>{s+=`<line x1="140" y1="${(i+1)*gy}" x2="280" y2="${(t+1)*gy}" stroke="${C.gold}" stroke-width="2.2" marker-end="url(#fa)"/>`;});
+  s=`<defs><marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${C.gold}"/></marker></defs>`+s;
+  D.forEach((t,i)=>{const on=pending===i;
+   s+=`<circle data-d="${i}" cx="140" cy="${(i+1)*gy}" r="16" fill="${on?C.gold:'#16301F'}" stroke="${C.mint}" stroke-width="2" style="cursor:pointer"/>
+       <text x="140" y="${(i+1)*gy+5}" text-anchor="middle" pointer-events="none" fill="${on?'#07120D':C.text}" font-family="Space Grotesk" font-size="13">${t}</text>`;});
+  const hits=new Set(f);
+  Co.forEach((t,i)=>{s+=`<circle data-c="${i}" cx="280" cy="${(i+1)*gy}" r="16" fill="${hits.has(i)?'rgba(63,166,120,.35)':'#16301F'}" stroke="${C.mint}" stroke-width="2" style="cursor:pointer"/>
+       <text x="280" y="${(i+1)*gy+5}" text-anchor="middle" pointer-events="none" fill="${C.text}" font-family="Space Grotesk" font-size="13">${t}</text>`;});
+  s+=`<text x="140" y="26" text-anchor="middle" fill="${C.faint}" font-family="Space Grotesk" font-size="12">domain</text><text x="280" y="26" text-anchor="middle" fill="${C.faint}" font-family="Space Grotesk" font-size="12">codomain</text>`;
+  $('#fnSvg').innerHTML=s;
+  $$('#fnSvg [data-d]').forEach(c=>c.onclick=()=>{pending=+c.dataset.d;render();});
+  $$('#fnSvg [data-c]').forEach(c=>c.onclick=()=>{if(pending!==null){f[pending]=+c.dataset.c;pending=null;}render();});
+  const inj=new Set(f).size===f.length, sur=new Set(f).size===Co.length;
+  const verdict=inj&&sur?'<span class="ok">BIJECTIVE</span> — invertible. This is a permutation of the set, and permutations form the group S₄ (section 05).'
+   :inj?'<span class="hi">INJECTIVE only</span> — no collisions, but some outputs are never produced. Information is preserved; the codomain is oversized.'
+   :sur?'<span class="hi">SURJECTIVE only</span> — every output is hit, but some inputs collide. Information is lost; not invertible.'
+   :'<span class="no">NEITHER</span> — collisions AND unreachable outputs.';
+  $('#fnOut').innerHTML=`f = { ${f.map((t,i)=>D[i]+' ↦ '+Co[t]).join(',  ')} }\n\nInjective: ${inj?'<span class="ok">yes</span>':'<span class="no">no</span>'}   Surjective: ${sur?'<span class="ok">yes</span>':'<span class="no">no</span>'}\n${verdict}\n<span style="color:${C.dim}">There are 4⁴ = 256 functions here, of which 4! = 24 are bijections. Note you cannot make this one injective-but-not-surjective: on finite sets of equal size the three notions collapse into one, which is the pigeonhole principle again. It fails for infinite sets — n ↦ n+1 on ℕ is injective and misses 0.</span>`;
+ }
+ $('#fnBij').onclick=()=>{f=[0,1,2,3];render();};
+ $('#fnSur').onclick=()=>{f=[3,0,1,2];render();};
+ $('#fnInj').onclick=()=>{f=[0,1,1,3];render();};
+ $('#fnConst').onclick=()=>{f=[1,1,1,1];render();};
+ render();
+})();
+/* ============ HASSE DIAGRAMS + LATTICES ============ */
+(function(){
+ function divisors(n){const d=[];for(let i=1;i<=n;i++)if(n%i===0)d.push(i);return d;}
+ const POSETS={
+  d12:{els:divisors(12).map(String),leq:(a,b)=>(+b)%(+a)===0,name:'divides'},
+  d30:{els:divisors(30).map(String),leq:(a,b)=>(+b)%(+a)===0,name:'divides'},
+  d36:{els:divisors(36).map(String),leq:(a,b)=>(+b)%(+a)===0,name:'divides'},
+  p3:{els:['∅','{a}','{b}','{c}','{a,b}','{a,c}','{b,c}','{a,b,c}'],
+      leq:(a,b)=>{const S=x=>new Set(x.replace(/[{}∅]/g,'').split(',').filter(Boolean));const A=S(a),B=S(b);return [...A].every(x=>B.has(x));},name:'⊆'},
+  n5:{els:['0','a','b','c','d'],leq:(x,y)=>{const R={'0':['0','a','b','c','d'],'a':['a','c','d'],'b':['b','c','d'],'c':['c'],'d':['d']};return R[x].includes(y);},name:'≤'},
+  chain:{els:['1','2','3','4'],leq:(a,b)=>+a<=+b,name:'≤'}
+ };
+ let key='d12',sel=[];
+ function analyse(){
+  const P=POSETS[key],E=P.els,n=E.length,leq=(i,j)=>P.leq(E[i],E[j]);
+  const lvl=E.map((_,i)=>{let d=0;for(let j=0;j<n;j++)if(j!==i&&leq(j,i))d=Math.max(d,1);return 0;});
+  // longest chain depth
+  const depth=new Array(n).fill(0);let changed=true,guard=0;
+  while(changed&&guard++<50){changed=false;
+   for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(i!==j&&leq(j,i)&&depth[i]<depth[j]+1){depth[i]=depth[j]+1;changed=true;}}
+  const cov=[];
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){if(i===j||!leq(i,j))continue;
+   let mid=false;for(let k=0;k<n;k++)if(k!==i&&k!==j&&leq(i,k)&&leq(k,j))mid=true;
+   if(!mid)cov.push([i,j]);}
+  const bound=(i,j,up)=>{const c=[];for(let k=0;k<n;k++)if(up?(leq(i,k)&&leq(j,k)):(leq(k,i)&&leq(k,j)))c.push(k);
+   for(const x of c){if(c.every(y=>up?leq(x,y):leq(y,x)))return x;}return -1;};
+  let isLat=true,fail=null;
+  for(let i=0;i<n&&isLat;i++)for(let j=i+1;j<n;j++){if(bound(i,j,true)<0||bound(i,j,false)<0){isLat=false;fail=[i,j];break;}}
+  return{E,n,leq,depth,cov,bound,isLat,fail,P};
+ }
+ function draw(){
+  const A=analyse(),{E,n,depth,cov}=A;
+  const maxd=Math.max(...depth),W=640,H=420,pad=48;
+  const byL={};E.forEach((_,i)=>{(byL[depth[i]]=byL[depth[i]]||[]).push(i);});
+  const pos=[];Object.keys(byL).forEach(l=>{const row=byL[l],m=row.length;
+   row.forEach((i,k)=>{pos[i]=[pad+(W-2*pad)*((k+1)/(m+1)),H-pad-(H-2*pad)*(maxd?l/maxd:0.5)];});});
+  let s='';
+  cov.forEach(([i,j])=>{const on=sel.length===2&&([A.bound(sel[0],sel[1],true),A.bound(sel[0],sel[1],false)].includes(i)||[A.bound(sel[0],sel[1],true),A.bound(sel[0],sel[1],false)].includes(j));
+   s+=`<line x1="${pos[i][0]}" y1="${pos[i][1]}" x2="${pos[j][0]}" y2="${pos[j][1]}" stroke="rgba(157,198,168,.4)" stroke-width="1.8"/>`;});
+  E.forEach((t,i)=>{const isSel=sel.includes(i);
+   const mj=sel.length===2?[A.bound(sel[0],sel[1],true),A.bound(sel[0],sel[1],false)]:[];
+   const isMJ=mj.includes(i)&&!isSel;
+   s+=`<circle data-e="${i}" cx="${pos[i][0]}" cy="${pos[i][1]}" r="21" fill="${isSel?C.gold:isMJ?'rgba(63,166,120,.6)':'#16301F'}" stroke="${isSel?C.gold:C.mint}" stroke-width="2" style="cursor:pointer"/>
+   <text x="${pos[i][0]}" y="${pos[i][1]+5}" text-anchor="middle" pointer-events="none" font-family="Space Grotesk" font-size="${t.length>3?11:13}" fill="${isSel?'#07120D':C.text}">${t}</text>`;});
+  $('#hasseSvg').innerHTML=s;
+  $$('#hasseSvg [data-e]').forEach(c=>c.onclick=()=>{const i=+c.dataset.e;
+   if(sel.includes(i))sel=sel.filter(x=>x!==i);else{sel.push(i);if(sel.length>2)sel.shift();}draw();});
+  // text
+  const maximal=E.map((_,i)=>i).filter(i=>!E.some((_,j)=>j!==i&&A.leq(i,j)));
+  const minimal=E.map((_,i)=>i).filter(i=>!E.some((_,j)=>j!==i&&A.leq(j,i)));
+  const greatest=maximal.length===1&&E.every((_,j)=>A.leq(j,maximal[0]))?E[maximal[0]]:'none';
+  const least=minimal.length===1&&E.every((_,j)=>A.leq(minimal[0],j))?E[minimal[0]]:'none';
+  let out=`Order relation: ${A.P.name}   ·   ${n} elements   ·   ${A.cov.length} covering edges\n`+
+   `Maximal: {${maximal.map(i=>E[i]).join(', ')}}   Minimal: {${minimal.map(i=>E[i]).join(', ')}}\n`+
+   `Greatest: ${greatest}   Least: ${least}\n`+
+   (A.isLat?`<span class="ok">✓ This is a LATTICE</span> — every pair has both a meet and a join.`
+    :`<span class="no">✗ NOT a lattice</span> — the pair (${E[A.fail[0]]}, ${E[A.fail[1]]}) has no least upper bound: two incomparable minimal upper bounds compete and neither wins.`);
+  if(sel.length===2){const j=A.bound(sel[0],sel[1],true),m=A.bound(sel[0],sel[1],false);
+   out+=`\n\n<span class="hi">${E[sel[0]]} ∨ ${E[sel[1]]}</span> (join, least upper bound) = ${j<0?'<span class="no">does not exist</span>':'<span class="ok">'+E[j]+'</span>'}`+
+        `\n<span class="hi">${E[sel[0]]} ∧ ${E[sel[1]]}</span> (meet, greatest lower bound) = ${m<0?'<span class="no">does not exist</span>':'<span class="ok">'+E[m]+'</span>'}`;
+   if(key.startsWith('d'))out+=`\n<span style="color:${C.dim}">In a divisor lattice, join = lcm and meet = gcd. Compare with section 10.</span>`;
+   if(key==='p3')out+=`\n<span style="color:${C.dim}">In a subset lattice, join = ∪ and meet = ∩. Compare with section 03.</span>`;
+  } else out+=`\n<span style="color:${C.dim}">Click two elements to compute their meet and join.</span>`;
+  $('#hasseOut').innerHTML=out;
+ }
+ $('#hasseSel').onchange=e=>{key=e.target.value;sel=[];draw();};
+ draw();
+})();
+
+/* ============ STRUCTURE LADDER ============ */
+(function(){
+ const rows=[
+  ['Magma','closure only','(ℤ, −)','subtraction is closed but not associative'],
+  ['Semigroup','+ associative','(strings, concat) minus the empty string','you may re-bracket, so you may parallelise'],
+  ['Monoid','+ identity element','(strings, concat, ""), (ℕ, +, 0), (matrices, ×, I)','a safe value for an empty fold — every reduce needs this'],
+  ['Group','+ inverse for every element','(ℤ, +, 0), (ℚ*, ×, 1), symmetries of a shape','undo always exists; this is where the good theorems start'],
+  ['Abelian group','+ commutative','(ℤ, +), (ℤₙ, +)','order stops mattering entirely'],
+ ];
+ $('#structLadder').innerHTML='<table class="tt" style="text-align:left"><tr><th style="text-align:left">Structure</th><th style="text-align:left">Add this axiom</th><th style="text-align:left">Example</th><th style="text-align:left">What it buys</th></tr>'+
+  rows.map((r,i)=>`<tr><td style="text-align:left;color:${C.gold};padding-left:${i*10}px">${r[0]}</td><td style="text-align:left">${r[1]}</td><td style="text-align:left;color:${C.dim}" class="math">${r[2]}</td><td style="text-align:left">${r[3]}</td></tr>`).join('')+'</table>';
+})();
+
+/* ============ GROUP EXPLORER ============ */
+(function(){
+ function perms(){const a=[[0,1,2],[1,2,0],[2,0,1],[0,2,1],[2,1,0],[1,0,2]];return a;}
+ const GROUPS={
+  z6:{els:[0,1,2,3,4,5].map(String),op:(i,j)=>(i+j)%6,name:'ℤ₆ under addition mod 6',opsym:'+'},
+  z5:{els:[0,1,2,3,4].map(String),op:(i,j)=>(i+j)%5,name:'ℤ₅ under addition mod 5',opsym:'+'},
+  u8:{els:['1','3','5','7'],op:function(i,j){const v=[1,3,5,7];return v.indexOf(v[i]*v[j]%8);},name:'U(8) — units mod 8 under multiplication',opsym:'×'},
+  u7:{els:['1','2','3','4','5','6'],op:function(i,j){const v=[1,2,3,4,5,6];return v.indexOf(v[i]*v[j]%7);},name:'U(7) — units mod 7 under multiplication',opsym:'×'},
+  d3:{els:['e','r','r²','s','rs','r²s'],op:(i,j)=>{const P=perms();const c=[0,1,2].map(k=>P[i][P[j][k]]);return P.findIndex(p=>p.join()===c.join());},name:'D₃ — the six symmetries of an equilateral triangle',opsym:'∘'},
+  s3:{els:['id','(123)','(132)','(23)','(13)','(12)'],op:(i,j)=>{const P=perms();const c=[0,1,2].map(k=>P[i][P[j][k]]);return P.findIndex(p=>p.join()===c.join());},name:'S₃ — all permutations of three objects',opsym:'∘'}
+ };
+ let key='z6',sel=null;
+ function build(){
+  const G=GROUPS[key],n=G.els.length;
+  const T=[...Array(n)].map((_,i)=>[...Array(n)].map((_,j)=>G.op(i,j)));
+  const id=[...Array(n).keys()].find(e=>[...Array(n).keys()].every(x=>T[e][x]===x&&T[x][e]===x));
+  const abel=T.every((r,i)=>r.every((v,j)=>v===T[j][i]));
+  const ord=i=>{let x=i,k=1;while(x!==id&&k<100){x=T[x][i];k++;}return k;};
+  const gen=i=>{const S=new Set([id]);let x=i;while(!S.has(x)){S.add(x);x=T[x][i];}return [...S].sort((a,b)=>a-b);};
+  return{G,n,T,id,abel,ord,gen};
+ }
+ function render(){
+  const{G,n,T,id,abel,ord,gen}=build();
+  const sub=sel!==null?gen(sel):null;
+  let h='<table class="tt"><tr><th>'+G.opsym+'</th>'+G.els.map((e,j)=>`<th style="cursor:pointer" data-g="${j}">${e}</th>`).join('')+'</tr>';
+  for(let i=0;i<n;i++){h+=`<tr><th style="cursor:pointer" data-g="${i}">${G.els[i]}</th>`;
+   for(let j=0;j<n;j++){const v=T[i][j];
+    const inSub=sub&&sub.includes(i)&&sub.includes(j);
+    h+=`<td style="${v===id?'color:'+C.gold+';font-weight:700;':''}${inSub?'background:rgba(63,166,120,.22);':''}">${G.els[v]}</td>`;}
+   h+='</tr>';}
+  h+='</table>';
+  $('#cayleyOut').innerHTML=h;
+  $$('#cayleyOut [data-g]').forEach(t=>t.onclick=()=>{sel=(sel===+t.dataset.g)?null:+t.dataset.g;render();});
+  const orders=G.els.map((e,i)=>`${e}:${ord(i)}`).join('  ');
+  const cyc=G.els.map((e,i)=>i).filter(i=>gen(i).length===n);
+  let out=`<span class="hi">${G.name}</span>\nOrder |G| = ${n}   ·   identity = ${G.els[id]}\n`+
+   `${abel?'<span class="ok">Abelian</span> — table is symmetric across the diagonal':'<span class="no">Non-abelian</span> — the table is NOT symmetric; order of operation matters'}\n`+
+   `Element orders: ${orders}\n`+
+   (cyc.length?`<span class="ok">Cyclic</span>, generated by any of: ${cyc.map(i=>G.els[i]).join(', ')}`:`<span class="no">Not cyclic</span> — no single element generates everything`)+
+   `\n<span style="color:${C.dim}">Every row and column is a permutation of the elements — the Latin square property, forced by inverses.</span>`;
+  if(sel!==null){const S=gen(sel);
+   const cos=[];const used=new Set();
+   for(let g=0;g<n;g++){if(used.has(g))continue;const c=S.map(s=>T[g][s]).sort((a,b)=>a-b);c.forEach(x=>used.add(x));cos.push(c);}
+   out+=`\n\n<span class="hi">⟨${G.els[sel]}⟩</span> = {${S.map(i=>G.els[i]).join(', ')}}  — a subgroup of order ${S.length}\n`+
+    `Left cosets: ${cos.map(c=>'{'+c.map(i=>G.els[i]).join(',')+'}').join('  ')}\n`+
+    `<span class="ok">Lagrange check:</span> ${S.length} divides ${n} ✓  ·  index [G:H] = ${n/S.length} cosets, each of size ${S.length}, disjoint and covering G.`;
+  } else out+=`\n<span style="color:${C.dim}">Click any element (row or column header) to generate its subgroup.</span>`;
+  $('#grpInfo').innerHTML=out;
+ }
+ $('#grpSel').onchange=e=>{key=e.target.value;sel=null;render();};
+ render();
+})();
+/* ============ GRAPH LABORATORY ============ */
+(function(){
+ const cv=$('#gCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+ let V=[],E=new Set(),mode='none',sel=null,drag=null,res={};
+ const key=(a,b)=>a<b?a+'-'+b:b+'-'+a;
+ const adj=()=>{const A=V.map(()=>[]);[...E].forEach(k=>{const[a,b]=k.split('-').map(Number);A[a].push(b);A[b].push(a);});return A;};
+ const PRE={
+  k5:()=>{V=[];E=new Set();for(let i=0;i<5;i++)V.push({x:W/2+280*Math.cos(i*2*Math.PI/5-Math.PI/2),y:H/2+280*Math.sin(i*2*Math.PI/5-Math.PI/2)});
+   for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)E.add(key(i,j));},
+  k33:()=>{V=[];E=new Set();for(let i=0;i<3;i++)V.push({x:W/2-260,y:H/2-220+i*220});for(let i=0;i<3;i++)V.push({x:W/2+260,y:H/2-220+i*220});
+   for(let i=0;i<3;i++)for(let j=3;j<6;j++)E.add(key(i,j));},
+  cycle:()=>{V=[];E=new Set();for(let i=0;i<6;i++)V.push({x:W/2+280*Math.cos(i*Math.PI/3),y:H/2+280*Math.sin(i*Math.PI/3)});
+   for(let i=0;i<6;i++)E.add(key(i,(i+1)%6));},
+  petersen:()=>{V=[];E=new Set();for(let i=0;i<5;i++)V.push({x:W/2+320*Math.cos(i*2*Math.PI/5-Math.PI/2),y:H/2+320*Math.sin(i*2*Math.PI/5-Math.PI/2)});
+   for(let i=0;i<5;i++)V.push({x:W/2+150*Math.cos(i*2*Math.PI/5-Math.PI/2),y:H/2+150*Math.sin(i*2*Math.PI/5-Math.PI/2)});
+   for(let i=0;i<5;i++){E.add(key(i,(i+1)%5));E.add(key(i,i+5));E.add(key(5+i,5+(i+2)%5));}},
+  tree:()=>{V=[];E=new Set();const add=(x,y)=>{V.push({x,y});return V.length-1;};
+   const r=add(W/2,120);const a=add(W/2-300,320),b=add(W/2+300,320);
+   [[r,a],[r,b]].forEach(([u,v])=>E.add(key(u,v)));
+   [[a,-450],[a,-160],[b,160],[b,450]].forEach(([p,dx])=>{const c=add(W/2+dx,540);E.add(key(p,c));});
+   const l=add(W/2-450,700);E.add(key(3,l));},
+  bridge:()=>{V=[];E=new Set();
+   const L=[[240,200],[460,140],[460,380],[240,440]],R=[[940,200],[1160,140],[1160,380],[940,440]];
+   L.concat(R).forEach(p=>V.push({x:p[0],y:p[1]+120}));
+   [[0,1],[1,2],[2,3],[3,0],[0,2]].forEach(([a,b])=>E.add(key(a,b)));
+   [[4,5],[5,6],[6,7],[7,4],[5,7]].forEach(([a,b])=>E.add(key(a,b)));
+   E.add(key(1,4));
+   V.push({x:W/2,y:700});E.add(key(2,8));},
+  clear:()=>{V=[];E=new Set();}
+ };
+ function comps(){const A=adj(),c=V.map(()=>-1);let n=0;
+  V.forEach((_,i)=>{if(c[i]>=0)return;const st=[i];c[i]=n;while(st.length){const u=st.pop();A[u].forEach(v=>{if(c[v]<0){c[v]=n;st.push(v);}});}n++;});
+  return{c,n};}
+ function bridgesArt(){
+  const A=adj(),n=V.length,disc=Array(n).fill(-1),low=Array(n).fill(0),par=Array(n).fill(-1);
+  const br=[],art=new Set();let t=0;
+  const dfs=u=>{disc[u]=low[u]=t++;let ch=0;
+   A[u].forEach(v=>{if(disc[v]<0){ch++;par[v]=u;dfs(v);low[u]=Math.min(low[u],low[v]);
+     if(low[v]>disc[u])br.push(key(u,v));
+     if(par[u]>=0&&low[v]>=disc[u])art.add(u);}
+    else if(v!==par[u])low[u]=Math.min(low[u],disc[v]);});
+   if(par[u]<0&&ch>1)art.add(u);};
+  for(let i=0;i<n;i++)if(disc[i]<0)dfs(i);
+  return{br,art};}
+ function bipartite(){const A=adj(),col=V.map(()=>-1);let ok=true,odd=null;
+  V.forEach((_,i)=>{if(col[i]>=0)return;col[i]=0;const q=[i];
+   while(q.length){const u=q.shift();A[u].forEach(v=>{if(col[v]<0){col[v]=1-col[u];q.push(v);}else if(col[v]===col[u]){ok=false;odd=[u,v];}});}});
+  return{ok,col,odd};}
+ function greedyColor(){const A=adj(),col=V.map(()=>-1);
+  const order=V.map((_,i)=>i).sort((a,b)=>A[b].length-A[a].length);
+  order.forEach(u=>{const used=new Set(A[u].map(v=>col[v]));let c=0;while(used.has(c))c++;col[u]=c;});
+  return col;}
+ function bipMatch(col){const A=adj(),L=V.map((_,i)=>i).filter(i=>col[i]===0);
+  const mt=V.map(()=>-1);
+  const tryK=(u,seen)=>{for(const v of A[u]){if(seen.has(v))continue;seen.add(v);
+   if(mt[v]<0||tryK(mt[v],seen)){mt[v]=u;mt[u]=v;return true;}}return false;};
+  L.forEach(u=>{if(mt[u]<0)tryK(u,new Set());});
+  const M=[];V.forEach((_,i)=>{if(mt[i]>=0&&i<mt[i])M.push(key(i,mt[i]));});return M;}
+ function greedyMatch(){const used=new Set(),M=[];
+  [...E].forEach(k=>{const[a,b]=k.split('-').map(Number);if(!used.has(a)&&!used.has(b)){used.add(a);used.add(b);M.push(k);}});return M;}
+ function maxIndep(){const n=V.length;if(n>20)return null;const A=adj();
+  const mask=V.map((_,i)=>A[i].reduce((m,v)=>m|(1<<v),0));
+  let best=0,bestS=0;
+  for(let s=0;s<(1<<n);s++){let ok=true;
+   for(let i=0;i<n&&ok;i++)if(s>>i&1)if(mask[i]&s)ok=false;
+   if(ok){const c=s.toString(2).split('1').length-1;if(c>best){best=c;bestS=s;}}}
+  return{size:best,set:V.map((_,i)=>i).filter(i=>bestS>>i&1)};}
+ function hamilton(){const n=V.length;if(n<3||n>10)return null;const A=adj();
+  const path=[0],vis=Array(n).fill(false);vis[0]=true;let found=null;
+  const go=u=>{if(found)return;if(path.length===n){if(A[u].includes(0))found=[...path];return;}
+   for(const v of A[u])if(!vis[v]){vis[v]=true;path.push(v);go(v);path.pop();vis[v]=false;if(found)return;}};
+  go(0);return found;}
+ function analyse(){
+  const n=V.length,m=E.size;res={};
+  if(!n){$('#gOut').innerHTML='Empty graph. Click the canvas to add vertices, or load a preset.';return;}
+  const A=adj(),cp=comps(),deg=A.map(a=>a.length);
+  let out=`<span class="hi">|V| = ${n}</span>   <span class="hi">|E| = ${m}</span>   degrees: ${deg.join(', ')}   Σdeg = ${deg.reduce((a,b)=>a+b,0)} = 2|E| ✓ (handshake lemma)\n`;
+  if(mode==='comp'){res.comp=cp.c;out+=`\n<span class="ok">${cp.n} connected component${cp.n>1?'s':''}.</span> ${cp.n===1?'The graph is connected — a path exists between every pair.':'Vertices in different components can never reach one another.'}`;}
+  else if(mode==='bridges'){const b=bridgesArt();res.br=b.br;res.art=b.art;
+   out+=`\n<span class="no">Bridges: ${b.br.length?b.br.map(k=>'('+k.split('-').map(x=>+x+1).join('–')+')').join(' '):'none'}</span> — edges whose removal disconnects the graph.\n`+
+   `<span class="hi">Cut vertices: ${b.art.size?[...b.art].map(x=>x+1).join(', '):'none'}</span> — vertices whose removal disconnects it.\n<span style="color:${C.dim}">Found in one DFS pass with Tarjan's algorithm, comparing discovery times to the lowest reachable ancestor. In a network these are your single points of failure.</span>`;}
+  else if(mode==='bip'){const b=bipartite();res.col=b.ok?b.col:null;
+   out+=b.ok?`\n<span class="ok">✓ Bipartite.</span> The vertices split into two teams with every edge crossing between them — so the graph contains no odd cycle, and 2 colours suffice.`
+    :`\n<span class="no">✗ Not bipartite.</span> 2-colouring fails at the edge (${b.odd.map(x=>x+1).join('–')}): both ends demanded the same colour. Equivalently, the graph contains an odd cycle.`;}
+  else if(mode==='color'){const col=greedyColor();res.col=col;const k=Math.max(...col)+1;
+   out+=`\n<span class="hi">Greedy colouring used ${k} colour${k>1?'s':''}</span> (largest-degree-first). Max degree Δ = ${Math.max(...deg)}, so Brooks' theorem guarantees χ ≤ Δ = ${Math.max(...deg)} unless this is a complete graph or an odd cycle.\n<span style="color:${C.dim}">Greedy is not optimal in general — finding the true chromatic number is NP-hard. This is register allocation, exam timetabling and frequency assignment, all at once.</span>`;}
+  else if(mode==='match'){const b=bipartite();const M=b.ok?bipMatch(b.col):greedyMatch();res.match=new Set(M);
+   out+=`\n<span class="ok">Matching of size ${M.length}</span>: ${M.map(k=>'('+k.split('-').map(x=>+x+1).join('–')+')').join(' ')||'none'}\n`+
+   (b.ok?`The graph is bipartite, so this is a genuine <b>maximum</b> matching, found by augmenting paths. König's theorem: maximum matching = minimum vertex cover = ${M.length} here.`
+    :`The graph is not bipartite, so this is a greedy <b>maximal</b> matching — no edge can be added, but it may not be the largest possible. Maximum matching in general graphs needs Edmonds' blossom algorithm.`);}
+  else if(mode==='cover'){const I=maxIndep();
+   if(!I){out+='\nToo many vertices for exact search (limit 20).';}
+   else{res.ind=new Set(I.set);
+    out+=`\n<span class="ok">Maximum independent set (α = ${I.size})</span>: {${I.set.map(x=>x+1).join(', ')}} — no two are adjacent.\n`+
+    `<span class="hi">Minimum vertex cover (β = ${n-I.size})</span>: {${V.map((_,i)=>i).filter(i=>!I.set.includes(i)).map(x=>x+1).join(', ')}} — every edge has an endpoint here.\n`+
+    `<span style="color:${C.dim}">α + β = ${I.size} + ${n-I.size} = ${n} = |V|. They are exact complements: maximising one minimises the other. Both are NP-hard in general — this used brute force over all 2^${n} subsets.</span>`;}}
+  else if(mode==='euler'){const oddV=deg.map((d,i)=>[d,i]).filter(x=>x[0]%2).map(x=>x[1]+1);
+   const conn=cp.n===1||deg.every((d,i)=>d===0||cp.c[i]===cp.c[deg.findIndex(x=>x>0)]);
+   const ham=hamilton();
+   out+=`\n<span class="hi">Euler</span> — odd-degree vertices: ${oddV.length?oddV.join(', '):'none'} (${oddV.length} of them, always even in number).\n`+
+    (oddV.length===0&&conn?'<span class="ok">✓ Euler circuit exists</span> — you can traverse every edge exactly once and return to the start.'
+     :oddV.length===2&&conn?'<span class="ok">✓ Euler trail exists</span> (but not a circuit) — start at one odd vertex, finish at the other.'
+     :'<span class="no">✗ No Euler trail or circuit</span> — more than two odd-degree vertices, or the graph is disconnected.')+
+    `\n<span style="color:${C.dim}">Checked in linear time, just by counting degrees. That is Euler's 1736 answer to the Königsberg bridges.</span>\n\n`+
+    `<span class="hi">Hamilton</span> — ${ham?'<span class="ok">✓ Hamiltonian cycle found:</span> '+ham.map(x=>x+1).join(' → ')+' → '+(ham[0]+1):V.length>10?'too large to brute-force here (>10 vertices)':'<span class="no">✗ no Hamiltonian cycle exists</span>'}\n`+
+    `<span style="color:${C.dim}">Found by exhaustive search, because no efficient criterion is known. Deciding this is NP-complete — one word apart from Euler, and computationally a different universe.</span>`;
+   if(ham)res.ham=ham;}
+  else if(mode==='bfs'){const A2=adj(),d=V.map(()=>-1);d[0]=0;const q=[0];
+   while(q.length){const u=q.shift();A2[u].forEach(v=>{if(d[v]<0){d[v]=d[u]+1;q.push(v);}});}
+   res.bfs=d;out+=`\n<span class="hi">BFS from vertex 1.</span> Layer of each vertex: ${d.map((x,i)=>(i+1)+':'+(x<0?'∞':x)).join('  ')}\n<span style="color:${C.dim}">Layer number = shortest path length in edges. This single loop is how every unweighted shortest-path, social-network "degrees of separation" and web-crawler frontier works.</span>`;}
+  else out+=`\n<span style="color:${C.dim}">Pick an analysis below. Vertices are numbered from 1 in the readouts.</span>`;
+  const V2=n,E2=m,F=E2-V2+2;
+  if(mode==='none'&&n>2)out+=`\n<span style="color:${C.dim}">If this graph is connected and planar, Euler's formula V − E + F = 2 predicts ${F} faces. Note E ≤ 3V − 6 requires ${E2} ≤ ${3*V2-6} — ${E2<=3*V2-6?'satisfied, so planarity is possible — but this test is necessary, not sufficient: the Petersen graph passes it and is still non-planar':'<span class="no">violated, so this graph is definitely NOT planar</span>'}.</span>`;
+  $('#gOut').innerHTML=out;
+ }
+ const PAL=['#D4A04C','#3FA678','#C97B5A','#9DC6A8','#7FA0D4','#B58ACB','#D4C24C'];
+ function draw(){
+  g.clearRect(0,0,W,H);
+  [...E].forEach(k=>{const[a,b]=k.split('-').map(Number);
+   const isBr=res.br&&res.br.includes(k),isM=res.match&&res.match.has(k);
+   g.strokeStyle=isBr?C.clay:isM?C.gold:'rgba(157,198,168,.34)';g.lineWidth=isBr||isM?6:2.6;
+   g.beginPath();g.moveTo(V[a].x,V[a].y);g.lineTo(V[b].x,V[b].y);g.stroke();});
+  if(res.ham){g.strokeStyle='rgba(212,160,76,.75)';g.lineWidth=5;g.beginPath();
+   res.ham.forEach((v,i)=>i?g.lineTo(V[v].x,V[v].y):g.moveTo(V[v].x,V[v].y));g.closePath();g.stroke();}
+  V.forEach((v,i)=>{
+   let fill='#16301F',stroke=C.mint,label=String(i+1),lc=C.text;
+   if(res.comp)fill=PAL[res.comp[i]%PAL.length];
+   if(res.col)fill=PAL[res.col[i]%PAL.length];
+   if(res.bfs)fill=res.bfs[i]<0?'#2A2A2A':PAL[res.bfs[i]%PAL.length];
+   if(res.ind)fill=res.ind.has(i)?C.moss:'rgba(201,123,90,.5)';
+   if(res.art&&res.art.has(i)){stroke=C.clay;}
+   if(res.comp||res.col||res.bfs||res.ind)lc='#07120D';
+   if(i===sel)stroke=C.gold;
+   g.fillStyle=fill;g.strokeStyle=stroke;g.lineWidth=i===sel||stroke===C.clay?6:3;
+   g.beginPath();g.arc(v.x,v.y,30,0,7);g.fill();g.stroke();
+   g.fillStyle=lc;g.font='500 24px Space Grotesk, sans-serif';g.textAlign='center';g.textBaseline='middle';
+   g.fillText(label,v.x,v.y+1);});
+  g.textAlign='left';g.textBaseline='alphabetic';
+ }
+ function refresh(){analyse();draw();}
+ function pos(e){const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*W/r.width,(t.clientY-r.top)*H/r.height];}
+ function at(mx,my){return V.findIndex(v=>Math.hypot(v.x-mx,v.y-my)<34);}
+ let moved=false;
+ cv.addEventListener('mousedown',e=>{const[mx,my]=pos(e);const i=at(mx,my);moved=false;if(i>=0)drag=i;});
+ cv.addEventListener('mousemove',e=>{if(drag===null)return;const[mx,my]=pos(e);V[drag].x=mx;V[drag].y=my;moved=true;draw();});
+ window.addEventListener('mouseup',()=>{if(drag!==null&&moved){drag=null;refresh();}else drag=null;});
+ cv.addEventListener('click',e=>{if(moved){moved=false;return;}
+  const[mx,my]=pos(e);const i=at(mx,my);
+  if(i<0){if(V.length<20){V.push({x:mx,y:my});sel=null;}}
+  else if(e.shiftKey){E=new Set([...E].filter(k=>{const[a,b]=k.split('-').map(Number);return a!==i&&b!==i;}));
+   V.splice(i,1);E=new Set([...E].map(k=>{let[a,b]=k.split('-').map(Number);if(a>i)a--;if(b>i)b--;return key(a,b);}));sel=null;}
+  else if(sel===null)sel=i;
+  else if(sel===i)sel=null;
+  else{const k=key(sel,i);E.has(k)?E.delete(k):E.add(k);sel=null;}
+  res={};refresh();});
+ cv.addEventListener('touchstart',e=>{const[mx,my]=pos(e);const i=at(mx,my);if(i>=0){drag=i;}},{passive:true});
+ cv.addEventListener('touchmove',e=>{if(drag===null)return;const[mx,my]=pos(e);V[drag].x=mx;V[drag].y=my;moved=true;draw();e.preventDefault();},{passive:false});
+ cv.addEventListener('touchend',()=>{drag=null;if(moved){moved=false;refresh();}});
+ $$('[data-gp]').forEach(b=>b.onclick=()=>{PRE[b.dataset.gp]();sel=null;res={};refresh();});
+ $$('[data-ga]').forEach(b=>b.onclick=()=>{$$('[data-ga]').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.ga;res={};refresh();});
+ PRE.petersen();refresh();
+})();
+/* ============ INDUCTION ============ */
+(function(){
+ const CL={
+  sum:{lhs:n=>n*(n+1)/2,f:n=>[...Array(n)].map((_,i)=>i+1),rhs:n=>`${n}(${n}+1)/2 = ${n*(n+1)/2}`,
+   base:'n = 1:  LHS = 1,  RHS = 1·2/2 = 1  ✓',
+   step:'Assume 1+…+k = k(k+1)/2. Then 1+…+k+(k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2 — which is the formula at n = k+1. ∎'},
+  sq:{lhs:n=>n*n,f:n=>[...Array(n)].map((_,i)=>2*i+1),rhs:n=>`${n}² = ${n*n}`,
+   base:'n = 1:  LHS = 1,  RHS = 1² = 1  ✓',
+   step:'Assume the first k odd numbers sum to k². Adding the next odd number 2k+1 gives k² + 2k + 1 = (k+1)². ∎  (Geometrically: each odd number is an L-shaped shell wrapping a square into the next square.)'},
+  pow:{lhs:n=>Math.pow(2,n),f:n=>[Math.pow(2,n)],rhs:n=>`${n}`,cmp:true,
+   base:'n = 1:  2¹ = 2 > 1  ✓',
+   step:'Assume 2ᵏ > k. Then 2ᵏ⁺¹ = 2·2ᵏ > 2k = k + k ≥ k + 1 for k ≥ 1. ∎'}
+ };
+ let key='sum';
+ function draw(){
+  const n=+$('#indN').value,c=CL[key];$('#indNv').textContent=n;
+  let s='';const w=44;
+  for(let i=0;i<12;i++){const on=i<n;
+   s+=`<g transform="translate(${28+i*52},40) ${on?'rotate(-22)':''}"><rect width="22" height="90" rx="3" fill="${on?C.gold:'rgba(157,198,168,.13)'}" stroke="${on?C.gold:'rgba(157,198,168,.25)'}"/></g>`;
+   s+=`<text x="${39+i*52}" y="152" text-anchor="middle" font-family="Space Grotesk" font-size="12" fill="${on?C.gold:C.faint}">${i+1}</text>`;}
+  s+=`<text x="28" y="178" font-family="Space Grotesk" font-size="12" fill="${C.dim}">base case pushes the first · the inductive step makes each one push the next</text>`;
+  $('#indSvg').innerHTML=s;
+  const terms=c.f(n);
+  const lhsTxt=key==='pow'?`2^${n} = ${Math.pow(2,n)}`:terms.join(' + ')+' = '+terms.reduce((a,b)=>a+b,0);
+  const ok=key==='pow'?Math.pow(2,n)>n:terms.reduce((a,b)=>a+b,0)===c.lhs(n);
+  $('#indOut').innerHTML=`<span class="hi">At n = ${n}</span>\nLHS: ${lhsTxt}\nRHS: ${c.rhs(n)}\n${ok?'<span class="ok">✓ holds</span>':'<span class="no">✗ fails</span>'}\n\n<span class="hi">Base case</span>\n${c.base}\n\n<span class="hi">Inductive step</span>\n${c.step}`;
+ }
+ $('#indSel').onchange=e=>{key=e.target.value;draw();};$('#indN').oninput=draw;draw();
+})();
+
+/* ============ COMBINATIONS + PASCAL ============ */
+(function(){
+ const fact=n=>{let r=1;for(let i=2;i<=n;i++)r*=i;return r;};
+ const Cnk=(n,k)=>{if(k<0||k>n)return 0;let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);};
+ function draw(){
+  const n=+$('#cbN').value;let r=+$('#cbR').value;
+  $('#cbNv').textContent=n;$('#cbR').max=n;if(r>n){r=n;$('#cbR').value=n;}$('#cbRv').textContent=r;
+  const P=fact(n)/fact(n-r),Cv=Cnk(n,r);
+  $('#cbOut').innerHTML=
+   `<span class="hi">P(${n},${r})</span> = ${n}!/(${n}−${r})! = <span class="ok">${P.toLocaleString()}</span>   ordered selections — order matters\n`+
+   `<span class="hi">C(${n},${r})</span> = ${n}!/(${r}!·${n-r}!) = <span class="ok">${Cv.toLocaleString()}</span>   unordered selections — order ignored\n`+
+   `Ratio P/C = ${r}! = ${fact(r).toLocaleString()}  ·  the number of orderings you divided out\n`+
+   `All subsets of an ${n}-element set: 2^${n} = ${Math.pow(2,n).toLocaleString()}  ·  all arrangements: ${n}! = ${fact(n).toLocaleString()}\n`+
+   `<span style="color:${C.dim}">Symmetry: C(${n},${r}) = C(${n},${n-r}) — choosing who's in is the same as choosing who's out.</span>`;
+  const rows=Math.min(n,10),W=700,cw=52;
+  let s='';
+  for(let i=0;i<=rows;i++)for(let j=0;j<=i;j++){
+   const x=W/2+(j-i/2)*cw,y=24+i*29;
+   const on=i===n&&j===r, par=(i===n-1&&(j===r-1||j===r));
+   s+=`<text x="${x}" y="${y}" text-anchor="middle" font-family="Space Grotesk" font-size="${on?15:12.5}" fill="${on?C.gold:par?C.moss:'rgba(157,198,168,.5)'}" font-weight="${on?700:400}">${Cnk(i,j)}</text>`;}
+  if(n<=10)s+=`<text x="${W/2}" y="${24+(rows+1)*29+8}" text-anchor="middle" font-family="Space Grotesk" font-size="12" fill="${C.dim}">gold = C(${n},${r}) · green = the two entries above it that sum to it</text>`;
+  else s+=`<text x="${W/2}" y="${24+(rows+1)*29+8}" text-anchor="middle" font-family="Space Grotesk" font-size="12" fill="${C.dim}">showing rows 0–10</text>`;
+  $('#pascalSvg').innerHTML=s;
+ }
+ $('#cbN').oninput=draw;$('#cbR').oninput=draw;draw();
+})();
+
+/* ============ PIGEONHOLE ============ */
+(function(){
+ function draw(){
+  const n=+$('#phN').value,k=+$('#phK').value;
+  $('#phNv').textContent=n;$('#phKv').textContent=k;
+  const per=[...Array(k)].map((_,i)=>Math.floor(n/k)+(i<n%k?1:0));
+  const bw=Math.min(120,600/k),gap=8;let s='';
+  per.forEach((c,i)=>{const x=30+i*(bw+gap);
+   s+=`<rect x="${x}" y="60" width="${bw}" height="110" rx="8" fill="rgba(157,198,168,.05)" stroke="rgba(157,198,168,.3)"/>`;
+   for(let j=0;j<c;j++){const col=Math.floor(bw/22);
+    s+=`<circle cx="${x+12+(j%col)*20}" cy="${158-Math.floor(j/col)*20}" r="7.5" fill="${c>Math.ceil(n/k)-1&&c>1?C.gold:C.moss}"/>`;}
+   s+=`<text x="${x+bw/2}" y="190" text-anchor="middle" font-family="Space Grotesk" font-size="12" fill="${C.dim}">${c}</text>`;});
+  s+=`<text x="30" y="34" font-family="Space Grotesk" font-size="13" fill="${C.text}">${n} items spread as evenly as possible into ${k} boxes</text>`;
+  $('#phSvg').innerHTML=s;
+  const g=Math.ceil(n/k);
+  $('#phOut').innerHTML=n>k
+   ?`<span class="ok">✓ Pigeonhole applies.</span> ${n} > ${k}, so some box must hold at least two.\nGeneralised form: even in the most even spread, some box holds ⌈${n}/${k}⌉ = <span class="hi">${g}</span> items.\n<span style="color:${C.dim}">Proof by contradiction in one line: if every box held ≤ ${g-1}, the total would be at most ${k*(g-1)} < ${n}. Contradiction.</span>`
+   :`<span style="color:${C.dim}">With ${n} ≤ ${k} the principle says nothing — every item can get its own box. Push items above boxes to force a collision.</span>`;
+ }
+ $('#phN').oninput=draw;$('#phK').oninput=draw;draw();
+})();
+
+/* ============ INCLUSION–EXCLUSION ============ */
+(function(){
+ $('#ieCtl').innerHTML=`<div class="row"><label>Universe 1…N</label><input type="range" id="ieN" min="12" max="240" value="60"><span class="val" id="ieNv">60</span></div>
+  <div class="row"><label>Divisor a</label><input type="range" id="ieA" min="2" max="9" value="2"><span class="val" id="ieAv">2</span></div>
+  <div class="row"><label>Divisor b</label><input type="range" id="ieB" min="2" max="9" value="3"><span class="val" id="ieBv">3</span></div>
+  <div class="row"><label>Divisor c</label><input type="range" id="ieC" min="2" max="9" value="5"><span class="val" id="ieCv">5</span></div>`;
+ function draw(){
+  const N=+$('#ieN').value,a=+$('#ieA').value,b=+$('#ieB').value,c=+$('#ieC').value;
+  $('#ieNv').textContent=N;$('#ieAv').textContent=a;$('#ieBv').textContent=b;$('#ieCv').textContent=c;
+  const f=d=>Math.floor(N/d),lcm=(x,y)=>{const gg=(p,q)=>q?gg(q,p%q):p;return x*y/gg(x,y);};
+  const A=f(a),B=f(b),Cc=f(c),AB=f(lcm(a,b)),AC=f(lcm(a,c)),BC=f(lcm(b,c)),ABC=f(lcm(lcm(a,b),c));
+  const ie=A+B+Cc-AB-AC-BC+ABC;
+  let brute=0;for(let i=1;i<=N;i++)if(i%a===0||i%b===0||i%c===0)brute++;
+  const only=[A-AB-AC+ABC,B-AB-BC+ABC,Cc-AC-BC+ABC];
+  const R=100,cx=[160,260,210],cy=[120,120,205];
+  let s='';
+  [0,1,2].forEach(k=>s+=`<circle cx="${cx[k]}" cy="${cy[k]}" r="${R}" fill="rgba(63,166,120,.10)" stroke="rgba(157,198,168,.45)" stroke-width="2"/>`);
+  const T=(x,y,t,col)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="${col||C.text}">${t}</text>`;
+  s+=T(105,110,only[0])+T(315,110,only[1])+T(210,265,only[2]);
+  s+=T(210,95,AB-ABC)+T(140,190,AC-ABC)+T(280,190,BC-ABC)+T(210,155,ABC,C.gold);
+  s+=T(75,45,'÷'+a,C.mint)+T(345,45,'÷'+b,C.mint)+T(210,300,'÷'+c,C.mint);
+  $('#ieSvg').innerHTML=s;
+  $('#ieOut').innerHTML=`How many of 1…${N} are divisible by ${a}, ${b} or ${c}?\n\n`+
+   `  |A| + |B| + |C|            =  ${A} + ${B} + ${Cc}  =  ${A+B+Cc}\n`+
+   `− |A∩B| − |A∩C| − |B∩C|   = −${AB} − ${AC} − ${BC}  = −${AB+AC+BC}\n`+
+   `+ |A∩B∩C|                  = +${ABC}\n`+
+   `<span class="ok">= ${ie}</span>   ·   brute-force check: <span class="${ie===brute?'ok':'no'}">${brute}</span> ${ie===brute?'✓':'✗'}\n`+
+   `<span style="color:${C.dim}">Add the singles (over-counting overlaps), subtract the pairs (now the triple is gone), add the triple back. With n sets you alternate signs across all 2ⁿ−1 intersections.</span>`;
+ }
+ ['ieN','ieA','ieB','ieC'].forEach(id=>$('#'+id).oninput=draw);draw();
+})();
+
+/* ============ RECURRENCE SOLVER ============ */
+(function(){
+ const ids=['rcA','rcB','rcF0','rcF1'];
+ function draw(){
+  const a=+$('#rcA').value,b=+$('#rcB').value,f0=+$('#rcF0').value,f1=+$('#rcF1').value;
+  ids.forEach(i=>$('#'+i+'v').textContent=$('#'+i).value);
+  const N=16,seq=[f0,f1];
+  for(let i=2;i<N;i++)seq.push(a*seq[i-1]+b*seq[i-2]);
+  const disc=a*a+4*b;let closed,roots;
+  if(disc>0){const r1=(a+Math.sqrt(disc))/2,r2=(a-Math.sqrt(disc))/2;
+   const A=(f1-f0*r2)/(r1-r2),B=f0-A;
+   roots=[r1,r2];closed=`f(n) = ${A.toFixed(4)}·(${r1.toFixed(4)})ⁿ + ${B.toFixed(4)}·(${r2.toFixed(4)})ⁿ`;}
+  else if(disc===0){const r=a/2;const A=f0,B=r===0?0:(f1-A*r)/r;
+   roots=[r];closed=`f(n) = (${A.toFixed(4)} + ${B.toFixed(4)}n)·(${r.toFixed(4)})ⁿ   — repeated root, so the second solution picks up a factor of n`;}
+  else{const re=a/2,im=Math.sqrt(-disc)/2;roots=[re,im];
+   closed=`Complex roots ${re.toFixed(3)} ± ${im.toFixed(3)}i — the solution oscillates, with modulus ${Math.hypot(re,im).toFixed(4)} setting the envelope`;}
+  const cv=$('#rcCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+  g.clearRect(0,0,W,H);
+  const vals=seq.map(v=>Math.abs(v)).filter(v=>isFinite(v));
+  const mx=Math.max(1,...vals),pad=50;
+  g.strokeStyle='rgba(157,198,168,.15)';g.beginPath();g.moveTo(pad,H/2);g.lineTo(W-pad,H/2);g.stroke();
+  seq.forEach((v,i)=>{if(!isFinite(v))return;
+   const x=pad+(W-2*pad)*i/(N-1),h=(H/2-pad)*(v/mx);
+   g.fillStyle=v>=0?'rgba(212,160,76,.75)':'rgba(201,123,90,.75)';
+   g.fillRect(x-13,H/2-Math.max(h,0),26,Math.abs(h)||1);
+   g.fillStyle=C.dim;g.font='500 17px Space Grotesk, sans-serif';g.textAlign='center';
+   if(i<10||i%2===0)g.fillText(Math.abs(v)<1e6?v:v.toExponential(1),x,v>=0?H/2-h-10:H/2-h+22);});
+  g.textAlign='left';
+  const ratios=seq.slice(1).map((v,i)=>seq[i]?v/seq[i]:NaN).filter(isFinite);
+  $('#rcOut').innerHTML=`f(n) = ${a}·f(n−1) ${b<0?'−':'+'} ${Math.abs(b)}·f(n−2),  f(0)=${f0}, f(1)=${f1}\n\n`+
+   `Sequence: ${seq.slice(0,12).map(v=>Math.abs(v)<1e9?v:v.toExponential(2)).join(', ')}, …\n\n`+
+   `<span class="hi">Characteristic equation</span>  x² − ${a}x − ${b} = 0    discriminant = ${disc}\n`+
+   `<span class="hi">Roots</span>  ${disc>=0?roots.map(r=>r.toFixed(5)).join(',  '):roots[0].toFixed(3)+' ± '+roots[1].toFixed(3)+'i'}\n`+
+   `<span class="ok">${closed}</span>\n`+
+   (ratios.length?`<span style="color:${C.dim}">Successive ratio f(n)/f(n−1) → ${ratios[ratios.length-1].toFixed(6)} — the dominant root, and therefore the growth rate of any algorithm with this recurrence.</span>`:'');
+ }
+ ids.forEach(i=>$('#'+i).oninput=draw);
+ $$('[data-rc]').forEach(b=>b.onclick=()=>{const v=b.dataset.rc.split(',');ids.forEach((id,i)=>$('#'+id).value=v[i]);draw();});
+ draw();
+})();
+
+/* ============ GENERATING FUNCTIONS ============ */
+(function(){
+ const GF={
+  ones:{seq:[1,1,1,1,1,1,1,1],gf:'1/(1 − x)',why:'The geometric series. Multiply any sequence\'s GF by this and you get its running totals — division by (1−x) is the discrete integral.'},
+  pow2:{seq:[1,2,4,8,16,32,64,128],gf:'1/(1 − 2x)',why:'Substituting 2x for x scales the sequence geometrically. Any recurrence f(n)=2f(n−1) lands here.'},
+  nat:{seq:[0,1,2,3,4,5,6,7],gf:'x/(1 − x)²',why:'Differentiating the geometric series pulls the index down as a coefficient — the calculus of formal power series doing combinatorial work.'},
+  fib:{seq:[0,1,1,2,3,5,8,13],gf:'x/(1 − x − x²)',why:'Read the denominator: it is the characteristic polynomial of f(n)=f(n−1)+f(n−2) reversed. Partial fractions on this gives Binet\'s closed form and the golden ratio.'},
+  binom:{seq:[1,5,10,10,5,1,0,0],gf:'(1 + x)⁵',why:'The binomial theorem IS a generating function statement. Each factor (1+x) offers "take this item or don\'t"; multiplying does the counting.'},
+  dice:{seq:[0,0,1,2,3,4,5,6],gf:'(x + x² + x³ + x⁴ + x⁵ + x⁶)²',why:'One die per factor. The coefficient of xᵏ counts the ways to total k. Convolution of distributions is polynomial multiplication — which is why the FFT can speed up probability.'}
+ };
+ function draw(){
+  const k=$('#gfSel').value,d=GF[k],s=d.seq,mx=Math.max(...s,1);
+  let sv='';
+  s.forEach((v,i)=>{const x=40+i*76,h=v/mx*110;
+   sv+=`<rect x="${x}" y="${150-h}" width="46" height="${Math.max(h,1)}" rx="4" fill="rgba(212,160,76,.6)"/>`;
+   sv+=`<text x="${x+23}" y="${142-h}" text-anchor="middle" font-family="Space Grotesk" font-size="13" fill="${C.gold}">${v}</text>`;
+   sv+=`<text x="${x+23}" y="172" text-anchor="middle" font-family="Space Grotesk" font-size="12" fill="${C.dim}">x^${i}</text>`;});
+  $('#gfSvg').innerHTML=sv;
+  $('#gfOut').innerHTML=`Sequence a₀…a₇:  ${s.join(', ')}, …\n\n<span class="hi">G(x) = ${s.map((v,i)=>v?(v===1&&i?'':v)+(i?(i===1?'x':'x'+'^'+i):''):null).filter(Boolean).join(' + ')} + ⋯</span>\n<span class="ok">        = ${d.gf}</span>\n\n${d.why}`;
+ }
+ $('#gfSel').onchange=draw;draw();
+})();
+/* ============ BAYES ============ */
+(function(){
+ const cv=$('#byCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+ function draw(){
+  const prev=+$('#byPrev').value, sens=+$('#bySens').value/100, spec=+$('#bySpec').value/100;
+  $('#byPrevv').textContent=(prev/100).toFixed(2)+'%';
+  $('#bySensv').textContent=(sens*100).toFixed(0)+'%';
+  $('#bySpecv').textContent=(spec*100).toFixed(0)+'%';
+  const N=10000, sick=prev, well=N-sick;
+  const TP=Math.round(sick*sens), FN=sick-TP, FP=Math.round(well*(1-spec)), TN=well-FP;
+  const cols=200,rows=50,dx=W/cols,dy=H/rows;
+  g.clearRect(0,0,W,H);
+  for(let i=0;i<N;i++){
+   const c=i%cols,r=Math.floor(i/cols);
+   const isSick=i<sick;
+   const pos=isSick?(i<TP):((i-sick)<FP);
+   const x=c*dx+dx/2,y=r*dy+dy/2;
+   g.beginPath();g.arc(x,y,Math.min(dx,dy)*0.32,0,7);
+   if(isSick){g.fillStyle=pos?'#D4A04C':'rgba(212,160,76,.25)';g.fill();}
+   else if(pos){g.fillStyle='#C97B5A';g.fill();}
+   else{g.fillStyle='rgba(157,198,168,.16)';g.fill();}}
+  const ppv=TP+FP?TP/(TP+FP):0, npv=TN+FN?TN/(TN+FN):0;
+  $('#byOut').innerHTML=
+  `Out of 10,000 people:  <span class="hi">${sick}</span> have the condition, ${well.toLocaleString()} do not.\n`+
+  `  True positives  <span class="ok">${TP}</span>   (sick and correctly flagged — solid gold)\n`+
+  `  False positives <span class="no">${FP}</span>   (healthy but flagged anyway — clay)\n`+
+  `  False negatives ${FN}   ·   True negatives ${TN.toLocaleString()}\n\n`+
+  `<span class="hi">P(condition | positive test) = ${TP} / (${TP} + ${FP}) = ${(ppv*100).toFixed(2)}%</span>\n`+
+  `P(healthy | negative test) = ${(npv*100).toFixed(4)}%\n\n`+
+  (ppv<0.5?`<span class="no">A positive result is still more likely to be wrong than right.</span> `:'')+
+  `<span style="color:${C.dim}">The test is ${(sens*100).toFixed(0)}% accurate on the sick and ${(spec*100).toFixed(0)}% accurate on the healthy — but there are so many more healthy people that their small error rate produces most of the positives. This is base-rate neglect, and it is why screening programmes for rare conditions need a confirmatory second test.</span>`;
+ }
+ ['byPrev','bySens','bySpec'].forEach(i=>$('#'+i).oninput=draw);draw();
+})();
+
+/* ============ DISTRIBUTIONS ============ */
+(function(){
+ let mode='unif';
+ const CTL={
+  unif:[['n','Outcomes',2,12,6]],
+  binom:[['n','Trials n',1,50,10],['p','Probability p',1,99,50]],
+  pois:[['l','Rate λ',1,120,30]],
+  exp:[['r','Rate λ',1,50,10]],
+  norm:[['m','Mean μ',-30,30,0],['s','Std dev σ',5,40,10]]
+ };
+ function ctl(){
+  $('#distCtl').innerHTML=CTL[mode].map(c=>
+   `<div class="row"><label>${c[1]}</label><input type="range" id="ds_${c[0]}" min="${c[2]}" max="${c[3]}" value="${c[4]}"><span class="val" id="ds_${c[0]}v"></span></div>`).join('');
+  CTL[mode].forEach(c=>$('#ds_'+c[0]).oninput=draw);
+ }
+ const Cnk=(n,k)=>{let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return r;};
+ function draw(){
+  const v={};CTL[mode].forEach(c=>{v[c[0]]=+$('#ds_'+c[0]).value;});
+  const cv=$('#distCv'),g=cv.getContext('2d'),W=cv.width,H=cv.height,pad=54;
+  g.clearRect(0,0,W,H);
+  let xs=[],ys=[],lbl='',txt='',cont=false,mean=0,varr=0;
+  if(mode==='unif'){const n=v.n;xs=[...Array(n)].map((_,i)=>i+1);ys=xs.map(()=>1/n);
+   mean=(n+1)/2;varr=(n*n-1)/12;lbl='outcome';
+   txt=`Uniform on 1…${n}. Every outcome equally likely, P = 1/${n} = ${(1/n).toFixed(4)}.\nE[X] = (n+1)/2 = ${mean}   Var = (n²−1)/12 = ${varr.toFixed(3)}\n<span style="color:${C.dim}">A fair die, a random array index, a uniformly chosen hash bucket. The maximum-entropy discrete distribution: it assumes nothing beyond the list of possibilities.</span>`;}
+  if(mode==='binom'){const n=v.n,p=v.p/100;xs=[...Array(n+1)].map((_,i)=>i);
+   ys=xs.map(k=>Cnk(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k));mean=n*p;varr=n*p*(1-p);lbl='successes k';
+   txt=`Binomial(n=${n}, p=${p.toFixed(2)}).  P(k) = C(${n},k)·p^k·(1−p)^(${n}−k)\nE[X] = np = ${mean.toFixed(2)}   Var = np(1−p) = ${varr.toFixed(2)}   σ = ${Math.sqrt(varr).toFixed(3)}\n<span style="color:${C.dim}">The combination C(n,k) inside is section 07 doing the counting: choose which k of the n trials succeeded. Push n up and watch a bell shape appear — that is the central limit theorem arriving.</span>`;}
+  if(mode==='pois'){const l=v.l/10;xs=[...Array(Math.max(12,Math.ceil(l*3)))].map((_,i)=>i);
+   ys=xs.map(k=>{let t=Math.exp(-l);for(let i=1;i<=k;i++)t*=l/i;return t;});mean=l;varr=l;lbl='events k';
+   txt=`Poisson(λ = ${l.toFixed(1)}).  P(k) = e^(−λ)·λ^k / k!\nE[X] = λ = ${l.toFixed(2)}   Var = λ = ${l.toFixed(2)}   <span style="color:${C.dim}">(mean equals variance — the Poisson fingerprint)</span>\n<span style="color:${C.dim}">The limit of Binomial(n, λ/n) as n → ∞: many opportunities, each vanishingly unlikely. Requests per second, typos per page, radioactive decays per minute.</span>`;}
+  if(mode==='exp'){const r=v.r/10;cont=true;xs=[...Array(80)].map((_,i)=>i*(6/r)/80);
+   ys=xs.map(x=>r*Math.exp(-r*x));mean=1/r;varr=1/(r*r);lbl='waiting time t';
+   txt=`Exponential(λ = ${r.toFixed(1)}).  f(t) = λe^(−λt)   — continuous\nE[T] = 1/λ = ${mean.toFixed(3)}   Var = 1/λ² = ${varr.toFixed(3)}\n<span style="color:${C.dim}">The waiting time between Poisson events. Memoryless: having waited an hour tells you nothing about the next hour — the only continuous distribution with that property, and the reason it models component failure and inter-arrival gaps.</span>`;}
+  if(mode==='norm'){const m=v.m,s=v.s/10;cont=true;xs=[...Array(120)].map((_,i)=>m/10-4*s+i*8*s/119);
+   ys=xs.map(x=>Math.exp(-((x-m/10)**2)/(2*s*s))/(s*Math.sqrt(2*Math.PI)));mean=m/10;varr=s*s;lbl='x';
+   txt=`Normal(μ = ${(m/10).toFixed(1)}, σ = ${s.toFixed(1)}).  The continuous one — included precisely because it is the border.\nAbout 68% within 1σ, 95% within 2σ, 99.7% within 3σ.\n<span style="color:${C.dim}">The central limit theorem: sums of many independent contributions converge here regardless of what they started as. Set the binomial to n = 50 and compare shapes — that convergence is discrete becoming continuous in front of you.</span>`;}
+  const mx=Math.max(...ys),n=xs.length;
+  const X=i=>pad+(W-2*pad)*i/(n-(cont?1:0)), bw=(W-2*pad)/n;
+  g.strokeStyle='rgba(157,198,168,.15)';g.beginPath();g.moveTo(pad,H-pad);g.lineTo(W-pad,H-pad);g.stroke();
+  if(cont){g.beginPath();
+   xs.forEach((x,i)=>{const px=X(i),py=H-pad-(H-2*pad)*ys[i]/mx;i?g.lineTo(px,py):g.moveTo(px,py);});
+   g.lineTo(X(n-1),H-pad);g.lineTo(X(0),H-pad);g.closePath();
+   const gr=g.createLinearGradient(0,pad,0,H-pad);gr.addColorStop(0,'rgba(212,160,76,.55)');gr.addColorStop(1,'rgba(212,160,76,.05)');
+   g.fillStyle=gr;g.fill();g.strokeStyle=C.gold;g.lineWidth=3;g.stroke();}
+  else{ys.forEach((y,i)=>{const h=(H-2*pad)*y/mx;
+   g.fillStyle='rgba(212,160,76,.65)';g.fillRect(X(i)-bw*0.4+bw*0.5,H-pad-h,bw*0.8,h);
+   if(n<=26){g.fillStyle=C.dim;g.font='500 16px Space Grotesk, sans-serif';g.textAlign='center';
+    g.fillText(xs[i],X(i)+bw*0.5,H-pad+24);
+    if(y/mx>0.06)g.fillText(y.toFixed(3),X(i)+bw*0.5,H-pad-h-8);}});}
+  // mean line
+  const mi=cont?xs.findIndex(x=>x>=mean):xs.indexOf(Math.round(mean));
+  if(mi>=0){const px=X(mi)+(cont?0:bw*0.5);g.strokeStyle=C.moss;g.lineWidth=2;g.setLineDash([8,6]);
+   g.beginPath();g.moveTo(px,pad*0.4);g.lineTo(px,H-pad);g.stroke();g.setLineDash([]);
+   g.fillStyle=C.moss;g.font='500 17px Space Grotesk, sans-serif';g.textAlign='left';g.fillText('E[X]',px+8,pad*0.4+16);}
+  g.textAlign='left';g.fillStyle=C.faint;g.font='500 17px Space Grotesk, sans-serif';g.fillText(lbl,pad,H-14);
+  $('#distOut').innerHTML=txt;
+ }
+ $$('#distTabs .btn').forEach(b=>b.onclick=()=>{$$('#distTabs .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.d;ctl();draw();});
+ ctl();draw();
+})();
+/* ============ EUCLID ============ */
+(function(){
+ function ext(a,b){if(!b)return[a,1,0];const[g,x,y]=ext(b,a%b);return[g,y,x-Math.floor(a/b)*y];}
+ function draw(){
+  let a=Math.max(1,Math.min(999,+$('#euA').value||1)),b=Math.max(1,Math.min(999,+$('#euB').value||1));
+  const A0=a,B0=b;const steps=[];
+  let x=a,y=b;
+  while(y){steps.push([x,y,Math.floor(x/y),x%y]);const t=x%y;x=y;y=t;}
+  const gcd=x;
+  // geometry
+  const W=660,H=240,pad=16;
+  const scale=Math.min((W-2*pad)/Math.max(A0,B0),(H-2*pad)/Math.min(A0,B0));
+  let rw=A0*scale,rh=B0*scale,ox=pad,oy=pad, s='',horiz=true,ci=0;
+  const cols=['rgba(212,160,76,.55)','rgba(63,166,120,.5)','rgba(201,123,90,.5)','rgba(157,198,168,.4)','rgba(127,160,212,.45)','rgba(181,138,203,.45)'];
+  let cw=rw,ch=rh,cx0=ox,cy0=oy;
+  steps.forEach(([p,q,k])=>{
+   for(let i=0;i<k;i++){
+    const side=Math.min(cw,ch);
+    s+=`<rect x="${cx0.toFixed(1)}" y="${cy0.toFixed(1)}" width="${side.toFixed(1)}" height="${side.toFixed(1)}" fill="${cols[ci%cols.length]}" stroke="rgba(7,18,13,.6)"/>`;
+    if(cw>ch){cx0+=side;cw-=side;}else{cy0+=side;ch-=side;}}
+   ci++;});
+  s=`<rect x="${pad}" y="${pad}" width="${rw.toFixed(1)}" height="${rh.toFixed(1)}" fill="none" stroke="${C.mint}" stroke-width="2"/>`+s;
+  s+=`<text x="${pad}" y="${rh+pad+22}" font-family="Space Grotesk" font-size="13" fill="${C.dim}">${A0} × ${B0} rectangle tiled by squares · smallest square side = gcd = ${gcd}</text>`;
+  $('#euSvg').innerHTML=s;
+  const[G,X,Y]=ext(A0,B0);
+  $('#euOut').innerHTML=steps.map(([p,q,k,r])=>`${String(p).padStart(4)} = ${String(q).padStart(4)} × ${String(k).padStart(3)} + ${r}`).join('\n')+
+   `\n\n<span class="ok">gcd(${A0}, ${B0}) = ${gcd}</span>   ·   ${steps.length} division steps   ·   lcm = ${A0*B0/gcd}\n`+
+   `<span class="hi">Bézout:</span> ${A0}·(${X}) + ${B0}·(${Y}) = ${G}\n`+
+   `<span style="color:${C.dim}">Each line replaces the pair with a smaller pair having the same gcd. Bézout's coefficients come from unwinding those lines backwards — and when gcd = 1, the coefficient of a IS a's modular inverse mod b. That single fact is how RSA computes its private key.</span>`;
+ }
+ $('#euGo').onclick=draw;$('#euA').oninput=draw;$('#euB').oninput=draw;draw();
+})();
+
+/* ============ MODULAR CLOCK ============ */
+(function(){
+ function draw(){
+  const n=+$('#mcN').value,a=+$('#mcA').value,mode=$('#mcMode').value;
+  $('#mcNv').textContent=n;$('#mcAv').textContent=a;
+  $('#mcA').max=n-1; if(a>=n){$('#mcA').value=n-1;}
+  const A=+$('#mcA').value;$('#mcAv').textContent=A;
+  const R=160,cx=210,cy=210;
+  const P=i=>[cx+R*Math.cos(i*2*Math.PI/n-Math.PI/2),cy+R*Math.sin(i*2*Math.PI/n-Math.PI/2)];
+  const seq=[];let v=mode==='pow'?A%n:A%n,seen=new Set(),k=0;
+  while(k<n*2){if(seen.has(v))break;seen.add(v);seq.push(v);v=mode==='pow'?(v*A)%n:(v+A)%n;k++;}
+  let s='';
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="rgba(157,198,168,.16)" stroke-width="1.5"/>`;
+  for(let i=1;i<seq.length;i++){const[x1,y1]=P(seq[i-1]),[x2,y2]=P(seq[i]);
+   s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C.gold}" stroke-width="1.8" opacity="${0.35+0.6*i/seq.length}"/>`;}
+  if(seq.length>1){const[x1,y1]=P(seq[seq.length-1]),[x2,y2]=P(seq[0]);
+   s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C.moss}" stroke-width="1.8" stroke-dasharray="5,4"/>`;}
+  for(let i=0;i<n;i++){const[x,y]=P(i);const on=seen.has(i);
+   s+=`<circle cx="${x}" cy="${y}" r="${on?13:9}" fill="${on?(i===seq[0]?C.gold:'rgba(63,166,120,.55)'):'rgba(157,198,168,.10)'}" stroke="rgba(157,198,168,.35)"/>`;
+   s+=`<text x="${x}" y="${y+4}" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="${on?'#07120D':C.faint}">${i}</text>`;}
+  $('#mcSvg').innerHTML=s;
+  const isP=n>1&&[...Array(n-2)].every((_,i)=>n%(i+2)!==0);
+  const gg=(p,q)=>q?gg(q,p%q):p;
+  let out=`<span class="hi">${mode==='pow'?`Powers of ${A} mod ${n}`:`Multiples of ${A} mod ${n}`}</span>\n${seq.join(' → ')} → (repeats)\n`+
+   `Cycle length = ${seq.length} of ${n} residues   ·   gcd(${A}, ${n}) = ${gg(A,n)}\n`;
+  if(mode==='mul')out+=seq.length===n?`<span class="ok">Full sweep.</span> ${A} generates all of ℤ${String(n).split('').map(d=>'₀₁₂₃₄₅₆₇₈₉'[+d]).join('')} under addition — this happens exactly when gcd(${A}, ${n}) = 1.`
+   :`<span style="color:${C.dim}">Only ${seq.length} residues reached, because gcd(${A},${n}) = ${gg(A,n)} ≠ 1. The reachable set is the subgroup generated by ${A} — and its size divides ${n}, as Lagrange requires.</span>`;
+  else{out+=seq.includes(1)?`Order of ${A} = ${seq.length} (smallest k with ${A}^k ≡ 1)\n`:'';
+   if(isP&&seq.length===n-1)out+=`<span class="ok">✓ ${A} is a PRIMITIVE ROOT mod ${n}.</span> Its powers sweep out every non-zero residue — the multiplicative group is cyclic and ${A} generates it. Diffie–Hellman is built on exactly this walk being easy forwards and infeasible to reverse.`;
+   else if(isP)out+=`<span style="color:${C.dim}">${n} is prime, so Fermat guarantees ${A}^${n-1} ≡ 1. The order ${seq.length} divides ${n-1} = ${n-1} ✓ — Lagrange again. Not a primitive root: it only reaches ${seq.length} of the ${n-1} non-zero residues.</span>`;
+   else out+=`<span style="color:${C.dim}">${n} is composite, so the pattern is messier — only residues coprime to ${n} form a group.</span>`;}
+  $('#mcOut').innerHTML=out;
+ }
+ ['mcN','mcA'].forEach(i=>$('#'+i).oninput=draw);$('#mcMode').onchange=draw;draw();
+})();
+
+/* ============ FERMAT TEST + RSA ============ */
+(function(){
+ const pmod=(b,e,m)=>{let r=1n;b=BigInt(b)%BigInt(m);e=BigInt(e);m=BigInt(m);
+  while(e>0n){if(e&1n)r=r*b%m;b=b*b%m;e>>=1n;}return Number(r);};
+ $('#fmGo').onclick=()=>{
+  const n=Math.max(3,Math.min(99999,+$('#fmN').value||3));
+  let fac=null;for(let i=2;i*i<=n;i++)if(n%i===0){fac=i;break;}
+  const bases=[2,3,5,7,11,13].filter(b=>b<n);
+  const rows=bases.map(b=>{const r=pmod(b,n-1,n);return[b,r,r===1];});
+  const pass=rows.filter(r=>r[2]).length;
+  $('#fmOut').innerHTML=`Testing n = ${n}   ·   a^(n−1) mod n for several bases a\n\n`+
+   rows.map(r=>`  a = ${String(r[0]).padStart(2)}  →  ${String(r[1]).padStart(6)}   ${r[2]?'<span class="ok">passes</span>':'<span class="no">FAILS ⇒ n is composite</span>'}`).join('\n')+
+   `\n\n${pass===rows.length
+    ?(fac?`<span class="no">Every base passed — yet ${n} = ${fac} × ${n/fac}.</span> This is a Fermat pseudoprime (a Carmichael number if it fools all coprime bases). The test can only ever prove compositeness, never primality — which is why real systems use Miller–Rabin, which closes this loophole by also checking square roots of 1.`
+     :`<span class="ok">All bases passed and ${n} is genuinely prime.</span> Note what the test actually established: no counterexample was found. Fermat's theorem gives a one-sided guarantee.`)
+    :`<span class="ok">A failing base is a certificate of compositeness</span> — proof that ${n} = ${fac} × ${n/fac} without ever factoring it. That asymmetry (easy to disprove primality, hard to factor) is the whole foundation of public-key cryptography.`}`;
+ };
+ $('#rsaGo').onclick=()=>{
+  const isP=x=>{if(x<2)return false;for(let i=2;i*i<=x;i++)if(x%i===0)return false;return true;};
+  const p=+$('#rsaP').value,q=+$('#rsaQ').value,m=+$('#rsaM').value;
+  if(!isP(p)||!isP(q)||p===q){$('#rsaOut').innerHTML='<span class="no">p and q must be distinct primes.</span>';return;}
+  const n=p*q,phi=(p-1)*(q-1);
+  const gg=(a,b)=>b?gg(b,a%b):a;
+  let e=3;while(gg(e,phi)!==1)e+=2;
+  let d=1;while((d*e)%phi!==1&&d<phi*2)d++;
+  if(m>=n){$('#rsaOut').innerHTML=`<span class="no">Message must be less than n = ${n}.</span>`;return;}
+  const c=pmod(m,e,n),back=pmod(c,d,n);
+  $('#rsaOut').innerHTML=
+  `<span class="hi">Key generation</span>\n  n = p·q = ${p} × ${q} = ${n}          (public)\n  φ(n) = (p−1)(q−1) = ${p-1} × ${q-1} = ${phi}   (secret — needs the factorisation)\n  e = ${e}, chosen coprime to φ(n)      (public)\n  d = ${d}, the inverse of e mod φ(n)   (private — found by extended Euclid)\n  check: e·d = ${e}×${d} = ${e*d} ≡ ${(e*d)%phi} (mod ${phi}) ✓\n\n`+
+  `<span class="hi">Encrypt</span>   c = m^e mod n = ${m}^${e} mod ${n} = <span class="ok">${c}</span>\n`+
+  `<span class="hi">Decrypt</span>   m = c^d mod n = ${c}^${d} mod ${n} = <span class="ok">${back}</span> ${back===m?'✓ recovered':'✗'}\n\n`+
+  `<span style="color:${C.dim}">Why decryption works: m^(ed) = m^(1+kφ(n)) = m·(m^φ(n))^k ≡ m, because Euler's theorem (the generalisation of Fermat's little theorem, itself a corollary of Lagrange's theorem from section 05) says m^φ(n) ≡ 1. An attacker who could factor n = ${n} would recover φ(n) and then d instantly. With 617-digit primes, nobody can.</span>`;
+ };
+ $('#fmGo').click();$('#rsaGo').click();
+})();
+/* ============ KARNAUGH MAP + QUINE–McCLUSKEY ============ */
+(function(){
+ let nv=4,on=new Set([0,1,4,5,10,11,14,15]);
+ const GRAY=[0,1,3,2];
+ function names(){return nv===3?['A','B','C']:['A','B','C','D'];}
+ function qm(minterms,n){
+  if(!minterms.length)return[];
+  if(minterms.length===(1<<n))return[{bits:'-'.repeat(n),cov:minterms}];
+  const toB=m=>m.toString(2).padStart(n,'0');
+  let cur=minterms.map(m=>({bits:toB(m),cov:[m]}));
+  const primes=[];
+  while(cur.length){
+   const used=new Set(),next=[];const seen=new Set();
+   for(let i=0;i<cur.length;i++)for(let j=i+1;j<cur.length;j++){
+    const a=cur[i].bits,b=cur[j].bits;let diff=-1,ok=true;
+    for(let k=0;k<n;k++){if(a[k]!==b[k]){if(diff<0)diff=k;else{ok=false;break;}}}
+    if(!ok||diff<0)continue;
+    used.add(i);used.add(j);
+    const nb=a.slice(0,diff)+'-'+a.slice(diff+1);
+    if(seen.has(nb))continue;seen.add(nb);
+    next.push({bits:nb,cov:[...new Set([...cur[i].cov,...cur[j].cov])].sort((x,y)=>x-y)});}
+   cur.forEach((t,i)=>{if(!used.has(i)&&!primes.some(p=>p.bits===t.bits))primes.push(t);});
+   cur=next;}
+  // cover
+  const need=new Set(minterms),chosen=[];
+  const ess=[];
+  need.forEach(m=>{const c=primes.filter(p=>p.cov.includes(m));
+   if(c.length===1&&!ess.includes(c[0]))ess.push(c[0]);});
+  ess.forEach(p=>{chosen.push(p);p.cov.forEach(m=>need.delete(m));});
+  while(need.size){
+   let best=null,bc=0;
+   primes.forEach(p=>{if(chosen.includes(p))return;const c=p.cov.filter(m=>need.has(m)).length;if(c>bc){bc=c;best=p;}});
+   if(!best)break;chosen.push(best);best.cov.forEach(m=>need.delete(m));}
+  chosen.forEach(p=>p.essential=ess.includes(p));
+  return chosen;
+ }
+ function term(bits){const N=names();
+  const l=[...bits].map((b,i)=>b==='-'?null:(b==='1'?N[i]:N[i]+"'")).filter(Boolean);
+  return l.length?l.join(''):'1';}
+ function render(){
+  const N=names();
+  const rows=nv===3?2:4,cols=4;
+  const rowBits=nv===3?[0,1]:GRAY,colBits=GRAY;
+  const rowLbl=nv===3?['0','1']:['00','01','11','10'],colLbl=['00','01','11','10'];
+  let h=`<table class="tt" style="width:auto;margin:0 auto"><tr><th style="border:none;color:${C.gold}">${nv===3?'A \\ BC':'AB \\ CD'}</th>`+
+   colLbl.map(c=>`<th>${c}</th>`).join('')+'</tr>';
+  for(let r=0;r<rows;r++){h+=`<tr><th>${rowLbl[r]}</th>`;
+   for(let c=0;c<cols;c++){
+    const m=nv===3?(rowBits[r]<<2|colBits[c]):(rowBits[r]<<2|colBits[c]);
+    const v=on.has(m);
+    h+=`<td data-m="${m}" style="cursor:pointer;width:62px;height:46px;font-size:17px;background:${v?'rgba(212,160,76,.3)':'transparent'};color:${v?C.gold:C.faint}">${v?1:0}<div style="font-size:9px;color:${C.faint}">m${m}</div></td>`;}
+   h+='</tr>';}
+  h+='</table>';
+  $('#kmGrid').innerHTML=h;
+  $$('#kmGrid [data-m]').forEach(t=>t.onclick=()=>{const m=+t.dataset.m;on.has(m)?on.delete(m):on.add(m);render();});
+  const mins=[...on].filter(m=>m<(1<<nv)).sort((a,b)=>a-b);
+  const sol=qm(mins,nv);
+  const expr=mins.length===0?'0':(mins.length===(1<<nv)?'1':sol.map(p=>term(p.bits)).join(' + '));
+  const rawLits=mins.length*nv;
+  const minLits=sol.reduce((a,p)=>a+[...p.bits].filter(b=>b!=='-').length,0);
+  $('#kmOut').innerHTML=
+   `Minterms: ${mins.length?'Σm('+mins.join(', ')+')':'none'}   ·   ${mins.length} of ${1<<nv} rows are 1\n`+
+   `Canonical DNF would need ${mins.length} terms and ${rawLits} literals.\n\n`+
+   `<span class="hi">Minimised: F = ${expr}</span>\n`+
+   `${sol.length} product term${sol.length===1?'':'s'}, ${minLits} literal${minLits===1?'':'s'} — a ${rawLits?Math.round((1-minLits/rawLits)*100):0}% reduction.\n`+
+   (sol.length?sol.map(p=>`  ${term(p.bits)}  covers m${p.cov.join(', m')}${p.essential?'   <span class="ok">essential prime implicant</span>':''}`).join('\n'):'')+
+   `\n<span style="color:${C.dim}">There are 2^(2^${nv}) = ${nv===3?'256':'65,536'} distinct Boolean functions of ${nv} variables; this is one of them.</span>`;
+  // circuit
+  const terms=sol.slice(0,6);
+  const W=700,H=Math.max(120,40+terms.length*38);
+  let s='';
+  if(!terms.length||mins.length===(1<<nv)){s=`<text x="20" y="40" font-family="Space Grotesk" font-size="14" fill="${C.dim}">${mins.length?'Constant 1 — no gates needed.':'Constant 0 — no gates needed.'}</text>`;}
+  else{
+   terms.forEach((p,i)=>{const y=30+i*38;
+    s+=`<rect x="30" y="${y-14}" width="220" height="28" rx="14" fill="rgba(63,166,120,.16)" stroke="${C.moss}"/>`;
+    s+=`<text x="140" y="${y+5}" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="${C.mint}">AND: ${term(p.bits)}</text>`;
+    s+=`<line x1="250" y1="${y}" x2="330" y2="${H/2}" stroke="rgba(157,198,168,.4)" stroke-width="1.6"/>`;});
+   s+=`<rect x="330" y="${H/2-22}" width="150" height="44" rx="22" fill="rgba(212,160,76,.18)" stroke="${C.gold}"/>`;
+   s+=`<text x="405" y="${H/2+5}" text-anchor="middle" font-family="Space Grotesk" font-size="15" fill="${C.gold}">OR</text>`;
+   s+=`<line x1="480" y1="${H/2}" x2="560" y2="${H/2}" stroke="${C.gold}" stroke-width="2"/>`;
+   s+=`<text x="572" y="${H/2+5}" font-family="Space Grotesk" font-size="15" fill="${C.text}">F</text>`;
+   s+=`<text x="30" y="${H-4}" font-family="Space Grotesk" font-size="12" fill="${C.faint}">two-level sum-of-products circuit · ${terms.length} AND gate${terms.length===1?'':'s'} + 1 OR gate${sol.length>6?' (showing first 6)':''}</text>`;}
+  $('#kmCircuit').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  $('#kmCircuit').innerHTML=s;
+ }
+ $('#kmVars').onchange=e=>{nv=+e.target.value;on=new Set([...on].filter(m=>m<(1<<nv)));render();};
+ $('#kmRand').onclick=()=>{on=new Set();for(let i=0;i<(1<<nv);i++)if(Math.random()<0.45)on.add(i);render();};
+ $('#kmClear').onclick=()=>{on=new Set();render();};
+ render();
+})();
+
+/* ============ GAME THEORY ============ */
+(function(){
+ const G={
+  pd:{name:"Prisoner's dilemma",R:['Stay silent','Confess'],Cl:['Stay silent','Confess'],
+    P:[[[-1,-1],[-3,0]],[[0,-3],[-2,-2]]],
+    note:"Confess strictly dominates staying silent for both players, so rational play lands on (Confess, Confess) — worse for both than mutual silence. Individually rational, collectively terrible. This is the shape of arms races, price wars, overfishing and every under-funded shared resource."},
+  chicken:{name:"Chicken",R:['Swerve','Straight'],Cl:['Swerve','Straight'],
+    P:[[[0,0],[-1,1]],[[1,-1],[-10,-10]]],
+    note:"Two pure equilibria, and they disagree about who wins. Commitment is the winning move — visibly removing your own option to swerve makes the other player's best response to yield. That is why brinkmanship works and why it is dangerous."},
+  stag:{name:"Stag hunt",R:['Hunt stag','Hunt hare'],Cl:['Hunt stag','Hunt hare'],
+    P:[[[4,4],[0,3]],[[3,0],[2,2]]],
+    note:"Two equilibria again, but here one is better for everyone. The obstacle is not conflict, it is trust: cooperating pays more only if the other player also cooperates. Standards adoption, team norms and protocol migrations all live here."},
+  mp:{name:"Matching pennies",R:['Heads','Tails'],Cl:['Heads','Tails'],
+    P:[[[1,-1],[-1,1]],[[-1,1],[1,-1]]],
+    note:"Zero-sum with NO pure equilibrium — every cell has someone who wants to move. The equilibrium is mixed: play 50/50, making your opponent indifferent so they cannot exploit you. This is the mathematical reason bluffing exists in poker and why serve direction in tennis is randomised."},
+  coord:{name:"Coordination",R:['Left','Right'],Cl:['Left','Right'],
+    P:[[[2,2],[0,0]],[[0,0],[2,2]]],
+    note:"Nothing to fight over — the only problem is agreeing. Both equilibria are equally good, so the outcome is decided by convention, history or a focal point. Which side of the road to drive on is this game, played by a whole country."}
+ };
+ let key='pd';
+ function render(){
+  const g=G[key],P=g.P;
+  const brR=[0,1].map(c=>P[0][c][0]>=P[1][c][0]?0:1);
+  const brC=[0,1].map(r=>P[r][0][1]>=P[r][1][1]?0:1);
+  let h=`<table class="tt" style="width:auto;margin:8px auto"><tr><th style="border:none"></th><th colspan="2" style="color:${C.mint}">Column player</th></tr><tr><th style="border:none"></th>`+
+   g.Cl.map(c=>`<th>${c}</th>`).join('')+'</tr>';
+  for(let r=0;r<2;r++){h+=`<tr><th style="color:${C.mint}">${g.R[r]}</th>`;
+   for(let c=0;c<2;c++){
+    const rb=brR[c]===r, cb=brC[r]===c, nash=rb&&cb;
+    h+=`<td style="padding:14px 20px;font-size:15px;background:${nash?'rgba(212,160,76,.18)':'transparent'}">
+     <span style="color:${rb?C.gold:C.dim};${rb?'text-decoration:underline;font-weight:700':''}">${P[r][c][0]}</span>,
+     <span style="color:${cb?C.moss:C.dim};${cb?'text-decoration:underline;font-weight:700':''}">${P[r][c][1]}</span></td>`;}
+   h+='</tr>';}
+  h+='</table>';
+  $('#gtGrid').innerHTML=h;
+  const nash=[];for(let r=0;r<2;r++)for(let c=0;c<2;c++)if(brR[c]===r&&brC[r]===c)nash.push([r,c]);
+  $('#gtOut').innerHTML=`<span class="hi">${g.name}</span>\n`+
+   (nash.length?`Pure Nash equilibria: ${nash.map(([r,c])=>`(${g.R[r]}, ${g.Cl[c]})`).join('  ·  ')}`
+    :`<span class="no">No pure Nash equilibrium.</span> The unique equilibrium is mixed: each player randomises 50/50.`)+
+   `\n\n${g.note}`;
+ }
+ $$('#gtPresets .btn').forEach(b=>b.onclick=()=>{$$('#gtPresets .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');key=b.dataset.g;render();});
+ render();
+})();
+
+/* ============ SYNTHESIS TABS ============ */
+(function(){
+ const S={
+  demorgan:`<span class="hi">De Morgan's law, in four rooms</span>
+
+  Logic (§02)      ¬(p ∧ q) ≡ ¬p ∨ ¬q
+  Sets (§03)       (A ∩ B)ᶜ = Aᶜ ∪ Bᶜ
+  Boolean (§11)    (AB)′ = A′ + B′
+  Your code        ~(a & b) == (~a | ~b)   — and !(x && y) === (!x || !y)
+
+It is <span class="ok">one theorem</span>. All four are statements about a complemented distributive lattice; the differences are notation and nothing else. Prove it once with a truth table and you have proved it for bitmasks, sets, circuits and if-statements simultaneously. This is what algebraic abstraction is FOR — and it is why section 05 exists.`,
+  lagrange:`<span class="hi">One chain, five sections, ending at your bank</span>
+
+  §05  Lagrange: the order of a subgroup divides the order of the group.
+  §05  Corollary: a^|G| = e for every element of a finite group.
+  §10  Apply it to the units mod p (a group of order p−1): a^(p−1) ≡ 1 (mod p). That is Fermat's little theorem.
+  §10  Generalise to composite n with Euler's φ: a^φ(n) ≡ 1 (mod n).
+  §10  Therefore m^(ed) ≡ m whenever ed ≡ 1 (mod φ(n)). That is RSA decryption working.
+  §07  Combinatorics tells you the key space is unsearchable; §09 bounds the primality test's error.
+
+A theorem about <span class="ok">cosets of finite groups</span> — proved a century before computers, for no practical reason whatsoever — is the reason your payment goes through.`,
+  pigeon:`<span class="hi">Pigeonhole → hashing → the limits of compression</span>
+
+  §07  If n items go into k boxes with n > k, some box holds two.
+  §03  Restated as functions: no injection exists from a larger set to a smaller one.
+  Apply  A hash maps infinitely many keys to finitely many buckets ⟹ collisions are a theorem, not a bug. Every hash table needs a collision strategy; no clever function escapes this.
+  Apply  No lossless compressor can shrink every input. If it did, it would injectively map all n-bit strings into shorter strings — the same impossibility. Every compression gain on one file is paid for by a loss on another.
+
+The most obvious statement in the subject <span class="ok">bounds what software can do</span>, permanently.`,
+  euler:`<span class="hi">Euler's formula → what fits on one layer of a board</span>
+
+  §06  For a connected planar graph, V − E + F = 2.
+  §06  Each face needs ≥ 3 edges and each edge borders 2 faces ⟹ E ≤ 3V − 6.
+  §06  K₅ has V=5, E=10 and 10 > 9, so K₅ cannot be drawn without crossings. Proof complete, no case analysis.
+  §11  A single-layer PCB is a planar embedding problem; crossings force a via or another layer.
+  §06  Kuratowski: K₅ and K₃,₃ are the ONLY two obstructions — every non-planar graph contains one of them.
+
+A counting identity about <span class="ok">faces of a drawing</span> tells a hardware engineer whether the board needs a second layer.`
+ };
+ function set(k){$('#synthOut').innerHTML=S[k];}
+ $$('#synthTabs .btn').forEach(b=>b.onclick=()=>{$$('#synthTabs .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');set(b.dataset.sy);});
+ set('demorgan');
+})();
+
+/* ============ PATHWAY ============ */
+(function(){
+ const P=[
+  ['Logic and proof','§02','Everything downstream is stated and justified in this language. Skipping it means reading every later theorem as a spell rather than an argument. Give it two weeks and write proofs by hand.'],
+  ['Sets, relations, functions','§03','The universal vocabulary. Cheap to learn, and it makes graphs, orders, groups and probability all look like variations on one idea rather than four new subjects.'],
+  ['Counting and induction','§07','The first place you will get things wrong and be able to check yourself against a brute-force program. Do that constantly — it builds the instinct faster than any textbook.'],
+  ['Graph theory','§06','The highest practical return per hour in the whole subject. Implement BFS, DFS, bridges, bipartite checking and greedy colouring yourself before reading about them.'],
+  ['Number theory and modular arithmetic','§10','Self-contained, immediately applicable, and the fastest route to a working RSA you built yourself. Also the densest source of exam and interview questions.'],
+  ['Recurrences and probability','§08 §09','Now that you can count, learn to count things that repeat and things that are uncertain. This pair is the mathematical core of algorithm analysis and of machine learning.'],
+  ['Order, lattices, groups','§04 §05','Left until last on purpose. Abstraction is only meaningful once you have several concrete examples to abstract FROM — which by now you do. This is where the subject suddenly becomes one thing instead of ten.'],
+  ['Boolean algebra','§11','Quick, once logic and lattices are in place. Mostly a matter of learning the notation and the minimisation technique.'],
+ ];
+ $('#pathway').innerHTML=P.map((p,i)=>`
+  <div style="display:grid;grid-template-columns:52px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)">
+   <div style="font-family:var(--ui);font-size:12px;color:${C.gold};padding-top:4px">${String(i+1).padStart(2,'0')}<div style="color:${C.faint};margin-top:3px">${p[1]}</div></div>
+   <div><div style="font-family:var(--display);font-size:19px;color:${C.text};margin-bottom:4px">${p[0]}</div>
+   <div style="font-size:16px;color:#C9D9CC">${p[2]}</div></div>
+  </div>`).join('');
+})();
+</script>
+</body>
+</html>
