@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP — Field Notes on the Model Context Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest-950:#0a1911;
+    --forest-900:#0f2318;
+    --forest-800:#152d20;
+    --forest-700:#1c3a29;
+    --forest-600:#254a34;
+    --line:rgba(233,224,197,0.10);
+    --line-bright:rgba(233,224,197,0.22);
+    --gold:#c9a961;
+    --gold-bright:#e3c684;
+    --mint:#9fcdb0;
+    --mint-dim:#6fa585;
+    --paper:#f5f0e2;
+    --paper-dim:#ece3cd;
+    --ink:#12201a;
+    --ink-soft:#3c4a41;
+    --body-on-dark: #cdd9cd;
+    --body-on-dark-dim:#93a89b;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+    --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--forest-950);
+    color:var(--body-on-dark);
+    font-family:'Newsreader', serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    color:var(--paper);
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono, .eyebrow, nav, button, .tag, .step-nav, code, pre{
+    font-family:'Space Grotesk', sans-serif;
+  }
+  a{color:var(--gold-bright);}
+  ::selection{background:var(--gold); color:var(--forest-950);}
+  :focus-visible{outline:2px solid var(--gold-bright); outline-offset:3px;}
+
+  /* ---------- NAV ---------- */
+  nav.topnav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px;
+    background:rgba(10,25,17,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex; align-items:baseline; gap:8px;
+    font-weight:600; color:var(--paper); font-size:15px; letter-spacing:0.02em;
+  }
+  .brand .dot{color:var(--gold-bright);}
+  .navlinks{display:flex; gap:2px; flex-wrap:wrap;}
+  .navlinks a{
+    font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--body-on-dark-dim); text-decoration:none;
+    padding:8px 11px; border-radius:20px; transition:all .25s ease;
+    white-space:nowrap;
+  }
+  .navlinks a:hover{color:var(--paper);}
+  .navlinks a.active{color:var(--forest-950); background:var(--mint);}
+  @media (max-width:920px){
+    .navlinks{display:none;}
+  }
+
+  /* ---------- LAYOUT HELPERS ---------- */
+  section{padding:100px 28px; position:relative;}
+  .wrap{max-width:var(--maxw); margin:0 auto;}
+  .eyebrow{
+    font-size:12px; text-transform:uppercase; letter-spacing:0.14em;
+    color:var(--mint); font-weight:600; margin-bottom:14px; display:block;
+  }
+  h2.display{font-size:clamp(28px,4vw,42px); margin-bottom:22px;}
+  .lede{font-size:19px; color:var(--body-on-dark); max-width:640px; margin-bottom:8px;}
+  p{color:var(--body-on-dark); max-width:680px;}
+  .divider{height:1px; background:var(--line); max-width:var(--maxw); margin:0 auto;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:92vh; display:flex; flex-direction:column; justify-content:center;
+    padding:120px 28px 80px; overflow:hidden; position:relative;
+    background:
+      radial-gradient(ellipse 70% 55% at 25% 15%, rgba(201,169,97,0.10), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 85%, rgba(159,205,176,0.08), transparent 60%),
+      var(--forest-950);
+  }
+  .hero-inner{max-width:820px; margin:0 auto; width:100%; position:relative; z-index:2;}
+  .hero .eyebrow{color:var(--gold-bright);}
+  .hero h1{font-size:clamp(38px,7vw,72px); line-height:1.04; margin-bottom:24px;}
+  .hero h1 em{font-style:italic; color:var(--mint); font-weight:400;}
+  .hero .lede{font-size:21px; max-width:560px;}
+  .hero-svg{
+    position:absolute; right:-6%; bottom:-8%; width:52%; max-width:560px; opacity:0.9;
+    z-index:1; pointer-events:none;
+  }
+  @media (max-width:820px){ .hero-svg{ opacity:0.25; right:0; width:100%; } }
+  .scrollcue{
+    margin-top:56px; display:flex; align-items:center; gap:10px;
+    font-size:12px; text-transform:uppercase; letter-spacing:0.12em; color:var(--body-on-dark-dim);
+  }
+  .scrollcue .line{width:32px; height:1px; background:var(--mint-dim); animation:pulse-line 2.4s ease-in-out infinite;}
+  @keyframes pulse-line{ 0%,100%{opacity:.4} 50%{opacity:1} }
+
+  /* ---------- CARDS / PANELS ---------- */
+  .panel{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:14px;
+    padding:32px;
+  }
+  .panel p, .panel li{color:var(--ink-soft);}
+  .panel h3{color:var(--ink); font-family:'Fraunces',serif;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:760px){ .grid3, .grid2{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--forest-800);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 22px;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .card:hover{border-color:var(--line-bright); transform:translateY(-2px);}
+  .card h3{font-size:16px; color:var(--paper); margin-bottom:8px; font-family:'Space Grotesk',sans-serif; font-weight:600;}
+  .card p{font-size:14.5px; margin:0; color:var(--body-on-dark-dim);}
+  .card .tag{
+    display:inline-block; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--forest-950); background:var(--mint); padding:3px 8px; border-radius:20px; margin-bottom:12px;
+  }
+
+  /* ---------- TOGGLE (problem section) ---------- */
+  .toggle-wrap{margin-top:32px;}
+  .toggle-btns{display:inline-flex; background:var(--forest-800); border:1px solid var(--line); border-radius:30px; padding:4px; margin-bottom:24px;}
+  .toggle-btns button{
+    border:none; background:transparent; color:var(--body-on-dark-dim);
+    padding:9px 20px; border-radius:24px; font-size:13px; cursor:pointer; letter-spacing:0.03em;
+    transition:all .25s ease;
+  }
+  .toggle-btns button.active{background:var(--gold); color:var(--forest-950); font-weight:600;}
+  .diagram-panel{
+    background:var(--forest-900); border:1px solid var(--line); border-radius:14px;
+    padding:28px; display:flex; justify-content:center; align-items:center; min-height:320px;
+  }
+  .diagram-view{display:none;}
+  .diagram-view.active{display:block; animation:fadein .4s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .diagram-caption{text-align:center; font-size:13px; color:var(--body-on-dark-dim); margin-top:16px; font-family:'Space Grotesk',sans-serif;}
+
+  /* ---------- TABS (primitives) ---------- */
+  .tabs{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .tabs button{
+    border:1px solid var(--line); background:var(--forest-800); color:var(--body-on-dark);
+    padding:10px 16px; border-radius:9px; font-size:13.5px; cursor:pointer; transition:all .2s ease;
+  }
+  .tabs button.active{background:var(--mint); color:var(--forest-950); border-color:var(--mint); font-weight:600;}
+  .tabpanel{display:none;}
+  .tabpanel.active{display:block; animation:fadein .35s ease;}
+  pre{
+    background:var(--forest-950); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; overflow-x:auto; font-size:13px; line-height:1.6; color:var(--mint);
+    margin:0 0 14px;
+  }
+  code{color:var(--gold-bright);}
+
+  /* ---------- STEPPER ---------- */
+  .stepper{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
+  .step-dot{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line-bright);
+    display:flex; align-items:center; justify-content:center; background:var(--forest-800);
+    color:var(--body-on-dark-dim); font-size:13px; cursor:pointer; font-family:'Space Grotesk',sans-serif;
+    transition:all .25s ease; flex-shrink:0;
+  }
+  .step-dot.active{background:var(--gold); color:var(--forest-950); border-color:var(--gold); font-weight:700;}
+  .step-track{flex:1; height:1px; background:var(--line); align-self:center; min-width:16px;}
+  .step-body{display:none; background:var(--forest-800); border:1px solid var(--line); border-radius:12px; padding:26px 28px;}
+  .step-body.active{display:block; animation:fadein .35s ease;}
+  .step-body h3{font-family:'Space Grotesk',sans-serif; font-size:16px; color:var(--gold-bright); margin-bottom:10px;}
+  .step-body p{margin:0; font-size:15px;}
+
+  /* ---------- TREE / MYCELIUM SIGNATURE ---------- */
+  .tree-scene{background:var(--forest-900); border:1px solid var(--line); border-radius:16px; padding:20px; margin-top:28px;}
+  .tree-caption{display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--body-on-dark-dim); font-family:'Space Grotesk',sans-serif;}
+  .compare-table{width:100%; border-collapse:collapse; margin-top:28px; font-size:14.5px;}
+  .compare-table th{
+    text-align:left; font-family:'Space Grotesk',sans-serif; text-transform:uppercase; font-size:11px;
+    letter-spacing:0.08em; color:var(--gold-bright); padding:10px 14px; border-bottom:1px solid var(--line-bright);
+  }
+  .compare-table td{padding:14px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--body-on-dark);}
+  .compare-table tr td:first-child{color:var(--mint); font-family:'Space Grotesk',sans-serif; font-size:13px; white-space:nowrap;}
+
+  /* ---------- LOOP DIAGRAM ---------- */
+  .loop-wrap{display:flex; gap:36px; align-items:center; flex-wrap:wrap; margin-top:28px;}
+  .loop-svg{flex:0 0 260px;}
+  .loop-notes{flex:1; min-width:260px;}
+  .loop-notes .note{margin-bottom:16px; padding-left:16px; border-left:2px solid var(--mint-dim);}
+  .loop-notes .note b{color:var(--paper); font-family:'Space Grotesk',sans-serif; font-size:13.5px; display:block; margin-bottom:3px;}
+  .loop-notes .note span{font-size:14px; color:var(--body-on-dark-dim);}
+
+  /* ---------- DECISION SECTION ---------- */
+  .quiz-box{background:var(--paper); border-radius:16px; padding:34px; color:var(--ink); margin-top:12px;}
+  .quiz-q{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; margin-bottom:14px; color:var(--ink);}
+  .quiz-opts{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px;}
+  .quiz-opts button{
+    border:1px solid rgba(18,32,26,0.18); background:var(--paper-dim); color:var(--ink);
+    padding:10px 16px; border-radius:9px; font-size:13.5px; cursor:pointer; font-family:'Newsreader',serif;
+    transition:all .2s ease;
+  }
+  .quiz-opts button.chosen{background:var(--forest-800); color:var(--paper); border-color:var(--forest-800);}
+  .quiz-result{
+    display:none; background:var(--forest-950); color:var(--paper); border-radius:12px; padding:22px 24px; margin-top:6px;
+  }
+  .quiz-result.show{display:block; animation:fadein .4s ease;}
+  .quiz-result .verdict{font-family:'Fraunces',serif; font-size:22px; color:var(--gold-bright); margin-bottom:8px;}
+  .quiz-result p{color:var(--body-on-dark); font-size:14.5px; margin:0;}
+
+  .checklist{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px;}
+  @media (max-width:760px){ .checklist{grid-template-columns:1fr;} }
+  .check-item{
+    background:var(--forest-800); border:1px solid var(--line); border-radius:12px; padding:18px 20px; cursor:pointer;
+  }
+  .check-item .chead{display:flex; justify-content:space-between; align-items:center; font-family:'Space Grotesk',sans-serif; font-size:14px; color:var(--paper); font-weight:600;}
+  .check-item .chead .plus{color:var(--gold-bright); font-size:18px; transition:transform .25s ease;}
+  .check-item.open .plus{transform:rotate(45deg);}
+  .check-item .cbody{display:none; margin-top:10px; font-size:14px; color:var(--body-on-dark-dim);}
+  .check-item.open .cbody{display:block; animation:fadein .3s ease;}
+
+  footer{padding:70px 28px 90px; text-align:center; color:var(--body-on-dark-dim); font-size:13px; font-family:'Space Grotesk',sans-serif;}
+  footer .line{width:40px; height:1px; background:var(--mint-dim); margin:0 auto 20px;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand"><span>MCP</span><span class="dot">·</span><span style="color:var(--body-on-dark-dim); font-weight:400;">field notes</span></div>
+  <div class="navlinks">
+    <a href="#problem">Why</a>
+    <a href="#mechanism">Mechanism</a>
+    <a href="#handshake">Handshake</a>
+    <a href="#agent-agent">Agent↔Agent</a>
+    <a href="#harness">Harness</a>
+    <a href="#decision">Your Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Field notes · protocol design</span>
+    <h1>The quiet plumbing<br>that lets an agent<br><em>reach for a tool.</em></h1>
+    <p class="lede">Model Context Protocol, plainly explained — how it works, what it isn't, and how it bears on connecting your own chat product to somebody else's.</p>
+    <div class="scrollcue"><span class="line"></span><span>Scroll — six short sections</span></div>
+  </div>
+  <svg class="hero-svg" viewBox="0 0 500 560" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M250 40 L250 200" stroke="#c9a961" stroke-width="2" opacity="0.5"/>
+    <circle cx="250" cy="40" r="5" fill="#e3c684"/>
+    <g stroke="#9fcdb0" stroke-width="1.4" opacity="0.55">
+      <path d="M250 200 Q210 240 150 250"/>
+      <path d="M250 200 Q290 240 350 250"/>
+      <path d="M250 200 Q250 250 250 300"/>
+    </g>
+    <circle cx="150" cy="250" r="4" fill="#9fcdb0"/>
+    <circle cx="350" cy="250" r="4" fill="#9fcdb0"/>
+    <circle cx="250" cy="300" r="4" fill="#9fcdb0"/>
+    <g stroke="#c9a961" stroke-width="1" opacity="0.35">
+      <path d="M150 250 Q100 320 90 400"/>
+      <path d="M250 300 Q250 360 240 430"/>
+      <path d="M350 250 Q400 320 410 400"/>
+      <path d="M150 250 Q170 330 200 420"/>
+      <path d="M350 250 Q330 330 300 420"/>
+    </g>
+    <circle cx="90" cy="400" r="2.4" fill="#c9a961"/>
+    <circle cx="240" cy="430" r="2.4" fill="#c9a961"/>
+    <circle cx="410" cy="400" r="2.4" fill="#c9a961"/>
+    <circle cx="200" cy="420" r="2.4" fill="#c9a961"/>
+    <circle cx="300" cy="420" r="2.4" fill="#c9a961"/>
+  </svg>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <span class="eyebrow">Why it exists</span>
+    <h2 class="display">Every agent, every tool, its own custom wire.</h2>
+    <p class="lede">Before MCP, connecting a model to a database, a calendar, or a CRM meant writing a bespoke integration for that exact pairing. An organisation with 6 agents and 10 tools faced up to 60 one-off integrations — each with its own auth pattern, its own way of describing what it does, its own failure modes.</p>
+    <div class="toggle-wrap">
+      <div class="toggle-btns">
+        <button class="active" data-view="before">Before MCP</button>
+        <button data-view="after">With MCP</button>
+      </div>
+      <div class="diagram-panel">
+        <div class="diagram-view active" id="view-before">
+          <svg width="420" height="280" viewBox="0 0 420 280">
+            <g stroke="#c9a961" stroke-width="1" opacity="0.55">
+              <line x1="60" y1="40" x2="200" y2="240"/><line x1="60" y1="40" x2="360" y2="60"/><line x1="60" y1="40" x2="330" y2="230"/>
+              <line x1="60" y1="140" x2="200" y2="240"/><line x1="60" y1="140" x2="360" y2="60"/><line x1="60" y1="140" x2="80" y2="230"/>
+              <line x1="60" y1="230" x2="200" y2="240"/><line x1="60" y1="230" x2="330" y2="230"/><line x1="60" y1="230" x2="80" y2="230"/>
+            </g>
+            <g>
+              <circle cx="60" cy="40" r="9" fill="#e3c684"/><circle cx="60" cy="140" r="9" fill="#e3c684"/><circle cx="60" cy="230" r="9" fill="#e3c684"/>
+              <circle cx="200" cy="240" r="7" fill="#9fcdb0"/><circle cx="360" cy="60" r="7" fill="#9fcdb0"/><circle cx="330" cy="230" r="7" fill="#9fcdb0"/><circle cx="80" cy="230" r="7" fill="#9fcdb0"/>
+            </g>
+            <text x="10" y="18" fill="#93a89b" font-size="11" font-family="Space Grotesk">agents (gold) × tools (mint)</text>
+          </svg>
+        </div>
+        <div class="diagram-view" id="view-after">
+          <svg width="420" height="280" viewBox="0 0 420 280">
+            <g stroke="#c9a961" stroke-width="1.4" opacity="0.7">
+              <line x1="60" y1="40" x2="210" y2="140"/><line x1="60" y1="140" x2="210" y2="140"/><line x1="60" y1="230" x2="210" y2="140"/>
+            </g>
+            <g stroke="#9fcdb0" stroke-width="1.4" opacity="0.7">
+              <line x1="210" y1="140" x2="360" y2="40"/><line x1="210" y1="140" x2="360" y2="120"/><line x1="210" y1="140" x2="360" y2="200"/><line x1="210" y1="140" x2="330" y2="255"/>
+            </g>
+            <circle cx="60" cy="40" r="9" fill="#e3c684"/><circle cx="60" cy="140" r="9" fill="#e3c684"/><circle cx="60" cy="230" r="9" fill="#e3c684"/>
+            <circle cx="210" cy="140" r="11" fill="#f5f0e2" stroke="#c9a961" stroke-width="1.5"/>
+            <circle cx="360" cy="40" r="7" fill="#9fcdb0"/><circle cx="360" cy="120" r="7" fill="#9fcdb0"/><circle cx="360" cy="200" r="7" fill="#9fcdb0"/><circle cx="330" cy="255" r="7" fill="#9fcdb0"/>
+            <text x="180" y="105" fill="#f5f0e2" font-size="10" font-family="Space Grotesk" text-anchor="middle">MCP</text>
+          </svg>
+        </div>
+      </div>
+      <div class="diagram-caption" id="diagram-caption">N agents × M tools = N×M custom integrations to build and maintain.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MECHANISM -->
+<section id="mechanism">
+  <div class="wrap">
+    <span class="eyebrow">The mechanism</span>
+    <h2 class="display">Three roles, one grammar.</h2>
+    <p class="lede">MCP is a specification: a shared grammar for how an AI application asks what's available, and how it asks for something to be done. Three roles do the work.</p>
+    <div class="grid3" style="margin-top:28px;">
+      <div class="card">
+        <span class="tag">Host</span>
+        <h3>The application</h3>
+        <p>Your chatbot, IDE, or agent runtime. It's what the person actually talks to, and it holds the conversation.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Client</span>
+        <h3>The connection</h3>
+        <p>Lives inside the host, keeps one dedicated 1:1 link open to a server, and speaks MCP on the host's behalf.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Server</span>
+        <h3>The capability</h3>
+        <p>A small program that exposes a specific set of tools, data, or templates — e.g. "our booking system" or "internal wiki search."</p>
+      </div>
+    </div>
+    <p style="margin-top:22px; font-size:14.5px; color:var(--body-on-dark-dim);">Messages between them are plain <span class="mono">JSON-RPC 2.0</span>, carried over <span class="mono">stdio</span> for a server running on your machine, or over <span class="mono">HTTP</span> for a remote one. Nothing exotic — the value is entirely in everyone agreeing to describe things the same way.</p>
+
+    <div style="margin-top:44px;">
+      <p class="lede" style="margin-bottom:18px;">A server can expose three kinds of thing, and who decides to use each one differs:</p>
+      <div class="tabs">
+        <button class="active" data-tab="tools">Tools</button>
+        <button data-tab="resources">Resources</button>
+        <button data-tab="prompts">Prompts</button>
+      </div>
+      <div class="tabpanel active" id="tab-tools">
+        <div class="panel">
+          <p style="font-size:14px; margin-bottom:14px;"><b>Model-controlled.</b> The LLM itself decides, mid-reasoning, to call one — the way it already decides to call any function.</p>
+          <pre><code>{
+  "name": "get_portfolio_valuation",
+  "description": "Return the current valuation of a client's portfolio.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "client_id": { "type": "string" },
+      "as_of_date": { "type": "string", "format": "date" }
+    },
+    "required": ["client_id"]
+  }
+}</code></pre>
+        </div>
+      </div>
+      <div class="tabpanel" id="tab-resources">
+        <div class="panel">
+          <p style="font-size:14px;"><b>Application-controlled.</b> The host decides what to attach as background context — a file, a record, a page — before the model ever reasons about it. Think of it as read-only material handed to the model, not something the model requests mid-thought.</p>
+        </div>
+      </div>
+      <div class="tabpanel" id="tab-prompts">
+        <div class="panel">
+          <p style="font-size:14px;"><b>User-controlled.</b> Reusable, parameterised instruction templates a person explicitly invokes — a slash command, a saved workflow — rather than something the model reaches for on its own.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HANDSHAKE -->
+<section id="handshake">
+  <div class="wrap">
+    <span class="eyebrow">Agent ↔ tool</span>
+    <h2 class="display">How a tool call actually happens.</h2>
+    <p class="lede">This is the part that enables an agent to "talk to tools" — a fixed sequence, the same regardless of which tool sits behind it.</p>
+    <div class="stepper" id="stepper" style="margin-top:32px;">
+      <div class="step-dot active" data-step="1">1</div><div class="step-track"></div>
+      <div class="step-dot" data-step="2">2</div><div class="step-track"></div>
+      <div class="step-dot" data-step="3">3</div><div class="step-track"></div>
+      <div class="step-dot" data-step="4">4</div><div class="step-track"></div>
+      <div class="step-dot" data-step="5">5</div>
+    </div>
+    <div class="step-body active" data-body="1"><h3>Discover</h3><p>On connecting, the client asks the server what it offers. The server replies with a list of tools, each with a name, a plain-language description, and a JSON Schema for its inputs — this is the part the model actually reads.</p></div>
+    <div class="step-body" data-body="2"><h3>Decide</h3><p>Those tool descriptions get folded into the model's context alongside the conversation. Mid-reasoning, the model decides a particular tool fits the current step, and emits a structured call with arguments — ordinary function-calling, just against a standardised list.</p></div>
+    <div class="step-body" data-body="3"><h3>Invoke</h3><p>The client packages that as a <span class="mono">tools/call</span> request and sends it to the server over the open connection.</p></div>
+    <div class="step-body" data-body="4"><h3>Execute</h3><p>The server runs the underlying code — a database query, an API call, a file read — outside the model entirely, and returns a structured result or an error.</p></div>
+    <div class="step-body" data-body="5"><h3>Resume</h3><p>The result is inserted back into the conversation as if the model had just been handed a document. The model reads it and continues reasoning — possibly straight into another tool call.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AGENT TO AGENT -->
+<section id="agent-agent">
+  <div class="wrap">
+    <span class="eyebrow">Does MCP do agent-to-agent?</span>
+    <h2 class="display">No — MCP reaches down. A2A reaches sideways.</h2>
+    <p class="lede">MCP connects one agent to its own tools and data — vertical, like roots drawing from soil the tree already owns. Getting two independent agents, run by two different systems, to collaborate as peers is a different problem, with its own emerging standard: <b>A2A (Agent2Agent Protocol)</b>, originally published by Google and now developed as an open, multi-vendor project under the Linux Foundation.</p>
+
+    <div class="tree-scene">
+      <svg width="100%" viewBox="0 0 720 300" preserveAspectRatio="xMidYMid meet">
+        <!-- ground line -->
+        <line x1="20" y1="180" x2="700" y2="180" stroke="#1c3a29" stroke-width="1"/>
+        <!-- tree 1 -->
+        <path d="M170 180 L170 70" stroke="#c9a961" stroke-width="3"/>
+        <path d="M170 100 Q120 60 90 40 M170 90 Q220 55 250 35 M170 70 Q170 40 170 15" stroke="#c9a961" stroke-width="1.6" opacity="0.7" fill="none"/>
+        <!-- roots tree 1 (MCP, vertical, own soil) -->
+        <path d="M170 180 Q140 210 120 250 M170 180 Q170 220 170 260 M170 180 Q200 215 215 250" stroke="#9fcdb0" stroke-width="1.6" fill="none" opacity="0.85"/>
+        <circle cx="120" cy="250" r="3" fill="#9fcdb0"/><circle cx="170" cy="260" r="3" fill="#9fcdb0"/><circle cx="215" cy="250" r="3" fill="#9fcdb0"/>
+        <text x="170" y="290" fill="#93a89b" font-size="11" text-anchor="middle" font-family="Space Grotesk">Agent A · its own tools (MCP)</text>
+
+        <!-- tree 2 -->
+        <path d="M550 180 L550 70" stroke="#c9a961" stroke-width="3"/>
+        <path d="M550 100 Q500 60 470 40 M550 90 Q600 55 630 35 M550 70 Q550 40 550 15" stroke="#c9a961" stroke-width="1.6" opacity="0.7" fill="none"/>
+        <path d="M550 180 Q520 210 500 250 M550 180 Q550 220 550 260 M550 180 Q580 215 595 250" stroke="#9fcdb0" stroke-width="1.6" fill="none" opacity="0.85"/>
+        <circle cx="500" cy="250" r="3" fill="#9fcdb0"/><circle cx="550" cy="260" r="3" fill="#9fcdb0"/><circle cx="595" cy="250" r="3" fill="#9fcdb0"/>
+        <text x="550" y="290" fill="#93a89b" font-size="11" text-anchor="middle" font-family="Space Grotesk">Agent B · its own tools (MCP)</text>
+
+        <!-- mycelial network between them, dashed gold (A2A) -->
+        <path d="M170 180 Q260 205 300 190 Q340 175 360 190 Q380 205 420 190 Q460 175 550 180" stroke="#e3c684" stroke-width="1.4" fill="none" stroke-dasharray="3 5" opacity="0.85"/>
+        <circle cx="360" cy="188" r="4" fill="#e3c684"/>
+        <text x="360" y="150" fill="#e3c684" font-size="11" text-anchor="middle" font-family="Space Grotesk">A2A — peer task exchange</text>
+      </svg>
+      <div class="tree-caption">
+        <span>Mint roots — each agent's own MCP connections (private, vertical)</span>
+        <span>Gold dashed line — A2A between agents (peer, horizontal)</span>
+      </div>
+    </div>
+
+    <table class="compare-table">
+      <tr><th></th><th>MCP</th><th>A2A</th></tr>
+      <tr><td>Direction</td><td>Agent → its tools and data</td><td>Agent → another, independent agent</td></tr>
+      <tr><td>Unit exchanged</td><td>A tool call and its structured result</td><td>A task, delegated and tracked to completion</td></tr>
+      <tr><td>What's visible</td><td>Full tool schema — the caller sees exactly what a tool does</td><td>An "agent card" advertising capabilities only — internals stay opaque</td></tr>
+      <tr><td>Typical shape</td><td>Synchronous, within one turn of reasoning</td><td>Can be long-running and asynchronous</td></tr>
+    </table>
+    <p style="margin-top:20px; font-size:14.5px; color:var(--body-on-dark-dim);">In practice the two nest: Agent B might use A2A to accept a task from Agent A, then quietly use its own MCP connections to actually carry it out. Neither replaces the other.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HARNESS -->
+<section id="harness">
+  <div class="wrap">
+    <span class="eyebrow">Where harness engineering fits</span>
+    <h2 class="display">MCP is the wiring. The harness is the loop.</h2>
+    <p class="lede">The "harness" is the scaffolding code that runs around the model: the loop that decides what goes into context, calls the model, interprets what comes back, executes tool calls, and repeats. MCP standardises the last mile of that loop — how the harness reaches outward. It doesn't decide when to loop, what to remember, or when to stop.</p>
+    <div class="loop-wrap">
+      <svg class="loop-svg" width="260" height="260" viewBox="0 0 260 260">
+        <circle cx="130" cy="130" r="95" fill="none" stroke="#254a34" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <g font-family="Space Grotesk" font-size="12" fill="#f5f0e2">
+          <circle cx="130" cy="30" r="7" fill="#e3c684"/><text x="130" y="14" text-anchor="middle">Perceive</text>
+          <circle cx="230" cy="130" r="7" fill="#9fcdb0"/><text x="230" y="150" text-anchor="middle" transform="rotate(0)">Plan</text>
+          <circle cx="130" cy="230" r="7" fill="#e3c684"/><text x="130" y="252" text-anchor="middle">Act</text>
+          <circle cx="30" cy="130" r="7" fill="#9fcdb0"/><text x="30" y="150" text-anchor="middle">Observe</text>
+        </g>
+        <path d="M130 37 A95 95 0 0 1 223 130" stroke="#c9a961" stroke-width="1.4" fill="none" opacity="0.6"/>
+        <path d="M223 130 A95 95 0 0 1 130 223" stroke="#c9a961" stroke-width="1.4" fill="none" opacity="0.6"/>
+        <path d="M130 223 A95 95 0 0 1 37 130" stroke="#c9a961" stroke-width="1.4" fill="none" opacity="0.6"/>
+        <path d="M37 130 A95 95 0 0 1 130 37" stroke="#c9a961" stroke-width="1.4" fill="none" opacity="0.6"/>
+        <text x="130" y="134" text-anchor="middle" fill="#93a89b" font-size="10" font-family="Space Grotesk">harness</text>
+      </svg>
+      <div class="loop-notes">
+        <div class="note"><b>Perceive — context engineering</b><span>What actually goes in the window this turn: system prompt, retrieved memory, prior turns, and which tool schemas to even show the model. More MCP servers means more schemas competing for the same budget — good harnesses load tool definitions selectively rather than dumping every connected server in at once.</span></div>
+        <div class="note"><b>Plan — the model reasons</b><span>Ordinary model inference: given what's in context, what's the next step.</span></div>
+        <div class="note"><b>Act — MCP does its job here</b><span>If the plan calls for a tool, the harness routes that call through an MCP client to the right server and waits for a result.</span></div>
+        <div class="note"><b>Observe — and loop</b><span>The result re-enters context, and the harness decides: call the model again, ask the person a question, or stop.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DECISION -->
+<section id="decision">
+  <div class="wrap">
+    <span class="eyebrow">The practical question</span>
+    <h2 class="display">Linking your chatbot to a different org's GenAI chat: API or MCP?</h2>
+    <p class="lede">Neither is strictly "more correct" — they answer different questions. A plain API call answers <i>"how do I invoke this one function."</i> MCP answers <i>"how does my agent discover and reason about a changing set of capabilities, uniformly, alongside everything else it already talks to."</i></p>
+
+    <div class="quiz-box">
+      <div class="quiz-q">Start here — how will your side actually use the other org's chat?</div>
+      <div class="quiz-opts" id="quiz-opts">
+        <button data-r="single">A single, well-defined action — "get an answer on topic X"</button>
+        <button data-r="dynamic">One of several external capabilities your agent picks between at run time</button>
+        <button data-r="peer">The other side is itself an autonomous agent that should own a whole sub-task</button>
+      </div>
+      <div class="quiz-result" id="quiz-result">
+        <div class="verdict" id="quiz-verdict"></div>
+        <p id="quiz-text"></p>
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:44px;">Whichever you pick, the protocol choice is the smaller decision. These matter more once real user data starts crossing an org boundary:</p>
+
+    <div class="checklist" id="checklist">
+      <div class="check-item"><div class="chead"><span>Trust boundary &amp; auth</span><span class="plus">+</span></div><div class="cbody">Scope credentials tightly (a limited API key or OAuth token, not shared internal auth), and never let the external system's response trigger actions in your own system without review.</div></div>
+      <div class="check-item"><div class="chead"><span>Data governance</span><span class="plus">+</span></div><div class="cbody">Decide exactly what leaves your side — ideally a scoped question, not full account or conversation history — and get it reviewed wherever your institution's data-sharing and vendor-risk process lives before anything ships.</div></div>
+      <div class="check-item"><div class="chead"><span>Context to forward</span><span class="plus">+</span></div><div class="cbody">Send the minimum needed for a good answer — usually the current question plus a short summary, not the raw transcript. Smaller payloads are cheaper, faster, and leak less.</div></div>
+      <div class="check-item"><div class="chead"><span>Guardrails on the way back</span><span class="plus">+</span></div><div class="cbody">Treat whatever the external chat returns as untrusted input to your own model — the same as any other tool result — not as an instruction to follow.</div></div>
+      <div class="check-item"><div class="chead"><span>Disclosure</span><span class="plus">+</span></div><div class="cbody">If a different organisation's model is now effectively answering, the person is usually owed a clear signal of that — particularly in a regulated setting.</div></div>
+      <div class="check-item"><div class="chead"><span>Latency &amp; fallback</span><span class="plus">+</span></div><div class="cbody">An extra network hop to another org's infrastructure needs a timeout and a graceful fallback for when their side is slow or down.</div></div>
+      <div class="check-item"><div class="chead"><span>Versioning</span><span class="plus">+</span></div><div class="cbody">A plain API integration silently breaks when their contract changes. MCP's discovery step means your agent re-reads the current tool list each session — one real advantage of the extra plumbing.</div></div>
+      <div class="check-item"><div class="chead"><span>Audit trail</span><span class="plus">+</span></div><div class="cbody">Log what was sent out, what came back, and when — cross-org AI calls are exactly the kind of thing a compliance review will later ask to see.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="line"></div>
+  Field notes — Model Context Protocol, A2A, and the harness around them.
+</footer>
+
+<script>
+  // scrollspy
+  const links = document.querySelectorAll('.navlinks a');
+  const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        const idx = sections.indexOf(e.target);
+        if(idx > -1) links[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(s => s && io.observe(s));
+
+  // problem toggle
+  document.querySelectorAll('.toggle-btns button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.toggle-btns button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.diagram-view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+      document.getElementById('diagram-caption').textContent = btn.dataset.view === 'before'
+        ? 'N agents × M tools = N×M custom integrations to build and maintain.'
+        : 'N agents + M tools = N+M connections to one shared protocol.';
+    });
+  });
+
+  // primitive tabs
+  document.querySelectorAll('.tabs button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // stepper
+  document.querySelectorAll('.step-dot').forEach(dot=>{
+    dot.addEventListener('click', ()=>{
+      document.querySelectorAll('.step-dot').forEach(d=>d.classList.remove('active'));
+      dot.classList.add('active');
+      document.querySelectorAll('.step-body').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.step-body[data-body="'+dot.dataset.step+'"]').classList.add('active');
+    });
+  });
+
+  // decision quiz
+  const verdicts = {
+    single: {
+      v: "Plain API call.",
+      t: "Wrap it as one function your model can call, same as any other tool. Standing up an MCP server for a single fixed action is overhead you don't need yet — revisit if it grows into several capabilities."
+    },
+    dynamic: {
+      v: "Wrap it as an MCP tool.",
+      t: "If the external org already runs an MCP server, connect to it directly. If not, build a thin MCP server on your side that wraps their API — you get uniform discovery and can add or drop it alongside every other tool your harness already manages, without hand-rolling a one-off integration."
+    },
+    peer: {
+      v: "Look for A2A, or delegate explicitly.",
+      t: "If they publish an A2A endpoint, delegate the task and let their agent own its own reasoning and tool use. If they don't, the pragmatic fallback is the same MCP wrapper — you just treat the whole exchange as one longer-running call rather than a single request."
+    }
+  };
+  document.querySelectorAll('#quiz-opts button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#quiz-opts button').forEach(b=>b.classList.remove('chosen'));
+      btn.classList.add('chosen');
+      const r = verdicts[btn.dataset.r];
+      document.getElementById('quiz-verdict').textContent = r.v;
+      document.getElementById('quiz-text').textContent = r.t;
+      document.getElementById('quiz-result').classList.add('show');
+    });
+  });
+
+  // checklist accordion
+  document.querySelectorAll('.check-item').forEach(item=>{
+    item.addEventListener('click', ()=> item.classList.toggle('open'));
+  });
+</script>
+</body>
+</html>
