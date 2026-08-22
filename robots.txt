@@ -1,0 +1,13 @@
+# ted.sg
+# Brown bags and resources are meant to be found. The rest isn't.
+ 
+User-agent: *
+Allow: /
+ 
+# Private / password-protected working documents
+Disallow: /report/
+ 
+# Shared assets — no reason to index a stylesheet
+Disallow: /_shared/
+ 
+Sitemap: https://ted.sg/sitemap.xml
