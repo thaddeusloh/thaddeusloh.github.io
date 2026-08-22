@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Thaddeus Loh — ted.sg</title>
+  <meta name="description" content="Thaddeus Loh — AI & data strategist in wealth management, Singapore. Career, reading shelf, games and small web apps." />
+  <link rel="canonical" href="https://ted.sg/about/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --canopy:    #060F0A;
+      --understory:#0B1A12;
+      --moss:      #16291D;
+      --moss-soft: #1E3627;
+      --biolume:   #4DE8A0;
+      --sunbeam:   #E4C56B;
+      --mist:      #E9F2EC;
+      --fern:      #8FAC9B;
+      --deep-fern: #55705F;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans:  'Outfit', system-ui, sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      background: var(--canopy); color: var(--mist);
+      font-family: var(--sans); font-size: 16.5px; font-weight: 300; line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--biolume); color: var(--canopy); }
+    a, a:visited { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--biolume); outline-offset: 3px; border-radius: 2px; }
+
+    /* ─────────── NAV ─────────── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(6, 15, 10, 0.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(30, 54, 39, 0.7);
+    }
+    .nav-inner {
+      max-width: 1180px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.5rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.6rem; }
+    .logo svg { width: 22px; height: 22px; }
+    .logo-word { font-family: var(--mono); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.14em; color: var(--mist); }
+    .logo-word em { font-style: normal; color: var(--biolume); }
+    .nav-links { list-style: none; display: flex; gap: 2rem; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--fern); transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--biolume); }
+    .nav-links a.home { color: var(--biolume); }
+
+    .burger {
+      display: none; background: none; border: 0; cursor: pointer;
+      width: 42px; height: 42px;
+      flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+    }
+    .burger span { display: block; width: 24px; height: 2px; background: var(--mist); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+    body.menu-open .burger span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    body.menu-open .burger span:nth-child(2) { opacity: 0; }
+    body.menu-open .burger span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 150;
+      background: radial-gradient(120% 100% at 50% 0%, #0B1E13 0%, var(--canopy) 70%);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 2rem 3rem; opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    }
+    body.menu-open .mobile-menu { opacity: 1; pointer-events: auto; }
+    .mobile-menu ol { list-style: none; }
+    .mobile-menu li { margin: 0.45rem 0; }
+    .mobile-menu a {
+      display: flex; align-items: baseline; gap: 1rem;
+      font-family: var(--serif); font-size: clamp(1.6rem, 6vw, 2.1rem); font-weight: 400;
+      color: var(--mist); transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--biolume); }
+    .mobile-menu a .mk { font-family: var(--mono); font-size: 0.68rem; color: var(--deep-fern); letter-spacing: 0.15em; min-width: 3ch; }
+    .mobile-menu .menu-foot { margin-top: 2.5rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em; color: var(--deep-fern); text-transform: uppercase; }
+
+    /* ─────────── LAYOUT ─────────── */
+    main section { position: relative; padding: 6.5rem 1.5rem; }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+
+    .trail {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--biolume); margin-bottom: 1.2rem;
+    }
+    .trail::before { content: ""; width: 26px; height: 1px; background: var(--biolume); opacity: 0.6; }
+    .trail .elev { color: var(--deep-fern); letter-spacing: 0.12em; }
+
+    h2.sec {
+      font-family: var(--serif); font-weight: 400;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.18; letter-spacing: -0.01em; max-width: 22ch; margin-bottom: 1.4rem;
+    }
+    h2.sec em { font-style: italic; color: var(--biolume); }
+    .lede { color: var(--fern); max-width: 62ch; }
+
+    .btn {
+      font-family: var(--mono); font-size: 0.74rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.85rem 1.5rem; border-radius: 999px;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .btn-solid { background: var(--biolume); color: var(--canopy); }
+    .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(77,232,160,0.28); }
+    .btn-ghost { border: 1px solid var(--moss-soft); color: var(--mist); }
+    .btn-ghost:hover { border-color: var(--biolume); color: var(--biolume); }
+
+    /* ─────────── PAGE HEAD ─────────── */
+    #head {
+      padding-top: 10rem; padding-bottom: 3rem;
+      background:
+        radial-gradient(80% 50% at 70% 0%, rgba(77,232,160,0.06) 0%, transparent 62%),
+        var(--canopy);
+    }
+    .backlink {
+      display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.6rem;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--deep-fern); transition: color 0.2s;
+    }
+    .backlink:hover { color: var(--biolume); }
+    #head h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.08; letter-spacing: -0.015em;
+      margin-bottom: 1.2rem;
+    }
+    #head h1 em { font-style: italic; font-weight: 500; color: var(--biolume); }
+
+    /* ─────────── ABOUT ─────────── */
+    #about { background: var(--understory); border-top: 1px solid var(--moss); }
+    .about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; align-items: start; }
+    .about-copy p { margin-bottom: 1.1rem; color: var(--fern); }
+    .about-copy strong { color: var(--mist); font-weight: 500; }
+    .about-copy .conviction {
+      border-left: 2px solid var(--biolume); padding: 0.4rem 0 0.4rem 1.2rem;
+      font-family: var(--serif); font-size: 1.15rem; font-style: italic;
+      color: var(--mist); margin-top: 1.6rem;
+    }
+    .stats { display: grid; gap: 1rem; }
+    .stat {
+      border: 1px solid var(--moss); border-radius: 14px; padding: 1.3rem 1.4rem;
+      background: linear-gradient(160deg, rgba(77,232,160,0.05), transparent 55%);
+    }
+    .stat .big { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--biolume); line-height: 1.1; }
+    .stat .small { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fern); margin-top: 0.3rem; }
+
+    /* ─────────── EXPERTISE ─────────── */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .card {
+      border: 1px solid var(--moss); border-radius: 16px; padding: 1.6rem 1.5rem;
+      background: var(--understory); transition: border-color 0.25s, transform 0.25s;
+    }
+    .card:hover { border-color: rgba(77,232,160,0.45); transform: translateY(-3px); }
+    .card .glyph { color: var(--biolume); margin-bottom: 0.9rem; }
+    .card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.12rem; margin-bottom: 0.55rem; }
+    .card p { font-size: 0.92rem; color: var(--fern); line-height: 1.65; }
+
+    /* ─────────── EXPERIENCE ─────────── */
+    #experience { background: var(--understory); border-top: 1px solid var(--moss); }
+    .timeline { margin-top: 2.8rem; position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px;
+      background: linear-gradient(var(--biolume), var(--moss-soft));
+    }
+    .tl-item { position: relative; padding-bottom: 2.6rem; }
+    .tl-item:last-of-type { padding-bottom: 0.5rem; }
+    .tl-item::before {
+      content: ""; position: absolute; left: -2rem; top: 7px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--canopy); border: 2px solid var(--biolume);
+      box-shadow: 0 0 10px rgba(77,232,160,0.5);
+    }
+    .tl-when { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--biolume); }
+    .tl-item h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 500; margin: 0.35rem 0 0.15rem; }
+    .tl-org { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--fern); text-transform: uppercase; }
+    .tl-item p { color: var(--fern); max-width: 62ch; margin-top: 0.55rem; }
+    .tl-note { font-size: 0.82rem; color: var(--deep-fern); font-style: italic; margin-top: 2rem; }
+
+    /* ─────────── STACK ─────────── */
+    .stack-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .stack-group { border: 1px solid var(--moss); border-radius: 16px; padding: 1.5rem; background: var(--understory); }
+    .stack-group h3 {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--sunbeam); margin-bottom: 1rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.72rem; padding: 0.32rem 0.75rem;
+      border-radius: 999px; border: 1px solid var(--moss-soft); color: var(--fern);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tag:hover { color: var(--biolume); border-color: rgba(77,232,160,0.5); }
+
+    /* ─────────── BOOKS ─────────── */
+    #books { background: var(--understory); border-top: 1px solid var(--moss); }
+    .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .book {
+      border: 1px solid var(--moss); border-radius: 16px; overflow: hidden;
+      background: var(--canopy); display: flex; flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .book:hover { border-color: rgba(228,197,107,0.5); transform: translateY(-3px); }
+    .book .spine { height: 5px; background: linear-gradient(90deg, var(--sunbeam), var(--biolume)); }
+    .book .inner { padding: 1.4rem 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .book h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.35; }
+    .book .by { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; color: var(--deep-fern); text-transform: uppercase; }
+    .book p { font-size: 0.88rem; color: var(--fern); line-height: 1.6; }
+    .book .status {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--sunbeam);
+    }
+    .book .links { margin-top: auto; padding-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+    .book .links a {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--biolume);
+    }
+    .book .links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ─────────── PLAYGROUND ─────────── */
+    #games { background: var(--understory); border-top: 1px solid var(--moss); }
+    .play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .play {
+      position: relative; border: 1px solid var(--moss); border-radius: 18px;
+      padding: 1.6rem 1.5rem; background: var(--canopy); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .play:hover { border-color: rgba(77,232,160,0.5); transform: translateY(-3px); }
+    .play::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(70% 60% at 85% 0%, rgba(77,232,160,0.08), transparent 65%);
+      pointer-events: none;
+    }
+    .play .kind { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sunbeam); }
+    .play h3 { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; margin: 0.5rem 0 0.4rem; }
+    .play p { font-size: 0.9rem; color: var(--fern); line-height: 1.65; flex: 1; }
+    .play .go {
+      display: inline-block; margin-top: 1rem;
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--biolume);
+    }
+    .play:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ─────────── CONTACT ─────────── */
+    #contact { text-align: center; padding-bottom: 4rem; }
+    #contact h2.sec { margin-left: auto; margin-right: auto; }
+    #contact .lede { margin: 0 auto 2.4rem; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+    footer {
+      border-top: 1px solid var(--moss); padding: 2rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      max-width: 1080px; margin: 0 auto;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+      color: var(--deep-fern); text-transform: uppercase;
+    }
+    footer a:hover { color: var(--biolume); }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .cards, .shelf, .play-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      main section { padding: 4.5rem 1.25rem; }
+      #head { padding-top: 8rem; }
+      .cards, .shelf, .play-grid, .stack-groups, .stats { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="ted.sg home">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 21C12 13 7 9 3 8c1 7 4 12 9 13Z" fill="#4DE8A0" opacity="0.85"/>
+          <path d="M12 21c0-9 4-13 9-15-.5 8-3.5 14-9 15Z" fill="#4DE8A0" opacity="0.5"/>
+          <path d="M12 21V10" stroke="#4DE8A0" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="logo-word">ted<em>.sg</em></span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a class="home" href="/">← Brown Bags</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Career</a></li>
+          <li><a href="#books">Books</a></li>
+          <li><a href="#games">Playground</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <ol>
+      <li><a href="#about"><span class="mk">01</span>About</a></li>
+      <li><a href="#expertise"><span class="mk">02</span>Expertise</a></li>
+      <li><a href="#experience"><span class="mk">03</span>Experience</a></li>
+      <li><a href="#stack"><span class="mk">04</span>Stack</a></li>
+      <li><a href="#books"><span class="mk">05</span>Books</a></li>
+      <li><a href="#games"><span class="mk">06</span>Mini Games</a></li>
+      <li><a href="#apps"><span class="mk">07</span>Web Apps</a></li>
+      <li><a href="#contact"><span class="mk">08</span>Contact</a></li>
+      <li><a href="/"><span class="mk">↰</span>Back to Brown Bags</a></li>
+    </ol>
+    <p class="menu-foot">Thaddeus Loh · Singapore · 163 m above sea level</p>
+  </nav>
+
+  <main>
+    <!-- ─────────── PAGE HEAD ─────────── -->
+    <section id="head">
+      <div class="wrap">
+        <a class="backlink" href="/">← ted.sg · brown bags &amp; resources</a>
+        <h1>The person who <em>packed the bags.</em></h1>
+        <p class="lede">Career, convictions, the reading shelf, and the small things I build for fun. If you came for the learning material, it all lives back on the <a href="/" style="color:var(--biolume)">main trail</a>.</p>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 01 · ABOUT ─────────── -->
+    <section id="about">
+      <div class="wrap">
+        <p class="trail reveal">Trail 01 — Understory <span class="elev">· elev 40 m</span></p>
+        <h2 class="sec reveal">A technologist with a <em>living-systems</em> worldview.</h2>
+        <div class="about-grid">
+          <div class="about-copy reveal">
+            <p>I began as a <strong>software engineer</strong>, specialising in backend API architecture and data engineering for large-scale platforms. My early career took me deep into the root system of finance — <strong>core banking, trade execution, compliance, and multi-asset-class wealth platforms</strong>.</p>
+            <p>Over time, my focus grew upward: from building systems to shaping strategy. Today I work at the intersection of <strong>AI, machine learning, and digital advisory</strong> — designing intelligent capabilities that help institutions understand, serve, and grow their clients.</p>
+            <p>Off the clock you'll find me on a trail — Bukit Timah on a Friday, the Southern Alps or a US national park when the leave calendar allows. The forest is where I do my best thinking.</p>
+            <p class="conviction">The best AI in finance isn't automation — it's augmentation. Sharper insight, faster, for advisors and the people they serve.</p>
+          </div>
+          <div class="stats reveal">
+            <div class="stat"><div class="big">10+</div><div class="small">Years in fintech &amp; banking platforms</div></div>
+            <div class="stat"><div class="big">AI/ML</div><div class="small">Strategy &amp; digital advisory focus</div></div>
+            <div class="stat"><div class="big">SG</div><div class="small">Based in Singapore · APAC markets</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 02 · EXPERTISE ─────────── -->
+    <section id="expertise">
+      <div class="wrap">
+        <p class="trail reveal">Trail 02 — Canopy <span class="elev">· elev 80 m</span></p>
+        <h2 class="sec reveal">What grows well <em>under my care.</em></h2>
+        <div class="cards">
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M12 8l5-3M12 8 7 5M12 14l6-3M12 14l-6-3"/></svg></div>
+            <h3>AI Strategy in Wealth Management</h3>
+            <p>AI-powered advisory capabilities — nudge engines, recommendation systems, agentic workflows — that translate into measurable client outcomes.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="18" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18" cy="14" r="2"/><path d="M7.5 16.5 10.5 10M13.7 9.4l2.8 3.2"/></svg></div>
+            <h3>Machine Learning for Finance</h3>
+            <p>ML at scale on financial data — portfolio analytics, client segmentation, behavioural modelling, predictive signals — with rigorous model governance.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="18" height="5" rx="1.5"/><path d="M7 6.5h.01M7 14.5h.01"/></svg></div>
+            <h3>Data Platform Architecture</h3>
+            <p>Big data infrastructure for real-time analytics, O2O client journeys, and content personalisation at institutional scale.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h16v10H9l-5 4V6Z" stroke-linejoin="round"/><path d="M8 10h8M8 13h5"/></svg></div>
+            <h3>Digital Advisory Products</h3>
+            <p>Intelligent chatbots, relationship-manager copilots, and personalised content platforms that bridge technology and client trust.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4Z" stroke-linejoin="round"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Core Banking &amp; Compliance</h3>
+            <p>Hands-on depth in the regulatory backbone of finance — trade execution, compliance platforms, and settlement infrastructure.</p>
+          </div>
+          <div class="card reveal">
+            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 20c3-9 8-14 16-16-1 8-6 13-13 15"/><path d="M4 20c1-3 2.5-5 5-7"/></svg></div>
+            <h3>Strategic Roadmapping</h3>
+            <p>Translating AI and data ambitions into actionable roadmaps — aligning engineering, business stakeholders, and senior leadership.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 03 · EXPERIENCE ─────────── -->
+    <section id="experience">
+      <div class="wrap">
+        <p class="trail reveal">Trail 03 — Growth Rings <span class="elev">· elev 110 m</span></p>
+        <h2 class="sec reveal">Career trajectory, <em>ring by ring.</em></h2>
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <span class="tl-when">Present</span>
+            <h3>Product — AI &amp; Data Strategy</h3>
+            <span class="tl-org">Wealth Management · Singapore</span>
+            <p>Leading strategic data initiatives for digital advisory — AI nudge engines, content personalisation platforms, and agentic advisory capabilities for a major financial institution.</p>
+          </div>
+          <div class="tl-item reveal">
+            <span class="tl-when">Prior</span>
+            <h3>Senior Software Engineer — Global Financial Markets, Data Platform</h3>
+            <span class="tl-org">Financial Services · Singapore</span>
+            <p>Built backend APIs and data engineering infrastructure for multi-asset trade execution and portfolio analytics at institutional scale.</p>
+          </div>
+          <div class="tl-item reveal">
+            <span class="tl-when">Early career</span>
+            <h3>Software Engineer — Core Banking</h3>
+            <span class="tl-org">Banking Technology</span>
+            <p>Worked on compliance systems and core banking platforms, developing expertise in the operational fabric of large financial institutions.</p>
+          </div>
+        </div>
+        <p class="tl-note reveal">Full history on LinkedIn.</p>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 04 · STACK ─────────── -->
+    <section id="stack">
+      <div class="wrap">
+        <p class="trail reveal">Trail 04 — Root System <span class="elev">· elev 130 m</span></p>
+        <h2 class="sec reveal">Tools of the trade.</h2>
+        <div class="stack-groups">
+          <div class="stack-group reveal">
+            <h3>AI &amp; Machine Learning</h3>
+            <div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">LLM Fine-tuning</span><span class="tag">RAG Architectures</span><span class="tag">LangChain</span><span class="tag">Agentic AI</span><span class="tag">Hugging Face</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Data Engineering</h3>
+            <div class="tags"><span class="tag">Apache Spark</span><span class="tag">Kafka</span><span class="tag">Airflow</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Backend &amp; APIs</h3>
+            <div class="tags"><span class="tag">Java</span><span class="tag">REST</span><span class="tag">gRPC</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span></div>
+          </div>
+          <div class="stack-group reveal">
+            <h3>Cloud &amp; Infrastructure</h3>
+            <div class="tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Kubernetes</span><span class="tag">Docker</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 05 · BOOKS ─────────── -->
+    <section id="books">
+      <div class="wrap">
+        <p class="trail reveal">Trail 05 — The Reading Canopy <span class="elev">· elev 145 m</span></p>
+        <h2 class="sec reveal">Books that <em>rewired</em> me.</h2>
+        <p class="lede reveal">A slow-growing shelf. Each entry earns its place by changing how I think, not just what I know.</p>
+        <div class="shelf">
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>Gödel, Escher, Bach</h3>
+              <span class="by">Douglas Hofstadter</span>
+              <span class="status">◆ Re-reading</span>
+              <p>Strange loops, self-reference, and the machinery of minds. The book that made me want to build things that think.</p>
+              <div class="links">
+                <a href="/geb">Summary →</a>
+                <a href="/geb/kids">For kids →</a>
+              </div>
+            </div>
+          </div>
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>Functional Programming in Scala</h3>
+              <span class="by">Paul Chiusano, Rúnar Bjarnason</span>
+              <span class="status">◆ Explainer</span>
+              <p>Deriving functional programming rather than memorising it.</p>
+              <div class="links"><a href="/brownbag/scala">Summary →</a></div>
+            </div>
+          </div>
+          <div class="book reveal">
+            <div class="spine"></div>
+            <div class="inner">
+              <h3>Trees</h3>
+              <span class="by">Peter A Thomas</span>
+              <span class="status">◆ On the shelf</span>
+              <p>The incredible world of trees, and snippets of Bukit Timah's flora. Learning about trees uncovered another dimension in the world around me.</p>
+              <div class="links"><a href="/books/trees">Summary →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 06 · MINI GAMES ─────────── -->
+    <section id="games">
+      <div class="wrap">
+        <p class="trail reveal">Trail 06 — The Playground <span class="elev">· elev 160 m</span></p>
+        <h2 class="sec reveal">Mini games, <em>hand-grown</em> in the browser.</h2>
+        <p class="lede reveal">Small HTML5 experiments — no installs, no accounts, just play.</p>
+        <div class="play-grid">
+          <a class="play reveal" href="/game">
+            <span class="kind">Endless Runner</span>
+            <h3>Lohki Runner</h3>
+            <p>A cat, a scrolling world, and obstacles named after people who will recognise themselves. Dodge, jump, repeat.</p>
+            <span class="go">Play →</span>
+          </a>
+          <a class="play reveal" href="/geb/game">
+            <span class="kind">Puzzle · Educational</span>
+            <h3>The Cat &amp; the Golden Braid</h3>
+            <p>Twenty riddle chambers through an Escher-inspired labyrinth of strange loops. Bring your curiosity.</p>
+            <span class="go">Play →</span>
+          </a>
+          <a class="play reveal" href="/game/tarot">
+            <span class="kind">Tarot</span>
+            <h3>Lohki Tarot</h3>
+            <p>The 22 Major Arcana are renamed for cat archetypes — The Kitten (Fool), The Zoomies (Chariot), and more.</p>
+            <span class="go">Play →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 07 · WEB APPS ─────────── -->
+    <section id="apps">
+      <div class="wrap">
+        <p class="trail reveal">Trail 07 — Toolshed <span class="elev">· elev 163 m</span></p>
+        <h2 class="sec reveal">Mini web apps — small tools, <em>sharp edges.</em></h2>
+        <p class="lede reveal">Single-purpose utilities I build for myself, then share.</p>
+        <div class="play-grid">
+          <a class="play reveal" href="/app/sgfg">
+            <span class="kind">Field Guide</span>
+            <h3>Singapore Field Guide</h3>
+            <p>Canopy &amp; Coast — know the flora and fauna around you, from Bukit Timah to the shoreline.</p>
+            <span class="go">Try it →</span>
+          </a>
+          <a class="play reveal" href="/app/finsim">
+            <span class="kind">Simulator</span>
+            <h3>Financial Planning Simulator</h3>
+            <p>Live a financial life on fast-forward and see how the decisions compound.</p>
+            <span class="go">Try it →</span>
+          </a>
+          <a class="play reveal" href="/brownbag/claude">
+            <span class="kind">Guide</span>
+            <h3>Claude Guide</h3>
+            <p>A working guide to getting useful output from Claude — prompting patterns, project setup, and honest limitations.</p>
+            <span class="go">Try it →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── TRAIL 08 · CONTACT ─────────── -->
+    <section id="contact">
+      <div class="wrap">
+        <p class="trail reveal" style="justify-content:center;">Trail 08 — Summit <span class="elev">· elev 163 m</span></p>
+        <h2 class="sec reveal">Let's build something <em>that lasts.</em></h2>
+        <p class="lede reveal">Open to conversations about AI strategy, advisory technology, or the intersection of machine intelligence and financial services. Trail recommendations also welcome.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-solid" href="https://www.linkedin.com/in/thaddeusloh" rel="noopener">LinkedIn</a>
+          <a class="btn btn-ghost" href="mailto:hello@ted.sg">Email</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Thaddeus Loh · ted.sg</span>
+    <span><a href="/">Brown Bags &amp; Resources</a> · Singapore</span>
+  </footer>
+
+  <script>
+    const burger = document.querySelector('.burger');
+    function toggleMenu(force) {
+      const open = force !== undefined ? force : !document.body.classList.contains('menu-open');
+      document.body.classList.toggle('menu-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    burger.addEventListener('click', () => toggleMenu());
+    document.querySelectorAll('.mobile-menu a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>

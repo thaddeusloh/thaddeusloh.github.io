@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thaddeus Loh — Technology, grown in the wild</title>
-  <meta name="description" content="Thaddeus Loh — AI & data strategist in wealth management, Singapore. Where the rainforest meets the machine." />
+  <title>ted.sg — Brown bags & field notes on data, AI and product</title>
+  <meta name="description" content="A growing shelf of brown bag sessions and resources on data, AI, product and engineering — built and shared by Thaddeus Loh, Singapore." />
+  <link rel="canonical" href="https://ted.sg/" />
+  <meta property="og:title" content="ted.sg — Brown bags & field notes" />
+  <meta property="og:description" content="Interactive explainers on data, AI, product and engineering. Free, no signup." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ted.sg/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -12,22 +17,30 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --canopy:    #060F0A;   /* rainforest night */
-      --understory:#0B1A12;   /* surface */
-      --moss:      #16291D;   /* borders */
+      --canopy:    #060F0A;
+      --understory:#0B1A12;
+      --moss:      #16291D;
       --moss-soft: #1E3627;
-      --biolume:   #4DE8A0;   /* bioluminescent mint — the future glow */
+      --biolume:   #4DE8A0;
       --biolume-dim: rgba(77, 232, 160, 0.14);
-      --sunbeam:   #E4C56B;   /* light through canopy */
-      --mist:      #E9F2EC;   /* primary text */
-      --fern:      #8FAC9B;   /* muted text */
+      --sunbeam:   #E4C56B;
+      --mist:      #E9F2EC;
+      --fern:      #8FAC9B;
       --deep-fern: #55705F;
+
+      /* category hues — each borrowed from something that actually grows here */
+      --cat-data:  #4DE8A0;  /* bioluminescent mint */
+      --cat-ai:    #E4C56B;  /* light through canopy */
+      --cat-prod:  #C79BE0;  /* forest orchid */
+      --cat-eng:   #6FC6E8;  /* kingfisher */
+      --cat-other: #E8896B;  /* heliconia */
+
       --serif: 'Fraunces', Georgia, serif;
       --sans:  'Outfit', system-ui, sans-serif;
       --mono:  'JetBrains Mono', monospace;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -45,16 +58,13 @@
 
     ::selection { background: var(--biolume); color: var(--canopy); }
 
-    a:focus-visible, button:focus-visible {
+    a:focus-visible, button:focus-visible, input:focus-visible {
       outline: 2px solid var(--biolume);
       outline-offset: 3px;
       border-radius: 2px;
     }
 
-    a, a:visited, a:hover, a:active {
-    color: inherit;
-    text-decoration: none; /* Optional: removes the default underline */
-    }
+    a, a:visited { color: inherit; text-decoration: none; }
 
     /* ─────────── NAV ─────────── */
     header {
@@ -69,10 +79,7 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 1rem 1.5rem;
     }
-    .logo {
-      display: flex; align-items: center; gap: 0.6rem;
-      text-decoration: none;
-    }
+    .logo { display: flex; align-items: center; gap: 0.6rem; }
     .logo svg { width: 22px; height: 22px; }
     .logo-word {
       font-family: var(--mono); font-size: 0.9rem; font-weight: 500;
@@ -84,12 +91,10 @@
     .nav-links a {
       font-family: var(--mono); font-size: 0.72rem; font-weight: 400;
       letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--fern); text-decoration: none;
-      transition: color 0.25s;
+      color: var(--fern); transition: color 0.25s;
     }
     .nav-links a:hover { color: var(--biolume); }
 
-    /* hamburger */
     .burger {
       display: none;
       background: none; border: 0; cursor: pointer;
@@ -105,7 +110,6 @@
     body.menu-open .burger span:nth-child(2) { opacity: 0; }
     body.menu-open .burger span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-    /* mobile overlay menu */
     .mobile-menu {
       position: fixed; inset: 0; z-index: 150;
       background: radial-gradient(120% 100% at 50% 0%, #0B1E13 0%, var(--canopy) 70%);
@@ -119,10 +123,8 @@
     .mobile-menu li { margin: 0.45rem 0; }
     .mobile-menu a {
       display: flex; align-items: baseline; gap: 1rem;
-      text-decoration: none;
       font-family: var(--serif); font-size: clamp(1.7rem, 6.5vw, 2.3rem); font-weight: 400;
-      color: var(--mist);
-      transition: color 0.2s;
+      color: var(--mist); transition: color 0.2s;
     }
     .mobile-menu a:hover { color: var(--biolume); }
     .mobile-menu a .mk {
@@ -145,9 +147,7 @@
       letter-spacing: 0.2em; text-transform: uppercase;
       color: var(--biolume); margin-bottom: 1.2rem;
     }
-    .trail::before {
-      content: ""; width: 26px; height: 1px; background: var(--biolume); opacity: 0.6;
-    }
+    .trail::before { content: ""; width: 26px; height: 1px; background: var(--biolume); opacity: 0.6; }
     .trail .elev { color: var(--deep-fern); letter-spacing: 0.12em; }
 
     h2.sec {
@@ -174,8 +174,7 @@
     #fireflies { position: absolute; inset: 0; width: 100%; height: 100%; }
     .canopy-silhouette {
       position: absolute; left: 0; right: 0; bottom: -2px;
-      width: 100%; height: auto; pointer-events: none;
-      opacity: 0.9;
+      width: 100%; height: auto; pointer-events: none; opacity: 0.9;
     }
     .hero-inner {
       position: relative; z-index: 3;
@@ -184,8 +183,7 @@
     }
     .hero-eyebrow {
       font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--fern);
-      margin-bottom: 1.6rem;
+      text-transform: uppercase; color: var(--fern); margin-bottom: 1.6rem;
     }
     .hero-eyebrow b { color: var(--biolume); font-weight: 500; }
     h1 {
@@ -200,21 +198,18 @@
     .btn {
       font-family: var(--mono); font-size: 0.74rem; font-weight: 500;
       letter-spacing: 0.14em; text-transform: uppercase;
-      text-decoration: none; padding: 0.85rem 1.5rem;
-      border-radius: 999px;
-      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+      padding: 0.85rem 1.5rem; border-radius: 999px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
     }
     .btn-solid { background: var(--biolume); color: var(--canopy); }
     .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(77,232,160,0.28); }
     .btn-ghost { border: 1px solid var(--moss-soft); color: var(--mist); }
     .btn-ghost:hover { border-color: var(--biolume); color: var(--biolume); }
 
-    /* circuit leaf — signature */
     .leaf-wrap { display: flex; justify-content: center; }
     .leaf-wrap svg { width: min(100%, 340px); height: auto; overflow: visible; }
     .vein {
-      stroke: var(--biolume); stroke-width: 1.4; fill: none;
-      stroke-linecap: round;
+      stroke: var(--biolume); stroke-width: 1.4; fill: none; stroke-linecap: round;
       stroke-dasharray: 260; stroke-dashoffset: 260;
       animation: growvein 3.2s ease forwards;
       filter: drop-shadow(0 0 5px rgba(77,232,160,0.55));
@@ -247,147 +242,134 @@
     }
     @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 60% { transform: scaleY(1); } 100% { opacity: 0; transform: scaleY(1); } }
 
-    /* ─────────── ABOUT ─────────── */
-    #about { background: var(--understory); border-top: 1px solid var(--moss); }
-    .about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; align-items: start; }
-    .about-copy p { margin-bottom: 1.1rem; color: var(--fern); }
-    .about-copy strong { color: var(--mist); font-weight: 500; }
-    .about-copy .conviction {
-      border-left: 2px solid var(--biolume);
-      padding: 0.4rem 0 0.4rem 1.2rem;
-      font-family: var(--serif); font-size: 1.15rem; font-style: italic;
-      color: var(--mist); margin-top: 1.6rem;
-    }
-    .stats { display: grid; gap: 1rem; }
-    .stat {
-      border: 1px solid var(--moss); border-radius: 14px;
-      padding: 1.3rem 1.4rem;
-      background: linear-gradient(160deg, rgba(77,232,160,0.05), transparent 55%);
-    }
-    .stat .big { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--biolume); line-height: 1.1; }
-    .stat .small { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fern); margin-top: 0.3rem; }
+    /* ─────────── BROWN BAG SHELF ─────────── */
+    #brownbags { background: var(--understory); border-top: 1px solid var(--moss); }
 
-    /* ─────────── EXPERTISE ─────────── */
-    .cards {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem;
+    .shelf-bar {
+      position: sticky; top: 57px; z-index: 100;
+      margin: 2.4rem 0 2rem;
+      padding: 1rem 0;
+      background: rgba(11, 26, 18, 0.94);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--moss);
+      display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center;
     }
-    .card {
-      border: 1px solid var(--moss); border-radius: 16px;
-      padding: 1.6rem 1.5rem;
-      background: var(--understory);
-      transition: border-color 0.25s, transform 0.25s;
+    .search-wrap { position: relative; flex: 1 1 240px; min-width: 200px; }
+    .search-wrap svg {
+      position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: var(--deep-fern); pointer-events: none;
     }
-    .card:hover { border-color: rgba(77,232,160,0.45); transform: translateY(-3px); }
-    .card .glyph { color: var(--biolume); margin-bottom: 0.9rem; }
-    .card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.12rem; margin-bottom: 0.55rem; letter-spacing: 0.005em; }
-    .card p { font-size: 0.92rem; color: var(--fern); line-height: 1.65; }
+    #bagSearch {
+      width: 100%;
+      background: var(--canopy); color: var(--mist);
+      border: 1px solid var(--moss-soft); border-radius: 999px;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      font-family: var(--sans); font-size: 0.9rem; font-weight: 300;
+      transition: border-color 0.2s;
+    }
+    #bagSearch::placeholder { color: var(--deep-fern); }
+    #bagSearch:focus { border-color: rgba(77,232,160,0.5); }
 
-    /* ─────────── EXPERIENCE ─────────── */
-    #experience { background: var(--understory); border-top: 1px solid var(--moss); }
-    .timeline { margin-top: 2.8rem; position: relative; padding-left: 2rem; }
-    .timeline::before {
-      content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
-      width: 1px;
-      background: linear-gradient(var(--biolume), var(--moss-soft));
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chip {
+      cursor: pointer; background: transparent;
+      border: 1px solid var(--moss-soft); border-radius: 999px;
+      padding: 0.42rem 0.85rem;
+      font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--fern);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
     }
-    .tl-item { position: relative; padding-bottom: 2.6rem; }
-    .tl-item:last-of-type { padding-bottom: 0.5rem; }
-    .tl-item::before {
-      content: ""; position: absolute; left: -2rem; top: 7px;
-      width: 11px; height: 11px; border-radius: 50%;
-      background: var(--canopy); border: 2px solid var(--biolume);
-      box-shadow: 0 0 10px rgba(77,232,160,0.5);
+    .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--tone, var(--fern)); }
+    .chip .n { font-size: 0.62rem; color: var(--deep-fern); }
+    .chip:hover { color: var(--mist); border-color: var(--tone, var(--biolume)); }
+    .chip[aria-pressed="true"] {
+      color: var(--canopy); background: var(--tone, var(--biolume));
+      border-color: var(--tone, var(--biolume)); font-weight: 500;
     }
-    .tl-when { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--biolume); }
-    .tl-item h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 500; margin: 0.35rem 0 0.15rem; }
-    .tl-org { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--fern); text-transform: uppercase; }
-    .tl-item p { color: var(--fern); max-width: 62ch; margin-top: 0.55rem; }
-    .tl-note { font-size: 0.82rem; color: var(--deep-fern); font-style: italic; margin-top: 2rem; }
+    .chip[aria-pressed="true"] .n { color: rgba(6,15,10,0.65); }
 
-    /* ─────────── STACK ─────────── */
-    .stack-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
-    .stack-group { border: 1px solid var(--moss); border-radius: 16px; padding: 1.5rem; background: var(--understory); }
-    .stack-group h3 {
-      font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
-      letter-spacing: 0.16em; text-transform: uppercase; color: var(--sunbeam);
-      margin-bottom: 1rem;
+    .bag-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem;
     }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .tag {
-      font-family: var(--mono); font-size: 0.72rem;
-      padding: 0.32rem 0.75rem; border-radius: 999px;
-      border: 1px solid var(--moss-soft); color: var(--fern);
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .tag:hover { color: var(--biolume); border-color: rgba(77,232,160,0.5); }
-
-    /* ─────────── LIBRARY (books + brown bags) ─────────── */
-    #books { background: var(--understory); border-top: 1px solid var(--moss); }
-    .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
-    .book {
-      border: 1px solid var(--moss); border-radius: 16px; overflow: hidden;
+    .bag {
+      --tone: var(--biolume);
+      position: relative; display: flex; flex-direction: column; gap: 0.4rem;
+      border: 1px solid var(--moss); border-left: 2px solid var(--tone);
+      border-radius: 4px 14px 14px 4px;
+      padding: 1.25rem 1.3rem 1.35rem;
       background: var(--canopy);
+      transition: border-color 0.22s, transform 0.22s, background 0.22s;
+    }
+    .bag:hover { transform: translateY(-3px); background: #08150E; border-color: var(--moss-soft); border-left-color: var(--tone); }
+    .bag-top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem; }
+    .bag-cat {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--tone);
+    }
+    .bag-num { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--deep-fern); }
+    .bag h3 {
+      font-family: var(--serif); font-size: 1.06rem; font-weight: 500;
+      line-height: 1.35; letter-spacing: 0.005em;
+    }
+    .bag p { font-size: 0.86rem; color: var(--fern); line-height: 1.6; flex: 1; }
+    .bag-go {
+      margin-top: 0.55rem;
+      font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--tone);
+    }
+    .bag:hover .bag-go { text-decoration: underline; text-underline-offset: 3px; }
+    .bag-soon { border-left-style: dashed; }
+    .bag-soon h3, .bag-soon p { color: var(--deep-fern); }
+    .bag-soon .bag-go { color: var(--deep-fern); }
+
+    .cat-data  { --tone: var(--cat-data); }
+    .cat-ai    { --tone: var(--cat-ai); }
+    .cat-product { --tone: var(--cat-prod); }
+    .cat-engineering { --tone: var(--cat-eng); }
+    .cat-others { --tone: var(--cat-other); }
+
+    .shelf-empty {
+      grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;
+      color: var(--deep-fern); font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em;
+    }
+    .shelf-count {
+      margin-top: 1.6rem; font-family: var(--mono); font-size: 0.66rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--deep-fern);
+    }
+
+    /* ─────────── RESOURCES ─────────── */
+    .kit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
+    .kit {
+      position: relative; border: 1px solid var(--moss); border-radius: 18px;
+      padding: 1.6rem 1.5rem; background: var(--understory); overflow: hidden;
       display: flex; flex-direction: column;
       transition: border-color 0.25s, transform 0.25s;
     }
-    .book:hover { border-color: rgba(228,197,107,0.5); transform: translateY(-3px); }
-    .book .spine { height: 5px; background: linear-gradient(90deg, var(--sunbeam), var(--biolume)); }
-    .book .inner { padding: 1.4rem 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-    .book h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.35; }
-    .book .by { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; color: var(--deep-fern); text-transform: uppercase; }
-    .book p { font-size: 0.88rem; color: var(--fern); line-height: 1.6; }
-    .book .status { margin-top: auto; padding-top: 0.8rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sunbeam); }
-
-    /* brown bags */
-    .sessions { margin-top: 2.6rem; display: grid; gap: 0.9rem; }
-    .session {
-      display: grid; grid-template-columns: auto 1fr auto; gap: 1.4rem; align-items: center;
-      border: 1px solid var(--moss); border-radius: 14px;
-      padding: 1.2rem 1.4rem; background: var(--understory);
-      transition: border-color 0.25s;
-    }
-    .session:hover { border-color: rgba(77,232,160,0.45); }
-    .session .num { font-family: var(--mono); font-size: 0.72rem; color: var(--biolume); letter-spacing: 0.12em; }
-    .session h3 { font-family: var(--serif); font-size: 1.12rem; font-weight: 500; }
-    .session p { font-size: 0.88rem; color: var(--fern); margin-top: 0.15rem; }
-    .session .pill {
-      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
-      padding: 0.35rem 0.8rem; border-radius: 999px; white-space: nowrap;
-    }
-    .pill.live { border: 1px solid rgba(77,232,160,0.5); color: var(--biolume); }
-    .pill.soon { border: 1px solid var(--moss-soft); color: var(--deep-fern); }
-
-    /* ─────────── PLAYGROUND (games + apps) ─────────── */
-    #games { background: var(--understory); border-top: 1px solid var(--moss); }
-    .play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
-    .play {
-      position: relative; border: 1px solid var(--moss); border-radius: 18px;
-      padding: 1.6rem 1.5rem; background: var(--canopy); overflow: hidden;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-    .play:hover { border-color: rgba(77,232,160,0.5); transform: translateY(-3px); }
-    .play::before {
+    .kit:hover { border-color: rgba(228,197,107,0.45); transform: translateY(-3px); }
+    .kit::before {
       content: ""; position: absolute; inset: 0;
-      background: radial-gradient(70% 60% at 85% 0%, rgba(77,232,160,0.08), transparent 65%);
+      background: radial-gradient(70% 60% at 85% 0%, rgba(228,197,107,0.07), transparent 65%);
       pointer-events: none;
     }
-    .play .kind { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sunbeam); }
-    .play h3 { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; margin: 0.5rem 0 0.4rem; }
-    .play p { font-size: 0.9rem; color: var(--fern); line-height: 1.65; }
-    .play .go {
+    .kit .kind { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sunbeam); }
+    .kit h3 { font-family: var(--serif); font-size: 1.22rem; font-weight: 500; margin: 0.5rem 0 0.4rem; }
+    .kit p { font-size: 0.9rem; color: var(--fern); line-height: 1.65; flex: 1; }
+    .kit .go {
       display: inline-block; margin-top: 1rem;
-      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--biolume); text-decoration: none;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--sunbeam);
     }
-    .play .go:hover { text-decoration: underline; }
-    .seedling { border-style: dashed; }
-    .seedling h3, .seedling p { color: var(--deep-fern); }
-    .seedling .kind { color: var(--deep-fern); }
+    .kit:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+    .kit.soon { border-style: dashed; }
+    .kit.soon h3, .kit.soon p, .kit.soon .kind, .kit.soon .go { color: var(--deep-fern); }
 
-    /* ─────────── CONTACT ─────────── */
-    #contact { text-align: center; padding-bottom: 4rem; }
-    #contact h2.sec { margin-left: auto; margin-right: auto; }
-    #contact .lede { margin: 0 auto 2.4rem; }
+    /* ─────────── ABOUT DOOR ─────────── */
+    #guide { background: var(--understory); border-top: 1px solid var(--moss); text-align: center; padding-bottom: 5rem; }
+    #guide h2.sec { margin-left: auto; margin-right: auto; }
+    #guide .lede { margin: 0 auto 2.4rem; }
+    .door-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
     footer {
       border-top: 1px solid var(--moss);
       padding: 2rem 1.5rem;
@@ -396,25 +378,23 @@
       font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
       color: var(--deep-fern); text-transform: uppercase;
     }
+    footer a:hover { color: var(--biolume); }
 
     .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.in { opacity: 1; transform: none; }
 
     /* ─────────── RESPONSIVE ─────────── */
-    @media (max-width: 900px) {
-      .cards, .shelf, .play-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 980px) {
+      .bag-grid, .kit-grid { grid-template-columns: repeat(2, 1fr); }
       .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
       .leaf-wrap { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
-      .stats { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .burger { display: flex; }
       main section { padding: 4.5rem 1.25rem; }
-      .cards, .shelf, .play-grid, .stack-groups, .stats { grid-template-columns: 1fr; }
-      .session { grid-template-columns: 1fr; gap: 0.5rem; }
-      .session .pill { justify-self: start; }
+      .bag-grid, .kit-grid { grid-template-columns: 1fr; }
+      .shelf-bar { position: static; padding: 0 0 1rem; }
       footer { flex-direction: column; text-align: center; }
     }
   </style>
@@ -434,12 +414,9 @@
       </a>
       <nav aria-label="Primary">
         <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#expertise">Work</a></li>
-          <li><a href="#books">Books</a></li>
           <li><a href="#brownbags">Brown Bags</a></li>
-          <li><a href="#games">Playground</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="/about">About Ted</a></li>
         </ul>
       </nav>
       <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -451,21 +428,15 @@
   <!-- mobile overlay -->
   <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
     <ol>
-      <li><a href="#about"><span class="mk">01</span>About</a></li>
-      <li><a href="#expertise"><span class="mk">02</span>Expertise</a></li>
-      <li><a href="#experience"><span class="mk">03</span>Experience</a></li>
-      <li><a href="#stack"><span class="mk">04</span>Stack</a></li>
-      <li><a href="#books"><span class="mk">05</span>Books</a></li>
-      <li><a href="#brownbags"><span class="mk">06</span>Brown Bags</a></li>
-      <li><a href="#games"><span class="mk">07</span>Mini Games</a></li>
-      <li><a href="#apps"><span class="mk">08</span>Web Apps</a></li>
-      <li><a href="#contact"><span class="mk">09</span>Contact</a></li>
+      <li><a href="#brownbags"><span class="mk">01</span>Brown Bags</a></li>
+      <li><a href="#resources"><span class="mk">02</span>Resources</a></li>
+      <li><a href="/about"><span class="mk">03</span>About Ted</a></li>
     </ol>
-    <p class="menu-foot">Thaddeus Loh · Singapore · 163 m above sea level</p>
+    <p class="menu-foot">ted.sg · Singapore · 163 m above sea level</p>
   </nav>
 
   <main>
-    <!-- ─────────── HERO ─────────── -->
+    <!-- ─────────── HERO (unchanged) ─────────── -->
     <section id="top">
       <canvas id="fireflies" aria-hidden="true"></canvas>
       <div class="hero-inner">
@@ -474,12 +445,11 @@
           <h1>Technology,<br />grown <span class="wild">in the wild.</span></h1>
           <p class="hero-sub">Engineer turned strategist. I build and shape AI systems that power the next generation of digital wealth advisory — deep technical roots, a canopy-level view of capital markets, and a conviction that the best ideas grow like rainforests: layered, patient, alive.</p>
           <div class="hero-cta">
-            <a class="btn btn-solid" href="#about">Step into the forest</a>
+            <a class="btn btn-solid" href="#brownbags">Step into the forest</a>
             <a class="btn btn-ghost" href="https://www.linkedin.com/in/thaddeusloh" rel="noopener">Connect on LinkedIn</a>
           </div>
         </div>
         <div class="leaf-wrap" aria-hidden="true">
-          <!-- signature: leaf with circuit veins -->
           <svg viewBox="0 0 300 340">
             <path class="leaf-body" d="M150 8 C 250 70, 268 190, 150 332 C 32 190, 50 70, 150 8 Z"/>
             <path class="vein v1" d="M150 330 L150 20"/>
@@ -498,7 +468,6 @@
           </svg>
         </div>
       </div>
-      <!-- canopy silhouette -->
       <svg class="canopy-silhouette" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 180 L0 120 Q 60 70 130 105 Q 170 40 240 80 Q 300 30 370 75 Q 430 95 480 70 Q 540 20 620 65 Q 680 90 740 60 Q 800 15 880 60 Q 940 85 1000 65 Q 1060 25 1140 70 Q 1200 95 1260 75 Q 1320 45 1440 90 L1440 180 Z" fill="#0B1A12"/>
         <path d="M0 180 L0 145 Q 90 105 180 135 Q 260 90 340 125 Q 420 145 500 120 Q 590 85 680 120 Q 760 145 840 118 Q 930 88 1020 122 Q 1100 145 1180 122 Q 1270 95 1360 128 L1440 140 L1440 180 Z" fill="#08140D"/>
@@ -506,306 +475,61 @@
       <p class="scroll-hint">descend</p>
     </section>
 
-    <!-- ─────────── ABOUT ─────────── -->
-    <section id="about">
-      <div class="wrap">
-        <p class="trail reveal">Trail 01 — Understory <span class="elev">· elev 40 m</span></p>
-        <h2 class="sec reveal">A technologist with a <em>living-systems</em> worldview.</h2>
-        <div class="about-grid">
-          <div class="about-copy reveal">
-            <p>I began as a <strong>software engineer</strong>, specialising in backend API architecture and data engineering for large-scale platforms. My early career took me deep into the root system of finance — <strong>core banking, trade execution, compliance, and multi-asset-class wealth platforms</strong>.</p>
-            <p>Over time, my focus grew upward: from building systems to shaping strategy. Today I work at the intersection of <strong>AI, machine learning, and digital advisory</strong> — designing intelligent capabilities that help institutions understand, serve, and grow their clients.</p>
-            <p>Off the clock you'll find me on a trail — Bukit Timah on a Friday, the Southern Alps or a US national park when the leave calendar allows. The forest is where I do my best thinking.</p>
-            <p class="conviction">The best AI in finance isn't automation — it's augmentation. Sharper insight, faster, for advisors and the people they serve.</p>
-          </div>
-          <div class="stats reveal">
-            <div class="stat"><div class="big">10+</div><div class="small">Years in fintech & banking platforms</div></div>
-            <div class="stat"><div class="big">AI/ML</div><div class="small">Strategy & digital advisory focus</div></div>
-            <div class="stat"><div class="big">SG</div><div class="small">Based in Singapore · APAC markets</div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────── EXPERTISE ─────────── -->
-    <section id="expertise">
-      <div class="wrap">
-        <p class="trail reveal">Trail 02 — Canopy <span class="elev">· elev 80 m</span></p>
-        <h2 class="sec reveal">What grows well <em>under my care.</em></h2>
-        <div class="cards">
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M12 8l5-3M12 8 7 5M12 14l6-3M12 14l-6-3"/></svg></div>
-            <h3>AI Strategy in Wealth Management</h3>
-            <p>AI-powered advisory capabilities — nudge engines, recommendation systems, agentic workflows — that translate into measurable client outcomes.</p>
-          </div>
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="18" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="18" cy="14" r="2"/><path d="M7.5 16.5 10.5 10M13.7 9.4l2.8 3.2"/></svg></div>
-            <h3>Machine Learning for Finance</h3>
-            <p>ML at scale on financial data — portfolio analytics, client segmentation, behavioural modelling, predictive signals — with rigorous model governance.</p>
-          </div>
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="18" height="5" rx="1.5"/><path d="M7 6.5h.01M7 14.5h.01"/></svg></div>
-            <h3>Data Platform Architecture</h3>
-            <p>Big data infrastructure for real-time analytics, O2O client journeys, and content personalisation at institutional scale.</p>
-          </div>
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h16v10H9l-5 4V6Z" stroke-linejoin="round"/><path d="M8 10h8M8 13h5"/></svg></div>
-            <h3>Digital Advisory Products</h3>
-            <p>Intelligent chatbots, relationship-manager copilots, and personalised content platforms that bridge technology and client trust.</p>
-          </div>
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4Z" stroke-linejoin="round"/><path d="m9 12 2 2 4-4"/></svg></div>
-            <h3>Core Banking & Compliance</h3>
-            <p>Hands-on depth in the regulatory backbone of finance — trade execution, compliance platforms, and settlement infrastructure.</p>
-          </div>
-          <div class="card reveal">
-            <div class="glyph" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 20c3-9 8-14 16-16-1 8-6 13-13 15"/><path d="M4 20c1-3 2.5-5 5-7"/></svg></div>
-            <h3>Strategic Roadmapping</h3>
-            <p>Translating AI and data ambitions into actionable roadmaps — aligning engineering, business stakeholders, and senior leadership.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────── EXPERIENCE ─────────── -->
-    <section id="experience">
-      <div class="wrap">
-        <p class="trail reveal">Trail 03 — Growth Rings <span class="elev">· elev 110 m</span></p>
-        <h2 class="sec reveal">Career trajectory, <em>ring by ring.</em></h2>
-        <div class="timeline">
-          <div class="tl-item reveal">
-            <span class="tl-when">Present</span>
-            <h3>Product - AI & Data Strategy</h3>
-            <span class="tl-org">Wealth Management · Singapore</span>
-            <p>Leading strategic data initiatives for digital advisory — AI nudge engines, content personalisation platforms, and agentic advisory capabilities for a major financial institution.</p>
-          </div>
-          <div class="tl-item reveal">
-            <span class="tl-when">Prior</span>
-            <h3>Senior Software Engineer — Global Financial Markets, Data Platform</h3>
-            <span class="tl-org">Financial Services · Singapore</span>
-            <p>Built backend APIs and data engineering infrastructure for multi-asset trade execution and portfolio analytics at institutional scale.</p>
-          </div>
-          <div class="tl-item reveal">
-            <span class="tl-when">Early career</span>
-            <h3>Software Engineer — Core Banking</h3>
-            <span class="tl-org">Banking Technology</span>
-            <p>Worked on compliance systems and core banking platforms, developing expertise in the operational fabric of large financial institutions.</p>
-          </div>
-        </div>
-        <p class="tl-note reveal">Full history on LinkedIn.</p>
-      </div>
-    </section>
-
-    <!-- ─────────── STACK ─────────── -->
-    <section id="stack">
-      <div class="wrap">
-        <p class="trail reveal">Trail 04 — Root System <span class="elev">· elev 130 m</span></p>
-        <h2 class="sec reveal">Tools of the trade.</h2>
-        <div class="stack-groups">
-          <div class="stack-group reveal">
-            <h3>AI & Machine Learning</h3>
-            <div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">LLM Fine-tuning</span><span class="tag">RAG Architectures</span><span class="tag">LangChain</span><span class="tag">Agentic AI</span><span class="tag">Hugging Face</span></div>
-          </div>
-          <div class="stack-group reveal">
-            <h3>Data Engineering</h3>
-            <div class="tags"><span class="tag">Apache Spark</span><span class="tag">Kafka</span><span class="tag">Airflow</span></div>
-          </div>
-          <div class="stack-group reveal">
-            <h3>Backend & APIs</h3>
-            <div class="tags"><span class="tag">Java</span><span class="tag">REST</span><span class="tag">gRPC</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span></div>
-          </div>
-          <div class="stack-group reveal">
-            <h3>Cloud & Infrastructure</h3>
-            <div class="tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Kubernetes</span><span class="tag">Docker</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────── BOOKS ─────────── -->
-    <section id="books">
-      <div class="wrap">
-        <p class="trail reveal">Trail 05 — The Reading Canopy <span class="elev">· elev 145 m</span></p>
-        <h2 class="sec reveal">Books that <em>rewired</em> me.</h2>
-        <p class="lede reveal">A slow-growing shelf. Each entry earns its place by changing how I think, not just what I know.</p>
-        <div class="shelf">
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Gödel, Escher, Bach</h3>
-              <span class="by">Douglas Hofstadter</span>
-              <span class="status">◆ Re-reading</span>
-              <p>Strange loops, self-reference, and the machinery of minds. The book that made me want to build things that think.</p>
-              <span class="status"><a href="https://ted.sg/geb">Summary → </a></span>
-              <span class="status"><a href="https://ted.sg/geb/kids">Summary for kids → </a></span>
-            </div>
-          </div>
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Trees</h3>
-              <span class="by">Peter A Thomas</span>
-              <span class="status">◆ On the shelf</span>
-              <p>The incredible world of trees, and snippets of Bukit Timah's flora. Learning about trees uncovered another dimension in the world around me.</p>
-              <span class="status"><a href="https://ted.sg/books/trees">Summary → </a></span>
-            </div>
-          </div>
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Functional Programming in Scala</h3>
-              <span class="by">Paul Chiusano, Rúnar Bjarnason</span>
-              <span class="status">◆ Explainer</span>
-              <p>Deriving functional programming rather than memorise it.</p>
-              <span class="status"><a href="https://ted.sg/brownbag/scala">Summary → </a></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────── BROWN BAGS ─────────── -->
+    <!-- ─────────── TRAIL 01 · BROWN BAGS ─────────── -->
     <section id="brownbags">
       <div class="wrap">
-        <p class="trail reveal">Trail 06 — Brown Bags <span class="elev">· elev 155 m</span></p>
+        <p class="trail reveal">Trail 01 — The Brown Bag Shelf <span class="elev">· elev 40 m</span></p>
         <h2 class="sec reveal">Lunchtime talks on ideas <em>worth chewing.</em></h2>
-        <p class="lede reveal">Short, informal sessions on topics I find fascinating — slides, demos, and honest opinions included.</p>
-        <div class="sessions">
-          <div class="session reveal">
-            <span class="num">BB·00</span>
-            <div>
-              <h3>Discrete Mathematics</h3>
-              <p>Discrete mathematics for kids</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/discretemath">Available → </a></span>
+        <p class="lede reveal">Short, self-contained explainers I build to teach a topic properly — slides, demos and interactive bits included. Filter by category or search the shelf. Everything opens in the browser, no signup.</p>
+
+        <div class="shelf-bar reveal">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input id="bagSearch" type="search" placeholder="Search the shelf…" aria-label="Search brown bags" autocomplete="off" />
           </div>
-          <div class="session reveal">
-            <span class="num">BB·01</span>
-            <div>
-              <h3>From data to Agentic AI</h3>
-              <p>ELI5 course with interactive explainers</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/llm">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·02</span>
-            <div>
-              <h3>GenAI, AI Agent, Agentic AI - Chatbot Case Study</h3>
-              <p>Differences between the 3 using banking as a case study</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/chatbot">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·03</span>
-            <div>
-              <h3>Python in Data Science, Data Engineering</h3>
-              <p>Applying Python analytically, then operationally.</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/python">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·04</span>
-            <div>
-              <h3>JavaScript, React Native, PWA, Flutter & Dart </h3>
-              <p>Basic walkthrough of...things.</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/js">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·05</span>
-            <div>
-              <h3>State of Crypto 2026</h3>
-              <p>Beginner research report on state of crypto - July 2026</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/crypto2026">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·06</span>
-            <div>
-              <h3>LLM Trends 2026</h3>
-              <p>State of LLM - July 2026</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/llmtrends">Available → </a></span>
-          </div>
-          <div class="session reveal">
-            <span class="num">BB·07</span>
-            <div>
-              <h3>AI ML Field Guide</h3>
-              <p>Supervised, unsupervised, reinforced</p>
-            </div>
-            <span class="pill live"><a href="https://ted.sg/brownbag/aiml">Available → </a></span>
-          </div>
+          <div class="chips" id="bagChips" role="group" aria-label="Filter by category"></div>
         </div>
+
+        <div class="bag-grid" id="bagGrid"></div>
+        <p class="shelf-count" id="bagCount"></p>
+        <noscript>
+          <p class="lede" style="margin-top:1.5rem">
+            The shelf needs JavaScript to filter. Jump straight in:
+            <a href="/brownbag/llm" style="color:var(--biolume)">Data → Agentic AI</a>,
+            <a href="/brownbag/aiml" style="color:var(--biolume)">AI/ML Field Guide</a>,
+            <a href="/brownbag/llmtrends" style="color:var(--biolume)">LLM Trends</a>,
+            <a href="/brownbag/mcp" style="color:var(--biolume)">MCP</a>,
+            <a href="/brownbag/chatbot" style="color:var(--biolume)">GenAI vs Agents</a>,
+            <a href="/brownbag/python" style="color:var(--biolume)">Python</a>,
+            <a href="/brownbag/js" style="color:var(--biolume)">JS &amp; friends</a>,
+            <a href="/brownbag/discretemath" style="color:var(--biolume)">Discrete Maths</a>,
+            <a href="/brownbag/scala" style="color:var(--biolume)">FP in Scala</a>,
+            <a href="/brownbag/crypto2026" style="color:var(--biolume)">State of Crypto</a>.
+          </p>
+        </noscript>
       </div>
     </section>
 
-    <!-- ─────────── MINI GAMES ─────────── -->
-    <section id="games">
+    <!-- ─────────── TRAIL 02 · RESOURCES ─────────── -->
+    <section id="resources">
       <div class="wrap">
-        <p class="trail reveal">Trail 07 — The Playground <span class="elev">· elev 160 m</span></p>
-        <h2 class="sec reveal">Mini games, <em>hand-grown</em> in the browser.</h2>
-        <p class="lede reveal">Small HTML5 experiments — no installs, no accounts, just play.</p>
-        <div class="play-grid">
-          <div class="play reveal">
-            <span class="kind">Endless Runner</span>
-            <h3>Lohki Runner</h3>
-            <p>A cat, a scrolling world, and obstacles named after people who will recognise themselves. Dodge, jump, repeat.</p>
-            <a class="go" href="https://ted.sg/game">Play →</a>
-          </div>
-          <div class="play reveal">
-            <span class="kind">Puzzle · Educational</span>
-            <h3>The Cat & the Golden Braid</h3>
-            <p>Twenty riddle chambers through an Escher-inspired labyrinth of strange loops. Bring your curiosity.</p>
-            <a class="go" href="https://ted.sg/geb/game">Play →</a>
-          </div>
-          <!-- <div class="play seedling reveal"> -->
-          <div class="play reveal">
-            <span class="kind">Tarot</span>
-            <h3>Lohki Tarot</h3>
-            <p>The 22 Major Arcana are renamed for cat archetypes — The Kitten (Fool), The Zoomies (Chariot), and more.</p>
-            <a class="go" href="https://ted.sg/game/tarot">Play →</a>
-          </div>
-        </div>
+        <p class="trail reveal">Trail 02 — The Field Kit <span class="elev">· elev 110 m</span></p>
+        <h2 class="sec reveal">Templates and playbooks you can <em>take with you.</em></h2>
+        <p class="lede reveal">Where a brown bag teaches a topic, a field kit hands you the tool. Working artefacts for people building AI products — decks, frameworks and guides, all as single web pages you can read, copy or fork.</p>
+        <div class="kit-grid" id="kitGrid"></div>
       </div>
     </section>
 
-    <!-- ─────────── WEB APPS ─────────── -->
-    <section id="apps">
+    <!-- ─────────── TRAIL 03 · ABOUT DOOR ─────────── -->
+    <section id="guide">
       <div class="wrap">
-        <p class="trail reveal">Trail 08 — Toolshed <span class="elev">· elev 163 m · summit</span></p>
-        <h2 class="sec reveal">Mini web apps — small tools, <em>sharp edges.</em></h2>
-        <p class="lede reveal">Single-purpose utilities I build for myself, then share.</p>
-        <div class="play-grid">
-          <div class="play reveal">
-            <span class="kind">Seedling</span>
-            <h3>Singapore Field Guide</h3>
-            <p>A small tool taking root. Know the flora and fauna around you.</p>
-            <a class="go" href="https://ted.sg/app/sgfg">Try it →</a>
-          </div>
-          <div class="play reveal">
-            <span class="kind">Seedling</span>
-            <h3>Financial Planning Simulator</h3>
-            <p>Embark on a journey to learn to plan your finances!</p>
-            <a class="go" href="https://ted.sg/app/finsim">Try it →</a>
-          </div>
-          <div class="play seedling reveal">
-            <span class="kind">Seedling</span>
-            <h3>Claude Guide</h3>
-            <p>Just Cluade.</p>
-            <a class="go" href="https://ted.sg/brownbag/claude">Try it →</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────── CONTACT ─────────── -->
-    <section id="contact">
-      <div class="wrap">
-        <p class="trail reveal" style="justify-content:center;">Trail 09 — Summit</p>
-        <h2 class="sec reveal">Let's build something <em>that lasts.</em></h2>
-        <p class="lede reveal">Open to conversations about AI strategy, advisory technology, or the intersection of machine intelligence and financial services. Trail recommendations also welcome.</p>
-        <div class="hero-cta reveal" style="justify-content:center;">
-          <a class="btn btn-solid" href="https://www.linkedin.com/in/thaddeusloh" rel="noopener">LinkedIn</a>
+        <p class="trail reveal" style="justify-content:center;">Trail 03 — The Guide <span class="elev">· elev 163 m · summit</span></p>
+        <h2 class="sec reveal">Curious who <em>packed the bags?</em></h2>
+        <p class="lede reveal">The career, the reading shelf, the games and the small web apps live on a separate trail. Follow it if you want the person behind the material — or if you just want to play something.</p>
+        <div class="door-cta reveal">
+          <a class="btn btn-solid" href="/about/">Take the Guide's trail</a>
           <a class="btn btn-ghost" href="mailto:hello@ted.sg">Email</a>
         </div>
       </div>
@@ -814,13 +538,144 @@
 
   <footer>
     <span>© 2026 Thaddeus Loh · ted.sg</span>
-    <span>Singapore · grown near Nature</span>
+    <span><a href="/about/">About</a> · Singapore · grown near Nature</span>
   </footer>
 
   <script>
-    // mobile menu
+    /* ════════════════════════════════════════════════════════════════
+       THE SHELF — add a new brown bag by adding ONE object below.
+       cat:  'data' | 'ai' | 'product' | 'engineering' | 'others'
+       live: false  → renders as a dashed "In the oven" card, not a link
+       ════════════════════════════════════════════════════════════════ */
+    const BAGS = [
+      { cat: 'data', title: 'Data → AI → GenAI → Agentic AI',
+        desc: 'The whole climb in one session: what structured and unstructured data actually are, and how each layer builds on the one below it.',
+        url: '/brownbag/llm', live: true },
+
+      { cat: 'ai', title: 'AI/ML Field Guide',
+        desc: 'Supervised, unsupervised and reinforcement learning — what each one is really doing, and when you would reach for it.',
+        url: '/brownbag/aiml', live: true },
+      { cat: 'ai', title: 'LLM Trends',
+        desc: 'The current state of large language models: the model atlas across providers, context engineering, harnesses and where the frontier is moving.',
+        url: '/brownbag/llmtrends', live: true },
+      { cat: 'ai', title: 'Model Context Protocol',
+        desc: 'Field notes on MCP — how models plug into tools and data, plus the distinction between MCP and agent-to-agent protocols.',
+        url: '/brownbag/mcp', live: true },
+
+      { cat: 'product', title: 'GenAI vs AI Agent vs Agentic AI',
+        desc: 'Three terms that get used interchangeably, pulled apart using one banking chatbot as the case study.',
+        url: '/brownbag/chatbot', live: true },
+
+      { cat: 'engineering', title: 'Python for Data Science, then Data Analytics',
+        desc: 'Python used analytically first, then operationally — the same language, two very different jobs.',
+        url: '/brownbag/python', live: true },
+      { cat: 'engineering', title: 'JavaScript, React Native, Flutter & PWAs',
+        desc: 'One tour through the ways to ship a modern front end, and how to pick between them without a religious war.',
+        url: '/brownbag/js', live: true },
+      { cat: 'engineering', title: 'Discrete Mathematics',
+        desc: 'Sets, logic, graphs and counting — the maths underneath computing, explained simply enough for a curious ten-year-old.',
+        url: '/brownbag/discretemath', live: true },
+      { cat: 'engineering', title: 'Functional Programming in Scala',
+        desc: 'Working through the red book by deriving functional programming from first principles rather than memorising the rules.',
+        url: '/brownbag/scala', live: true },
+
+      { cat: 'others', title: 'State of Crypto 2026',
+        desc: 'A beginner-level research report on where crypto actually stands — the parts that matter, without the noise.',
+        url: '/brownbag/crypto2026', live: true },
+    ];
+
+    /* ════ THE FIELD KIT — same idea, add one object per resource ════ */
+    const KITS = [
+      { kind: 'Template · Deck', title: 'AI Product Requirements Deck',
+        desc: 'A PRD structure built for AI features, where the requirement is a behaviour and an evaluation, not a fixed spec.',
+        url: '/resources/prd', live: false },
+      { kind: 'Framework', title: 'AI Product Strategy',
+        desc: 'How to decide what to build with AI: capability mapping, the build-versus-buy line, and sequencing a roadmap that survives model upgrades.',
+        url: '/resources/strategy', live: false },
+      { kind: 'Guide', title: 'A Guide to the AI PM',
+        desc: 'What the role actually involves day to day — the vocabulary, the tradeoffs, and how it differs from classical product management.',
+        url: '/resources/ai-pm', live: false },
+    ];
+
+    /* ─────────── render ─────────── */
+    const CATS = [
+      { id: 'all',         label: 'All',         tone: 'var(--biolume)' },
+      { id: 'data',        label: 'Data',        tone: 'var(--cat-data)' },
+      { id: 'ai',          label: 'AI',          tone: 'var(--cat-ai)' },
+      { id: 'product',     label: 'Product',     tone: 'var(--cat-prod)' },
+      { id: 'engineering', label: 'Engineering', tone: 'var(--cat-eng)' },
+      { id: 'others',      label: 'Others',      tone: 'var(--cat-other)' },
+    ];
+
+    const grid    = document.getElementById('bagGrid');
+    const chipBox = document.getElementById('bagChips');
+    const search  = document.getElementById('bagSearch');
+    const countEl = document.getElementById('bagCount');
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
+    let active = 'all';
+
+    CATS.forEach(c => {
+      const n = c.id === 'all' ? BAGS.length : BAGS.filter(b => b.cat === c.id).length;
+      const btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.type = 'button';
+      btn.style.setProperty('--tone', c.tone);
+      btn.setAttribute('aria-pressed', c.id === 'all');
+      btn.dataset.cat = c.id;
+      btn.innerHTML = (c.id === 'all' ? '' : '<span class="dot"></span>') +
+                      esc(c.label) + '<span class="n">' + n + '</span>';
+      btn.addEventListener('click', () => {
+        active = c.id;
+        chipBox.querySelectorAll('.chip').forEach(x =>
+          x.setAttribute('aria-pressed', x.dataset.cat === active));
+        render();
+      });
+      chipBox.appendChild(btn);
+    });
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      const shown = BAGS.filter(b => {
+        const okCat = active === 'all' || b.cat === active;
+        const okQ = !q || (b.title + ' ' + b.desc + ' ' + b.cat).toLowerCase().includes(q);
+        return okCat && okQ;
+      });
+
+      grid.innerHTML = shown.length ? shown.map((b, i) => {
+        const label = (CATS.find(c => c.id === b.cat) || {}).label || b.cat;
+        const num = 'BB·' + String(BAGS.indexOf(b) + 1).padStart(2, '0');
+        const body =
+          '<div class="bag-top"><span class="bag-cat">' + esc(label) + '</span>' +
+          '<span class="bag-num">' + num + '</span></div>' +
+          '<h3>' + esc(b.title) + '</h3>' +
+          '<p>' + esc(b.desc) + '</p>' +
+          '<span class="bag-go">' + (b.live ? 'Open session →' : 'In the oven') + '</span>';
+        const cls = 'bag cat-' + b.cat + (b.live ? '' : ' bag-soon');
+        return b.live
+          ? '<a class="' + cls + '" href="' + esc(b.url) + '">' + body + '</a>'
+          : '<div class="' + cls + '">' + body + '</div>';
+      }).join('') : '<p class="shelf-empty">Nothing on the shelf matches that. Try another word.</p>';
+
+      countEl.textContent = shown.length + ' of ' + BAGS.length + ' sessions';
+    }
+
+    search.addEventListener('input', render);
+    render();
+
+    document.getElementById('kitGrid').innerHTML = KITS.map(k => {
+      const body =
+        '<span class="kind">' + esc(k.kind) + '</span>' +
+        '<h3>' + esc(k.title) + '</h3>' +
+        '<p>' + esc(k.desc) + '</p>' +
+        '<span class="go">' + (k.live ? 'Open →' : 'Taking root') + '</span>';
+      return k.live
+        ? '<a class="kit" href="' + esc(k.url) + '">' + body + '</a>'
+        : '<div class="kit soon">' + body + '</div>';
+    }).join('');
+
+    /* ─────────── chrome ─────────── */
     const burger = document.querySelector('.burger');
-    const menuLinks = document.querySelectorAll('.mobile-menu a');
     function toggleMenu(force) {
       const open = force !== undefined ? force : !document.body.classList.contains('menu-open');
       document.body.classList.toggle('menu-open', open);
@@ -829,16 +684,14 @@
       document.body.style.overflow = open ? 'hidden' : '';
     }
     burger.addEventListener('click', () => toggleMenu());
-    menuLinks.forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+    document.querySelectorAll('.mobile-menu a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
     window.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
 
-    // scroll reveal
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-    // fireflies
     const canvas = document.getElementById('fireflies');
     const ctx = canvas.getContext('2d');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
