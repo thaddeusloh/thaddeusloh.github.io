@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Product Strategy — ted.sg</title>
+<meta name="description" content="How to decide what to build with AI: capability mapping, the build-versus-buy line, and sequencing a roadmap that survives model upgrades.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..600&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#06120D; --forest:#0B2117; --forest-2:#0F2C1F; --forest-3:#143726;
+  --bark:#1E4632; --bark-2:#2A5C43;
+  --sage:#A9C9B4; --mint:#8FD6AE; --gold:#E2A93C; --gold-2:#F2CE7E;
+  --bone:#F1EFE4; --muted:#8AA697; --rust:#C97A4A;
+  --f-display:"Fraunces",Georgia,serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-ui:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;
+  --w:1180px; --r:3px; --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--night);color:var(--bone);
+  font-family:var(--f-body);font-size:18px;line-height:1.62;font-optical-sizing:auto;
+  background-image:
+    radial-gradient(900px 500px at 88% -8%, rgba(30,70,50,.5), transparent 60%),
+    radial-gradient(700px 420px at 6% 2%, rgba(226,169,60,.07), transparent 62%);
+  background-repeat:no-repeat;
+}
+::selection{background:var(--gold);color:var(--night)}
+a{color:var(--gold-2);text-decoration:none;border-bottom:1px solid rgba(242,206,126,.32)}
+a:hover{border-bottom-color:var(--gold-2)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 26px}
+.narrow{max-width:760px}
+
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;letter-spacing:-.015em;line-height:1.1;margin:0}
+h2{font-size:clamp(30px,4.1vw,46px);font-variation-settings:"SOFT" 0,"WONK" 1}
+h3{font-size:22px;letter-spacing:-.01em}
+p{margin:0 0 1.05em}
+.lede{font-size:clamp(19px,2.1vw,22px);color:#DCE7DF;line-height:1.58}
+.eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);font-weight:500;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(143,214,174,.4),transparent)}
+.ui{font-family:var(--f-ui)}
+.dim{color:var(--muted)}
+em.key{font-style:normal;color:var(--gold-2);border-bottom:1px dotted rgba(242,206,126,.45)}
+
+.topbar{position:sticky;top:0;z-index:60;background:rgba(6,18,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(30,70,50,.7)}
+.topbar-in{max-width:var(--w);margin:0 auto;padding:0 26px;display:flex;align-items:center;gap:20px;height:56px}
+.brand{font-family:var(--f-display);font-size:17px;font-weight:600;color:var(--bone);border:0;white-space:nowrap}
+.brand span{color:var(--gold)}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-family:var(--f-ui);font-size:12.5px;color:var(--muted);border:0;padding:7px 10px;border-radius:var(--r);white-space:nowrap;transition:color .2s,background .2s}
+.navlinks a:hover{color:var(--bone);background:rgba(30,70,50,.5)}
+.navlinks a.on{color:var(--night);background:var(--mint);font-weight:500}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--gold);width:0}
+
+.hero{padding:78px 0 60px}
+.hero h1{font-size:clamp(42px,6.9vw,80px);line-height:.98;font-weight:400;font-variation-settings:"SOFT" 20,"WONK" 1;letter-spacing:-.03em}
+.hero h1 i{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 60,"WONK" 1}
+.hero .lede{max-width:660px;margin-top:26px}
+.herometa{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;font-family:var(--f-ui);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
+.herometa span{border:1px solid var(--bark);padding:6px 11px;border-radius:100px;background:rgba(15,44,31,.5)}
+
+button,.btn{font-family:var(--f-ui);font-size:13px;font-weight:500;letter-spacing:.03em;background:var(--gold);color:var(--night);border:1px solid var(--gold);padding:9px 17px;border-radius:100px;cursor:pointer;transition:.18s var(--ease)}
+button:hover,.btn:hover{background:var(--gold-2);border-color:var(--gold-2);transform:translateY(-1px)}
+button.ghost{background:transparent;color:var(--sage);border-color:var(--bark-2)}
+button.ghost:hover{background:rgba(30,70,50,.55);color:var(--bone);border-color:var(--mint)}
+button.ghost.on{background:var(--mint);color:var(--night);border-color:var(--mint);font-weight:600}
+
+/* ══ signature: the absorption line ══ */
+.absbox{margin-top:52px;border:1px solid var(--bark);border-radius:5px;background:linear-gradient(180deg,rgba(15,44,31,.85),rgba(11,33,23,.5));padding:26px}
+.abs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.abs-head p{margin:0;font-size:15.5px;color:var(--sage);max-width:540px;line-height:1.5}
+.abs-title{font-family:var(--f-ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.abs-actions{display:flex;gap:8px;flex-wrap:wrap}
+.abs-bar{display:flex;height:66px;border:1px solid var(--bark-2);border-radius:4px;overflow:hidden;margin:26px 0 14px;background:
+  repeating-linear-gradient(135deg,rgba(138,166,151,.09) 0 6px,transparent 6px 12px)}
+.abs-seg{transition:width .85s var(--ease),opacity .85s var(--ease);position:relative;overflow:hidden;border-right:1px solid rgba(6,18,13,.5)}
+.abs-seg:last-child{border-right:0}
+.abs-seg span{position:absolute;left:8px;top:8px;font-family:var(--f-ui);font-size:10px;letter-spacing:.04em;color:rgba(6,18,13,.82);font-weight:600;line-height:1.2;white-space:nowrap;opacity:0;transition:opacity .3s}
+.abs-seg.wide span{opacity:1}
+.abs-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-ui);font-size:11.5px;color:var(--muted);margin-bottom:18px}
+.abs-legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px;vertical-align:middle}
+.abs-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(30,70,50,.7);padding-top:16px}
+.readout{display:flex;gap:26px;flex-wrap:wrap}
+.readout div{font-family:var(--f-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.readout b{display:block;font-size:22px;letter-spacing:-.01em;text-transform:none;margin-top:3px;font-weight:500;font-variant-numeric:tabular-nums}
+.readout .g{color:var(--mint)}.readout .r{color:var(--rust)}.readout .y{color:var(--gold-2)}
+
+section{padding:74px 0;border-top:1px solid rgba(30,70,50,.55)}
+section:first-of-type{border-top:0}
+.sec-head{margin-bottom:38px;max-width:840px}
+.sec-head p{margin:14px 0 0;color:#CBDCD0;font-size:18.5px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px}
+.card{border:1px solid var(--bark);border-radius:5px;padding:22px;background:linear-gradient(180deg,rgba(15,44,31,.6),rgba(11,33,23,.35))}
+.card h3{margin-bottom:9px}
+.card p:last-child{margin-bottom:0}
+.card .tag{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:10px;display:block}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+
+/* ══ capability map ══ */
+.maplayout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,380px);gap:22px;align-items:start}
+@media(max-width:900px){.maplayout{grid-template-columns:1fr}}
+.mapouter{border:1px solid var(--bark);border-radius:5px;padding:20px 20px 14px;background:rgba(11,33,23,.5)}
+.mapgrid{position:relative;aspect-ratio:1/.82;min-height:300px;border-left:1px solid var(--bark-2);border-bottom:1px solid var(--bark-2);
+  background-image:linear-gradient(rgba(30,70,50,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(30,70,50,.55) 1px,transparent 1px);
+  background-size:25% 25%;background-position:0 0}
+.mapgrid::before,.mapgrid::after{content:"";position:absolute;background:rgba(242,206,126,.22)}
+.mapgrid::before{left:50%;top:0;bottom:0;width:1px}
+.mapgrid::after{top:50%;left:0;right:0;height:1px}
+.quad{position:absolute;font-family:var(--f-ui);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(138,166,151,.6);pointer-events:none}
+.chip{position:absolute;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:var(--mint);border:2px solid var(--night);cursor:pointer;transition:.25s var(--ease);box-shadow:0 0 0 3px rgba(143,214,174,.14)}
+.chip:hover{transform:translate(-50%,-50%) scale(1.35)}
+.chip.on{background:var(--gold);box-shadow:0 0 0 6px rgba(226,169,60,.22);transform:translate(-50%,-50%) scale(1.35)}
+.chip.you{background:var(--rust);width:18px;height:18px;box-shadow:0 0 0 5px rgba(201,122,74,.2);cursor:default}
+.axlabel{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;margin-top:9px}
+.yaxis{position:absolute;left:-13px;top:0;bottom:0;display:flex;align-items:center}
+.yaxis span{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transform:rotate(-90deg);white-space:nowrap}
+.mapside{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:22px;background:rgba(15,44,31,.5)}
+.mapside .verdictlbl{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}
+.mapside h3{color:var(--gold-2);margin-bottom:10px;font-size:21px}
+.mapside .vd{font-family:var(--f-ui);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--night);background:var(--gold);display:inline-block;padding:5px 12px;border-radius:100px;margin-bottom:14px;font-weight:600}
+.mapside p{font-size:15.5px;line-height:1.5;color:#CBDCD0}
+.mapside .coords{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);border-top:1px dashed var(--bark-2);padding-top:12px;margin-top:14px}
+.plotter{border:1px solid var(--bark);border-radius:5px;padding:18px 20px;background:rgba(11,33,23,.5);margin-top:14px}
+.field{margin-bottom:13px}
+.field label{display:block;font-family:var(--f-ui);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--sage);margin-bottom:5px}
+.field .hint{font-family:var(--f-ui);font-size:11px;color:var(--muted);margin-top:4px;display:block}
+.rangewrap{display:flex;align-items:center;gap:12px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;background:var(--bark-2);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+.rangeval{font-family:var(--f-ui);font-size:12.5px;color:var(--gold-2);min-width:82px;text-align:right}
+input[type=number],input[type=text],select{font-family:var(--f-ui);font-size:13.5px;background:rgba(6,18,13,.7);color:var(--bone);border:1px solid var(--bark-2);border-radius:var(--r);padding:8px 11px;width:100%}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-in">
+    <a href="#top" class="brand">ted<span>.</span>sg</a>
+    <div class="navlinks" id="navlinks"></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Brown bag &nbsp;·&nbsp; Product</div>
+    <h1>AI product<br><i>strategy</i></h1>
+    <p class="lede">How to decide what to build with AI — capability mapping, where the build-versus-buy line actually falls, and how to sequence a roadmap that isn't obsoleted by a release you didn't schedule.</p>
+    <div class="herometa"><span>~40 min read</span><span>15 sections</span><span>Interactive capability map</span><span>3-year TCO model</span></div>
+
+    <div class="absbox">
+      <div class="abs-head">
+        <div>
+          <div class="abs-title">Start here: the absorption line</div>
+          <p>Every bar below is a slice of your product's surface area. Now ship forward a model generation at a time and watch which slices the platform quietly absorbs into table stakes.</p>
+        </div>
+        <div class="abs-actions">
+          <button id="absNext">Next model generation →</button>
+          <button class="ghost" id="absReset">Reset</button>
+        </div>
+      </div>
+      <div class="abs-bar" id="absBar"></div>
+      <div class="abs-legend" id="absLegend"></div>
+      <div class="abs-foot">
+        <div class="readout">
+          <div>Generations shipped<b class="y" id="rGen">0</b></div>
+          <div>Surface still yours<b class="g" id="rOwn">100%</b></div>
+          <div>Absorbed<b class="r" id="rAbs">0%</b></div>
+        </div>
+        <p class="dim ui" style="font-size:12.5px;margin:0;max-width:400px" id="absNote">The strategy question isn't "can we build it?" — it's "will it still matter once the platform ships it?"</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+/* ══ layers ══ */
+.layers{display:grid;gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.layer{display:grid;grid-template-columns:96px 1fr 118px;background:var(--forest);cursor:pointer;text-align:left;border:0;border-radius:0;color:var(--bone);font-family:var(--f-body);padding:0;transition:background .2s;align-items:stretch}
+.layer:hover{background:var(--forest-3);transform:none}
+.layer.on{background:rgba(226,169,60,.09)}
+.layer .lnum{display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;color:var(--muted);border-right:1px solid var(--bark);background:rgba(6,18,13,.35)}
+.layer.on .lnum{color:var(--gold)}
+.layer .lbody{padding:16px 20px}
+.layer .lttl{font-family:var(--f-display);font-size:19px;margin-bottom:4px}
+.layer.on .lttl{color:var(--gold-2)}
+.layer .lsub{font-size:15px;color:var(--sage);line-height:1.45}
+.layer .lvd{display:flex;align-items:center;justify-content:center;border-left:1px solid var(--bark);font-family:var(--f-ui);font-size:11px;letter-spacing:.13em;text-transform:uppercase;text-align:center;padding:8px}
+.lvd.buy{color:var(--mint)}.lvd.build{color:var(--gold-2)}.lvd.mix{color:var(--sage)}
+.layer .ldetail{display:none;grid-column:1/-1;padding:0 20px 20px 116px;border-top:1px dashed var(--bark-2);margin-top:2px}
+.layer.on .ldetail{display:block}
+.layer .ldetail p{font-size:15.5px;color:#CBDCD0;margin:14px 0 0;line-height:1.5}
+.layer .ldetail .flag{font-family:var(--f-ui);font-size:13px;color:var(--sage);margin-top:12px;border-left:2px solid var(--bark-2);padding-left:11px;line-height:1.45}
+@media(max-width:700px){.layer{grid-template-columns:56px 1fr}.layer .lvd{grid-column:1/-1;border-left:0;border-top:1px solid var(--bark);justify-content:flex-start;padding:8px 16px}.layer .ldetail{padding-left:16px}}
+
+/* ══ decision tree ══ */
+.tree{border:1px solid var(--bark);border-radius:5px;background:rgba(11,33,23,.55);padding:26px;min-height:270px}
+.tq{font-family:var(--f-display);font-size:24px;line-height:1.25;margin-bottom:8px;color:var(--bone)}
+.tsub{font-size:15.5px;color:var(--sage);margin-bottom:20px;line-height:1.5}
+.tbtns{display:flex;gap:10px;flex-wrap:wrap}
+.tprog{display:flex;gap:5px;margin-bottom:20px}
+.tprog i{width:26px;height:3px;border-radius:2px;background:var(--bark-2);display:block}
+.tprog i.done{background:var(--gold)}
+.tresult .rv{font-family:var(--f-ui);font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:var(--gold);color:var(--night);display:inline-block;padding:6px 14px;border-radius:100px;font-weight:600;margin-bottom:16px}
+.tresult h3{font-size:26px;color:var(--gold-2);margin-bottom:12px}
+.tresult p{font-size:16.5px;color:#CBDCD0;max-width:640px}
+.trace{font-family:var(--f-ui);font-size:12.5px;color:var(--muted);border-top:1px dashed var(--bark-2);padding-top:14px;margin-top:18px;line-height:1.7}
+.trace b{color:var(--sage);font-weight:500}
+
+/* ══ tco ══ */
+.calc{display:grid;grid-template-columns:minmax(260px,330px) 1fr;gap:22px;align-items:start}
+@media(max-width:820px){.calc{grid-template-columns:1fr}}
+.calc-in{border:1px solid var(--bark);border-radius:5px;padding:20px;background:rgba(15,44,31,.5)}
+.calc-in h4{font-family:var(--f-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:20px 0 12px;font-weight:500}
+.calc-in h4:first-child{margin-top:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--bark);border-radius:5px;padding:16px 18px;background:rgba(11,33,23,.6)}
+.kpi .k{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:29px;font-weight:500;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums;line-height:1}
+.kpi .s{font-family:var(--f-ui);font-size:11.5px;color:var(--sage);margin-top:6px}
+.kpi.good .v{color:var(--mint)}.kpi.warn .v{color:var(--gold-2)}.kpi.bad .v{color:var(--rust)}
+.verdict{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:16px 18px;background:rgba(15,44,31,.5);font-size:16px;line-height:1.55}
+.vsbars{display:grid;gap:9px;margin:4px 0}
+.vsrow{display:grid;grid-template-columns:78px 1fr 84px;gap:12px;align-items:center}
+.vsrow .n{font-family:var(--f-ui);font-size:12px;color:var(--sage)}
+.vstrack{height:24px;background:rgba(30,70,50,.4);border-radius:2px;overflow:hidden}
+.vsfill{height:100%;width:0;transition:width .6s var(--ease)}
+.vsrow .v{font-family:var(--f-ui);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;color:var(--bone)}
+
+/* ══ moats ══ */
+.moat{border:1px solid var(--bark);border-radius:5px;padding:20px;background:rgba(15,44,31,.5);border-top:2px solid var(--mint)}
+.moat h3{font-size:19px;margin-bottom:8px}
+.moat p{font-size:15px;line-height:1.48;color:#CBDCD0;margin:0 0 12px}
+.moat .test{font-family:var(--f-ui);font-size:13px;color:var(--sage);border-left:2px solid var(--bark-2);padding-left:11px;line-height:1.45}
+.notmoat{border-top-color:var(--rust)}
+.notmoat h3{color:var(--rust)}
+
+/* ══ checklist ══ */
+.checks{display:grid;gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.chk{display:flex;gap:14px;align-items:flex-start;background:var(--forest);padding:15px 18px;cursor:pointer;transition:background .2s;text-align:left;border:0;border-radius:0;color:var(--bone);font-family:var(--f-body);width:100%}
+.chk:hover{background:var(--forest-3);transform:none}
+.chk .box{width:19px;height:19px;border:1.5px solid var(--bark-2);border-radius:3px;flex:0 0 auto;margin-top:3px;position:relative;transition:.2s}
+.chk.on .box{background:var(--mint);border-color:var(--mint)}
+.chk.on .box::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--night);font-size:13px;font-weight:700;font-family:var(--f-ui)}
+.chk .txt{font-size:16px;line-height:1.45}
+.chk .txt small{display:block;font-family:var(--f-ui);font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.chk.on .txt{color:var(--mint)}
+.chkscore{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:18px 20px;margin-top:16px;background:rgba(15,44,31,.5);font-size:16.5px;line-height:1.55}
+.chkscore b{color:var(--gold-2);font-weight:500}
+
+/* ══ roadmap board ══ */
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.col{border:1px solid var(--bark);border-radius:5px;background:rgba(11,33,23,.45);padding:16px}
+.col > h3{font-size:18px;color:var(--gold-2);margin-bottom:3px}
+.col .colsub{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+.item{border:1px solid var(--bark);border-radius:4px;padding:13px 15px;margin-bottom:10px;background:rgba(15,44,31,.6);transition:.2s}
+.item:last-child{margin-bottom:0}
+.item .it{font-family:var(--f-ui);font-size:14px;color:var(--bone);margin-bottom:6px;font-weight:500}
+.item .gate{font-size:14px;color:var(--sage);line-height:1.42}
+.item .gate b{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);display:block;margin-bottom:3px;font-weight:500}
+.item .flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.flag-t{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:100px;border:1px solid var(--bark-2);color:var(--muted)}
+.flag-t.rev{border-color:var(--gold);color:var(--gold-2)}
+.flag-t.dur{border-color:var(--mint);color:var(--mint)}
+.item.dim-out{opacity:.28}
+
+/* ══ stepper ══ */
+.step-nav{display:flex;border:1px solid var(--bark);border-radius:5px 5px 0 0;overflow:hidden;flex-wrap:wrap}
+.step-nav button{flex:1;min-width:96px;border-radius:0;background:rgba(15,44,31,.6);color:var(--sage);border:0;border-right:1px solid var(--bark);padding:13px 8px;font-size:12px;text-align:center}
+.step-nav button:last-child{border-right:0}
+.step-nav button:hover{background:rgba(30,70,50,.7);color:var(--bone);transform:none}
+.step-nav button.on{background:var(--gold);color:var(--night);font-weight:600}
+.step-nav button .sn{display:block;font-size:10px;letter-spacing:.14em;opacity:.7;margin-bottom:2px}
+.step-body{border:1px solid var(--bark);border-top:0;border-radius:0 0 5px 5px;padding:28px;background:rgba(11,33,23,.55);min-height:230px}
+.step-body h3{color:var(--gold-2);margin-bottom:14px}
+.step-body ul{margin:14px 0 0;padding-left:0;list-style:none}
+.step-body li{padding-left:22px;position:relative;margin-bottom:9px;font-size:16.5px;line-height:1.5}
+.step-body li::before{content:"";position:absolute;left:3px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--mint)}
+
+/* ══ horizons ══ */
+.hz{display:grid;grid-template-columns:1fr minmax(240px,320px);gap:24px;align-items:start}
+@media(max-width:820px){.hz{grid-template-columns:1fr}}
+.hzbar{display:flex;height:34px;border-radius:3px;overflow:hidden;border:1px solid var(--bark);margin-bottom:22px}
+.hzbar div{transition:width .5s var(--ease);display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);font-size:11px;color:var(--night);font-weight:600;overflow:hidden;white-space:nowrap}
+.hzcard{border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:5px;padding:22px;background:rgba(15,44,31,.55);position:sticky;top:74px}
+.hzcard h3{color:var(--gold-2);margin-bottom:10px;font-size:20px}
+.hzcard p{font-size:15px;line-height:1.5;margin:0;color:#CBDCD0}
+
+/* ══ accordion ══ */
+details.acc{border:1px solid var(--bark);border-radius:5px;margin-bottom:10px;background:rgba(15,44,31,.4);overflow:hidden}
+details.acc summary{cursor:pointer;padding:16px 20px;font-family:var(--f-ui);font-size:14.5px;color:var(--bone);list-style:none;display:flex;align-items:center;gap:14px;transition:background .2s}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:hover{background:rgba(30,70,50,.45)}
+details.acc summary::after{content:"+";margin-left:auto;color:var(--gold);font-size:19px;line-height:1}
+details.acc[open] summary::after{content:"–"}
+details.acc[open] summary{background:rgba(30,70,50,.4);color:var(--gold-2)}
+details.acc .accbody{padding:4px 20px 22px;border-top:1px solid rgba(30,70,50,.6)}
+.spec{font-family:var(--f-ui);font-size:13.5px;line-height:1.65;background:rgba(6,18,13,.7);border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:var(--r);padding:16px 18px;margin:16px 0 0;color:#D6E5DB;white-space:pre-wrap}
+.copybtn{margin-top:12px}
+
+/* ══ table ══ */
+.tbl{width:100%;border-collapse:collapse;font-size:15.5px}
+.tbl th{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:left;padding:0 14px 12px;color:var(--mint);font-weight:500;border-bottom:1px solid var(--bark)}
+.tbl td{padding:15px 14px;border-bottom:1px solid rgba(30,70,50,.5);vertical-align:top;line-height:1.5}
+.tbl tr:hover td{background:rgba(15,44,31,.45)}
+.tbl td:first-child{font-family:var(--f-ui);font-size:13px;color:var(--gold-2);width:22%}
+.tblwrap{overflow-x:auto}
+
+footer{border-top:1px solid var(--bark);padding:52px 0 70px;margin-top:40px}
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:20px}
+.srcs a{font-family:var(--f-ui);font-size:13px;color:var(--sage);border:1px solid var(--bark);border-radius:var(--r);padding:10px 13px;display:block;transition:.2s}
+.srcs a:hover{border-color:var(--mint);color:var(--bone);background:rgba(30,70,50,.4)}
+.srcs a span{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
+
+@media(max-width:640px){
+  body{font-size:17px}
+  section{padding:54px 0}
+  .step-nav button{min-width:33%}
+  .abs-bar{height:52px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<main class="wrap">
+
+<!-- 1 THESIS -->
+<section id="thesis">
+  <div class="sec-head">
+    <div class="eyebrow">The premise</div>
+    <h2>Strategy is now mostly a question about what won't be absorbed</h2>
+    <p class="lede">Every other decision on this page is downstream of that one.</p>
+  </div>
+  <div class="grid2" style="align-items:start">
+    <div class="narrow">
+      <p>For twenty years, product strategy asked whether you could build something and whether anyone wanted it. AI adds a third question that dominates both: <em class="key">will this still be yours in eighteen months, or will the platform ship it as a feature?</em></p>
+      <p>The pattern is not new. Relational databases were a moat and became a commodity. Cloud infrastructure was a moat and became a utility. Each time, the layer that felt central became substrate, and durable advantage moved to whatever sat on top and grew more useful with use. Foundation models are the next layer doing this — and doing it faster, because inference prices have fallen by orders of magnitude and open-weight models now trail the closed frontier by months rather than years.</p>
+      <p>So the discipline is subtraction before addition. Before you argue about what to build, work out which parts of your intended surface area have a half-life measured in release cycles. Then spend your scarce engineering time on the rest.</p>
+      <p style="margin-bottom:0">The rule of thumb that survives contact with a steering committee: <em class="key">if a competent competitor could replicate it in a weekend with the same API, it isn't strategy — it's a feature you happen to have first.</em></p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gold)">
+      <span class="tag">Three questions, in order</span>
+      <h3 style="margin-bottom:16px">The sequence that saves money</h3>
+      <ol style="margin:0;padding-left:20px;font-size:16px;line-height:1.55">
+        <li style="margin-bottom:13px"><b style="color:var(--gold-2);font-weight:500">Is the capability reliable enough today?</b> Not in principle — on your actual task, probed with real examples. Capability is discovered, not specified.</li>
+        <li style="margin-bottom:13px"><b style="color:var(--gold-2);font-weight:500">Does owning it differentiate us?</b> Would a customer pay a premium specifically because we built it rather than bought it? If not, it's operational hygiene.</li>
+        <li><b style="color:var(--gold-2);font-weight:500">Does it survive the next model generation?</b> If the answer is "our advantage is that we use a good model", you have no answer.</li>
+      </ol>
+      <p class="dim ui" style="font-size:13px;margin:18px 0 0;line-height:1.5">Most capabilities resolve on question one or two. Run full cost modelling only on the two or three that carry real strategic weight.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 CAPABILITY MAP -->
+<section id="map">
+  <div class="sec-head">
+    <div class="eyebrow">Capability mapping</div>
+    <h2>Plot it before you budget it</h2>
+    <p>Two axes decide most of it. <b style="color:var(--bone);font-weight:500">Maturity</b> — how reliably models handle this task today, measured on your data, not a benchmark. <b style="color:var(--bone);font-weight:500">Differentiation</b> — how much of your competitive position depends on owning it. Click a capability to see where it lands, or plot your own below.</p>
+  </div>
+  <div class="maplayout">
+    <div>
+      <div class="mapouter">
+        <div style="position:relative">
+          <div class="yaxis"><span>Differentiation →</span></div>
+          <div class="mapgrid" id="mapgrid">
+            <div class="quad" style="left:10px;top:10px">Build · with a partner</div>
+            <div class="quad" style="right:10px;top:10px;text-align:right">Build · your moat</div>
+            <div class="quad" style="left:10px;bottom:8px">Defer</div>
+            <div class="quad" style="right:10px;bottom:8px;text-align:right">Buy</div>
+          </div>
+          <div class="axlabel"><span>Model maturity today</span><span>Reliable →</span></div>
+        </div>
+      </div>
+      <div class="plotter">
+        <div class="field" style="margin-bottom:10px"><label>Plot your own capability</label>
+          <input type="text" id="myName" value="Our capability" maxlength="40"></div>
+        <div class="field"><label>How reliable is the model on this task, on your data?</label>
+          <div class="rangewrap"><input type="range" id="myX" min="0" max="100" value="50"><span class="rangeval" id="vX">Uneven</span></div></div>
+        <div class="field" style="margin-bottom:0"><label>How much of your position depends on owning it?</label>
+          <div class="rangewrap"><input type="range" id="myY" min="0" max="100" value="50"><span class="rangeval" id="vY">Some</span></div></div>
+      </div>
+    </div>
+    <div class="mapside" id="mapside"></div>
+  </div>
+</section>
+
+<!-- 3 LAYERS -->
+<section id="layers">
+  <div class="sec-head">
+    <div class="eyebrow">The build–buy line</div>
+    <h2>It isn't one decision, it's six</h2>
+    <p>The single most common strategy error is applying one doctrine across the whole stack. "We build our AI" and "we buy our AI" are both wrong answers, because the right call at the model layer is almost never the right call at the evaluation layer. Decide per layer, deliberately, and expect a hybrid.</p>
+  </div>
+  <div class="layers" id="layerList"></div>
+  <div class="card" style="margin-top:22px;border-left:3px solid var(--mint)">
+    <span class="tag">The shape most enterprises land on</span>
+    <p style="font-size:16.5px;margin:0">Buy the foundation — models, infrastructure, observability, generic connectors. Build the intelligence layer — domain logic, proprietary context, decision rules, evaluation. Partner for specialised execution where deep expertise matters but doesn't need to live permanently on your payroll. <b style="color:var(--gold-2);font-weight:500">Commodity gets rented, differentiation gets owned.</b> The useful discipline is being able to say which is which, per layer, with a reason.</p>
+  </div>
+</section>
+
+<!-- 4 DECISION TREE -->
+<section id="decide">
+  <div class="sec-head">
+    <div class="eyebrow">Working it through</div>
+    <h2>Build, buy, fine-tune, partner, or defer</h2>
+    <p>Five paths, not two. The middle options are where most 2026 decisions actually land, and naming them is what separates a strategy conversation from a budget argument. Answer honestly — the trace at the end shows which answer drove the verdict.</p>
+  </div>
+  <div class="tree" id="tree"></div>
+</section>
+
+<!-- 5 TCO -->
+<section id="tco">
+  <div class="sec-head">
+    <div class="eyebrow">The arithmetic</div>
+    <h2>Three-year cost, including the part everyone forgets</h2>
+    <p>Build-versus-buy comparisons usually fail because they compare a build quote against a licence fee. The honest model runs three years and includes maintenance, model migration, observability, governance effort — and <b style="color:var(--bone);font-weight:500">capability debt</b>: what it costs you if you need to understand this deeply in eighteen months and you outsourced the learning.</p>
+  </div>
+  <div class="calc">
+    <div class="calc-in">
+      <h4>Build path</h4>
+      <div class="field"><label>Engineers on it (FTE)</label><input type="number" id="bFte" value="3" min="0" step="0.5"></div>
+      <div class="field"><label>Fully loaded cost per FTE / year (US$)</label><input type="number" id="bCost" value="140000" min="0" step="5000"></div>
+      <div class="field"><label>Months to first production release</label><input type="number" id="bMonths" value="8" min="1"></div>
+      <div class="field"><label>Ongoing maintenance after launch</label>
+        <div class="rangewrap"><input type="range" id="bMaint" min="10" max="80" value="35"><span class="rangeval" id="vMaint">35% of team</span></div>
+        <span class="hint">Model migrations, eval upkeep, drift, dependency churn.</span></div>
+      <div class="field"><label>Infrastructure &amp; tooling / year (US$)</label><input type="number" id="bInfra" value="60000" min="0" step="5000"></div>
+      <h4>Buy path</h4>
+      <div class="field"><label>Licence / year (US$)</label><input type="number" id="pLic" value="180000" min="0" step="10000"></div>
+      <div class="field"><label>Annual price escalation</label>
+        <div class="rangewrap"><input type="range" id="pEsc" min="0" max="30" value="8"><span class="rangeval" id="vEsc">8%</span></div></div>
+      <div class="field"><label>Integration &amp; change management, one-off (US$)</label><input type="number" id="pInt" value="120000" min="0" step="10000"></div>
+      <div class="field" style="margin-bottom:0"><label>Capability debt premium</label>
+        <div class="rangewrap"><input type="range" id="pDebt" min="0" max="40" value="15"><span class="rangeval" id="vDebt">15%</span></div>
+        <span class="hint">What it costs later to not have built the in-house understanding. Set higher when the capability is strategic.</span></div>
+    </div>
+    <div class="calc-out" style="display:grid;gap:14px">
+      <div class="kpis">
+        <div class="kpi"><div class="k">Build, 3-year total</div><div class="v" id="kBuild">—</div><div class="s" id="kBuildSub">incl. maintenance</div></div>
+        <div class="kpi"><div class="k">Buy, 3-year total</div><div class="v" id="kBuy">—</div><div class="s" id="kBuySub">incl. escalation</div></div>
+        <div class="kpi warn"><div class="k">Difference</div><div class="v" id="kDiff">—</div><div class="s" id="kDiffSub">over three years</div></div>
+        <div class="kpi"><div class="k">Time to value</div><div class="v" id="kTtv">—</div><div class="s">build vs buy, months</div></div>
+      </div>
+      <div class="vsbars" id="vsbars"></div>
+      <div class="verdict" id="tcoVerdict"></div>
+      <div class="grid2" style="gap:14px">
+        <div class="card" style="padding:17px"><span class="tag">What the number can't tell you</span><p style="font-size:15px;margin:0">Cost decides ties, not strategy. If the capability is genuinely differentiating, a more expensive build can still be the right call — and if it isn't, being cheaper to build is not a reason to build it. Run this model on the two or three capabilities that carry strategic weight and buy the rest without a spreadsheet.</p></div>
+        <div class="card" style="padding:17px"><span class="tag">The speed argument is real</span><p style="font-size:15px;margin:0">If you need to be live in six weeks and a vendor can do it, an eight-month build is a strategic liability regardless of the three-year total. Buying first to validate, then building the layer that proved differentiating, is a legitimate sequence — and usually a cheaper way to learn than a fourteen-month custom build that never validated demand.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 MOATS -->
+<section id="moats">
+  <div class="sec-head">
+    <div class="eyebrow">What actually holds</div>
+    <h2>Five things a model provider cannot ship as a feature</h2>
+    <p>If your differentiation rests on model access, its half-life is the next release cycle. These five compound instead — and each has a test you can apply this afternoon.</p>
+  </div>
+  <div class="grid3" id="moatGrid"></div>
+  <h3 style="margin:34px 0 16px;color:var(--rust)">And four that feel like moats but aren't</h3>
+  <div class="grid3" id="notMoatGrid"></div>
+</section>
+
+<!-- 7 ABSORPTION TEST -->
+<section id="test">
+  <div class="sec-head">
+    <div class="eyebrow">The screen</div>
+    <h2>The absorption test</h2>
+    <p>Before committing engineering time to an AI capability, walk these eight. Tick the ones you can answer yes to honestly — not aspirationally. The score at the bottom is a rough read on whether this is a durable investment or a feature you'll be maintaining until the platform makes it redundant.</p>
+  </div>
+  <div class="checks" id="checks"></div>
+  <div class="chkscore" id="chkscore">Nothing ticked yet. Work down the list — the honest answer is usually lower than the first instinct.</div>
+</section>
+
+<!-- 8 ROADMAP -->
+<section id="roadmap">
+  <div class="sec-head">
+    <div class="eyebrow">Sequencing</div>
+    <h2>A roadmap of gates, not dates</h2>
+    <p>Feature-with-a-date rows break for AI work, for three structural reasons: capability is discovered rather than specified, progress isn't linear — getting from roughly 70% to 90% task success routinely takes longer than getting from zero to 70% — and done isn't a state but a distribution that keeps moving after launch. The reframe worth stealing: <em class="key">an AI roadmap commits to learning something by a date, not to something working by a date.</em> Put hard dates only on process steps you control.</p>
+  </div>
+  <div class="pills">
+    <button class="ghost on" id="fAll">Show everything</button>
+    <button class="ghost" id="fDurable">Only what survives an upgrade</button>
+    <button class="ghost" id="fRevisit">Only revisit-at-next-generation</button>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="grid2" style="margin-top:26px">
+    <div class="card"><span class="tag">The rule for the Later column</span><p style="font-size:16px;margin:0">Anything sitting in Later purely because the model isn't good enough yet gets a <b style="color:var(--gold-2);font-weight:500">revisit-at-next-generation</b> tag, an owner, and a standing calendar entry. Half the value of an AI roadmap is knowing which parked items to un-park the week a new model lands — and being the team that checks within days rather than months.</p></div>
+    <div class="card"><span class="tag">The rule for the Now column</span><p style="font-size:16px;margin:0">Every item carries a quality bar and a current eval score, and an explicit kill option. If an item can't state what number would make you stop, it isn't a gate — it's a wish. This is also the honest answer to "when will it be ready": <b style="color:var(--gold-2);font-weight:500">a range tied to eval evidence</b>, forecast from measured trajectory the way you'd forecast a conversion curve.</p></div>
+  </div>
+</section>
+
+<!-- 9 MODEL DROP PLAYBOOK -->
+<section id="playbook">
+  <div class="sec-head">
+    <div class="eyebrow">The event you don't schedule</div>
+    <h2>A new model lands. Now what?</h2>
+    <p>Two or three times a year a release changes your feasibility frontier, your cost structure, or both. Teams that handle this well have a rehearsed drill. Teams that don't spend a fortnight arguing in a Slack thread and then migrate under pressure when the old version sunsets.</p>
+  </div>
+  <div class="step-nav" id="pbNav"></div>
+  <div class="step-body" id="pbBody"></div>
+</section>
+
+<!-- 10 HORIZONS -->
+<section id="portfolio">
+  <div class="sec-head">
+    <div class="eyebrow">Allocation</div>
+    <h2>Spending across three horizons</h2>
+    <p>Any single AI bet is a coin flip on capability you don't control. A portfolio isn't. Drag the allocation and see what shape of programme you've actually funded — most organisations discover they've put everything in one horizon and called it a strategy.</p>
+  </div>
+  <div class="hz">
+    <div>
+      <div class="hzbar" id="hzbar"></div>
+      <div id="hzFields"></div>
+    </div>
+    <div class="hzcard"><h3 id="hzTitle">Balanced</h3><p id="hzText"></p></div>
+  </div>
+</section>
+
+<!-- 11 REGULATED -->
+<section id="regulated">
+  <div class="sec-head">
+    <div class="eyebrow">The wrinkle</div>
+    <h2>What changes inside a regulated perimeter</h2>
+    <p>In financial services the build-buy line moves for reasons that have nothing to do with cost or capability. Three of them are worth knowing before you argue either side.</p>
+  </div>
+  <div class="grid3" id="regGrid"></div>
+  <div class="tblwrap" style="margin-top:28px">
+    <table class="tbl">
+      <thead><tr><th>Consideration</th><th>Pushes you toward buying</th><th>Pushes you toward building</th></tr></thead>
+      <tbody id="regTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 12 ANTIPATTERNS -->
+<section id="traps">
+  <div class="sec-head">
+    <div class="eyebrow">Failure modes</div>
+    <h2>How AI strategies go wrong</h2>
+    <p>Ranked by how often they show up in a post-mortem rather than how dramatic they sound.</p>
+  </div>
+  <div id="trapList"></div>
+</section>
+
+<!-- 13 MEMO -->
+<section id="memo">
+  <div class="sec-head">
+    <div class="eyebrow">The artefact</div>
+    <h2>One page, or it isn't a strategy</h2>
+    <p>Everything above collapses into a document short enough that a sponsor reads all of it. If you can't fill these nine lines, the decision isn't ready — and the gaps tell you exactly what to go find out.</p>
+  </div>
+  <details class="acc" open>
+    <summary><span class="ui" style="color:var(--gold);font-size:11px;letter-spacing:.1em">TEMPLATE</span>The AI capability decision memo</summary>
+    <div class="accbody">
+      <p style="color:#CBDCD0;font-size:16.5px;margin-top:16px">Nine lines. Fill them in order — the order matters, because each one constrains the next.</p>
+      <div class="spec" id="memoText"></div>
+      <button class="copybtn" id="copyMemo">Copy the template</button>
+    </div>
+  </details>
+</section>
+
+<!-- 14 CLOSE -->
+<section id="close">
+  <div class="sec-head">
+    <div class="eyebrow">Last thing</div>
+    <h2>Assume the platform catches up</h2>
+  </div>
+  <div class="narrow">
+    <p>The uncomfortable version of everything above is that a large share of what feels like real product work today — orchestration glue, tool connectors, retrieval scaffolding, generic guardrails — is being steadily absorbed into platform primitives. Teams spend months building it and then watch it collapse into table stakes.</p>
+    <p>That's not an argument against building. It's an argument for being precise about which months you spend. The teams that hold up over multiple model generations tend to have invested in the same unglamorous places: <em class="key">their own evaluation pipelines, their proprietary data and the feedback loop around it, and the workflows they've become the system of record for.</em> None of those get shipped away in a release note.</p>
+    <p style="margin-bottom:0">A useful closing question for any roadmap review: if the model layer became free tomorrow, what would still be worth something? Fund that.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="eyebrow">Sources &amp; further reading</div>
+    <p class="dim" style="max-width:720px;font-size:16px">Synthesised from current practitioner and analyst writing. Figures used in the calculators are illustrative inputs for modelling, not benchmarks — replace them with your own numbers before quoting anything.</p>
+    <div class="srcs" id="srcs"></div>
+    <p class="dim ui" style="font-size:12px;margin-top:34px">Companion to <a href="#top">A Guide to the AI PM</a> · Built for a brown bag · ted.sg · August 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const money=n=>n>=1e6?"$"+(n/1e6).toFixed(2)+"m":n>=1000?"$"+Math.round(n/1000)+"k":"$"+Math.round(n);
+
+/* ── nav ── */
+const NAV=[["thesis","Premise"],["map","Capability map"],["layers","Six layers"],["decide","Decide"],["tco","Cost model"],["moats","Moats"],["test","Absorption test"],["roadmap","Roadmap"],["playbook","New model drops"],["portfolio","Horizons"],["regulated","Regulated"],["traps","Failure modes"],["memo","The memo"]];
+const nl=$("#navlinks");
+NAV.forEach(([id,l])=>{const a=el("a",null,l);a.href="#"+id;a.dataset.sec=id;nl.appendChild(a);});
+const secs=NAV.map(([id])=>document.getElementById(id)).filter(Boolean);
+let tick=false;
+function onScroll(){
+  const y=scrollY,h=document.body.scrollHeight-innerHeight;
+  $("#progress").style.width=(h>0?Math.min(100,y/h*100):0)+"%";
+  let cur=null;secs.forEach(s=>{if(s.getBoundingClientRect().top<160)cur=s.id;});
+  $$(".navlinks a").forEach(a=>a.classList.toggle("on",a.dataset.sec===cur));
+  const on=$(".navlinks a.on");
+  if(on&&on.offsetLeft<nl.scrollLeft)nl.scrollLeft=on.offsetLeft-16;
+  else if(on&&on.offsetLeft+on.offsetWidth>nl.scrollLeft+nl.clientWidth)nl.scrollLeft=on.offsetLeft+on.offsetWidth-nl.clientWidth+16;
+  tick=false;
+}
+addEventListener("scroll",()=>{if(!tick){tick=true;requestAnimationFrame(onScroll);}},{passive:true});
+
+/* ── hero: absorption line ── */
+const SEG=[
+ ["Prompting &amp; UI polish",13,.22,"#6f8f7d"],
+ ["Orchestration glue",14,.38,"#7fa78e"],
+ ["Retrieval scaffolding",13,.5,"#8FD6AE"],
+ ["Generic guardrails",10,.42,"#a7c4b2"],
+ ["Tool connectors",11,.45,"#c0b48a"],
+ ["Domain logic &amp; policy",13,.93,"#E2A93C"],
+ ["Your evaluation pipeline",10,.96,"#F2CE7E"],
+ ["Proprietary data &amp; feedback loop",9,.98,"#e8bf5f"],
+ ["Workflow ownership &amp; distribution",7,.99,"#C97A4A"]
+];
+const TOTAL=SEG.reduce((a,s)=>a+s[1],0);
+const bar=$("#absBar");
+SEG.forEach((s,i)=>{const d=el("div","abs-seg",`<span>${s[0]}</span>`);d.style.background=s[3];d.dataset.i=i;bar.appendChild(d);});
+$("#absLegend").innerHTML=SEG.map(s=>`<span><i style="background:${s[3]}"></i>${s[0]}</span>`).join("");
+let gen=0;
+function drawAbs(){
+  let kept=0;
+  SEG.forEach((s,i)=>{
+    const w=s[1]*Math.pow(s[2],gen);kept+=w;
+    const d=bar.children[i];
+    const pct=w/TOTAL*100;
+    d.style.width=pct+"%";
+    d.style.opacity=w/s[1]<.06?0:1;
+    d.classList.toggle("wide",pct>13);
+  });
+  const own=Math.round(kept/TOTAL*100);
+  $("#rGen").textContent=gen;
+  $("#rOwn").textContent=own+"%";
+  $("#rAbs").textContent=(100-own)+"%";
+  const notes=["The strategy question isn't \"can we build it?\" — it's \"will it still matter once the platform ships it?\"",
+   "One generation in and the generic scaffolding is already thinning. Nothing you did was wrong — it just wasn't yours.",
+   "Two generations. What's left is domain logic, your evals, your data, your workflow. That was always the product.",
+   "Three generations. If your bar is nearly empty, the strategy was the model. That was never a strategy.",
+   "The bar stops shrinking when everything left is something a provider can't ship in a release note."];
+  $("#absNote").textContent=notes[Math.min(gen,notes.length-1)];
+}
+$("#absNext").addEventListener("click",()=>{gen=Math.min(gen+1,6);drawAbs();});
+$("#absReset").addEventListener("click",()=>{gen=0;drawAbs();});
+drawAbs();
+
+/* ── capability map ── */
+const CAPS=[
+ {n:"Meeting transcription",x:94,y:8,w:"Buy",d:"Solved, commoditised, and nobody chooses a wealth platform for its transcription quality. Buying here is not a compromise, it's the correct answer — and building it is a tell that the team is optimising for interest rather than impact."},
+ {n:"Document OCR &amp; extraction",x:86,y:22,w:"Buy",d:"Mature across providers. The differentiation isn't extraction, it's what you do with the extracted fields — which sits further up your own stack. Buy the parsing, own the interpretation."},
+ {n:"Code assistance for the team",x:88,y:12,w:"Buy",d:"Mature market, real productivity gains, zero strategic differentiation. This is a procurement decision with a training plan attached, not a product decision."},
+ {n:"Generic chat assistant",x:90,y:15,w:"Buy",d:"Absorbed into every platform you already pay for. If your AI programme's flagship is a chat box over public documents, the roadmap needs a harder conversation."},
+ {n:"Client suitability reasoning",x:44,y:92,w:"Build",d:"Deeply differentiating, encodes your policy and your regulator's expectations, and no vendor has your segmentation or your product shelf. Maturity is mixed — which means build it behind gates, with a human checkpoint, and expect the quality climb to be the whole project."},
+ {n:"Portfolio commentary generation",x:70,y:66,w:"Build",d:"Models handle the language well; the value is in your house view, your data, and your compliance constraints. Buy nothing here except the model — the tone, the guardrails and the source-of-truth binding are yours."},
+ {n:"Next-best-action nudge engine",x:52,y:88,w:"Build",d:"Your behavioural data and your outcome feedback loop are the entire asset. This is the archetypal build: it gets better with use, and every month of usage widens the gap."},
+ {n:"Your evaluation pipeline",x:64,y:95,w:"Build",d:"The quiet one. The ability to tell whether a new model improves your specific workflows — your credit memo quality, your extraction accuracy — is itself a competitive capability, and it's entirely independent of model choice. Nobody can sell you this."},
+ {n:"Model gateway &amp; routing",x:72,y:48,w:"Build lite",d:"Increasingly available off the shelf, but owning the routing layer is what makes model swaps cheap. Build thin, keep it boring, and treat portability as the feature."},
+ {n:"KYC document review",x:58,y:58,w:"Partner",d:"Regulated, specialised, and a mature vendor market exists — but the policy layer is yours. Partner for the engine, own the decision rules and the audit trail."},
+ {n:"Autonomous client outreach",x:26,y:74,w:"Defer",d:"High potential differentiation, insufficient reliability, and an unforgiving failure mode. Park it with an explicit revisit trigger rather than building scaffolding that the next generation makes redundant."},
+ {n:"Multi-agent research desk",x:22,y:44,w:"Defer",d:"Genuinely interesting, not yet reliable, and not obviously differentiating even if it were. The right move is a two-week probe with real tasks, not a programme."}
+];
+const grid=$("#mapgrid"),side=$("#mapside");
+CAPS.forEach((c,i)=>{
+  const ch=el("button","chip");
+  ch.style.left=c.x+"%";ch.style.bottom=c.y+"%";ch.title=c.n.replace(/&amp;/g,"&");
+  ch.addEventListener("click",()=>{$$(".chip").forEach(x=>x.classList.remove("on"));ch.classList.add("on");showCap(i);});
+  grid.appendChild(ch);
+});
+const you=el("div","chip you");you.title="Your capability";grid.appendChild(you);
+function verdictFor(x,y){
+  if(y>=55&&x>=55)return["Build","This is your moat. Reliable enough to ship and differentiating enough to matter — the rare quadrant where spending your best engineers is clearly correct. Move fast, because the window is defined by how long it takes a competitor to notice."];
+  if(y>=55&&x<55)return["Build with a partner","Worth owning, not yet reliable. Build behind quality gates with an explicit kill option, or bring in specialised help for the parts that need depth you don't have permanently. Do not commit a dated launch to it."];
+  if(y<55&&x>=55)return["Buy","Mature and non-differentiating. Rent it, integrate it well, and spend the saved months on the top-right quadrant. Building here is the most expensive way to feel productive."];
+  return["Defer","Neither reliable nor differentiating. Park it with a named revisit trigger — usually the next model generation — rather than funding scaffolding that gets absorbed. Run a two-week probe if you need evidence to say no."];
+}
+function showCap(i){
+  const c=CAPS[i];
+  side.innerHTML=`<div class="verdictlbl">Selected capability</div><h3>${c.n}</h3><div class="vd">${c.w}</div><p>${c.d}</p>
+   <div class="coords">Maturity ${c.x} · Differentiation ${c.y}</div>`;
+}
+const XL=["Unreliable","Unreliable","Patchy","Uneven","Workable","Workable","Solid","Reliable","Reliable","Commodity","Commodity"];
+const YL=["None","None","Marginal","Some","Some","Meaningful","Meaningful","High","High","Core","Core"];
+function plotMine(){
+  const x=+$("#myX").value,y=+$("#myY").value,n=$("#myName").value.trim()||"Our capability";
+  you.style.left=x+"%";you.style.bottom=y+"%";
+  $("#vX").textContent=XL[Math.round(x/10)];
+  $("#vY").textContent=YL[Math.round(y/10)];
+  $$(".chip").forEach(c=>c.classList.remove("on"));
+  const [v,d]=verdictFor(x,y);
+  side.innerHTML=`<div class="verdictlbl">Your capability</div><h3>${n.replace(/</g,"&lt;")}</h3><div class="vd">${v}</div><p>${d}</p>
+   <div class="coords">Maturity ${x} · Differentiation ${y} — drag the sliders, or click a plotted example to compare.</div>`;
+}
+["myX","myY","myName"].forEach(id=>$("#"+id).addEventListener("input",plotMine));
+plotMine();
+
+/* ── six layers ── */
+const LAYERS=[
+ ["01","Model","The foundation model itself — train, fine-tune, or call an API.","Buy","buy",
+  "For nearly every enterprise use case, a commercial frontier model beats what you'd train, at a fraction of the effort. Custom training makes sense in narrow cases: proprietary data no foundation model has seen, extreme precision in a narrow domain, or inference volume that justifies a purpose-built model. These are real but increasingly rare.",
+  "Fine-tuning is the middle path people forget exists. Try prompt and context work first — fine-tuning adds cost, maintenance, and a migration problem at the next model release."],
+ ["02","Orchestration","The loop, the tool calls, the agent scaffolding, the workflow engine.","Mixed","mix",
+  "The most volatile layer on this list. Providers keep absorbing generic orchestration into platform primitives, so anything you build here should be thin and expected to be replaced. Architect so the engine is a swappable component.",
+  "Rule of thumb: build the orchestration that encodes your business process, buy the orchestration that encodes generic agent mechanics."],
+ ["03","Retrieval &amp; context","Your knowledge base, chunking, indexing, ranking, freshness.","Mixed","mix",
+  "The infrastructure is buyable and increasingly commoditised. The corpus, the entitlement model and the freshness discipline are yours, and they're where retrieval quality actually comes from. Most 'the model is bad' complaints resolve to a retrieval problem.",
+  "The knowledge itself — your policies, your products, your processes — is yours and should stay yours regardless of who hosts the index."],
+ ["04","Evaluation","Golden sets, judges, regression gates, quality dashboards.","Build","build",
+  "The layer most often outsourced and most worth owning. Being able to assess whether a new model improves your specific workflows — not abstract benchmarks — is itself a competitive capability, and it's what makes every future model decision cheap instead of political.",
+  "Tools help, but the golden set and the rubric encode your definition of good. No vendor can sell you that, and a competitor can't copy it."],
+ ["05","Governance &amp; controls","Model inventory, audit trail, explainability, human oversight, kill switches.","Mixed","mix",
+  "Platforms cover part of it. The accountability framework, the risk tiering and the control catalogue reflect your regulator and your risk appetite, so they're yours to define even when the tooling is bought.",
+  "In regulated settings this layer also affects your build-buy call elsewhere — building custom models can change your classification and your obligations."],
+ ["06","Workflow &amp; interface","Where the AI meets the actual job, and who owns the record.","Build","build",
+  "Never outsource the surface where your users work. This is where switching costs, habit and data capture accumulate, and it's the layer a model provider has no route into. If someone else owns the workflow, you're a component in their product.",
+  "The test: if the AI vendor disappeared tomorrow, would customers still need you? If not, you bought the wrong layer and built the wrong one."]
+];
+const ll=$("#layerList");
+LAYERS.forEach((L,i)=>{
+  const b=el("button","layer"+(i===3?" on":""));
+  b.innerHTML=`<div class="lnum">${L[0]}</div><div class="lbody"><div class="lttl">${L[1]}</div><div class="lsub">${L[2]}</div></div>
+   <div class="lvd ${L[4]}">${L[3]}</div>
+   <div class="ldetail"><p>${L[5]}</p><div class="flag">${L[6]}</div></div>`;
+  b.addEventListener("click",()=>{$$(".layer").forEach(x=>x.classList.remove("on"));b.classList.add("on");});
+  ll.appendChild(b);
+});
+
+/* ── decision tree ── */
+const TREE=[
+ {q:"Would a customer pay a premium specifically because you built this rather than bought it?",
+  s:"The single question that settles most cases. If the honest answer is no, it's a commodity capability and the rest of the decision is procurement.",
+  a:[["Yes","diff"],["No","commodity"],["Only in one narrow segment","niche"]]},
+ {q:"Do you have proprietary data or process knowledge that materially improves the result?",
+  s:"Not data you could theoretically collect. Data you have, that a vendor doesn't, that measurably changes output quality.",
+  a:[["Yes, and we can use it","data"],["Some, but it's messy or inaccessible","weak"],["No","nodata"]]},
+ {q:"How reliably do current models handle this task on your actual data?",
+  s:"Probed with twenty real examples, not reasoned from general capability. The frontier is jagged — adjacent tasks behave very differently.",
+  a:[["Reliably today","mature"],["Promising but inconsistent","emerging"],["Not yet","immature"]]},
+ {q:"Does a credible vendor already meet your compliance, latency and integration needs?",
+  s:"Credible means references in your sector, evidence they'll pass your risk review, and an integration path that doesn't require rebuilding your stack.",
+  a:[["Yes","vendor"],["Partially","partial"],["No","novendor"]]},
+ {q:"When do you need this working?",
+  s:"Speed to market is real value, and an eight-month build against a six-week need is a strategic liability regardless of the three-year cost.",
+  a:[["This quarter","fast"],["This year","normal"],["It's a multi-year bet","slow"]]}
+];
+const RESULTS={
+ build:["Build","Own it","This lands in the quadrant worth spending your best engineers on: differentiating, feasible enough to gate, and improved by data you already have. Build it behind quality gates with an explicit kill criterion, sequence eval infrastructure first, and keep the model layer swappable so a provider change doesn't become a rebuild."],
+ partner:["Build with a partner","Own the outcome, rent the depth","Worth owning, but you don't have the specialist capability permanently on payroll and shouldn't hire it for one project. Partner for the build, insist on knowledge transfer as a deliverable, and keep the evaluation pipeline and the data in-house — those are the parts that must not leave."],
+ tune:["Fine-tune","The middle path","You have proprietary data that moves the needle but no reason to own a training stack. Buy the base model, tune on your data, and budget for the fact that this is a recurring commitment — every base model upgrade re-opens the question. Prove prompt and context engineering can't get you there first."],
+ buy:["Buy","Rent it and move on","Non-differentiating, well served by vendors, and building it is the most expensive way to feel productive. Integrate properly, negotiate for your data rights, and redirect the engineering months to the capabilities that are actually yours."],
+ buyfirst:["Buy first, build later","Sequence it","Validate with a vendor now, learn what actually matters, then build the layer that proved differentiating. This sequence — experiment, extend, evolve — is consistently cheaper than a long custom build that never validated demand. Write down the trigger that would flip you to building."],
+ defer:["Defer","Not yet, and say so","Neither reliable enough nor clearly differentiating. Park it with a named revisit trigger and an owner rather than funding scaffolding that gets absorbed. A two-week probe with real tasks is a legitimate deliverable; a programme is not."]
+};
+let ti=0,answers=[];
+const tree=$("#tree");
+function renderTree(){
+  if(ti<TREE.length){
+    const q=TREE[ti];
+    tree.innerHTML=`<div class="tprog">${TREE.map((_,i)=>`<i class="${i<ti?"done":""}"></i>`).join("")}</div>
+     <div class="tq">${q.q}</div><div class="tsub">${q.s}</div><div class="tbtns" id="tb"></div>`;
+    q.a.forEach(([label,key])=>{
+      const b=el("button","ghost",label);
+      b.addEventListener("click",()=>{answers.push([q.q,label,key]);ti++;renderTree();});
+      $("#tb").appendChild(b);
+    });
+  } else {
+    const k=answers.map(a=>a[2]);
+    let r="buy";
+    const differentiating=k[0]==="diff"||k[0]==="niche";
+    if(!differentiating) r=(k[3]==="novendor")?"buyfirst":"buy";
+    else if(k[2]==="immature") r="defer";
+    else if(k[1]==="data"&&k[2]==="mature") r=(k[4]==="fast"&&k[3]==="vendor")?"buyfirst":"build";
+    else if(k[1]==="data"&&k[2]==="emerging") r=(k[4]==="fast")?"buyfirst":"tune";
+    else if(k[1]==="weak") r="partner";
+    else if(k[1]==="nodata") r=(k[3]==="vendor")?"buy":"partner";
+    if(differentiating&&k[4]==="fast"&&k[3]==="vendor"&&r==="build") r="buyfirst";
+    const [vd,h,p]=RESULTS[r];
+    tree.innerHTML=`<div class="tresult"><div class="rv">${vd}</div><h3>${h}</h3><p>${p}</p>
+     <div class="trace">${answers.map(a=>`<b>${a[0]}</b> → ${a[1]}`).join("<br>")}</div>
+     <button class="ghost" id="treeReset" style="margin-top:18px">Run it again</button></div>`;
+    $("#treeReset").addEventListener("click",()=>{ti=0;answers=[];renderTree();});
+  }
+}
+renderTree();
+
+/* ── TCO ── */
+function tco(){
+  const fte=+$("#bFte").value||0, cost=+$("#bCost").value||0, months=Math.max(1,+$("#bMonths").value||1);
+  const maint=+$("#bMaint").value/100, infra=+$("#bInfra").value||0;
+  const lic=+$("#pLic").value||0, esc=+$("#pEsc").value/100, integ=+$("#pInt").value||0, debt=+$("#pDebt").value/100;
+  $("#vMaint").textContent=Math.round(maint*100)+"% of team";
+  $("#vEsc").textContent=Math.round(esc*100)+"%";
+  $("#vDebt").textContent=Math.round(debt*100)+"%";
+  const buildMonths=Math.min(months,36);
+  const devCost=fte*cost/12*buildMonths;
+  const maintMonths=36-buildMonths;
+  const maintCost=fte*cost/12*maintMonths*maint;
+  const infraCost=infra*3;
+  const build=devCost+maintCost+infraCost;
+  let buy=integ;
+  for(let y=0;y<3;y++) buy+=lic*Math.pow(1+esc,y);
+  const buyTrue=buy*(1+debt);
+  const diff=buyTrue-build;
+  $("#kBuild").textContent=money(build);
+  $("#kBuildSub").textContent=money(devCost)+" build · "+money(maintCost)+" upkeep";
+  $("#kBuy").textContent=money(buyTrue);
+  $("#kBuySub").textContent=money(buy)+" cash · "+money(buyTrue-buy)+" capability debt";
+  $("#kDiff").textContent=(diff>=0?"+":"−")+money(Math.abs(diff));
+  $("#kDiffSub").textContent=diff>=0?"building is cheaper":"buying is cheaper";
+  $("#kDiff").parentElement.className="kpi "+(Math.abs(diff)/Math.max(build,buyTrue)<.15?"warn":diff>=0?"good":"bad");
+  $("#kTtv").textContent=buildMonths+" vs ~3";
+  const max=Math.max(build,buyTrue,1);
+  $("#vsbars").innerHTML=
+   `<div class="vsrow"><div class="n">Build</div><div class="vstrack"><div class="vsfill" style="width:${build/max*100}%;background:linear-gradient(90deg,#8a6a1e,var(--gold))"></div></div><div class="v">${money(build)}</div></div>
+    <div class="vsrow"><div class="n">Buy</div><div class="vstrack"><div class="vsfill" style="width:${buyTrue/max*100}%;background:linear-gradient(90deg,var(--bark-2),var(--mint))"></div></div><div class="v">${money(buyTrue)}</div></div>`;
+  let v;
+  const gap=Math.abs(diff)/Math.max(build,buyTrue);
+  if(gap<.15) v=`<b style="color:var(--gold-2)">Too close to call on cost.</b> Within ${Math.round(gap*100)}% over three years, which is well inside the error bars of any estimate you've just made. That's good news: the decision is now a strategy question rather than a finance one. Go back to the capability map — if it's in the top-right quadrant, build it.`;
+  else if(diff>0) v=`<b style="color:var(--mint)">Building looks cheaper</b> by ${money(Math.abs(diff))} over three years. Sanity-check the build side before you believe it: teams routinely underestimate maintenance, and the maintenance line here assumes the model layer keeps moving under you. Also check you'd actually staff it — a build plan without named engineers is a wish.`;
+  else v=`<b style="color:var(--rust)">Buying looks cheaper</b> by ${money(Math.abs(diff))} over three years, even after the capability-debt premium. That settles it <em>unless</em> the capability is genuinely differentiating — in which case the right response is to buy the commodity layers and build only the thin part that's actually yours.`;
+  if(buildMonths>=9) v+=` <br><br><span style="color:var(--gold-2)">Timing:</span> ${buildMonths} months to first release is long enough that the model landscape will shift underneath you at least once. Assume a mid-build re-plan and budget for it.`;
+  $("#tcoVerdict").innerHTML=v;
+}
+["bFte","bCost","bMonths","bMaint","bInfra","pLic","pEsc","pInt","pDebt"].forEach(id=>$("#"+id).addEventListener("input",tco));
+tco();
+
+/* ── moats ── */
+const MOATS=[
+ ["Proprietary data flywheel","Data your product generates through its own use, that gets better the more it's used, and that no one can buy. Not the data you licensed — the data your usage creates.",
+  "Test: if a competitor launched today with unlimited budget, how long until their outputs match yours? If the answer is 'immediately', you don't have this."],
+ ["Workflow ownership","Being the system of record for a job someone does every day. Switching means re-training people and migrating history, not swapping an API key.",
+  "Test: if your AI vendor vanished overnight, would customers still need you? If not, you're a component in someone else's product."],
+ ["Evaluation capability","Knowing, faster than anyone else, whether a new model improves your specific workflows. It makes every future model decision cheap, and it's entirely independent of which model wins.",
+  "Test: when the next frontier model shipped, how many days until you knew what it meant for your product? Under a week is a moat. Over a month is a liability."],
+ ["Distribution &amp; trust position","Owned access to customers, plus the credibility to be allowed near their decisions. In regulated markets this includes the licence, the audit history and the relationships.",
+  "Test: could a better product reach your customers without going through you? In wealth management the answer is often no, and that's worth more than any feature."],
+ ["Integration depth","Connections into systems that took years to accumulate — core banking, CRM, custody, compliance tooling, identity. Painful to build, more painful to replace.",
+  "Test: how many weeks would a replacement take to reach parity on integrations alone? That number is your switching cost."]
+];
+$("#moatGrid").innerHTML=MOATS.map(([t,d,x])=>`<div class="moat"><h3>${t}</h3><p>${d}</p><div class="test">${x}</div></div>`).join("");
+const NOTMOATS=[
+ ["Model access","Everyone can rent the same models, and the gap between frontier and open-weight alternatives keeps narrowing. \"We use a good model\" describes a purchase order, not a position."],
+ ["Prompt engineering","A system prompt and a UI over one API call is fast to ship — which cuts both ways, because a competitor or the provider itself can replicate it just as fast."],
+ ["Being first","Speed matters, but a first mover with no accumulation loses to a fast follower with distribution. First is only a moat if you're using the head start to build one of the five on the left."],
+ ["Generic scaffolding","Orchestration glue, tool connectors and retrieval plumbing feel like real product. They're the surface providers are absorbing fastest into platform primitives."]
+];
+$("#notMoatGrid").innerHTML=NOTMOATS.map(([t,d])=>`<div class="moat notmoat"><h3>${t}</h3><p style="margin:0">${d}</p></div>`).join("");
+
+/* ── absorption test ── */
+const CHECKS=[
+ ["It uses data a competitor cannot obtain.","Not data they could buy or scrape — data your usage generates."],
+ ["It gets measurably better the more it's used.","There is a real feedback loop, instrumented, with someone accountable for closing it."],
+ ["It encodes a decision rule that is specifically ours.","House policy, risk appetite, segmentation, a regulator's expectation — something a generic model has no way to know."],
+ ["We own the workflow it sits inside.","Users do the job here, not somewhere else with our output pasted in."],
+ ["A competent competitor could not replicate it in a weekend.","Same APIs, same public information, motivated engineer. Be honest."],
+ ["It would still be valuable if the model layer were free tomorrow.","Strip out the intelligence and ask what remains: data, workflow, distribution, trust."],
+ ["We can tell within a week whether a new model changes it.","You have evals for this specific task, not vendor benchmarks."],
+ ["A provider shipping an 'agent platform' primitive wouldn't collapse it.","Most orchestration and connector work fails this one. That's the point of asking."]
+];
+const cw=$("#checks");let ticked=0;
+CHECKS.forEach((c,i)=>{
+  const b=el("button","chk",`<span class="box"></span><span class="txt">${c[0]}<small>${c[1]}</small></span>`);
+  b.addEventListener("click",()=>{b.classList.toggle("on");ticked=$$(".chk.on").length;chkScore();});
+  cw.appendChild(b);
+});
+function chkScore(){
+  const n=ticked,s=$("#chkscore");
+  if(n===0){s.innerHTML="Nothing ticked yet. Work down the list — the honest answer is usually lower than the first instinct.";return;}
+  let t;
+  if(n<=2) t=`<b>${n} of 8 — this is a feature, not a strategy.</b> Ship it if it's cheap and useful, but don't fund it as a programme, don't staff it permanently, and don't put it in a board deck as differentiation. Expect to retire it when the platform ships the equivalent.`;
+  else if(n<=4) t=`<b>${n} of 8 — thin.</b> There's something here, but not enough to defend a multi-quarter investment. The productive move is to find which two more you could honestly tick within six months, and make those the actual roadmap items. Usually it's data capture and workflow ownership.`;
+  else if(n<=6) t=`<b>${n} of 8 — durable enough to build.</b> This survives a model generation. Sequence it properly: evaluation infrastructure first, thin and swappable model layer, and the data feedback loop instrumented from day one rather than added later.`;
+  else t=`<b>${n} of 8 — this is the moat.</b> Fund it, staff it with your best people, and protect it in planning when something louder comes along. Capabilities that score this high are rare, and organisations usually have one or two rather than a portfolio.`;
+  s.innerHTML=t;
+}
+
+/* ── roadmap board ── */
+const BOARD=[
+ ["Now","Committed. Dates attach to gates you control, not to quality you don't.",[
+  {t:"Adviser answer assistant — grounded Q&A",g:"Groundedness ≥ 0.95 on the 180-case golden set; kill if under 0.85 by the March review.",f:["durable"]},
+  {t:"Evaluation platform v1",g:"Golden sets for three surfaces, judge calibrated, CI gate live. Date is ours to control.",f:["durable"]},
+  {t:"Model gateway &amp; routing",g:"Two providers behind one interface; swap demonstrated in a drill, not a doc.",f:["durable"]},
+  {t:"Meeting summarisation",g:"Vendor selected, integrated, adoption ≥ 40% of advisers in 90 days.",f:["bought"]}]],
+ ["Next","Sequenced behind a dependency or a gate that hasn't cleared yet.",[
+  {t:"Portfolio commentary drafting",g:"Blocked on the house-view data contract. Gate: source-of-truth binding passes fee/figure accuracy at 100%.",f:["durable"]},
+  {t:"Next-best-action nudges",g:"Blocked on outcome feedback instrumentation. No point modelling what you can't measure.",f:["durable"]},
+  {t:"KYC review assist",g:"Partner shortlisted; gate is the risk review, which is a date we control.",f:["bought"]},
+  {t:"Suitability reasoning — pilot",g:"Gate: 60-case expert-labelled set built and agreed with compliance before any build.",f:["durable"]}]],
+ ["Later","Parked deliberately, with a trigger and an owner. Not a graveyard.",[
+  {t:"Autonomous client outreach",g:"Reliability insufficient and the failure mode is unforgiving. Revisit trigger: next frontier generation.",f:["revisit"]},
+  {t:"Multi-agent research desk",g:"Two-week probe budgeted, not a programme. Revisit trigger: next generation, or a credible vendor.",f:["revisit"]},
+  {t:"Real-time voice adviser copilot",g:"Latency envelope not met at acceptable cost. Revisit trigger: price or latency shift of 2×.",f:["revisit"]},
+  {t:"Fine-tuned house-tone model",g:"Prompt and context work hasn't been exhausted yet. Revisit at 100k monthly calls.",f:["revisit"]}]]
+];
+const FLAGLBL={durable:["dur","Survives upgrades"],revisit:["rev","Revisit next generation"],bought:["","Bought"]};
+$("#board").innerHTML=BOARD.map(([h,s,items])=>`
+ <div class="col"><h3>${h}</h3><div class="colsub">${s}</div>
+ ${items.map(it=>`<div class="item" data-f="${it.f.join(" ")}"><div class="it">${it.t}</div>
+   <div class="gate"><b>Gate</b>${it.g}</div>
+   <div class="flags">${it.f.map(f=>`<span class="flag-t ${FLAGLBL[f][0]}">${FLAGLBL[f][1]}</span>`).join("")}</div></div>`).join("")}
+ </div>`).join("");
+function boardFilter(key,btn){
+  $$("#fAll,#fDurable,#fRevisit").forEach(b=>b.classList.remove("on"));btn.classList.add("on");
+  $$(".item").forEach(i=>i.classList.toggle("dim-out",key!=="all"&&!i.dataset.f.includes(key)));
+}
+$("#fAll").addEventListener("click",e=>boardFilter("all",e.currentTarget));
+$("#fDurable").addEventListener("click",e=>boardFilter("durable",e.currentTarget));
+$("#fRevisit").addEventListener("click",e=>boardFilter("revisit",e.currentTarget));
+
+/* ── model drop playbook ── */
+const PB=[
+ {n:"01",k:"Read",t:"Read the card, not the launch post",
+  li:["Pull the model card and the pricing before anyone benchmarks anything","Note the deprecation timeline for what you're currently pinned to — that's the real deadline","Identify what changed structurally: context, tool use, latency profile, reasoning behaviour","Resist the demo. A launch demo tells you nothing about your task"]},
+ {n:"02",k:"Score",t:"Run your evals, not theirs",
+  li:["Run the full golden suite against the new version, unchanged prompts first","Then run it again with light prompt adaptation — behaviour shifts, and old prompts are tuned to old quirks","Compare on your criteria, per surface, not on published benchmarks","Record cost and latency alongside quality; a quality win at 3× the price is a different decision"]},
+ {n:"03",k:"Re-price",t:"Recompute the cost structure",
+  li:["Re-run your routing split — a new cheap tier may absorb work the expensive one was doing","Check whether the price change makes a parked capability viable","Update the cost-per-successful-outcome figure that the business actually sees","Watch for cliff pricing: thresholds that double the cost of a long request"]},
+ {n:"04",k:"Re-score",t:"Re-plot the roadmap",
+  li:["Walk the Later column and test every revisit-at-next-generation item against real examples","Move what cleared the bar; leave the rest parked with the trigger reset","Check whether any Now item just became unnecessary — the generation may have absorbed it","Tell stakeholders what changed and why, before they read about it elsewhere"]},
+ {n:"05",k:"Migrate",t:"Move deliberately",
+  li:["Stage it: shadow mode, then a cohort, then full — the same discipline as any launch","Keep the old version pinned and reachable until the new one has production eval data","Budget prompt rework as real work, not a tidy-up","Write down what surprised you; it sharpens the next drill, and there will be one within six months"]}
+];
+const pbn=$("#pbNav"),pbb=$("#pbBody");
+PB.forEach((s,i)=>{
+  const b=el("button",i===0?"on":"",`<span class="sn">${s.n}</span>${s.k}`);
+  b.addEventListener("click",()=>{$$("#pbNav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");showPb(i);});
+  pbn.appendChild(b);
+});
+function showPb(i){const s=PB[i];pbb.innerHTML=`<h3>${s.t}</h3><ul>${s.li.map(x=>`<li>${x}</li>`).join("")}</ul>`;}
+showPb(0);
+
+/* ── horizons ── */
+const HZ=[
+ ["H1 — Ship this year","Proven capability, clear owner, measurable this quarter.","var(--mint)",50],
+ ["H2 — Prove this year","Feasible but unvalidated. Funded as gated experiments with kill criteria.","var(--gold)",35],
+ ["H3 — Watch and probe","Not yet reliable. Two-week probes, revisit triggers, no programmes.","var(--rust)",15]
+];
+const hzf=$("#hzFields");
+HZ.forEach((h,i)=>{
+  const d=el("div","field");
+  d.innerHTML=`<label>${h[0]}</label><div class="rangewrap"><input type="range" id="hz${i}" min="0" max="100" value="${h[3]}"><span class="rangeval" id="hzv${i}">${h[3]}%</span></div><span class="hint">${h[1]}</span>`;
+  hzf.appendChild(d);
+  d.querySelector("input").addEventListener("input",drawHz);
+});
+function drawHz(){
+  const raw=HZ.map((_,i)=>+$("#hz"+i).value);
+  const sum=raw.reduce((a,b)=>a+b,0)||1;
+  const pct=raw.map(v=>v/sum*100);
+  $("#hzbar").innerHTML=HZ.map((h,i)=>`<div style="width:${pct[i]}%;background:${h[2]}">${pct[i]>14?Math.round(pct[i])+"%":""}</div>`).join("");
+  HZ.forEach((h,i)=>$("#hzv"+i).textContent=Math.round(pct[i])+"%");
+  const [a,b,c]=pct;
+  let t,x;
+  if(a>75){t="Harvesting";x="Almost everything funded is proven work. Efficient this year, empty next year — nothing in the pipeline is being de-risked, so the first capability shift catches you flat. A programme with no H2 is a delivery plan wearing a strategy label.";}
+  else if(c>40){t="Speculating";x="Heavily weighted to capability that isn't reliable yet. Exciting, and very hard to defend when the budget conversation arrives without shipped outcomes behind it. Move some of this into gated H2 experiments with real kill criteria.";}
+  else if(b>55){t="All bets, no base";x="A pipeline of experiments with too little shipping alongside it. Experiments buy credibility with delivered outcomes; without an H1 base, each gate review gets harder and you spend your political capital defending optionality.";}
+  else if(a>=40&&a<=65&&b>=25&&c>=8){t="Balanced";x="A defensible shape: enough shipping to hold credibility, enough gated experimentation to have something ready when capability moves, and a cheap watching brief on the rest. Re-cut it after every significant model release rather than annually.";}
+  else{t="Workable";x="No obvious pathology. Check the shape against your actual constraint — if capability is moving fast in your domain, weight H2 up; if the organisation is short on delivered proof, weight H1 up until you've banked some.";}
+  $("#hzTitle").textContent=t;$("#hzText").textContent=x;
+}
+drawHz();
+
+/* ── regulated ── */
+const REG=[
+ ["Provider vs deployer","Building custom models can change your regulatory classification and the obligations that come with it. Buying a compliant solution can keep you in the lighter category. That's a genuine consideration in high-risk use cases — and one that rarely appears in an engineering-led build-buy debate."],
+ ["Concentration risk","Your risk function will ask what happens if a single provider changes pricing, deprecates a model or has an outage. A second provider behind one interface isn't over-engineering here; it's frequently a condition of approval."],
+ ["The data boundary","Where data can be processed decides which providers are even available. Settle residency, retention and training-use terms before architecture, because they eliminate options rather than adjust them."]
+];
+$("#regGrid").innerHTML=REG.map(([t,d])=>`<div class="card"><h3 style="font-size:19px">${t}</h3><p style="font-size:15.5px;margin:0;color:#CBDCD0">${d}</p></div>`).join("");
+const REGT=[
+ ["Model risk validation","Vendor brings documentation, prior validations and a track record other institutions have already tested.","You control the evidence and can answer any question, rather than waiting on a vendor's disclosure policy."],
+ ["Explainability","Mature vendors in regulated niches have built the audit trail because their customers demanded it.","Custom decision logic that you can fully account for, with no black box you're contractually unable to inspect."],
+ ["Speed to approval","A solution already deployed elsewhere in your sector shortens the risk review considerably.","Nothing is faster if the vendor can't meet a control you're required to enforce."],
+ ["Data sensitivity","Vendors increasingly offer in-region processing and no-training contractual terms.","The most sensitive data never leaves, which sometimes settles the argument on its own."],
+ ["Long-run cost","Predictable, and the maintenance burden sits with someone else.","No escalation clause, no renewal negotiation, and no dependency on a vendor's roadmap surviving their next funding round."]
+];
+$("#regTable").innerHTML=REGT.map(([k,b,d])=>`<tr><td>${k}</td><td>${b}</td><td>${d}</td></tr>`).join("");
+
+/* ── traps ── */
+const TRAPS=[
+ ["One doctrine across the whole stack","\"We build our AI\" and \"we buy our AI\" are both wrong. The right answer at the model layer is almost never the right answer at the evaluation layer. Decide per layer, and expect a hybrid — that's the mature outcome, not a fudge."],
+ ["Treating build-versus-buy as a budget question","Framing it as a line-item comparison produces the wreckage the industry is now living through. The question is where you place differentiation, not which quote is smaller."],
+ ["Building what the next generation absorbs","Months of orchestration glue, tool connectors and retrieval scaffolding, collapsed into platform primitives by a release you didn't schedule. Assume the platform catches up and invest in what won't be packaged away."],
+ ["Confusing a feature with a business","A capability that a competitor can replicate in a weekend with the same API isn't a position. It might still be worth shipping — just not worth defending in a strategy review."],
+ ["Skipping the probe","Reasoning about feasibility from general capability instead of testing the specific task. The frontier is jagged; adjacent tasks behave very differently, and twenty real examples costs an afternoon."],
+ ["Committing dates to quality you don't control","\"Model-quality summarisation by Q3\" is a promise about something outside your control. Put dates on gates you own — eval set complete, integration live, cohort opened."],
+ ["Under-sequencing evaluation","Every model-based feature depends on eval infrastructure, and teams that skip it ship regressions. It belongs early in the roadmap because everything downstream is cheaper once it exists."],
+ ["Letting the Later column rot","Parked items without a trigger and an owner quietly become never. Half the value of an AI roadmap is knowing what to un-park the week a new model lands."],
+ ["Optimising for the interesting problem","Multi-agent architectures are more fun than fixing chunk boundaries. The second one usually moves the metric. Watch where your best engineers actually want to spend time, and check it against the map."],
+ ["Assuming a build validates demand","A fourteen-month custom build that never tested whether anyone wanted the outcome is the most expensive possible way to learn. Buy something adequate, learn, then build the part that proved to matter."]
+];
+$("#trapList").innerHTML=TRAPS.map(([t,d],i)=>`
+ <details class="acc"><summary><span class="ui" style="color:var(--rust);font-size:11px;letter-spacing:.1em">${String(i+1).padStart(2,"0")}</span>${t}</summary>
+ <div class="accbody"><p style="margin:16px 0 0;color:#CBDCD0;font-size:16.5px">${d}</p></div></details>`).join("");
+
+/* ── memo ── */
+const MEMO=`1. THE JOB TO BE DONE
+   Who does what, today, badly or slowly. One sentence, no technology in it.
+
+2. WHY A MODEL
+   What makes this unsuitable for a form, a rule, or a query. Name the rejected alternatives.
+
+3. CAPABILITY READING
+   Maturity on our data (probed with N real examples, result): ___
+   Differentiation if we own it: ___
+   Quadrant: build / build-with-partner / buy / defer
+
+4. THE LINE, PER LAYER
+   Model: ___   Orchestration: ___   Retrieval: ___
+   Evaluation: ___   Governance: ___   Workflow: ___
+
+5. WHAT MAKES IT OURS
+   Which of the five moats this accumulates, and how we'd know it's working.
+   If none: say so, and reclassify this as a feature.
+
+6. THE GATE
+   Metric, dataset, bar, and the number that would make us stop.
+   Date attaches to the gate, not to the quality.
+
+7. THE ECONOMICS
+   Cost per successful outcome at target volume: ___
+   Three-year build vs buy: ___    Time to value: ___
+
+8. SURVIVAL
+   What a next-generation model release would do to this. If the honest
+   answer is "make it redundant", park it with a revisit trigger instead.
+
+9. THE DECISION AND THE OWNER
+   What we're doing, who owns it, and when we look at this again.`;
+$("#memoText").textContent=MEMO;
+$("#copyMemo").addEventListener("click",async e=>{
+  const b=e.currentTarget;
+  try{await navigator.clipboard.writeText(MEMO);b.textContent="Copied";}
+  catch(err){b.textContent="Select the text above to copy";}
+  setTimeout(()=>b.textContent="Copy the template",2200);
+});
+
+/* ── sources ── */
+const SRC=[
+ ["In AI, the moat is moving","Forbes","https://www.forbes.com/sites/sanjaysrivastava/2026/03/04/in-ai-the-moat-is-moving/"],
+ ["The model is not the moat","Future Frontiers","https://www.futurefrontiers.us/insights/the-model-is-not-the-moat"],
+ ["The model commoditisation trap","Tobias Pfuetze","https://medium.com/@tobias_pfuetze/the-model-commoditisation-trap-2c137956d6b7"],
+ ["Build vs buy AI: enterprise framework","InteligenAI","https://inteligenai.com/how-to-navigate-the-build-vs-buy-ai-in-2026/"],
+ ["Build, buy or outsource in 2026","Monterail","https://www.monterail.com/blog/how-to-decide-when-to-build-buy-or-outsource-ai-solution"],
+ ["Build, buy or partner: decision framework","NeuralChainAI","https://neuralchainai.com/blog/build-vs-buy-ai-decision-framework-for-business-enterprises/"],
+ ["AI procurement: build, buy or fine-tune","Innovative AI Solutions","https://innovativeais.com/blog/ai-procurement-guide-build-buy-or-fine-tune-existing-models"],
+ ["Why roadmaps break for AI agents","Product Map","https://www.productmap.io/blog/why-roadmaps-break-for-ai-agents"],
+ ["Product roadmaps for AI products","Ideaplan","https://www.ideaplan.io/blog/product-roadmap-for-ai-products"],
+ ["Proprietary data moats and defensibility","The Innovation Attorney","https://theinnovationattorney.com/proprietary-data-moats-and-ai-startup-defensibility-in-2026/"],
+ ["Are AI wrapper startups worth building?","Preuve","https://preuve.ai/blog/are-ai-wrapper-startups-worth-building-2026"],
+ ["Build vs buy in the AI era","Product School","https://productschool.com/blog/leadership/build-vs-buy"]
+];
+$("#srcs").innerHTML=SRC.map(([t,d,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}<span>${d}</span></a>`).join("");
+
+onScroll();
+})();
+</script>
+</body>
+</html>
