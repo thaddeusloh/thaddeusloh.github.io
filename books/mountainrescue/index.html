@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mountain Rescue — Phillip Melchior | A reader's guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --map:        #DFE4DA;   /* topo sheet, pale bush-grey */
+  --map-deep:   #CDD5C7;   /* shaded contour band */
+  --ink:        #17211C;   /* bush-black, all body copy */
+  --ink-soft:   #4E5A52;
+  --water:      #2F6E7E;   /* glacial lake — primary accent */
+  --contour:    #A97F52;   /* topo contour brown */
+  --signal:     #B33A1E;   /* fatality marker only */
+  --rule:       rgba(23,33,28,.16);
+  --measure:    64ch;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{overflow-x:hidden;max-width:100%}
+body{
+  margin:0;
+  background:var(--map);
+  color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:19px;
+  line-height:1.65;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-wrap:break-word;
+}
+.wrap{
+  max-width:1060px;
+  margin:0 auto;
+  padding-left:max(28px, env(safe-area-inset-left));
+  padding-right:max(28px, env(safe-area-inset-right));
+}
+
+/* ---------- utility type: map-label vernacular ---------- */
+.label{
+  font-family:"Archivo Narrow",Arial Narrow,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-weight:600;
+  font-size:.68rem;
+  color:var(--ink-soft);
+}
+.label--water{color:var(--water)}
+
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.05;margin:0}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--rule)}
+.hero__contours{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.hero__inner{position:relative;padding:74px 0 0}
+.eyebrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:34px}
+.eyebrow span:not(:last-child)::after{content:"";display:inline-block;width:1px;height:11px;background:var(--rule);margin-left:14px;vertical-align:-1px}
+h1{font-size:clamp(2.9rem,9vw,6rem);letter-spacing:-.025em;max-width:12ch}
+h1 em{font-style:normal;display:block;font-size:.3em;letter-spacing:.02em;font-weight:400;color:var(--ink-soft);margin-top:18px;max-width:26ch;line-height:1.3}
+.byline{margin:30px 0 0;font-size:1.15rem}
+.byline strong{font-weight:500}
+.thesis{
+  margin:40px 0 0;max-width:var(--measure);
+  font-size:1.28rem;line-height:1.55;color:var(--ink);
+  border-left:2px solid var(--water);padding-left:22px;
+}
+
+/* ---------- signature: the ridgeline timeline ---------- */
+.ridge{margin:64px 0 0;padding-bottom:56px;max-width:100%}
+.ridge svg{width:100%;max-width:100%;height:auto;display:block;overflow:hidden}
+.ridge__cap{margin:14px 0 0;max-width:56ch;font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+.mk{cursor:pointer}
+.mk circle{transition:r .18s ease, fill .18s ease}
+.mk:hover circle,.mk:focus-visible circle{r:9}
+.mk:focus-visible{outline:2px solid var(--water);outline-offset:3px;border-radius:50%}
+.mk text{font-family:"Archivo Narrow",sans-serif;font-size:15px;letter-spacing:.1em;fill:var(--ink-soft)}
+.mk:hover text{fill:var(--ink)}
+
+/* ---------- sections ---------- */
+section{padding:78px 0;border-bottom:1px solid var(--rule)}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:30px;flex-wrap:wrap}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);letter-spacing:-.015em}
+.prose{max-width:var(--measure)}
+.prose p{margin:0 0 1.15em}
+.prose p:last-child{margin-bottom:0}
+.lead::first-letter{
+  float:left;font-family:"Fraunces",serif;font-weight:600;
+  font-size:3.6em;line-height:.82;padding:.06em .1em 0 0;color:var(--water);
+}
+
+/* ---------- callout cards ---------- */
+.callouts{display:grid;gap:2px;background:var(--rule);border:1px solid var(--rule)}
+.callout{background:var(--map);padding:30px 32px;display:grid;grid-template-columns:112px 1fr;gap:32px;align-items:start}
+.callout__meta{border-right:1px solid var(--rule);padding-right:18px;min-height:100%}
+.callout__yr{font-family:"Fraunces",serif;font-size:1.9rem;font-weight:600;line-height:1;display:block}
+.callout__place{display:block;margin-top:8px}
+.callout h3{font-size:1.35rem;margin-bottom:10px;letter-spacing:-.01em}
+.callout p{margin:0;max-width:60ch;color:var(--ink)}
+.tag{
+  display:inline-block;margin-top:16px;padding:4px 11px 3px;
+  font-family:"Archivo Narrow",sans-serif;text-transform:uppercase;
+  letter-spacing:.13em;font-size:.63rem;font-weight:700;
+  border:1px solid currentColor;
+}
+.tag--saved{color:var(--water)}
+.tag--lost{color:var(--signal)}
+.tag--mixed{color:var(--contour)}
+.pos{
+  font-family:"Archivo Narrow",sans-serif;font-size:.63rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--water);display:block;margin-bottom:12px;font-weight:700;
+}
+
+/* ---------- themes ---------- */
+.themes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:38px 44px;margin-top:8px}
+.theme h3{font-size:1.15rem;margin-bottom:9px}
+.theme p{margin:0;font-size:1rem;color:var(--ink-soft);line-height:1.6}
+.theme__no{font-family:"Archivo Narrow",sans-serif;color:var(--contour);font-size:.68rem;letter-spacing:.16em;display:block;margin-bottom:12px;font-weight:700}
+
+/* ---------- facts rail ---------- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:26px;margin-top:14px}
+.fact{border-top:2px solid var(--ink);padding-top:12px}
+.fact b{font-family:"Fraunces",serif;font-size:1.5rem;font-weight:600;display:block;line-height:1.1}
+.fact span{font-size:.92rem;color:var(--ink-soft);display:block;margin-top:4px;line-height:1.4}
+
+/* ---------- note ---------- */
+.note{
+  background:var(--map-deep);border-left:3px solid var(--contour);
+  padding:24px 28px;max-width:var(--measure);font-size:1rem;line-height:1.6;
+}
+.note p{margin:0}
+.note p + p{margin-top:.8em}
+
+footer{padding:52px 0 76px;font-size:.92rem;color:var(--ink-soft)}
+footer a{color:var(--water);text-decoration-thickness:1px;text-underline-offset:3px}
+footer ul{margin:12px 0 0;padding-left:18px}
+footer li{margin-bottom:5px}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:720px){
+  body{font-size:17px}
+  .callout{grid-template-columns:1fr;gap:18px;padding:26px 22px}
+  .callout__meta{border-right:0;border-bottom:1px solid var(--rule);padding:0 0 14px}
+  .callout__yr{display:inline;margin-right:12px}
+  .callout__place{display:inline}
+  section{padding:56px 0}
+  .hero__inner{padding-top:48px}
+  h1{font-size:clamp(2.3rem,11vw,3.4rem);max-width:100%;letter-spacing:-.02em}
+  h1 em{font-size:.36em;max-width:100%}
+  .thesis{font-size:1.1rem;padding-left:16px}
+  .note{padding:20px 20px}
+  .ridge{margin-top:44px;padding-bottom:36px}
+}
+@media (max-width:420px){
+  .wrap{
+    padding-left:max(20px, env(safe-area-inset-left));
+    padding-right:max(20px, env(safe-area-inset-right));
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="hero__contours" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#A97F52" stroke-opacity=".38" stroke-width="1">
+      <path d="M-40 540 C 180 470, 300 560, 470 500 S 760 380, 940 430 S 1180 470, 1260 420"/>
+      <path d="M-40 500 C 180 425, 310 515, 480 452 S 765 330, 945 382 S 1180 425, 1260 372"/>
+      <path d="M-40 460 C 185 380, 320 470, 490 404 S 770 280, 950 334 S 1180 380, 1260 324"/>
+      <path d="M-40 420 C 190 335, 330 425, 500 356 S 775 230, 955 286 S 1180 335, 1260 276"/>
+      <path d="M-40 380 C 195 290, 340 380, 510 308 S 780 180, 960 238 S 1180 290, 1260 228"/>
+      <path d="M-40 340 C 200 245, 350 335, 520 260 S 785 130, 965 190 S 1180 245, 1260 180"/>
+      <path d="M-40 300 C 205 200, 360 290, 530 212 S 790 80, 970 142 S 1180 200, 1260 132"/>
+      <path d="M-40 260 C 210 155, 370 245, 540 164 S 795 30, 975 94 S 1180 155, 1260 84"/>
+    </g>
+  </svg>
+
+  <div class="wrap hero__inner">
+    <p class="eyebrow label">
+      <span>Non-fiction</span><span>New Zealand</span><span>Random House NZ, 2015</span><span class="label--water">A reader's guide</span>
+    </p>
+
+    <h1>Mountain Rescue<em>Epic tales of search and rescue in high-country New Zealand</em></h1>
+
+    <p class="byline">by <strong>Phillip Melchior</strong> — mountaineer, LandSAR Wanaka volunteer, and former global managing director of Reuters Media</p>
+
+    <p class="thesis">Eleven callouts in the Southern Alps, told from both ends of the rope: the trip that went wrong, and the volunteers who walked in after it did.</p>
+
+    <div class="ridge">
+      <svg viewBox="0 0 1000 258" role="img" aria-label="Timeline of the six rescues documented in public sources, from 1948 to 2012, plotted on a mountain ridgeline.">
+        <path d="M0 190 L 90 96 L 150 140 L 235 44 L 320 122 L 400 78 L 486 156 L 560 100 L 650 148 L 730 62 L 815 128 L 890 88 L 1000 150"
+              fill="none" stroke="#17211C" stroke-width="1.6" stroke-linejoin="round"/>
+        <line x1="0" y1="222" x2="1000" y2="222" stroke="#17211C" stroke-opacity=".28" stroke-width="1"/>
+
+        <!-- 1948 -->
+        <a class="mk" href="#c-1948">
+          <line x1="40" y1="168" x2="40" y2="222" stroke="#2F6E7E" stroke-width="1"/>
+          <circle cx="40" cy="168" r="6.5" fill="#2F6E7E"/>
+          <text x="40" y="244" text-anchor="start">1948</text>
+        </a>
+        <!-- 2003 -->
+        <a class="mk" href="#c-2003">
+          <line x1="830" y1="112" x2="830" y2="222" stroke="#B33A1E" stroke-width="1"/>
+          <circle cx="830" cy="112" r="6.5" fill="#B33A1E"/>
+          <text x="800" y="244" text-anchor="middle">2003</text>
+        </a>
+        <!-- 2005 -->
+        <a class="mk" href="#c-2005">
+          <line x1="861" y1="98" x2="861" y2="200" stroke="#2F6E7E" stroke-width="1"/>
+          <circle cx="861" cy="98" r="6.5" fill="#2F6E7E"/>
+          <text x="884" y="192" text-anchor="middle">2005</text>
+        </a>
+        <!-- 2012 -->
+        <a class="mk" href="#c-2012a">
+          <line x1="960" y1="150" x2="960" y2="222" stroke="#A97F52" stroke-width="1"/>
+          <circle cx="960" cy="150" r="6.5" fill="#A97F52"/>
+          <text x="1000" y="244" text-anchor="end">2012 ×2</text>
+        </a>
+      </svg>
+      <p class="ridge__cap">Plotted to scale. One story reaches back to 1948; the rest of the documented callouts sit in the last decade before publication — which is the book's quiet argument about how much has changed, and how little.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="label label--water">The review</span><h2>The half of the story a rescuer never sees</h2></div>
+    <div class="prose reveal">
+      <p class="lead">Most search and rescue books are written from the helicopter. Melchior's isn't, and that is the whole point of it. He came to the material as a Wanaka LandSAR volunteer who had turned out on real callouts, and found that the people he had carried off a mountain knew a story he didn't — the hours or days before the beacon went off, the small decisions that stacked up, the reason the trip needed rescuing at all. So he went and asked them. The result is a book with two protagonists in every chapter: the party in trouble, and the team walking in.</p>
+
+      <p>The structure is simple and holds up well. Eleven incidents, each given room to breathe, chosen with former Wanaka Alpine Cliff Rescue leader Gary Dickson from a longlist of eighteen. They are not a greatest-hits reel. Some end with everyone home; some end with a body bag and a family; at least one ends with a rescuer still turning it over years later. Melchior's first rule for himself was not to apportion blame, and he mostly keeps to it — the tone is closer to an aviation incident report than a morality tale, which makes the recurring mistakes land harder than any lecture would.</p>
+
+      <p>His journalism shows in the best way. Forty years of newsroom discipline gives the accounts pace and a refusal to over-write the drama, and his standing inside the SAR community gets him detail that reporters covering these operations never see — including the friction between two rescue teams working the same mountain, a story that had gone entirely unreported. Where he is honest about his own presence, as at the Motatapu, the writing tightens noticeably.</p>
+
+      <p>Two weaknesses are worth naming. The book is regionally concentrated: this is largely a Wanaka and Aoraki story, and readers wanting national coverage of New Zealand search and rescue should know that going in. And because Melchior likes his subjects and owes several of them his own safety, the analysis stops short more often than a full outsider's account would — you get the sequence of events cleanly, but rarely a hard verdict on the operational calls. That is a fair trade for the access, and most readers will take it.</p>
+
+      <p>Read it for the thing it does better than the news coverage ever did: it takes eleven incidents that were each a paragraph in the paper, and gives them back their duration.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="label label--water">Inside the book</span><h2>The callouts</h2></div>
+    <p class="prose" style="margin-bottom:34px">Six of the eleven chapters are described in published interviews and reviews; those are set out below in date order. Melchior has confirmed which two open and close the book — and the pairing is deliberate.</p>
+
+    <div class="callouts">
+
+      <article class="callout reveal" id="c-1948">
+        <div class="callout__meta">
+          <span class="callout__yr">1948</span>
+          <span class="callout__place label">La Perouse · Aoraki</span>
+        </div>
+        <div>
+          <span class="pos">Opening chapter</span>
+          <h3>Ruth Adams and the seven-day carry</h3>
+          <p>An accomplished climber, badly injured in a fall in the Aoraki/Mt Cook region, and a rescue that took a full week to bring her out. It was run by the guide Mick Bowie — famously spare with words — with a young Edmund Hillary among the party. Everything that a modern callout compresses into a few hours here takes days of manpower, and Melchior uses it to set the baseline for the rest of the book.</p>
+          <span class="tag tag--saved">Brought out alive</span>
+        </div>
+      </article>
+
+      <article class="callout reveal" id="c-2003">
+        <div class="callout__meta">
+          <span class="callout__yr">2003</span>
+          <span class="callout__place label">Mt Tasman</span>
+        </div>
+        <div>
+          <h3>The New Year's Day avalanche</h3>
+          <p>One of the most notorious incidents on New Zealand's second-highest peak, on the first day of the year. An avalanche chapter is the hardest kind to write without slipping into fatalism, and it sits early in the book's argument that the mountain does not care how good you are.</p>
+          <span class="tag tag--lost">Fatal</span>
+        </div>
+      </article>
+
+      <article class="callout reveal" id="c-2005">
+        <div class="callout__meta">
+          <span class="callout__yr">2005</span>
+          <span class="callout__place label">Mt Tutoko · Fiordland</span>
+        </div>
+        <div>
+          <h3>Lisa Auer and Jonathon Baird</h3>
+          <p>Two climbers — a Wanaka-based Australian and a Scot — stuck high in Fiordland. The rescue itself succeeded; the chapter's scoop is what happened between the rescuers. Wanaka volunteers, personally invested because the climbers were friends, arrived in Invercargill's territory with an attitude that rankled the local team and the police. Melchior reports it plainly, including his own side's part in it, and it is the most institutionally interesting chapter in the book.</p>
+          <span class="tag tag--mixed">Rescued · inter-team friction</span>
+        </div>
+      </article>
+
+      <article class="callout reveal" id="c-breakaway">
+        <div class="callout__meta">
+          <span class="callout__yr">—</span>
+          <span class="callout__place label">The Breakaway · Bonar Glacier</span>
+        </div>
+        <div>
+          <h3>Three Americans on Mt Aspiring</h3>
+          <p>Melchior's own nomination for the classic case: three keen young climbers with more enthusiasm than experience, caught by a weather change they lacked the background to read, choosing the wrong line down off the end of the Bonar Glacier. One of the three died in the fall; another lost a leg. If the book has a single cautionary chapter, this is it.</p>
+          <span class="tag tag--lost">One death · one amputation</span>
+        </div>
+      </article>
+
+      <article class="callout reveal" id="c-2012a">
+        <div class="callout__meta">
+          <span class="callout__yr">2012</span>
+          <span class="callout__place label">Motatapu River</span>
+        </div>
+        <div>
+          <h3>Dion Latta in the waterfall</h3>
+          <p>The chapter Melchior was there for, and the one he says marked the team most. Latta's foot jammed in rock at the lip of a waterfall and the force of the water pushed him over the edge, leaving him hanging in freezing whitewater that was too powerful for anyone to work against. An air pocket kept him breathing. It took three hours to free him, and three hours was too long — he later died of the effects of hypothermia. Melchior writes it without embellishment, which is why it is the hardest chapter to read.</p>
+          <span class="tag tag--lost">Fatal · author present</span>
+        </div>
+      </article>
+
+      <article class="callout reveal" id="c-2012b">
+        <div class="callout__meta">
+          <span class="callout__yr">2012</span>
+          <span class="callout__place label">Bonar Glacier · Mt Aspiring</span>
+        </div>
+        <div>
+          <span class="pos">Closing chapter</span>
+          <h3>Ian Larratt, found by his father</h3>
+          <p>A 27-year-old Canadian, snowblind in foul weather on Mt Aspiring, extremely well equipped but with no intentions filed locally — nobody in New Zealand knew he was on the mountain. His personal locator beacon pushed a position every ten minutes, and his father, watching from overseas, saw that the dot had not moved for five hours and called the police. Melchior pairs it deliberately with the 1948 opener: sixty-four years apart, one rescue slowed by having no technology, one made possible by it, and a survivor who still nearly died of an old-fashioned failure to tell anyone where he was going.</p>
+          <span class="tag tag--saved">Survived</span>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="note reveal" style="margin-top:34px">
+      <p><strong>On the other five chapters.</strong> Melchior cut his longlist of eighteen incidents down to eleven purely to hit a 60,000-word limit, but the remaining five stories haven't been itemised in any interview or review I could find. They are in the book; they just aren't in the public record around it.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="label label--water">What runs through it</span><h2>Four recurring threads</h2></div>
+    <div class="themes">
+      <div class="theme reveal">
+        <span class="theme__no">Thread one</span>
+        <h3>The weather is faster than you are</h3>
+        <p>Melchior names underestimating how quickly alpine conditions turn as one of the two commonest errors across the eleven incidents. It shows up in nearly every chapter, usually in people who were otherwise competent.</p>
+      </div>
+      <div class="theme reveal">
+        <span class="theme__no">Thread two</span>
+        <h3>Equipped for the good day only</h3>
+        <p>The other common error: parties carrying enough for the trip as planned, and nothing for the trip as it actually went. Gear for the failure case is what separates a bad night out from a callout.</p>
+      </div>
+      <div class="theme reveal">
+        <span class="theme__no">Thread three</span>
+        <h3>Technology cuts both ways</h3>
+        <p>The 1948-to-2012 arc is the book's spine. A beacon can collapse a seven-day carry into a single flight — but it doesn't replace telling someone where you're going, and the closing chapter is a survivor who nearly proved it.</p>
+      </div>
+      <div class="theme reveal">
+        <span class="theme__no">Thread four</span>
+        <h3>What it costs the volunteers</h3>
+        <p>Melchior is direct about the psychological freight, and about a SAR culture that used to shrug it off with a beer and now talks about it. One team leader speaks to the dead as though they can still hear him, because it makes the job survivable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="label label--water">Behind the book</span><h2>Written on a deadline of a different kind</h2></div>
+    <div class="prose reveal" style="margin-bottom:38px">
+      <p>Penguin Random House approached Melchior about the book just as he was starting four months of chemotherapy for amyloidosis, a rare blood disorder diagnosed in 2012, at which point he had been given six to nine months. He took the commission partly to have something to do other than contemplate that. He wrote the first chapter in three days and had a draft inside about two months, delivering the manuscript in December, comfortably ahead of a January deadline. He went into remission and outlived the prognosis by years.</p>
+      <p>He was also clear-eyed about why the stories should be told at all: LandSAR runs on donations, and a community that doesn't know what its volunteers do can't reasonably be asked to fund them. Proceeds from the book went to LandSAR Wanaka.</p>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b>11</b><span>rescues, cut down from a longlist of 18</span></div>
+      <div class="fact"><b>~60,000</b><span>words — the limit that set the chapter count</span></div>
+      <div class="fact"><b>1948–2012</b><span>the span the book covers</span></div>
+      <div class="fact"><b>31 July 2015</b><span>New Zealand release, Random House NZ</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="label label--water">Verdict</span><h2>Who should pick it up</h2></div>
+    <div class="prose reveal">
+      <p><strong>Read it if</strong> you tramp or climb in New Zealand and want the case studies rather than the safety pamphlet; if you like disaster reconstruction done with restraint; or if you want to understand what a volunteer rescue organisation actually is.</p>
+      <p><strong>Skip it if</strong> you're after a systematic history of search and rescue in New Zealand, or a technical manual — it is neither, and doesn't pretend to be.</p>
+      <p><strong>Pairs well with</strong> the TV series <em>High Country Rescue</em>, filmed with the same Wanaka team, which covers the operational side the book takes as read.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="label">The book</span><br>
+    <em>Mountain Rescue: Epic Tales of Search and Rescue in High-Country New Zealand</em> by Phillip Melchior. Random House New Zealand, 2015. Paperback, ISBN 978-1-77553-786-1.</p>
+    <p style="margin-top:26px"><span class="label">How this page was built</span><br>
+    This is a guide assembled from published sources, not a first-hand reading — the chapter details come from interviews with the author and reviews at publication. Nothing here is quoted from the book itself.</p>
+    <ul>
+      <li>Matthew Pike, “Haunting tales,” <em>Wilderness</em> magazine, October 2015 — <a href="https://www.wildernessmag.co.nz/haunting-tales/">wildernessmag.co.nz</a></li>
+      <li>Marjorie Cook, <em>Southland Times</em> / Stuff, July 2015 — author interview</li>
+      <li>Jessica Maddock, <em>Otago Daily Times</em>, July 2015</li>
+      <li>Publisher and LandSAR Wanaka listings</li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){
+    els.forEach(function(e){e.classList.add('in');});
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px', threshold:0.08});
+  els.forEach(function(e){io.observe(e);});
+})();
+</script>
+</body>
+</html>

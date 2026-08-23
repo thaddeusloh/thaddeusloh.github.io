@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About Thaddeus Loh — ted.sg</title>
-  <meta name="description" content="Thaddeus Loh — AI & data strategist in wealth management, Singapore. Career, reading shelf, games and small web apps." />
+  <meta name="description" content="Thaddeus Loh — AI & data strategist in wealth management, Singapore. Career, reading log, games and small web apps." />
   <link rel="canonical" href="https://ted.sg/about/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,6 +22,15 @@
       --mist:      #E9F2EC;
       --fern:      #8FAC9B;
       --deep-fern: #55705F;
+
+      /* reading-log subject hues */
+      --subj-thinking:    #C79BE0;
+      --subj-engineering: #6FC6E8;
+      --subj-nature:      #9BD46B;
+      --subj-finance:     #E4C56B;
+      --subj-fiction:     #E8896B;
+      --subj-other:       #8FAC9B;
+
       --serif: 'Fraunces', Georgia, serif;
       --sans:  'Outfit', system-ui, sans-serif;
       --mono:  'JetBrains Mono', monospace;
@@ -40,7 +49,9 @@
     }
     ::selection { background: var(--biolume); color: var(--canopy); }
     a, a:visited { color: inherit; text-decoration: none; }
-    a:focus-visible, button:focus-visible { outline: 2px solid var(--biolume); outline-offset: 3px; border-radius: 2px; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--biolume); outline-offset: 3px; border-radius: 2px;
+    }
 
     /* ─────────── NAV ─────────── */
     header {
@@ -210,30 +221,129 @@
     }
     .tag:hover { color: var(--biolume); border-color: rgba(77,232,160,0.5); }
 
-    /* ─────────── BOOKS ─────────── */
+    /* ═══════════ READING LOG ═══════════ */
     #books { background: var(--understory); border-top: 1px solid var(--moss); }
-    .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.6rem; }
-    .book {
-      border: 1px solid var(--moss); border-radius: 16px; overflow: hidden;
-      background: var(--canopy); display: flex; flex-direction: column;
-      transition: border-color 0.25s, transform 0.25s;
+
+    .log-bar {
+      position: sticky; top: 57px; z-index: 100;
+      margin: 2.4rem 0 0.5rem; padding: 1rem 0;
+      background: rgba(11, 26, 18, 0.94);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--moss);
+      display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center;
     }
-    .book:hover { border-color: rgba(228,197,107,0.5); transform: translateY(-3px); }
-    .book .spine { height: 5px; background: linear-gradient(90deg, var(--sunbeam), var(--biolume)); }
-    .book .inner { padding: 1.4rem 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-    .book h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.35; }
-    .book .by { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; color: var(--deep-fern); text-transform: uppercase; }
-    .book p { font-size: 0.88rem; color: var(--fern); line-height: 1.6; }
-    .book .status {
-      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--sunbeam);
+    .log-search { position: relative; flex: 1 1 200px; min-width: 180px; }
+    .log-search svg {
+      position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: var(--deep-fern); pointer-events: none;
     }
-    .book .links { margin-top: auto; padding-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
-    .book .links a {
-      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--biolume);
+    #bookSearch {
+      width: 100%; background: var(--canopy); color: var(--mist);
+      border: 1px solid var(--moss-soft); border-radius: 999px;
+      padding: 0.55rem 1rem 0.55rem 2.4rem;
+      font-family: var(--sans); font-size: 0.88rem; font-weight: 300;
+      transition: border-color 0.2s;
     }
-    .book .links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    #bookSearch::placeholder { color: var(--deep-fern); }
+    #bookSearch:focus { border-color: rgba(77,232,160,0.5); }
+
+    #bookYear {
+      background: var(--canopy); color: var(--fern);
+      border: 1px solid var(--moss-soft); border-radius: 999px;
+      padding: 0.55rem 1rem; cursor: pointer;
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    .subj-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .subj-chip {
+      cursor: pointer; background: transparent;
+      border: 1px solid var(--moss-soft); border-radius: 999px;
+      padding: 0.38rem 0.8rem;
+      font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.11em;
+      text-transform: uppercase; color: var(--fern);
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .subj-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--tone, var(--fern)); }
+    .subj-chip .n { font-size: 0.6rem; color: var(--deep-fern); }
+    .subj-chip:hover { color: var(--mist); border-color: var(--tone, var(--biolume)); }
+    .subj-chip[aria-pressed="true"] {
+      color: var(--canopy); background: var(--tone, var(--biolume));
+      border-color: var(--tone, var(--biolume)); font-weight: 500;
+    }
+    .subj-chip[aria-pressed="true"] .n { color: rgba(6,15,10,0.6); }
+
+    .log-stats {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem;
+      margin: 1.2rem 0 2.4rem;
+      font-family: var(--mono); font-size: 0.66rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--deep-fern);
+    }
+    .log-stats b { color: var(--sunbeam); font-weight: 500; }
+
+    /* month groups */
+    .log-group { display: grid; grid-template-columns: 8rem 1fr; gap: 1.4rem; margin-bottom: 2.4rem; }
+    .log-month {
+      position: sticky; top: 130px; align-self: start;
+      padding-top: 0.3rem; border-top: 1px solid var(--moss-soft);
+    }
+    .log-month .m {
+      display: block; font-family: var(--serif); font-size: 1.3rem;
+      font-weight: 500; color: var(--sunbeam); line-height: 1.2;
+    }
+    .log-month .y {
+      display: block; font-family: var(--mono); font-size: 0.66rem;
+      letter-spacing: 0.16em; color: var(--deep-fern);
+    }
+    .log-month .c {
+      display: block; margin-top: 0.35rem;
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.1em; color: var(--deep-fern);
+    }
+
+    .log-entries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+
+    .entry {
+      --tone: var(--subj-other);
+      position: relative; display: flex; flex-direction: column; gap: 0.35rem;
+      border: 1px solid var(--moss); border-left: 2px solid var(--tone);
+      border-radius: 4px 14px 14px 4px;
+      padding: 1.1rem 1.2rem 1.2rem;
+      background: var(--canopy);
+      transition: border-color 0.22s, transform 0.22s, background 0.22s;
+    }
+    .entry:hover { transform: translateY(-2px); background: #08150E; border-color: var(--moss-soft); border-left-color: var(--tone); }
+    .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.7rem; }
+    .entry-head h3 {
+      font-family: var(--serif); font-size: 1.04rem; font-weight: 500;
+      line-height: 1.32; letter-spacing: 0.005em;
+    }
+    .entry-rating { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--sunbeam); white-space: nowrap; }
+    .entry-rating .off { color: var(--moss-soft); }
+    .entry-by {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--deep-fern);
+      display: flex; flex-wrap: wrap; gap: 0.3rem 0.55rem;
+    }
+    .entry-by .subj { color: var(--tone); }
+    .entry-take { font-size: 0.85rem; color: var(--fern); line-height: 1.6; flex: 1; margin-top: 0.25rem; }
+    .entry-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.7rem; }
+    .entry-links a {
+      font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--tone);
+    }
+    .entry-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .entry.reading { border-left-style: dashed; }
+    .entry .now {
+      font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--biolume); white-space: nowrap;
+    }
+
+    .log-empty {
+      padding: 3rem 1rem; text-align: center; color: var(--deep-fern);
+      font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em;
+    }
 
     /* ─────────── PLAYGROUND ─────────── */
     #games { background: var(--understory); border-top: 1px solid var(--moss); }
@@ -279,16 +389,22 @@
     .reveal.in { opacity: 1; transform: none; }
 
     @media (max-width: 900px) {
-      .cards, .shelf, .play-grid { grid-template-columns: repeat(2, 1fr); }
+      .cards, .play-grid { grid-template-columns: repeat(2, 1fr); }
       .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
       .stats { grid-template-columns: repeat(3, 1fr); }
+      .log-entries { grid-template-columns: 1fr; }
+      .log-group { grid-template-columns: 6rem 1fr; gap: 1rem; }
     }
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .burger { display: flex; }
       main section { padding: 4.5rem 1.25rem; }
       #head { padding-top: 8rem; }
-      .cards, .shelf, .play-grid, .stack-groups, .stats { grid-template-columns: 1fr; }
+      .cards, .play-grid, .stack-groups, .stats { grid-template-columns: 1fr; }
+      .log-bar { position: static; padding: 0 0 1rem; }
+      .log-group { grid-template-columns: 1fr; gap: 0.7rem; }
+      .log-month { position: static; display: flex; align-items: baseline; gap: 0.6rem; }
+      .log-month .m { font-size: 1.05rem; }
       footer { flex-direction: column; text-align: center; }
     }
   </style>
@@ -310,7 +426,7 @@
           <li><a class="home" href="/">← Brown Bags</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#experience">Career</a></li>
-          <li><a href="#books">Books</a></li>
+          <li><a href="#books">Reading Log</a></li>
           <li><a href="#games">Playground</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -327,7 +443,7 @@
       <li><a href="#expertise"><span class="mk">02</span>Expertise</a></li>
       <li><a href="#experience"><span class="mk">03</span>Experience</a></li>
       <li><a href="#stack"><span class="mk">04</span>Stack</a></li>
-      <li><a href="#books"><span class="mk">05</span>Books</a></li>
+      <li><a href="#books"><span class="mk">05</span>Reading Log</a></li>
       <li><a href="#games"><span class="mk">06</span>Mini Games</a></li>
       <li><a href="#apps"><span class="mk">07</span>Web Apps</a></li>
       <li><a href="#contact"><span class="mk">08</span>Contact</a></li>
@@ -342,7 +458,7 @@
       <div class="wrap">
         <a class="backlink" href="/">← ted.sg · brown bags &amp; resources</a>
         <h1>The person who <em>packed the bags.</em></h1>
-        <p class="lede">Career, convictions, the reading shelf, and the small things I build for fun. If you came for the learning material, it all lives back on the <a href="/" style="color:var(--biolume)">main trail</a>.</p>
+        <p class="lede">Career, convictions, the reading log, and the small things I build for fun. If you came for the learning material, it all lives back on the <a href="/" style="color:var(--biolume)">main trail</a>.</p>
       </div>
     </section>
 
@@ -437,6 +553,7 @@
     </section>
 
     <!-- ─────────── TRAIL 04 · STACK ─────────── -->
+    <!--
     <section id="stack">
       <div class="wrap">
         <p class="trail reveal">Trail 04 — Root System <span class="elev">· elev 130 m</span></p>
@@ -461,48 +578,28 @@
         </div>
       </div>
     </section>
+    -->
 
-    <!-- ─────────── TRAIL 05 · BOOKS ─────────── -->
+    <!-- ═══════════ TRAIL 05 · READING LOG ═══════════ -->
     <section id="books">
       <div class="wrap">
         <p class="trail reveal">Trail 05 — The Reading Canopy <span class="elev">· elev 145 m</span></p>
-        <h2 class="sec reveal">Books that <em>rewired</em> me.</h2>
-        <p class="lede reveal">A slow-growing shelf. Each entry earns its place by changing how I think, not just what I know.</p>
-        <div class="shelf">
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Gödel, Escher, Bach</h3>
-              <span class="by">Douglas Hofstadter</span>
-              <span class="status">◆ Re-reading</span>
-              <p>Strange loops, self-reference, and the machinery of minds. The book that made me want to build things that think.</p>
-              <div class="links">
-                <a href="/geb">Summary →</a>
-                <a href="/geb/kids">For kids →</a>
-              </div>
-            </div>
+        <h2 class="sec reveal">A book a week, <em>logged as I go.</em></h2>
+        <p class="lede reveal">One review a week, newest first. Not a recommendation list — a record of what I actually read and what stuck. Filter by subject, pick a year, or just search.</p>
+
+        <div class="log-bar reveal">
+          <div class="log-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input id="bookSearch" type="search" placeholder="Search title, author, take…" aria-label="Search the reading log" autocomplete="off" />
           </div>
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Functional Programming in Scala</h3>
-              <span class="by">Paul Chiusano, Rúnar Bjarnason</span>
-              <span class="status">◆ Explainer</span>
-              <p>Deriving functional programming rather than memorising it.</p>
-              <div class="links"><a href="/brownbag/scala">Summary →</a></div>
-            </div>
-          </div>
-          <div class="book reveal">
-            <div class="spine"></div>
-            <div class="inner">
-              <h3>Trees</h3>
-              <span class="by">Peter A Thomas</span>
-              <span class="status">◆ On the shelf</span>
-              <p>The incredible world of trees, and snippets of Bukit Timah's flora. Learning about trees uncovered another dimension in the world around me.</p>
-              <div class="links"><a href="/books/trees">Summary →</a></div>
-            </div>
-          </div>
+          <select id="bookYear" aria-label="Filter by year"></select>
+          <div class="subj-chips" id="subjChips" role="group" aria-label="Filter by subject"></div>
         </div>
+
+        <p class="log-stats" id="logStats"></p>
+        <div id="logBody"></div>
       </div>
     </section>
 
@@ -584,6 +681,200 @@
   </footer>
 
   <script>
+    /* ═══════════════════════════════════════════════════════════════════
+       THE READING LOG — add a review by pasting ONE object at the top.
+       Order doesn't matter: entries sort by date and group into months
+       on their own, and a new year appears in the dropdown the moment
+       its first book exists.
+
+         date    'YYYY-MM-DD' — when you finished it. Required; drives sorting.
+         subject thinking · engineering · nature · finance · fiction · other
+         rating  1–5, or omit the field entirely for no rating
+         take    one or two sentences. What stuck, not what it's about.
+         links   optional, as many as you like
+         status  'reading' → dashed border, "Reading now", floats to the top
+       ═══════════════════════════════════════════════════════════════════ */
+    const BOOKS = [
+      {
+        title: 'Gödel, Escher, Bach',
+        author: 'Douglas Hofstadter',
+        date: '2026-05-16',
+        subject: 'thinking',
+        rating: 5,
+        // status: 'reading',
+        take: 'Strange loops, self-reference, and the machinery of minds. The book that made me want to build things that think — and the one I keep going back to.',
+        links: [
+          { label: 'Summary', url: '/geb' },
+          { label: 'For kids', url: '/geb/kids' }
+        ]
+      },
+      {
+        title: 'Functional Programming in Scala',
+        author: 'Paul Chiusano, Rúnar Bjarnason',
+        date: '2026-08-19',
+        subject: 'engineering',
+        rating: 4,
+        // status: 'reading',
+        take: 'The red book earns its reputation. It makes you derive functional programming from first principles rather than memorise the rules — slower, and worth it.',
+        links: [ { label: 'Explainer', url: '/brownbag/scala' } ]
+      },
+      {
+        title: 'Trees',
+        author: 'Peter A Thomas',
+        date: '2026-04-14',
+        subject: 'nature',
+        rating: 5,
+        take: 'How trees actually work, with enough Bukit Timah flora to change what I notice on a Friday walk. Opened up a dimension of the world I had been walking straight past.',
+        links: [ { label: 'Notes', url: '/books/trees' } ]
+      },
+      {
+        title: 'Mountain Rescue',
+        author: 'Phillip Melchior',
+        date: '2026-08-14',
+        subject: 'nature',
+        rating: 5,
+        take: 'Mountain rescues around Wanaka, South Island, New Zealand.',
+        links: [ { label: 'Notes', url: '/books/trees' } ]
+      },
+    ];
+
+    /* ─── subjects: add a row here to add a filter chip ─── */
+    const SUBJECTS = [
+      { id: 'thinking',       label: 'Thinking',    tone: 'var(--subj-thinking)' },
+      { id: 'engineering',    label: 'Engineering', tone: 'var(--subj-engineering)' },
+      { id: 'mountaineering', label: 'Mountaineering', tone: 'var(--subj-mountaineering)' },
+      { id: 'nature',         label: 'Nature',      tone: 'var(--subj-nature)' },
+      { id: 'finance',        label: 'Finance',     tone: 'var(--subj-finance)' },
+      { id: 'fiction',        label: 'Fiction',     tone: 'var(--subj-fiction)' },
+      { id: 'other',          label: 'Other',       tone: 'var(--subj-other)' },
+    ];
+
+    /* ─── render ─── */
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+
+    const logBody = document.getElementById('logBody');
+    const chipBox = document.getElementById('subjChips');
+    const yearSel = document.getElementById('bookYear');
+    const bookQ   = document.getElementById('bookSearch');
+    const statsEl = document.getElementById('logStats');
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
+    let subj = 'all';
+
+    // newest first; anything in progress floats to the top
+    const sorted = [...BOOKS].sort((a, b) => {
+      if ((a.status === 'reading') !== (b.status === 'reading')) return a.status === 'reading' ? -1 : 1;
+      return b.date.localeCompare(a.date);
+    });
+
+    // year dropdown, derived from the data
+    const years = [...new Set(sorted.map(b => b.date.slice(0, 4)))].sort().reverse();
+    yearSel.innerHTML = '<option value="all">All years</option>' +
+      years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+
+    // subject chips, with live counts
+    const allChip = document.createElement('button');
+    allChip.className = 'subj-chip'; allChip.type = 'button';
+    allChip.dataset.subj = 'all'; allChip.setAttribute('aria-pressed', 'true');
+    allChip.innerHTML = 'All<span class="n">' + BOOKS.length + '</span>';
+    chipBox.appendChild(allChip);
+
+    SUBJECTS.forEach(s => {
+      const n = BOOKS.filter(b => b.subject === s.id).length;
+      if (!n) return;                       // hide subjects with nothing in them yet
+      const btn = document.createElement('button');
+      btn.className = 'subj-chip'; btn.type = 'button';
+      btn.dataset.subj = s.id;
+      btn.style.setProperty('--tone', s.tone);
+      btn.setAttribute('aria-pressed', 'false');
+      btn.innerHTML = '<span class="dot"></span>' + esc(s.label) + '<span class="n">' + n + '</span>';
+      chipBox.appendChild(btn);
+    });
+
+    chipBox.addEventListener('click', e => {
+      const btn = e.target.closest('.subj-chip');
+      if (!btn) return;
+      subj = btn.dataset.subj;
+      chipBox.querySelectorAll('.subj-chip').forEach(x =>
+        x.setAttribute('aria-pressed', String(x.dataset.subj === subj)));
+      renderLog();
+    });
+
+    function stars(n) {
+      if (!n) return '';
+      return '<span class="entry-rating" aria-label="' + n + ' out of 5">' +
+        '●'.repeat(n) + '<span class="off">' + '●'.repeat(5 - n) + '</span></span>';
+    }
+
+    function entryHTML(b) {
+      const s = SUBJECTS.find(x => x.id === b.subject) || SUBJECTS[SUBJECTS.length - 1];
+      const d = new Date(b.date + 'T00:00:00');
+      const when = d.getDate() + ' ' + MONTHS[d.getMonth()].slice(0, 3);
+      const mark = b.status === 'reading' ? '<span class="now">Reading now</span>' : stars(b.rating);
+      const links = (b.links || []).map(l =>
+        '<a href="' + esc(l.url) + '">' + esc(l.label) + ' →</a>').join('');
+      return '<article class="entry' + (b.status === 'reading' ? ' reading' : '') +
+             '" style="--tone:' + s.tone + '">' +
+        '<div class="entry-head"><h3>' + esc(b.title) + '</h3>' + mark + '</div>' +
+        '<p class="entry-by"><span>' + esc(b.author) + '</span>' +
+          '<span class="subj">' + esc(s.label) + '</span><span>' + when + '</span></p>' +
+        '<p class="entry-take">' + esc(b.take) + '</p>' +
+        (links ? '<div class="entry-links">' + links + '</div>' : '') +
+      '</article>';
+    }
+
+    function renderLog() {
+      const q  = bookQ.value.trim().toLowerCase();
+      const yr = yearSel.value;
+
+      const shown = sorted.filter(b => {
+        const okS = subj === 'all' || b.subject === subj;
+        const okY = yr === 'all' || b.date.slice(0, 4) === yr;
+        const okQ = !q || (b.title + ' ' + b.author + ' ' + b.take + ' ' + b.subject).toLowerCase().includes(q);
+        return okS && okY && okQ;
+      });
+
+      if (!shown.length) {
+        logBody.innerHTML = '<p class="log-empty">Nothing in the log matches that. Try another word.</p>';
+        statsEl.innerHTML = '';
+        return;
+      }
+
+      // group into months, preserving sort order
+      const groups = [];
+      shown.forEach(b => {
+        const key = b.date.slice(0, 7);
+        const last = groups[groups.length - 1];
+        if (last && last.key === key) last.items.push(b);
+        else groups.push({ key: key, items: [b] });
+      });
+
+      logBody.innerHTML = groups.map(g => {
+        const y = g.key.slice(0, 4), m = g.key.slice(5, 7);
+        return '<div class="log-group">' +
+          '<div class="log-month">' +
+            '<span class="m">' + MONTHS[Number(m) - 1] + '</span>' +
+            '<span class="y">' + y + '</span>' +
+            '<span class="c">' + g.items.length + (g.items.length === 1 ? ' book' : ' books') + '</span>' +
+          '</div>' +
+          '<div class="log-entries">' + g.items.map(entryHTML).join('') + '</div>' +
+        '</div>';
+      }).join('');
+
+      const thisYear = String(new Date().getFullYear());
+      const ytd = BOOKS.filter(b => b.date.slice(0, 4) === thisYear).length;
+      statsEl.innerHTML =
+        '<span><b>' + shown.length + '</b> shown</span>' +
+        '<span><b>' + BOOKS.length + '</b> logged in total</span>' +
+        '<span><b>' + ytd + '</b> in ' + thisYear + '</span>';
+    }
+
+    bookQ.addEventListener('input', renderLog);
+    yearSel.addEventListener('change', renderLog);
+    renderLog();
+
+    /* ─── chrome ─── */
     const burger = document.querySelector('.burger');
     function toggleMenu(force) {
       const open = force !== undefined ? force : !document.body.classList.contains('menu-open');

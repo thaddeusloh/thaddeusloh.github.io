@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07120D">
+<title>Linear algebra &amp; calculus for computing — ted.sg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/_shared/brownbag.css">
+<style>
+/* ── tokens (mirrors /_shared/brownbag.css so this page also stands alone) ── */
+:root{
+  --bg-deep:#07120D; --bg:#0C1B14; --panel:#112A20; --panel-2:#17301F;
+  --line:rgba(157,198,168,.16); --line-strong:rgba(157,198,168,.34);
+  --mint:#9FD6B4; --mint-bright:#79C396; --gold:#D9A94E; --gold-soft:#ECCA86;
+  --clay:#C97B5A; --sky:#8FB8D4; --red:#C8503F;
+  --text:#EAF2EC; --text-dim:#A6BCAE; --text-faint:#6F8A7C;
+  --display:'Fraunces',Georgia,serif; --body:'Newsreader',Georgia,serif;
+  --ui:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  --maxw:880px; --maxw-wide:1080px; --radius:14px; --radius-sm:8px;
+  --step-0:1.02rem; --step-1:1.28rem; --step-2:1.62rem;
+  --step-3:clamp(1.8rem,3.4vw,2.3rem); --step-4:clamp(2.2rem,5.5vw,3.4rem);
+  /* page-local names used by this document's markup and inline styles */
+  --blue:var(--mint); --mag:var(--clay); --amber:var(--gold);
+  --ink:var(--text); --ink-2:var(--text-dim); --rule:var(--line);
+  --paper:var(--panel-2); --pen:var(--mint); --pen-soft:rgba(159,214,180,.12);
+  --serif:var(--body); --disp:var(--display);
+  --bar:56px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + 12px)}
+body{background:var(--bg-deep);color:var(--text);font-family:var(--body);
+  font-size:var(--step-0);line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--mint);color:var(--bg-deep)}
+a{color:var(--mint);text-decoration:none}
+a:hover{color:var(--mint-bright)}
+:focus-visible{outline:2px solid var(--mint);outline-offset:3px;border-radius:3px}
+canvas{display:block;width:100%;touch-action:manipulation}
+
+/* ── layout ── */
+.wrap{max-width:var(--maxw-wide);margin:0 auto;padding:0 1.4rem}
+main{width:100%}
+.col{max-width:var(--maxw);margin-inline:auto}
+section{scroll-margin-top:calc(var(--bar) + 12px)}
+
+/* ── type ── */
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;line-height:1.16;letter-spacing:-.012em;text-wrap:balance}
+h1{font-size:var(--step-4);font-weight:300;margin-bottom:1.1rem}
+h2{font-size:var(--step-3);margin:0 0 .8rem}
+h3{font-size:var(--step-2);font-weight:500;margin:2.4rem 0 .7rem}
+h4{font-family:var(--ui);font-size:.66rem;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin:0 0 .5rem}
+h1 em,h2 em,h3 em{font-style:italic;color:var(--mint)}
+p{margin:0 0 1.15rem}
+strong{color:var(--text);font-weight:600}
+ul,ol{margin:0 0 1.3rem 1.3rem}
+li{margin-bottom:.45rem}
+li::marker{color:var(--mint)}
+.dim{color:var(--text-dim)}
+.small{font-size:.92rem;color:var(--text-dim)}
+.lede{font-size:var(--step-1);line-height:1.62;color:var(--text-dim)}
+.eyebrow{display:flex;align-items:center;gap:.8rem;font-family:var(--ui);font-size:.7rem;
+  font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pen);margin-bottom:1rem}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.6;flex:0 0 auto}
+.eyebrow::after{content:"";flex:1 1 auto;height:1px;background:var(--line)}
+
+/* ── top bar ── */
+.bb-topbar{position:sticky;top:0;z-index:60;background:var(--bg-deep);
+  border-bottom:1px solid var(--line);min-height:var(--bar)}
+.topbar-inner{max-width:var(--maxw-wide);margin:0 auto;display:flex;align-items:stretch;min-width:0}
+.bb-back{flex:0 0 auto;display:flex;align-items:center;gap:.4rem;padding:0 .85rem;
+  font-family:var(--ui);font-size:.7rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-faint);border-right:1px solid var(--line)}
+.bb-back:hover{color:var(--mint)}
+.rail{flex:1 1 auto;min-width:0;display:flex;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.rail::-webkit-scrollbar{display:none}
+.rail a{flex:0 0 auto;display:flex;align-items:center;white-space:nowrap;
+  font-family:var(--ui);font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-faint);padding:0 .7rem;min-height:var(--bar);border-bottom:2px solid transparent}
+.rail a[data-pen="b"]{color:rgba(159,214,180,.62)}
+.rail a[data-pen="m"]{color:rgba(217,169,78,.62)}
+.rail a.on{color:var(--text);border-bottom-color:currentColor}
+.bb-progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;
+  transform-origin:0 50%;transform:scaleX(var(--p,0));
+  background:linear-gradient(90deg,var(--mint),var(--gold))}
+
+/* ── hero ── */
+header.mast{padding:4.5rem 0 2.6rem;
+  background:radial-gradient(80% 55% at 74% 0%,rgba(159,214,180,.07) 0,transparent 62%),
+             radial-gradient(60% 45% at 10% 96%,rgba(217,169,78,.05) 0,transparent 66%);}
+.tagrow{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.6rem}
+.tag{font-family:var(--mono);font-size:.7rem;padding:.28rem .7rem;border-radius:999px;
+  border:1px solid var(--line-strong);color:var(--text-dim)}
+.tag.b{color:var(--mint);border-color:rgba(159,214,180,.4)}
+.tag.m{color:var(--gold);border-color:rgba(217,169,78,.4)}
+.thesis{font-size:var(--step-1);line-height:1.6;color:var(--text-dim);max-width:46ch}
+.thesis b{color:var(--text)}
+
+/* ── part plates ── */
+.part{margin:5rem auto 2rem;padding:1.6rem 0 0;border-top:1px solid var(--line-strong)}
+.part .no{font-family:var(--ui);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.part h2{margin:.5rem 0 .6rem}
+.part .sub{color:var(--text-dim);max-width:56ch}
+[data-pen="mag"]{--pen:var(--gold)}
+[data-pen="amber"]{--pen:var(--sky)}
+
+/* ── topics ── */
+.topic{margin:4rem 0 0}
+.oneline{border-left:2px solid var(--pen);padding:.25rem 0 .25rem 1.2rem;margin:0 0 1.5rem;
+  font-family:var(--display);font-size:var(--step-1);font-style:italic;line-height:1.5;color:var(--text)}
+.oneline b{font-style:normal;font-family:var(--ui);font-size:.68rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--pen);display:block;margin-bottom:.25rem}
+
+/* ── notes / boxes ── */
+.box{--tone:var(--mint);border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--panel);padding:1.1rem 1.3rem;margin:1.8rem 0}
+.box.def{border-left:3px solid var(--gold);--tone:var(--gold)}
+.box.def h4{color:var(--gold)}
+.box.code{background:var(--bg)}
+.box p:last-child,.box ul:last-child,.box ol:last-child,.box table:last-child{margin-bottom:0}
+.warn{border:1px solid var(--line);border-left:3px solid var(--clay);border-radius:var(--radius-sm);
+  background:var(--panel);padding:1.1rem 1.3rem;margin:1.8rem 0;font-size:.96rem;color:var(--text-dim)}
+.warn b{display:block;margin-bottom:.4rem;font-family:var(--ui);font-size:.66rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--clay)}
+.incode{border:1px solid var(--line);border-left:3px solid var(--sky);border-radius:var(--radius-sm);
+  background:var(--panel);padding:1.1rem 1.3rem;margin:1.8rem 0;display:block}
+.incode .lbl{display:block;margin-bottom:.5rem;font-family:var(--ui);font-size:.66rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--sky)}
+.incode p{font-size:.96rem;color:var(--text-dim)}
+.incode p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ── code ── */
+code{font-family:var(--mono);font-size:.87em;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:5px;padding:.12em .42em;color:var(--mint);white-space:nowrap}
+pre{font-family:var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:1rem 1.1rem;margin:1rem 0 0;overflow-x:auto;font-size:.8rem;line-height:1.7;
+  white-space:pre;-webkit-overflow-scrolling:touch;color:var(--text)}
+pre .c{color:var(--text-faint);font-style:italic}
+pre .k{color:var(--gold)}
+
+/* ── tables ── */
+table.tbl{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:.84rem;margin:.5rem 0 1rem}
+table.tbl th{text-align:left;padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--line-strong);
+  font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+table.tbl td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--line);color:var(--text-dim);vertical-align:top}
+table.tbl td:first-child{color:var(--text)}
+
+/* ── maths setting ── */
+.m,.mono{font-family:var(--mono);font-size:.9em}
+.eq{font-family:var(--mono);font-size:.92rem;text-align:center;margin:1.4rem 0;line-height:2.2;
+  overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding-bottom:2px;color:var(--text)}
+.eq .hl{background:rgba(217,169,78,.15);color:var(--gold-soft);padding:.12em .35em;border-radius:3px}
+.eq .dim{color:var(--text-faint)}
+.mat{display:inline-grid;gap:.1em .8em;padding:.3em .5em;position:relative;font-family:var(--mono);
+  font-size:.9em;vertical-align:middle;text-align:right;grid-template-columns:repeat(var(--c,2),minmax(1.1em,auto))}
+.mat::before,.mat::after{content:"";position:absolute;top:0;bottom:0;width:.34em;
+  border:1.4px solid var(--line-strong)}
+.mat::before{left:-.1em;border-right:none}
+.mat::after{right:-.1em;border-left:none}
+.mat.round::before{border-radius:60% 0 0 60%/50%}
+.mat.round::after{border-radius:0 60% 60% 0/50%}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.85em;line-height:1.25;margin:0 .18em}
+.frac>span:first-child{border-bottom:1.3px solid currentColor;padding:0 .35em}
+.frac>span:last-child{padding:0 .35em}
+sub,sup{font-size:.68em;line-height:0}
+
+/* ── the bench ── */
+.bench{max-width:var(--maxw-wide);margin:2rem auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.bench-head{display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.bench-head .t{font-family:var(--ui);font-size:.66rem;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--pen)}
+.bench-head .h{font-family:var(--body);font-style:italic;font-size:.92rem;color:var(--text-faint)}
+.bench-body{display:grid;grid-template-columns:minmax(0,1fr) 288px}
+.stage{position:relative;min-width:0;background:var(--bg);border-right:1px solid var(--line)}
+.panel{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.85rem;min-width:0}
+.ctrl{display:flex;flex-direction:column;gap:.3rem}
+.ctrl label{font-family:var(--ui);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-faint);display:flex;justify-content:space-between;gap:.5rem;align-items:baseline}
+.ctrl label b{font-family:var(--mono);color:var(--text);font-weight:500;font-size:.8rem;letter-spacing:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;cursor:ew-resize}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line-strong);border-radius:2px}
+input[type=range]::-moz-range-track{height:2px;background:var(--line-strong);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-8px;
+  background:var(--panel);border:2px solid var(--pen);border-radius:50%}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--panel);
+  border:2px solid var(--pen);border-radius:50%}
+.btnrow{display:flex;flex-wrap:wrap;gap:.4rem}
+.btn{font-family:var(--ui);font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line-strong);background:transparent;
+  color:var(--text-dim);cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.btn:hover{border-color:var(--pen);color:var(--pen)}
+.btn.on{background:var(--pen);border-color:var(--pen);color:var(--bg-deep)}
+.numin,select.numin{font-family:var(--mono);font-size:.82rem;padding:.4rem .5rem;width:100%;
+  border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);text-align:center}
+.numin:focus{outline:none;border-color:var(--mint)}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem}
+.readout{font-family:var(--mono);font-size:.74rem;line-height:1.8;border-top:1px solid var(--line);
+  padding-top:.7rem;color:var(--text-dim);word-break:break-word}
+.readout b{color:var(--text);font-weight:500}
+.readout .k{color:var(--gold);font-weight:500}
+.readout .row{display:flex;justify-content:space-between;gap:.7rem}
+.readout .row span{color:var(--text-faint)}
+.note{font-size:.8rem;color:var(--text-faint);font-style:italic;line-height:1.5}
+.legend{display:flex;flex-wrap:wrap;gap:.7rem;font-family:var(--ui);font-size:.64rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint)}
+.legend i{display:inline-block;width:14px;height:0;border-top:2px solid;margin-right:.35rem;vertical-align:middle}
+#rref-grid table{width:auto}
+#rref-grid td{border:0;font-family:var(--mono);color:var(--text)}
+
+/* ── footer ── */
+footer{border-top:1px solid var(--line);margin-top:4rem;padding:2rem 0 4rem}
+footer .col{display:flex;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;
+  font-family:var(--ui);font-size:.72rem;color:var(--text-faint)}
+footer .mono{font-family:var(--ui);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+footer p{color:var(--text-faint);font-family:var(--body);font-size:.86rem;letter-spacing:0;text-transform:none}
+
+/* ── motion ── */
+.reveal{opacity:0;transform:translateY(16px)}
+.reveal.in{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
+
+/* ── responsive ── */
+@media (max-width:880px){
+  .bench-body{grid-template-columns:1fr}
+  .stage{border-right:none;border-bottom:1px solid var(--line)}
+  .bench{border-radius:var(--radius);margin:1.6rem 0}
+}
+@media (max-width:640px){
+  :root{--bar:50px}
+  body{font-size:1rem}
+  .wrap{padding:0 1rem}
+  header.mast{padding:2.6rem 0 2rem}
+  .topic{margin-top:2.8rem}
+  .part{margin-top:3.2rem}
+  .grid2{grid-template-columns:1fr}
+  .bb-back{padding:0 .6rem;font-size:.64rem}
+  .rail a{font-size:.64rem;padding:0 .55rem}
+  .eq{font-size:.82rem;text-align:left}
+  .oneline{font-size:1.1rem}
+  table.tbl{font-size:.78rem}
+  .btn{padding:.55rem .8rem}
+  footer .col{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .bb-progress{transition:none}
+}
+</style>
+</head>
+<body>
+<header class="bb-topbar">
+  <div class="topbar-inner">
+    <a class="bb-back" href="https://ted.sg">ted.sg</a>
+    <nav class="rail" id="rail" aria-label="Sections">
+    <a href="#start">Start</a>
+    <a href="#vectors" data-pen="b">1 Vectors</a>
+    <a href="#systems" data-pen="b">2 Systems</a>
+    <a href="#matrices" data-pen="b">3 Matrices</a>
+    <a href="#maps" data-pen="b">4 Maps &amp; det</a>
+    <a href="#span" data-pen="b">5 Span &amp; rank</a>
+    <a href="#eigen" data-pen="b">6 Eigen</a>
+    <a href="#ortho" data-pen="b">7 Orthogonality</a>
+    <a href="#svd" data-pen="b">8 SVD &amp; PCA</a>
+    <a href="#limits" data-pen="m">9 Limits</a>
+    <a href="#deriv" data-pen="m">10 Derivatives</a>
+    <a href="#applied" data-pen="m">11 Newton</a>
+    <a href="#integral" data-pen="m">12 Integrals</a>
+    <a href="#series" data-pen="m">13 Series</a>
+    <a href="#partial" data-pen="m">14 Gradients</a>
+    <a href="#optim" data-pen="m">15 Optimisation</a>
+    <a href="#ode" data-pen="m">16 ODEs</a>
+    <a href="#together">17 Both pens</a>
+    </nav>
+  </div>
+  <span class="bb-progress" id="prog"></span>
+</header>
+
+<div class="wrap">
+<main>
+
+<header class="mast" id="start">
+  <div class="col">
+    <div class="tagrow">
+      <span class="tag b">MA1522 · Linear algebra</span>
+      <span class="tag m">MA1521 · Calculus</span>
+      <span class="tag">Drag the handles &middot; swipe elsewhere to scroll</span>
+    </div>
+    <h1>Two pens<br>and a sheet<br>of grid paper.</h1>
+    <p class="thesis">Almost all of both syllabi collapses into two sentences. <b style="color:var(--mint)">A matrix is a function that bends space in straight lines.</b> <b style="color:var(--gold)">A derivative is the matrix that best imitates a curved function near one point.</b> Everything else — elimination, rank, eigenvalues, limits, series, gradients — is machinery for computing with those two ideas.</p>
+    <p class="small dim">Below: 17 sections, each with a live bench you can pull apart. Nothing is proved for its own sake; every idea is followed by the place it shows up in code.</p>
+  </div>
+</header>
+
+<section class="bench" data-bench="hero" aria-label="Matrix transformation bench">
+  <div class="bench-head">
+    <span class="t">Bench 00 · the whole of linear algebra, roughly</span>
+    <span class="h">move the four numbers, watch space move</span>
+  </div>
+  <div class="bench-body">
+    <div class="stage"><canvas id="c-hero" height="380"></canvas></div>
+    <div class="panel">
+      <div class="ctrl">
+        <label>Matrix A <b class="mono" id="hero-det">det = 1.00</b></label>
+        <div class="mgrid">
+          <input class="numin" id="hero-a" type="number" step="0.1" value="1.2" aria-label="a11">
+          <input class="numin" id="hero-b" type="number" step="0.1" value="0.7" aria-label="a12">
+          <input class="numin" id="hero-c" type="number" step="0.1" value="-0.3" aria-label="a21">
+          <input class="numin" id="hero-d" type="number" step="0.1" value="1.0" aria-label="a22">
+        </div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" data-preset="rot">Rotate</button>
+        <button class="btn" data-preset="scale">Scale</button>
+        <button class="btn" data-preset="shear">Shear</button>
+        <button class="btn" data-preset="flat">Squash</button>
+        <button class="btn" data-preset="flip">Reflect</button>
+      </div>
+      <div class="btnrow">
+        <button class="btn on" id="hero-eig">Eigenlines</button>
+        <button class="btn on" id="hero-circ">Circle &rarr; ellipse</button>
+      </div>
+      <div class="readout" id="hero-out"></div>
+      <p class="note">The shaded square is the unit square. Its area after the map <em>is</em> the determinant. Flip it inside-out and the determinant goes negative.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PART I ============================ -->
+<div class="part col" id="part1">
+  <div class="no">Part one · MA1522</div>
+  <h2>Linear algebra for computing</h2>
+  <p class="sub">Chapters follow the course order: linear systems, matrix algebra, vector spaces, determinants, eigen-theory, orthogonality, and the decompositions (LU, QR, SVD) that make all of it run on a machine.</p>
+</div>
+
+<!-- 1 ---------------------------------------------------------------- -->
+<section class="topic" id="vectors">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 01 · Euclidean space</div>
+    <h2>Vectors, dot products, projection</h2>
+    <p class="oneline"><b>The idea:</b> a vector is a list of numbers <em>and</em> an arrow. The dot product is the one operation that converts geometry (angle, length, shadow) into arithmetic (multiply, add).</p>
+
+    <p>A vector in <span class="m">R<sup>n</sup></span> is just an ordered list: a row of a CSV, the embedding of a sentence, the RGB of a pixel, the state of a system. Addition and scalar multiplication work coordinate-wise, and that is the whole definition of "linear" — you may stretch and you may add, nothing else.</p>
+
+    <p>Everything geometric comes from one product. For <span class="m">u, v ∈ R<sup>n</sup></span>:</p>
+
+    <div class="box def">
+      <h4>Definition · dot product</h4>
+      <div class="eq">u · v = u<sub>1</sub>v<sub>1</sub> + u<sub>2</sub>v<sub>2</sub> + ⋯ + u<sub>n</sub>v<sub>n</sub> = u<sup>T</sup>v</div>
+      <div class="eq">‖u‖ = √(u · u)&nbsp;&nbsp;&nbsp;&nbsp;u · v = ‖u‖‖v‖ cos θ</div>
+      <p class="small">Three consequences you will use constantly: <b>u · v = 0</b> means perpendicular; <b>u · v &gt; 0</b> means the angle is acute (same general direction); and dividing by the lengths gives <b>cosine similarity</b>, a number in <span class="m">[−1, 1]</span> that ignores magnitude and keeps only direction.</p>
+    </div>
+
+    <p>The <b>projection</b> of <span class="m">v</span> onto <span class="m">u</span> is the shadow <span class="m">v</span> casts on the line through <span class="m">u</span>:</p>
+    <div class="eq">proj<sub>u</sub>(v) = <span class="frac"><span>u · v</span><span>u · u</span></span> u &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; v = <span class="hl">proj<sub>u</sub>(v)</span> + <span class="hl">(v − proj<sub>u</sub>(v))</span></div>
+    <p>That split — one part along <span class="m">u</span>, one part perpendicular to it — is the seed of Gram–Schmidt, of least squares, and of PCA. Learn it once here and you get three later chapters cheaply.</p>
+  </div>
+
+  <div class="bench" data-bench="dot">
+    <div class="bench-head"><span class="t">Bench 01 · dot product</span><span class="h">drag either arrowhead</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-dot" height="320"></canvas></div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn on" id="dot-proj">Show projection</button>
+        </div>
+        <div class="readout" id="dot-out"></div>
+        <div class="legend"><span><i style="border-color:var(--blue)"></i>u</span><span><i style="border-color:var(--mag)"></i>v</span><span><i style="border-color:var(--amber)"></i>proj<sub>u</sub>(v)</span></div>
+        <p class="note">Drag v to be perpendicular to u and the dot product hits zero — that zero is what "independent features" means in a model.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box">
+      <h4>Worked example · cosine similarity</h4>
+      <p class="small mono">u = (2, 0, 1), v = (3, 1, 0), w = (20, 0, 10)</p>
+      <p class="small">u · v = 6 + 0 + 0 = 6. ‖u‖ = √5 ≈ 2.236, ‖v‖ = √10 ≈ 3.162.<br>
+      cos θ = 6 / (2.236 × 3.162) = <b>0.849</b> → about 32°.<br>
+      But u · w = 40 + 0 + 10 = 50, and cos θ = 50 / (2.236 × 22.36) = <b>1.000</b> → 0°.</p>
+      <p class="small">w is ten times longer than u yet points in exactly the same direction. Raw dot products reward magnitude; cosine similarity throws magnitude away. That single choice is why search engines normalise vectors before comparing documents.</p>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Every retrieval system you have touched is a dot product at scale. A vector database ranks documents by <span class="m">q·d / (‖q‖‖d‖)</span>; if the vectors are pre-normalised, that reduces to one matrix–vector product for the whole corpus, which is why the whole index can be a single dense matrix.</p>
+        <pre><span class="c"># the entire ranking step of a vector search</span>
+scores = D @ q          <span class="c"># (n_docs × dim) · (dim,) → (n_docs,)</span>
+top = np.argsort(-scores)[:10]</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ---------------------------------------------------------------- -->
+<section class="topic" id="systems">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 02 · Linear systems</div>
+    <h2>Gaussian elimination and what the answer looks like</h2>
+    <p class="oneline"><b>The idea:</b> a linear system has exactly three possible fates — no solution, one solution, or infinitely many. Row reduction is a mechanical procedure that always reveals which.</p>
+
+    <p>Write the system as an <b>augmented matrix</b> and apply only three moves, each of which is reversible and therefore preserves the solution set:</p>
+    <ol>
+      <li>swap two rows,</li>
+      <li>multiply a row by a nonzero scalar,</li>
+      <li>add a multiple of one row to another.</li>
+    </ol>
+    <p>Push the matrix to <b>row-echelon form</b> (REF — zeros below each leading entry, a staircase), then to <b>reduced row-echelon form</b> (RREF — leading entries are 1 and are the only nonzero entry in their column). RREF is unique for a given matrix, which is why it can be trusted as a canonical answer.</p>
+
+    <div class="box def">
+      <h4>Reading the RREF</h4>
+      <ul class="small">
+        <li><b>A row like</b> <span class="m">[0 0 0 | 1]</span> — the system claims 0 = 1. <b>Inconsistent, no solution.</b></li>
+        <li><b>Every variable has a pivot</b> — exactly one solution.</li>
+        <li><b>Some column has no pivot</b> — that variable is <b>free</b>. Infinitely many solutions, with one parameter per free variable.</li>
+      </ul>
+      <p class="small" style="margin-top:.6em">Number of free variables = (number of unknowns) − (rank). This is the rank–nullity theorem in disguise, arriving five sections early.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="rref">
+    <div class="bench-head"><span class="t">Bench 02 · row reduction, one move at a time</span><span class="h">edit the numbers, then step</span></div>
+    <div class="bench-body">
+      <div class="stage" style="padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+        <div id="rref-grid" class="mono" style="font-size:.85rem"></div>
+        <div id="rref-steps" class="mono" style="font-size:.76rem;color:var(--ink-2);line-height:1.9;min-height:2em"></div>
+      </div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn" id="rref-step">Next move</button>
+          <button class="btn" id="rref-all">Run to RREF</button>
+          <button class="btn" id="rref-reset">Reset</button>
+        </div>
+        <div class="btnrow">
+          <button class="btn" data-sys="unique">One solution</button>
+          <button class="btn" data-sys="infinite">Infinitely many</button>
+          <button class="btn" data-sys="none">No solution</button>
+        </div>
+        <div class="readout" id="rref-out"></div>
+        <p class="note">Fractions are exact — the bench keeps rationals so you can compare with your own hand working.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box">
+      <h4>Worked example · a system with a parameter</h4>
+      <p class="small">Solve <span class="m">x + y + z = 2</span>, <span class="m">x + 2y + 3z = 5</span>, <span class="m">2x + 3y + 4z = 7</span>.</p>
+      <div class="eq" style="font-size:.85rem">
+        <span class="mat" style="--c:4">
+          <span>1</span><span>1</span><span>1</span><span>2</span>
+          <span>1</span><span>2</span><span>3</span><span>5</span>
+          <span>2</span><span>3</span><span>4</span><span>7</span>
+        </span>
+        &nbsp;→&nbsp;
+        <span class="mat" style="--c:4">
+          <span>1</span><span>1</span><span>1</span><span>2</span>
+          <span>0</span><span>1</span><span>2</span><span>3</span>
+          <span>0</span><span>1</span><span>2</span><span>3</span>
+        </span>
+        &nbsp;→&nbsp;
+        <span class="mat" style="--c:4">
+          <span>1</span><span>0</span><span>&minus;1</span><span>&minus;1</span>
+          <span>0</span><span>1</span><span>2</span><span>3</span>
+          <span>0</span><span>0</span><span>0</span><span>0</span>
+        </span>
+      </div>
+      <p class="small">Column 3 has no pivot, so <span class="m">z = t</span> is free. Back-substituting: <span class="m">x = −1 + t</span>, <span class="m">y = 3 − 2t</span>. The solution set is a line in <span class="m">R<sup>3</sup></span>:</p>
+      <div class="eq" style="font-size:.85rem">(x, y, z) = (&minus;1, 3, 0) + t(1, &minus;2, 1)</div>
+      <p class="small">A <b>particular solution</b> plus a multiple of something in the <b>null space</b>. Every underdetermined system you ever solve has exactly this shape.</p>
+    </div>
+
+    <div class="warn">
+      <b>Where the machine differs from you</b>
+      Exact RREF is a hand tool. Numerically, dividing by a tiny pivot amplifies rounding error catastrophically, so real solvers use <em>partial pivoting</em> — swap in the largest available pivot before eliminating — and stop at REF rather than RREF, then back-substitute. That is what <code>scipy.linalg.lu_factor</code> does, and it is why <code>np.linalg.solve(A,b)</code> is both faster and more accurate than <code>inv(A) @ b</code>.
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Elimination costs about <span class="m">2n³/3</span> operations for an <span class="m">n×n</span> system — cubic, so doubling the problem multiplies the work by eight. This single fact drives the whole design of numerical libraries: reuse a factorisation instead of re-solving, exploit sparsity, and never form an inverse you do not need.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ---------------------------------------------------------------- -->
+<section class="topic" id="matrices">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 03 · Matrix algebra</div>
+    <h2>Matrices, inverses, and LU</h2>
+    <p class="oneline"><b>The idea:</b> matrix multiplication is not "multiply the numbers". It is <em>function composition</em>, and that is why it is associative but not commutative.</p>
+
+    <p>Read <span class="m">Ax</span> in the most useful way: <b>as a combination of the columns of A</b>.</p>
+    <div class="eq">
+      <span class="mat" style="--c:2"><span>1</span><span>3</span><span>2</span><span>4</span></span>
+      <span class="mat round" style="--c:1"><span>x</span><span>y</span></span>
+      &nbsp;=&nbsp; x<span class="mat round" style="--c:1"><span>1</span><span>2</span></span> + y<span class="mat round" style="--c:1"><span>3</span><span>4</span></span>
+    </div>
+    <p>Once you see that, several later theorems become obvious rather than memorised: <span class="m">Ax = b</span> is solvable exactly when <span class="m">b</span> lies in the span of A's columns; the column space is the set of reachable outputs; and <span class="m">Ax = 0</span> asks which combinations of columns cancel out.</p>
+
+    <p>For products, <span class="m">(AB)x = A(Bx)</span>: apply B first, then A. Composition of functions is associative, so matrix multiplication is. Composition is not commutative — rotating then stretching differs from stretching then rotating — so <span class="m">AB ≠ BA</span> in general.</p>
+
+    <div class="box def">
+      <h4>Inverse · when it exists</h4>
+      <p class="small"><span class="m">A<sup>−1</sup></span> exists iff A is square and its RREF is the identity, iff <span class="m">det A ≠ 0</span>, iff the columns are linearly independent, iff <span class="m">Ax=0</span> only when <span class="m">x=0</span>, iff rank = n. These are not five facts; they are one fact wearing five costumes. (The course calls this the <em>invertibility theorem</em>, and exams love it.)</p>
+      <div class="eq" style="font-size:.9rem">For 2×2: &nbsp; A<sup>−1</sup> = <span class="frac"><span>1</span><span>ad − bc</span></span> <span class="mat" style="--c:2"><span>d</span><span>&minus;b</span><span>&minus;c</span><span>a</span></span></div>
+      <p class="small">Note the determinant in the denominator: as <span class="m">det → 0</span>, the inverse blows up. Near-singular matrices are the numerical analyst's tar pit.</p>
+    </div>
+
+    <h3>LU factorisation — elimination, saved for reuse</h3>
+    <p>Gaussian elimination applied to A is itself a sequence of matrix multiplications by <em>elementary matrices</em>. Bundle them up and you get <span class="m">A = LU</span>: L unit lower-triangular (the multipliers you used), U upper-triangular (the echelon form you reached). With pivoting it becomes <span class="m">PA = LU</span>.</p>
+    <p>Why bother? Because solving <span class="m">Ax = b</span> then splits into two triangular solves, each costing only <span class="m">n²</span>:</p>
+    <div class="eq">LUx = b &nbsp;⟹&nbsp; solve <span class="hl">Ly = b</span> forward, then <span class="hl">Ux = y</span> backward</div>
+    <p>Factor once at <span class="m">O(n³)</span>, then answer any number of right-hand sides at <span class="m">O(n²)</span> each. In a pricing engine or a simulation loop where A is fixed and b changes every tick, this is the difference between shipping and not.</p>
+
+    <div class="box">
+      <h4>Worked example · LU by inspection</h4>
+      <p class="small">A = <span class="mat" style="--c:2"><span>2</span><span>4</span><span>6</span><span>3</span></span>. Eliminate row 2 using multiplier <span class="m">m = 6/2 = 3</span>: row2 ← row2 − 3·row1 gives <span class="m">[0, −9]</span>.</p>
+      <div class="eq" style="font-size:.88rem">A = <span class="mat" style="--c:2"><span>1</span><span>0</span><span>3</span><span>1</span></span><span class="mat" style="--c:2"><span>2</span><span>4</span><span>0</span><span>&minus;9</span></span> = LU</div>
+      <p class="small">L holds the multipliers you would otherwise have thrown away; U is where elimination stopped. Also note <span class="m">det A = det L · det U = 1 × (2 × −9) = −18</span> — determinants come free with the factorisation.</p>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Transposes and inverses reverse order, which trips people up in derivations: <span class="m">(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></span> and <span class="m">(AB)<sup>−1</sup> = B<sup>−1</sup>A<sup>−1</sup></span>. Socks then shoes; shoes off then socks off.</p>
+        <pre><span class="c"># factor once, reuse forever</span>
+lu, piv = scipy.linalg.lu_factor(A)
+<span class="k">for</span> b <span class="k">in</span> stream:
+    x = scipy.linalg.lu_solve((lu, piv), b)   <span class="c"># O(n²) each</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ---------------------------------------------------------------- -->
+<section class="topic" id="maps">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 04 · Linear transformations &amp; determinants</div>
+    <h2>Matrices as maps; determinant as area</h2>
+    <p class="oneline"><b>The idea:</b> a linear map sends grid lines to grid lines, parallel and evenly spaced, with the origin nailed down. The determinant measures how much it inflates area — and whether it flips orientation.</p>
+
+    <p>A map <span class="m">T : R<sup>n</sup> → R<sup>m</sup></span> is <b>linear</b> if <span class="m">T(u+v) = T(u)+T(v)</span> and <span class="m">T(cu) = cT(u)</span>. That is all. From it follows the most useful fact in the chapter:</p>
+
+    <div class="box def">
+      <h4>The standard matrix</h4>
+      <p class="small">A linear map is completely determined by what it does to the standard basis vectors. Feed it <span class="m">e<sub>1</sub>, e<sub>2</sub>, …, e<sub>n</sub></span>, and stack the outputs as columns:</p>
+      <div class="eq">A = [ T(e<sub>1</sub>) &nbsp; T(e<sub>2</sub>) &nbsp; ⋯ &nbsp; T(e<sub>n</sub>) ]</div>
+      <p class="small">Want the matrix of a 90° rotation? <span class="m">e<sub>1</sub>=(1,0)</span> goes to <span class="m">(0,1)</span>, <span class="m">e<sub>2</sub>=(0,1)</span> goes to <span class="m">(−1,0)</span>. So the matrix is <span class="mat" style="--c:2"><span>0</span><span>&minus;1</span><span>1</span><span>0</span></span>. No formula memorisation required — just track the basis.</p>
+    </div>
+
+    <p>Return to <b>Bench 00</b> at the top and try these while watching the readout:</p>
+    <ul>
+      <li><b>Squash</b> — the second column becomes a multiple of the first. The whole plane collapses onto a line, determinant 0, information destroyed, no inverse.</li>
+      <li><b>Reflect</b> — determinant −1. Same area, opposite orientation. A left hand becomes a right hand.</li>
+      <li><b>Shear</b> — determinant 1. Area preserved, angles wrecked. This is why "preserves area" and "preserves shape" are very different requirements.</li>
+    </ul>
+
+    <div class="box def">
+      <h4>Determinant · the properties that matter</h4>
+      <ul class="small">
+        <li><span class="m">det(AB) = det(A)·det(B)</span> — composing maps multiplies the area factors.</li>
+        <li><span class="m">det(A<sup>T</sup>) = det(A)</span>; <span class="m">det(A<sup>−1</sup>) = 1/det(A)</span>.</li>
+        <li>Swapping two rows flips the sign; adding a multiple of one row to another changes nothing.</li>
+        <li>For a triangular matrix, det is the product of the diagonal — which is exactly why we compute it from LU, in <span class="m">O(n³)</span>, rather than from cofactor expansion, which is <span class="m">O(n!)</span>.</li>
+      </ul>
+      <p class="small" style="margin-top:.6em">Cofactor expansion for a 20×20 matrix would take longer than the age of the universe. LU takes microseconds. Same number, different algorithm.</p>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Graphics pipelines are stacks of these maps: model → world → camera → clip, each a matrix, multiplied together once and applied to millions of vertices. Translation is not linear (it moves the origin), which is precisely why graphics uses 4×4 <em>homogeneous</em> coordinates — bolting on an extra dimension turns a translation into a shear, and shears are linear.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 ---------------------------------------------------------------- -->
+<section class="topic" id="span">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 05 · Vector spaces</div>
+    <h2>Span, independence, basis, rank</h2>
+    <p class="oneline"><b>The idea:</b> given a pile of vectors, only two questions matter — what can you reach with them (span), and how many of them are redundant (independence). Rank answers both at once.</p>
+
+    <p><b>Span</b> is the set of all linear combinations: everywhere you can get to by scaling and adding. Two vectors in <span class="m">R³</span> that point in different directions span a plane; add a third that lies in that plane and you have gained nothing.</p>
+
+    <p><b>Linear independence</b> is the formal version of "nothing is redundant": the only way to write <span class="m">c<sub>1</sub>v<sub>1</sub> + ⋯ + c<sub>k</sub>v<sub>k</sub> = 0</span> is with all <span class="m">c<sub>i</sub> = 0</span>. If some non-trivial combination cancels, one vector is expressible via the others and can be deleted without shrinking the span.</p>
+
+    <div class="box def">
+      <h4>Basis and dimension</h4>
+      <p class="small">A <b>basis</b> of a subspace is a spanning set that is also independent — the smallest possible set of directions that still reaches everything, with no repeats. Every basis of a given subspace has the same size; that number is the <b>dimension</b>.</p>
+      <p class="small">A basis is a coordinate system. Choosing a good one is often the entire content of a hard problem: PCA chooses a basis where the data's variance is axis-aligned; Fourier chooses a basis where convolution becomes multiplication.</p>
+    </div>
+
+    <h3>The four subspaces, and one theorem</h3>
+    <p>For an <span class="m">m×n</span> matrix A:</p>
+    <ul>
+      <li><b>Column space</b> <span class="m">⊆ R<sup>m</sup></span> — all reachable outputs <span class="m">Ax</span>. Its dimension is the <b>rank</b>.</li>
+      <li><b>Null space</b> <span class="m">⊆ R<sup>n</sup></span> — all inputs killed to zero, <span class="m">Ax=0</span>. Its dimension is the <b>nullity</b>.</li>
+      <li><b>Row space</b> — span of the rows; its dimension is also the rank (row rank = column rank, a genuinely surprising theorem).</li>
+      <li><b>Left null space</b> — <span class="m">A<sup>T</sup>y = 0</span>, the directions no output ever touches.</li>
+    </ul>
+
+    <div class="box def">
+      <h4>Rank–nullity</h4>
+      <div class="eq">rank(A) + nullity(A) = n &nbsp;&nbsp;(number of <em>columns</em>)</div>
+      <p class="small">Dimensions in = dimensions preserved + dimensions destroyed. Nothing goes missing. In practice: <b>rank = number of pivots in the RREF</b>, and <b>nullity = number of free variables</b>. You already computed both in Bench 02 without knowing their names.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="rank">
+    <div class="bench-head"><span class="t">Bench 03 · span &amp; rank</span><span class="h">drag the arrowheads; watch the span collapse</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-rank" height="330"></canvas></div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn" data-rank="ind">Independent</button>
+          <button class="btn" data-rank="dep">Dependent</button>
+          <button class="btn" data-rank="zero">Both zero</button>
+        </div>
+        <div class="readout" id="rank-out"></div>
+        <p class="note">Two vectors in the plane span everything unless they line up — then the span drops to a single line, rank falls to 1, and the null space appears out of nowhere with dimension 1.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box">
+      <h4>Worked example · rank of a data matrix</h4>
+      <p class="small">A table with columns <em>height in cm</em>, <em>height in inches</em>, <em>weight</em> has three columns but rank 2 — the second column is <span class="m">0.3937 ×</span> the first. Regression on it fails: <span class="m">A<sup>T</sup>A</span> is singular and there is no unique fit, because infinitely many coefficient pairs give the same prediction.</p>
+      <p class="small">This is <b>multicollinearity</b>, and it is not a statistical curiosity — it is rank deficiency, visible in the RREF. Fixes (drop a column, ridge regularisation, use the pseudoinverse) all amount to restoring a unique choice.</p>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Rank is <em>not</em> computed by row reduction in practice. Floating point turns exact zeros into <span class="m">1e−17</span>, so libraries compute the singular values and count how many exceed a tolerance — <code>np.linalg.matrix_rank</code> is an SVD in disguise. The honest question is never "is it singular?" but "how close to singular is it?", answered by the condition number.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ---------------------------------------------------------------- -->
+<section class="topic" id="eigen">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 06 · Eigenvalues &amp; diagonalisation</div>
+    <h2>The directions a matrix does not turn</h2>
+    <p class="oneline"><b>The idea:</b> most vectors get rotated by a matrix. A few special ones only get stretched. Find those and repeated application becomes trivial arithmetic.</p>
+
+    <div class="box def">
+      <h4>Definition</h4>
+      <div class="eq">Av = λv, &nbsp; v ≠ 0</div>
+      <p class="small">Rearranged: <span class="m">(A − λI)v = 0</span> has a non-zero solution, so <span class="m">A − λI</span> must be singular, so</p>
+      <div class="eq">det(A − λI) = 0 &nbsp;&nbsp;<span class="dim">— the characteristic equation</span></div>
+      <p class="small">Solve it for λ (the eigenvalues), then find the null space of <span class="m">A − λI</span> for each (the eigenvectors, the <em>eigenspace</em>).</p>
+    </div>
+
+    <p><b>Diagonalisation.</b> If A has n independent eigenvectors, stack them as columns of P and put the eigenvalues on the diagonal of D. Then <span class="m">A = PDP<sup>−1</sup></span>. Read that right to left as a sentence: <em>change into eigen-coordinates, stretch each axis, change back</em>.</p>
+
+    <p>The payoff is powers. Everything in the middle cancels:</p>
+    <div class="eq">A<sup>k</sup> = PD<sup>k</sup>P<sup>−1</sup>, &nbsp;&nbsp; D<sup>k</sup> = diag(λ<sub>1</sub><sup>k</sup>, …, λ<sub>n</sub><sup>k</sup>)</div>
+    <p>Raising a matrix to the 1000th power costs one factorisation and n scalar powers. And it tells you the long-run behaviour at a glance: if all <span class="m">|λ| &lt; 1</span> the system decays to zero; if some <span class="m">|λ| &gt; 1</span> it explodes; if the largest is exactly 1 it settles into a steady state.</p>
+  </div>
+
+  <div class="bench" data-bench="eigen">
+    <div class="bench-head"><span class="t">Bench 04 · iterate v ← Av</span><span class="h">drag the start vector, then step</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-eig" height="340"></canvas></div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn" data-eig="generic">Generic</button>
+          <button class="btn" data-eig="markov">Markov</button>
+          <button class="btn" data-eig="decay">Decaying</button>
+          <button class="btn" data-eig="rot">Rotation</button>
+        </div>
+        <div class="btnrow">
+          <button class="btn" id="eig-step">Step</button>
+          <button class="btn" id="eig-run">Run 12</button>
+          <button class="btn" id="eig-clear">Clear path</button>
+        </div>
+        <div class="readout" id="eig-out"></div>
+        <p class="note">Each step normalises the drawing so the path stays on screen; the readout shows the true growth factor. That normalise-and-repeat loop <em>is</em> the power method.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box">
+      <h4>Worked example · a Markov chain by hand</h4>
+      <p class="small">Users move between two plans each month: 90% of Basic stay, 10% upgrade; 20% of Premium downgrade, 80% stay.</p>
+      <div class="eq" style="font-size:.88rem">A = <span class="mat" style="--c:2"><span>0.9</span><span>0.2</span><span>0.1</span><span>0.8</span></span></div>
+      <p class="small">Characteristic equation: <span class="m">(0.9−λ)(0.8−λ) − 0.02 = λ² − 1.7λ + 0.7 = 0</span>, so <span class="m">λ = 1</span> and <span class="m">λ = 0.7</span>.</p>
+      <p class="small">The <span class="m">λ=1</span> eigenvector solves <span class="m">(A−I)v=0</span>: <span class="m">−0.1v₁ + 0.2v₂ = 0</span>, so <span class="m">v = (2,1)</span>. Normalised to sum to 1: <b>(2/3, 1/3)</b>. Whatever the starting split, the population converges to two-thirds Basic — and the <span class="m">0.7</span> tells you how fast the memory of the initial state dies out (30% of the gap closes per month).</p>
+    </div>
+
+    <div class="warn">
+      <b>Not everything diagonalises</b>
+      <span class="mat" style="--c:2"><span>1</span><span>1</span><span>0</span><span>1</span></span> has λ = 1 twice but only <em>one</em> independent eigenvector — algebraic multiplicity 2, geometric multiplicity 1. It is <b>defective</b>. Rotations have no real eigenvectors at all (nothing keeps its direction), only complex ones. Both are ordinary cases, not pathologies; they are the reason the SVD, which always exists, is the more dependable tool.
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>PageRank is the dominant eigenvector of the web's link matrix, found by exactly the loop in Bench 04. Graph clustering reads eigenvectors of the Laplacian. In deep learning, whether gradients vanish or explode across layers is a statement about the eigenvalues of the repeated Jacobian — <span class="m">|λ|&lt;1</span> everywhere means the signal dies before it reaches layer one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 ---------------------------------------------------------------- -->
+<section class="topic" id="ortho">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 07 · Orthogonality</div>
+    <h2>Right angles, QR, and least squares</h2>
+    <p class="oneline"><b>The idea:</b> in an orthonormal basis, coordinates are just dot products — no solving required. And when a system has no solution, the best available answer is a projection.</p>
+
+    <p>A set is <b>orthonormal</b> if the vectors are mutually perpendicular and each has length 1. Then for any v in their span, <span class="m">v = (v·q<sub>1</sub>)q<sub>1</sub> + ⋯ + (v·q<sub>k</sub>)q<sub>k</sub></span>. Finding coordinates degrades from a linear solve to k dot products.</p>
+
+    <p>A square matrix Q with orthonormal columns is <b>orthogonal</b>: <span class="m">Q<sup>T</sup>Q = I</span>, so <span class="m">Q<sup>−1</sup> = Q<sup>T</sup></span> — inversion for free. Such maps preserve every length and every angle; they are exactly the rotations and reflections. Numerically they are gold, because they never amplify error.</p>
+
+    <div class="box def">
+      <h4>Gram–Schmidt → QR</h4>
+      <p class="small">Take independent <span class="m">a<sub>1</sub>, a<sub>2</sub>, …</span>. Keep the first. For each next one, subtract its projection onto everything already kept, then normalise:</p>
+      <div class="eq" style="font-size:.9rem">u<sub>k</sub> = a<sub>k</sub> − Σ<sub>j&lt;k</sub> proj<sub>q<sub>j</sub></sub>(a<sub>k</sub>),&nbsp;&nbsp; q<sub>k</sub> = u<sub>k</sub>/‖u<sub>k</sub>‖</div>
+      <p class="small">Collecting the bookkeeping gives <span class="m">A = QR</span>, with Q orthonormal and R upper-triangular. It is the orthogonal cousin of LU, and it is the workhorse behind stable least squares and eigenvalue algorithms.</p>
+    </div>
+
+    <h3>Least squares — solving the unsolvable</h3>
+    <p>With more equations than unknowns, <span class="m">Ax=b</span> usually has <em>no</em> solution: b sits outside the column space. The next best thing is the <span class="m">x̂</span> that makes <span class="m">Ax̂</span> the closest point in the column space to b — the projection. The error must then be perpendicular to that space:</p>
+    <div class="eq">A<sup>T</sup>(b − Ax̂) = 0 &nbsp;⟹&nbsp; <span class="hl">A<sup>T</sup>A x̂ = A<sup>T</sup>b</span> &nbsp;<span class="dim">— the normal equations</span></div>
+    <p>That one line is linear regression. Fit a line, a polynomial, or a 200-feature model — same equation, different A.</p>
+  </div>
+
+  <div class="bench" data-bench="ls">
+    <div class="bench-head"><span class="t">Bench 05 · least squares</span><span class="h">tap to add points, drag to move them</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-ls" height="330"></canvas></div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn on" data-deg="1">Line</button>
+          <button class="btn" data-deg="2">Quadratic</button>
+          <button class="btn" data-deg="3">Cubic</button>
+        </div>
+        <div class="btnrow">
+          <button class="btn" id="ls-reset">Reset points</button>
+          <button class="btn on" id="ls-res">Show residuals</button>
+        </div>
+        <div class="readout" id="ls-out"></div>
+        <p class="note">The vertical hairs are residuals. The fit minimises the sum of their <em>squares</em>, which is why one distant point drags the line so hard.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box">
+      <h4>Worked example · fitting a line through three points</h4>
+      <p class="small">Points <span class="m">(1,1), (2,2), (3,2)</span>, model <span class="m">y = c + mx</span>.</p>
+      <div class="eq" style="font-size:.85rem">A = <span class="mat" style="--c:2"><span>1</span><span>1</span><span>1</span><span>2</span><span>1</span><span>3</span></span>, b = <span class="mat round" style="--c:1"><span>1</span><span>2</span><span>2</span></span>, A<sup>T</sup>A = <span class="mat" style="--c:2"><span>3</span><span>6</span><span>6</span><span>14</span></span>, A<sup>T</sup>b = <span class="mat round" style="--c:1"><span>5</span><span>11</span></span></div>
+      <p class="small">Solve <span class="m">3c + 6m = 5</span>, <span class="m">6c + 14m = 11</span>: subtract twice the first from the second → <span class="m">2m = 1</span>, so <span class="m">m = 0.5</span>, <span class="m">c = 2/3</span>. Fit: <span class="m">y = 0.667 + 0.5x</span>. No line passes through all three points, but this one minimises the squared vertical error.</p>
+    </div>
+
+    <div class="warn">
+      <b>Don't form A<sup>T</sup>A</b>
+      Squaring a matrix squares its condition number, so the normal equations lose roughly twice the digits. Production code solves least squares via QR (<code>numpy.linalg.lstsq</code>) or SVD. The normal equations are how you <em>derive</em> and understand the answer, not how you compute it.
+    </div>
+  </div>
+</section>
+
+<!-- 8 ---------------------------------------------------------------- -->
+<section class="topic" id="svd">
+  <div class="col">
+    <div class="eyebrow">MA1522 · 08 · Singular value decomposition</div>
+    <h2>SVD and PCA — the summit of the course</h2>
+    <p class="oneline"><b>The idea:</b> every matrix, of any shape, is a rotation, then a stretch along perpendicular axes, then another rotation. No exceptions, no defective cases.</p>
+
+    <div class="box def">
+      <h4>The decomposition</h4>
+      <div class="eq">A = U Σ V<sup>T</sup></div>
+      <p class="small">V's columns (orthonormal) are the input directions; Σ is diagonal with the <b>singular values</b> <span class="m">σ<sub>1</sub> ≥ σ<sub>2</sub> ≥ ⋯ ≥ 0</span>; U's columns (orthonormal) are the output directions. Concretely: <span class="m">Av<sub>i</sub> = σ<sub>i</sub>u<sub>i</sub></span>.</p>
+      <p class="small">Where it comes from: <span class="m">A<sup>T</sup>A</span> is symmetric and positive semi-definite, so it diagonalises with non-negative eigenvalues. Its eigenvectors are the <span class="m">v<sub>i</sub></span>, and <span class="m">σ<sub>i</sub> = √λ<sub>i</sub></span>. That is the whole construction — eigen-theory applied to <span class="m">A<sup>T</sup>A</span>.</p>
+    </div>
+
+    <p>Now the part that earns the chapter its reputation. Write the SVD as a sum of rank-1 pieces, ordered by importance:</p>
+    <div class="eq">A = σ<sub>1</sub>u<sub>1</sub>v<sub>1</sub><sup>T</sup> + σ<sub>2</sub>u<sub>2</sub>v<sub>2</sub><sup>T</sup> + ⋯ + σ<sub>r</sub>u<sub>r</sub>v<sub>r</sub><sup>T</sup></div>
+    <p>Truncate after k terms and you get <span class="m">A<sub>k</sub></span>. The Eckart–Young theorem says this is <em>the best possible</em> rank-k approximation of A, in the least-squares sense. Not a good heuristic — provably optimal. That single fact underwrites image compression, latent semantic analysis, recommender systems, and noise reduction.</p>
+  </div>
+
+  <div class="bench" data-bench="svdimg">
+    <div class="bench-head"><span class="t">Bench 06 · rank-k approximation</span><span class="h">how few numbers can still spell a word?</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-svd" height="420"></canvas></div>
+      <div class="panel">
+        <div class="ctrl">
+          <label>Components kept (k) <b id="svd-k">1</b></label>
+          <input type="range" id="svd-slider" min="1" max="24" value="1">
+        </div>
+        <div class="readout" id="svd-out"></div>
+        <p class="note">Left: the original 32×96 image. Right: the sum of the first k rank-1 layers. Storage falls from <span class="mono">32×96</span> numbers to <span class="mono">k×(32+96+1)</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>PCA is SVD wearing a lab coat</h3>
+    <p>Centre your data (subtract the column means), then the covariance matrix is <span class="m">C = <span class="frac"><span>1</span><span>n−1</span></span>X<sup>T</sup>X</span>. Its eigenvectors are the <b>principal components</b> — the perpendicular directions of greatest variance — and its eigenvalues say how much variance each captures. But those eigenvectors are exactly the right singular vectors of X, so PCA is done by taking the SVD of the centred data and never forming C at all.</p>
+  </div>
+
+  <div class="bench" data-bench="pca">
+    <div class="bench-head"><span class="t">Bench 07 · principal components</span><span class="h">tilt and squeeze the cloud</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-pca" height="320"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>Correlation <b id="pca-r-l">0.80</b></label><input type="range" id="pca-r" min="-95" max="95" value="80"></div>
+        <div class="ctrl"><label>Spread of x <b id="pca-s-l">1.6</b></label><input type="range" id="pca-s" min="40" max="260" value="160"></div>
+        <div class="btnrow"><button class="btn on" id="pca-proj">Project onto PC1</button></div>
+        <div class="readout" id="pca-out"></div>
+        <p class="note">When the correlation is near zero the two components carry similar variance and there is nothing to compress. Correlation is redundancy, and redundancy is what PCA harvests.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>The <b>condition number</b> <span class="m">κ = σ<sub>max</sub>/σ<sub>min</sub></span> is the number to check before trusting any linear solve: it bounds how much a relative error in your data is amplified in the answer. <span class="m">κ ≈ 10<sup>8</sup></span> in double precision means roughly half your significant digits are already gone.</p>
+        <p>The <b>pseudoinverse</b> <span class="m">A<sup>+</sup> = VΣ<sup>+</sup>U<sup>T</sup></span> (invert the non-zero σ's, transpose) solves least squares even when <span class="m">A<sup>T</sup>A</span> is singular — it quietly returns the minimum-norm solution instead of failing.</p>
+        <pre>U, s, Vt = np.linalg.svd(X_centered, full_matrices=<span class="k">False</span>)
+explained = s**2 / (s**2).sum()      <span class="c"># variance per component</span>
+Z = X_centered @ Vt[:k].T            <span class="c"># project to k dims</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PART II ============================ -->
+<div class="part col" id="part2" data-pen="mag">
+  <div class="no">Part two · MA1521</div>
+  <h2>Calculus for computing</h2>
+  <p class="sub">Limits and continuity, derivatives and their applications, integration, sequences and series, partial derivatives, optimisation, and first-order differential equations with numerical methods.</p>
+</div>
+
+<!-- 9 ---------------------------------------------------------------- -->
+<section class="topic" id="limits" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 09 · Limits &amp; continuity</div>
+    <h2>Limits, and why big-O is one</h2>
+    <p class="oneline"><b>The idea:</b> a limit describes where a function is <em>heading</em>, regardless of whether it ever arrives. Complexity analysis is the same statement about algorithms.</p>
+
+    <p><span class="m">lim<sub>x→a</sub> f(x) = L</span> means: you can force f(x) as close to L as you like by taking x close enough to a — <em>without ever setting x = a</em>. That exclusion is the whole point. <span class="m">(x²−1)/(x−1)</span> is undefined at 1, yet its limit there is a perfectly definite 2.</p>
+
+    <div class="box def">
+      <h4>The toolkit, in the order you should reach for it</h4>
+      <ol class="small">
+        <li><b>Substitute.</b> If the function is continuous at a, the limit is <span class="m">f(a)</span>. Done.</li>
+        <li><b>Factor or rationalise</b> to cancel the offending term: <span class="m">(x²−1)/(x−1) = x+1 → 2</span>.</li>
+        <li><b>Squeeze theorem.</b> If <span class="m">g ≤ f ≤ h</span> and both ends go to L, f has no choice. This is how <span class="m">lim<sub>x→0</sub> x sin(1/x) = 0</span> is proved.</li>
+        <li><b>L'Hôpital</b> for <span class="m">0/0</span> or <span class="m">∞/∞</span> only: differentiate top and bottom separately and try again.</li>
+      </ol>
+      <p class="small" style="margin-top:.6em"><b>Continuity</b> at a means all three exist and agree: <span class="m">f(a)</span>, the limit, and each other. Continuous functions on a closed interval attain a maximum and a minimum — the guarantee that makes optimisation problems well-posed.</p>
+    </div>
+
+    <p>The two limits worth memorising, because everything else is built from them:</p>
+    <div class="eq">lim<sub>x→0</sub> <span class="frac"><span>sin x</span><span>x</span></span> = 1 &nbsp;&nbsp;&nbsp;&nbsp; lim<sub>n→∞</sub> (1 + <span class="frac"><span>1</span><span>n</span></span>)<sup>n</sup> = e</div>
+  </div>
+
+  <div class="bench" data-bench="growth">
+    <div class="bench-head"><span class="t">Bench 08 · limits of ratios = big-O</span><span class="h">which function wins as n grows?</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-lim" height="320"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>f(n)</label><select class="numin" id="lim-f" style="text-align:left"></select></div>
+        <div class="ctrl"><label>g(n)</label><select class="numin" id="lim-g" style="text-align:left"></select></div>
+        <div class="ctrl"><label>n up to <b id="lim-n-l">100</b></label><input type="range" id="lim-n" min="10" max="1000" value="100"></div>
+        <div class="readout" id="lim-out"></div>
+        <p class="note">The curve is <span class="mono">f(n)/g(n)</span>. If it settles to zero, f is dominated by g. If it settles to a positive constant, they are the same order. If it runs away, f wins.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p><span class="m">f = O(g)</span> is precisely <span class="m">lim sup f/g &lt; ∞</span>; <span class="m">f = o(g)</span> is <span class="m">lim f/g = 0</span>; <span class="m">f = Θ(g)</span> is a finite positive limit. When you argue that constants "don't matter asymptotically", you are taking a limit — and the bench shows exactly why <span class="m">100n</span> still loses to <span class="m">n²</span>, but only after <span class="m">n = 100</span>. For small inputs the constant is the whole story, which is why real sort implementations switch to insertion sort below a threshold.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 --------------------------------------------------------------- -->
+<section class="topic" id="deriv" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 10 · Derivatives</div>
+    <h2>The derivative, and the chain rule that runs your models</h2>
+    <p class="oneline"><b>The idea:</b> zoom far enough into any smooth curve and it looks like a straight line. The derivative is that line's slope — the best linear approximation at a point.</p>
+
+    <div class="box def">
+      <h4>Definition</h4>
+      <div class="eq">f′(x) = lim<sub>h→0</sub> <span class="frac"><span>f(x+h) − f(x)</span><span>h</span></span></div>
+      <p class="small">The fraction is the slope of a <b>secant</b> through two nearby points; the limit is the <b>tangent</b>. Read as a rate: how fast the output moves per unit of input. Read as an approximation: <span class="m">f(x+h) ≈ f(x) + f′(x)h</span> — the linearisation that every gradient step relies on.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="secant">
+    <div class="bench-head"><span class="t">Bench 09 · secant → tangent</span><span class="h">shrink h and watch the slope settle</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-der" height="320"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>h <b id="der-h-l">1.000</b></label><input type="range" id="der-h" min="1" max="1000" value="850"></div>
+        <div class="ctrl"><label>x <b id="der-x-l">1.00</b></label><input type="range" id="der-x" min="-220" max="220" value="100"></div>
+        <div class="btnrow">
+          <button class="btn on" data-fn="sq">x²</button>
+          <button class="btn" data-fn="sin">sin x</button>
+          <button class="btn" data-fn="exp">eˣ</button>
+          <button class="btn" data-fn="cub">x³−2x</button>
+        </div>
+        <div class="readout" id="der-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box def">
+      <h4>The rules, compressed</h4>
+      <table class="tbl">
+        <tr><td>Power</td><td>(xⁿ)′ = n x<sup>n−1</sup></td></tr>
+        <tr><td>Product</td><td>(uv)′ = u′v + uv′</td></tr>
+        <tr><td>Quotient</td><td>(u/v)′ = (u′v − uv′)/v²</td></tr>
+        <tr><td>Chain</td><td>(f∘g)′(x) = f′(g(x)) · g′(x)</td></tr>
+        <tr><td>Exp / log</td><td>(eˣ)′ = eˣ,&nbsp; (ln x)′ = 1/x</td></tr>
+        <tr><td>Trig</td><td>(sin)′ = cos,&nbsp; (cos)′ = −sin,&nbsp; (tan)′ = sec²</td></tr>
+        <tr><td>Inverse</td><td>(f<sup>−1</sup>)′(y) = 1 / f′(x)</td></tr>
+      </table>
+      <p class="small" style="margin-top:.7em"><b>Implicit differentiation</b>: differentiate both sides with respect to x, treating y as a function of x, and solve for <span class="m">dy/dx</span>. For <span class="m">x² + y² = 25</span>: <span class="m">2x + 2y·y′ = 0</span>, so <span class="m">y′ = −x/y</span>.</p>
+    </div>
+
+    <h3>The chain rule is backpropagation</h3>
+    <p>Composition is how neural networks are built, so the chain rule is how they are trained. Take one neuron with a squared loss: <span class="m">z = wx + b</span>, <span class="m">a = σ(z)</span>, <span class="m">L = (a − y)²</span>. Then</p>
+    <div class="eq"><span class="frac"><span>∂L</span><span>∂w</span></span> = <span class="frac"><span>∂L</span><span>∂a</span></span> · <span class="frac"><span>∂a</span><span>∂z</span></span> · <span class="frac"><span>∂z</span><span>∂w</span></span> = 2(a−y) · σ′(z) · x</div>
+    <p>Backprop is nothing more than evaluating that product right-to-left, caching each factor so it is computed once. The bench below runs a real forward and backward pass on the numbers you choose.</p>
+  </div>
+
+  <div class="bench" data-bench="backprop">
+    <div class="bench-head"><span class="t">Bench 10 · one neuron, forward and back</span><span class="h">every number below is computed live</span></div>
+    <div class="bench-body">
+      <div class="stage" style="padding:16px 18px" id="bp-graph"></div>
+      <div class="panel">
+        <div class="ctrl"><label>w <b id="bp-w-l">0.80</b></label><input type="range" id="bp-w" min="-300" max="300" value="80"></div>
+        <div class="ctrl"><label>b <b id="bp-b-l">-0.50</b></label><input type="range" id="bp-b" min="-300" max="300" value="-50"></div>
+        <div class="ctrl"><label>x <b id="bp-x-l">1.50</b></label><input type="range" id="bp-x" min="-300" max="300" value="150"></div>
+        <div class="ctrl"><label>target y <b id="bp-y-l">1.00</b></label><input type="range" id="bp-y" min="0" max="100" value="100"></div>
+        <div class="readout" id="bp-out"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 --------------------------------------------------------------- -->
+<section class="topic" id="applied" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 11 · Applications of the derivative</div>
+    <h2>Shape of a curve, and Newton's method</h2>
+    <p class="oneline"><b>The idea:</b> the first derivative tells you which way the curve leans, the second tells you which way it bends, and together they locate every maximum and minimum.</p>
+
+    <div class="box def">
+      <h4>Finding extrema</h4>
+      <ol class="small">
+        <li><b>Critical points</b>: where <span class="m">f′(x) = 0</span> or f′ fails to exist.</li>
+        <li><b>First derivative test</b>: f′ changing + to − gives a local max; − to + gives a local min.</li>
+        <li><b>Second derivative test</b>: <span class="m">f″(c) &gt; 0</span> → concave up → minimum. <span class="m">f″(c) &lt; 0</span> → maximum. <span class="m">f″(c) = 0</span> → inconclusive, fall back to the first test.</li>
+        <li><b>Inflection points</b>: where f″ changes sign — the bend reverses.</li>
+        <li>On a closed interval, also check the <b>endpoints</b>. The global max may not be critical at all.</li>
+      </ol>
+    </div>
+
+    <p>Two theorems underwrite all of it. The <b>Mean Value Theorem</b>: for f continuous on <span class="m">[a,b]</span> and differentiable inside, some c has <span class="m">f′(c) = (f(b)−f(a))/(b−a)</span> — at some instant your speed equalled your average speed. Nearly every error bound in numerical analysis, including the ones below, is an MVT argument.</p>
+
+    <h3>Newton's method — the derivative as a solver</h3>
+    <p>To solve <span class="m">f(x) = 0</span>: stand at <span class="m">x<sub>n</sub></span>, replace the curve with its tangent line, and jump to where that line crosses zero.</p>
+    <div class="eq">x<sub>n+1</sub> = x<sub>n</sub> − <span class="frac"><span>f(x<sub>n</sub>)</span><span>f′(x<sub>n</sub>)</span></span></div>
+    <p>Convergence is <b>quadratic</b> near a simple root — the number of correct digits roughly doubles each step, which is why it typically needs five iterations, not five hundred. It also fails spectacularly if you start near a point where <span class="m">f′ ≈ 0</span>: the tangent is nearly flat and flings you across the number line.</p>
+  </div>
+
+  <div class="bench" data-bench="newton">
+    <div class="bench-head"><span class="t">Bench 11 · Newton's method</span><span class="h">drag the starting point, then step</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-newton" height="330"></canvas></div>
+      <div class="panel">
+        <div class="btnrow">
+          <button class="btn on" data-nf="cubic">x³ − 2x − 5</button>
+          <button class="btn" data-nf="cos">cos x − x</button>
+          <button class="btn" data-nf="sqrt">x² − 2</button>
+        </div>
+        <div class="btnrow">
+          <button class="btn" id="nw-step">Step</button>
+          <button class="btn" id="nw-run">Run 5</button>
+          <button class="btn" id="nw-reset">Reset</button>
+        </div>
+        <div class="readout" id="nw-out"></div>
+        <p class="note">Try starting near a turning point of the cubic and watch the tangent throw you far away — the method is fast, not safe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 --------------------------------------------------------------- -->
+<section class="topic" id="integral" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 12 · Integration</div>
+    <h2>Integrals, and the theorem that ties the course together</h2>
+    <p class="oneline"><b>The idea:</b> an integral is a limit of sums. The fundamental theorem says that this limit can be computed by <em>undoing</em> a derivative — which is why calculus is practical rather than merely true.</p>
+
+    <p>Chop <span class="m">[a,b]</span> into n slices, approximate each by a rectangle, add them up, then let <span class="m">n → ∞</span>:</p>
+    <div class="eq">∫<sub>a</sub><sup>b</sup> f(x) dx = lim<sub>n→∞</sub> Σ<sub>i=1</sub><sup>n</sup> f(x<sub>i</sub>*) Δx</div>
+
+    <div class="box def">
+      <h4>Fundamental theorem of calculus</h4>
+      <p class="small"><b>Part 1</b> — differentiation undoes integration: <span class="m">d/dx ∫<sub>a</sub><sup>x</sup> f(t)dt = f(x)</span>.</p>
+      <p class="small"><b>Part 2</b> — evaluation: if <span class="m">F′ = f</span>, then <span class="m">∫<sub>a</sub><sup>b</sup> f = F(b) − F(a)</span>.</p>
+      <p class="small">An infinite summation problem becomes two function evaluations. This is the single largest labour saving in mathematics.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="riemann">
+    <div class="bench-head"><span class="t">Bench 12 · Riemann sums</span><span class="h">watch the error, not the picture</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-riem" height="320"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>slices n <b id="riem-n-l">6</b></label><input type="range" id="riem-n" min="1" max="80" value="6"></div>
+        <div class="btnrow">
+          <button class="btn on" data-rm="left">Left</button>
+          <button class="btn" data-rm="right">Right</button>
+          <button class="btn" data-rm="mid">Midpoint</button>
+          <button class="btn" data-rm="trap">Trapezium</button>
+        </div>
+        <div class="readout" id="riem-out"></div>
+        <p class="note">Left and right sums lose accuracy like <span class="mono">O(1/n)</span>; midpoint and trapezium like <span class="mono">O(1/n²)</span>. Doubling the slices buys you four times the accuracy — that is the whole argument for better quadrature rules.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="box def">
+      <h4>Techniques, and when to use which</h4>
+      <ul class="small">
+        <li><b>Substitution</b> — undoes the chain rule. Spot an inner function whose derivative is loitering nearby: <span class="m">∫ 2x·e<sup>x²</sup>dx</span>, set <span class="m">u = x²</span>.</li>
+        <li><b>By parts</b> — undoes the product rule: <span class="m">∫u dv = uv − ∫v du</span>. Use it when one factor gets simpler on differentiating (a polynomial) and the other is harmless on integrating (<span class="m">eˣ</span>, sin, cos). For <span class="m">∫x ln x dx</span> take <span class="m">u = ln x</span>.</li>
+        <li><b>Partial fractions</b> — split a rational function into pieces you already know: <span class="m">1/((x−1)(x+1)) = ½[1/(x−1) − 1/(x+1)]</span>.</li>
+        <li><b>Trigonometric substitution</b> — for <span class="m">√(a²−x²)</span> try <span class="m">x = a sin θ</span>.</li>
+        <li><b>Improper integrals</b> — infinite limit or infinite integrand: define as a limit and check convergence. <span class="m">∫<sub>1</sub><sup>∞</sup>x<sup>−p</sup>dx</span> converges iff <span class="m">p &gt; 1</span>.</li>
+      </ul>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Continuous probability is integration: a density integrates to 1, expectation is <span class="m">∫x f(x)dx</span>, and a CDF is the running integral of the PDF. Every time you sample from a distribution by inverse-transform, you are inverting an integral. And the reason Monte Carlo dominates in high dimensions is that grid-based quadrature costs <span class="m">O(n<sup>d</sup>)</span> while sampling error falls like <span class="m">1/√N</span> regardless of d.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 --------------------------------------------------------------- -->
+<section class="topic" id="series" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 13 · Sequences &amp; series</div>
+    <h2>Infinite sums, and Taylor's approximation machine</h2>
+    <p class="oneline"><b>The idea:</b> adding infinitely many things can give a finite answer, provided the terms shrink fast enough. Taylor series then let you rebuild almost any function out of polynomials.</p>
+
+    <div class="box def">
+      <h4>Convergence tests, in the order to try them</h4>
+      <ol class="small">
+        <li><b>n-th term test</b>: if <span class="m">a<sub>n</sub> ↛ 0</span>, the series diverges. (The converse is false — the harmonic series has terms going to zero and still diverges.)</li>
+        <li><b>Geometric</b>: <span class="m">Σar<sup>n</sup></span> converges iff <span class="m">|r| &lt; 1</span>, to <span class="m">a/(1−r)</span>.</li>
+        <li><b>p-series</b>: <span class="m">Σ1/n<sup>p</sup></span> converges iff <span class="m">p &gt; 1</span>.</li>
+        <li><b>Ratio test</b>: <span class="m">L = lim|a<sub>n+1</sub>/a<sub>n</sub>|</span>. <span class="m">L &lt; 1</span> converges, <span class="m">L &gt; 1</span> diverges, <span class="m">L = 1</span> tells you nothing.</li>
+        <li><b>Comparison / integral test</b>: bound against something you already know, or against <span class="m">∫f</span>.</li>
+        <li><b>Alternating series</b>: signs alternate and <span class="m">|a<sub>n</sub>|</span> decreases to 0 → converges, with error smaller than the first omitted term.</li>
+      </ol>
+    </div>
+
+    <p>Two of these are load-bearing in computer science. The geometric series is why a dynamic array that doubles in size has <b>amortised O(1)</b> append: total copying is <span class="m">1 + 2 + 4 + ⋯ + n &lt; 2n</span>. And <span class="m">Σ1/k ≈ ln n + γ</span> — the harmonic number — is the expected cost of quicksort, of coupon-collecting, and of hash probing.</p>
+
+    <div class="box def">
+      <h4>Taylor and Maclaurin series</h4>
+      <div class="eq">f(x) = Σ<sub>n=0</sub><sup>∞</sup> <span class="frac"><span>f<sup>(n)</sup>(a)</span><span>n!</span></span>(x − a)<sup>n</sup></div>
+      <p class="small">Match the value, then the slope, then the curvature, then the rate of change of curvature, and so on. The four to know by heart:</p>
+      <table class="tbl">
+        <tr><td>eˣ</td><td>1 + x + x²/2! + x³/3! + ⋯</td><td>all x</td></tr>
+        <tr><td>sin x</td><td>x − x³/3! + x⁵/5! − ⋯</td><td>all x</td></tr>
+        <tr><td>cos x</td><td>1 − x²/2! + x⁴/4! − ⋯</td><td>all x</td></tr>
+        <tr><td>1/(1−x)</td><td>1 + x + x² + x³ + ⋯</td><td>|x| &lt; 1</td></tr>
+        <tr><td>ln(1+x)</td><td>x − x²/2 + x³/3 − ⋯</td><td>−1 &lt; x ≤ 1</td></tr>
+      </table>
+      <p class="small" style="margin-top:.7em">The <b>radius of convergence</b> is found with the ratio test. Outside it the series is worthless, no matter how well-behaved the function looks.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="taylor">
+    <div class="bench-head"><span class="t">Bench 13 · Taylor approximation</span><span class="h">add terms and watch the fit spread outwards</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-taylor" height="330"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>terms <b id="tay-n-l">2</b></label><input type="range" id="tay-n" min="1" max="14" value="2"></div>
+        <div class="btnrow">
+          <button class="btn on" data-tf="sin">sin x</button>
+          <button class="btn" data-tf="exp">eˣ</button>
+          <button class="btn" data-tf="geo">1/(1−x)</button>
+          <button class="btn" data-tf="log">ln(1+x)</button>
+        </div>
+        <div class="readout" id="tay-out"></div>
+        <p class="note">For the last two, the approximation refuses to follow the curve past <span class="mono">|x| = 1</span> however many terms you add. That wall is the radius of convergence, and no amount of compute gets you past it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="incode">
+      <span class="lbl">In your code</span>
+      <div>
+        <p>Your standard library computes <code>sin</code>, <code>exp</code> and <code>log</code> from truncated series (plus argument reduction and a polynomial fitted to minimise worst-case error). Taylor expansion is also how you rescue a formula from catastrophic cancellation: for tiny x, <code>exp(x)-1</code> loses all precision, so <code>expm1(x)</code> uses <span class="m">x + x²/2 + ⋯</span> instead — same value, many more correct digits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 --------------------------------------------------------------- -->
+<section class="topic" id="partial" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 14 · Functions of several variables</div>
+    <h2>Partial derivatives and the gradient</h2>
+    <p class="oneline"><b>The idea:</b> with many inputs, "the slope" splinters into one slope per direction. Collect them into a vector and you get the gradient — which points straight uphill.</p>
+
+    <p>A partial derivative <span class="m">∂f/∂x</span> is the ordinary derivative taken with every other variable frozen. For <span class="m">f(x,y) = x²y + 3y³</span>: <span class="m">f<sub>x</sub> = 2xy</span> and <span class="m">f<sub>y</sub> = x² + 9y²</span>. Mixed partials commute for well-behaved functions (<span class="m">f<sub>xy</sub> = f<sub>yx</sub></span>, Clairaut), which is why the Hessian is symmetric.</p>
+
+    <div class="box def">
+      <h4>Gradient and directional derivative</h4>
+      <div class="eq">∇f = (f<sub>x</sub>, f<sub>y</sub>) &nbsp;&nbsp;&nbsp; D<sub>u</sub>f = ∇f · u &nbsp;<span class="dim">(u a unit vector)</span></div>
+      <p class="small">Three consequences, straight from <span class="m">∇f·u = ‖∇f‖cos θ</span>:</p>
+      <ul class="small">
+        <li>The steepest ascent is along <span class="m">∇f</span> itself, and the steepest rate is <span class="m">‖∇f‖</span>.</li>
+        <li>Perpendicular to the gradient, the function does not change at all — so <b>∇f is always perpendicular to the contour line</b>.</li>
+        <li>Steepest <em>descent</em> is <span class="m">−∇f</span>. That is the entire idea of gradient descent, and it is just the dot product from Section 1 again.</li>
+      </ul>
+      <p class="small" style="margin-top:.5em"><b>Multivariable chain rule</b>: if <span class="m">x=x(t), y=y(t)</span> then <span class="m">df/dt = f<sub>x</sub>·x′(t) + f<sub>y</sub>·y′(t)</span>. Sum over every path the influence can travel — which is exactly how autodiff handles a node with several children.</p>
+    </div>
+  </div>
+
+  <div class="bench" data-bench="grad">
+    <div class="bench-head"><span class="t">Bench 14 · gradient on a contour map</span><span class="h">drag the point; spin the direction dial</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-grad" height="340"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>direction u <b id="gr-a-l">30°</b></label><input type="range" id="gr-a" min="0" max="359" value="30"></div>
+        <div class="readout" id="gr-out"></div>
+        <div class="legend"><span><i style="border-color:var(--mag)"></i>∇f</span><span><i style="border-color:var(--amber)"></i>direction u</span></div>
+        <p class="note">Rotate u until the directional derivative reads zero — you are now travelling exactly along the contour, perpendicular to the gradient.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 --------------------------------------------------------------- -->
+<section class="topic" id="optim" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 15 · Extrema &amp; optimisation</div>
+    <h2>Finding the bottom of the bowl</h2>
+    <p class="oneline"><b>The idea:</b> at a maximum or minimum the gradient vanishes. The second derivatives then decide whether you are at a peak, a pit, or a mountain pass.</p>
+
+    <div class="box def">
+      <h4>Second derivative test in two variables</h4>
+      <p class="small">At a critical point where <span class="m">f<sub>x</sub> = f<sub>y</sub> = 0</span>, let <span class="m">D = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>²</span> (the determinant of the Hessian).</p>
+      <ul class="small">
+        <li><span class="m">D &gt; 0</span> and <span class="m">f<sub>xx</sub> &gt; 0</span> → local <b>minimum</b>.</li>
+        <li><span class="m">D &gt; 0</span> and <span class="m">f<sub>xx</sub> &lt; 0</span> → local <b>maximum</b>.</li>
+        <li><span class="m">D &lt; 0</span> → <b>saddle point</b>: up one way, down another.</li>
+        <li><span class="m">D = 0</span> → inconclusive.</li>
+      </ul>
+      <p class="small" style="margin-top:.5em">In the language of Part One: the Hessian is a symmetric matrix, and this test just asks about the signs of its eigenvalues. All positive → bowl. All negative → dome. Mixed signs → saddle. The two courses are describing the same object.</p>
+    </div>
+
+    <p><b>Lagrange multipliers.</b> To optimise <span class="m">f</span> subject to a constraint <span class="m">g = c</span>, note that at the best point the contours of f must be tangent to the constraint curve — otherwise you could slide along the constraint and do better. Tangency means parallel gradients:</p>
+    <div class="eq">∇f = λ∇g, &nbsp;&nbsp; g(x,y) = c</div>
+    <p>Solve the system. The multiplier λ is not waste: it is the <em>shadow price</em>, the rate at which the optimum improves as you relax the constraint by one unit.</p>
+
+    <h3>Gradient descent, and why the step size fights the curvature</h3>
+    <p>Repeat <span class="m">x ← x − η∇f(x)</span>. On a quadratic bowl <span class="m">f = ½(ax² + by²)</span>, the update is diagonal, and along each axis the error is multiplied by <span class="m">(1 − ηλ)</span> per step. So:</p>
+    <ul>
+      <li>It converges only if <span class="m">η &lt; 2/λ<sub>max</sub></span> — the sharpest direction sets the speed limit.</li>
+      <li>The slowest direction converges at rate <span class="m">1 − ηλ<sub>min</sub></span>.</li>
+      <li>So the whole difficulty is the ratio <span class="m">λ<sub>max</sub>/λ<sub>min</sub></span> — the <b>condition number</b> from the SVD section. An ill-conditioned loss surface makes descent zig-zag down a narrow valley.</li>
+    </ul>
+    <p>Feature scaling, batch normalisation, momentum and Adam are all attempts to fix the same eigenvalue problem.</p>
+  </div>
+
+  <div class="bench" data-bench="gd">
+    <div class="bench-head"><span class="t">Bench 15 · gradient descent</span><span class="h">drag the start; push the step size until it breaks</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-gd" height="340"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>step size η <b id="gd-lr-l">0.10</b></label><input type="range" id="gd-lr" min="1" max="220" value="10"></div>
+        <div class="ctrl"><label>condition number <b id="gd-k-l">6</b></label><input type="range" id="gd-k" min="1" max="40" value="6"></div>
+        <div class="btnrow">
+          <button class="btn" id="gd-step">Step</button>
+          <button class="btn" id="gd-run">Run 40</button>
+          <button class="btn" id="gd-reset">Reset</button>
+          <button class="btn" id="gd-mom">Momentum</button>
+        </div>
+        <div class="readout" id="gd-out"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 --------------------------------------------------------------- -->
+<section class="topic" id="ode" data-pen="mag">
+  <div class="col">
+    <div class="eyebrow">MA1521 · 16 · Differential equations</div>
+    <h2>ODEs and the simplest numerical solver</h2>
+    <p class="oneline"><b>The idea:</b> an ODE describes a rule for change and asks you to recover the thing changing. When you cannot solve it on paper, you step forward along the tangent instead.</p>
+
+    <div class="box def">
+      <h4>The two you must be able to solve by hand</h4>
+      <p class="small"><b>Separable</b> — get all the y's on one side: <span class="m">dy/dx = g(x)h(y)</span> → <span class="m">∫dy/h(y) = ∫g(x)dx</span>.<br>
+      Example: <span class="m">dy/dx = ky</span> → <span class="m">ln|y| = kx + C</span> → <span class="m">y = Ae<sup>kx</sup></span>. Exponential growth and decay, half-lives, compound interest.</p>
+      <p class="small"><b>First-order linear</b> — <span class="m">y′ + P(x)y = Q(x)</span>. Multiply by the integrating factor <span class="m">μ = e<sup>∫P dx</sup></span>, which makes the left side an exact derivative <span class="m">(μy)′</span>, then integrate both sides.</p>
+      <p class="small"><b>Logistic</b> — <span class="m">y′ = ry(1 − y/K)</span> is separable via partial fractions and gives the S-curve that every adoption model reaches for.</p>
+    </div>
+
+    <p><b>Euler's method</b> turns the definition of the derivative into an algorithm. From <span class="m">y′ = f(x,y)</span> and <span class="m">y(x₀) = y₀</span>:</p>
+    <div class="eq">y<sub>n+1</sub> = y<sub>n</sub> + h·f(x<sub>n</sub>, y<sub>n</sub>)</div>
+    <p>Follow the tangent for a short distance h, recompute the slope, repeat. Global error is <span class="m">O(h)</span> — halve the step, halve the error, which is poor. Runge–Kutta 4 samples the slope four times per step for <span class="m">O(h⁴)</span>, and is what <code>scipy.integrate.solve_ivp</code> uses by default.</p>
+  </div>
+
+  <div class="bench" data-bench="ode">
+    <div class="bench-head"><span class="t">Bench 16 · Euler vs the exact curve</span><span class="h">shrink the step and watch the gap close</span></div>
+    <div class="bench-body">
+      <div class="stage"><canvas id="c-ode" height="320"></canvas></div>
+      <div class="panel">
+        <div class="ctrl"><label>step h <b id="ode-h-l">0.50</b></label><input type="range" id="ode-h" min="2" max="100" value="50"></div>
+        <div class="btnrow">
+          <button class="btn on" data-of="decay">y′ = −1.5y</button>
+          <button class="btn" data-of="logistic">logistic</button>
+          <button class="btn" data-of="osc">y′ = cos x − y</button>
+        </div>
+        <div class="btnrow"><button class="btn on" id="ode-field">Slope field</button></div>
+        <div class="readout" id="ode-out"></div>
+        <p class="note">On the decay equation, push h past <span class="mono">2/1.5 = 1.33</span> and the numerical solution oscillates and blows up while the true one decays quietly. Stability is not accuracy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 --------------------------------------------------------------- -->
+<section class="topic" id="together" data-pen="amber">
+  <div class="col">
+    <div class="eyebrow">Both pens · one page</div>
+    <h2>Where the two courses meet</h2>
+    <p class="oneline"><b>The idea:</b> linear algebra gives you the object; calculus tells you which object is best. Almost every model you will ship is that sentence, made concrete.</p>
+
+    <p>Here is linear regression derived twice. First, the calculus way. The loss is a function of the parameter vector <span class="m">x</span>:</p>
+    <div class="eq">L(x) = ‖Ax − b‖² = (Ax − b)<sup>T</sup>(Ax − b)</div>
+    <p>Expand, differentiate with respect to the vector x, and set the gradient to zero:</p>
+    <div class="eq">∇L = 2A<sup>T</sup>(Ax − b) = 0 &nbsp;⟹&nbsp; <span class="hl">A<sup>T</sup>A x = A<sup>T</sup>b</span></div>
+    <p>Now the linear algebra way: the residual must be perpendicular to the column space, so <span class="m">A<sup>T</sup>(b − Ax) = 0</span>. Same equation. One route reasons about slopes; the other reasons about right angles. They agree because minimising a squared distance <em>is</em> finding a perpendicular — the second derivative test even confirms it, since the Hessian <span class="m">2A<sup>T</sup>A</span> is positive semi-definite, so the critical point is a genuine minimum.</p>
+
+    <div class="box def">
+      <h4>The same pairing, four more times</h4>
+      <table class="tbl">
+        <tr><th>Task</th><th>Linear algebra supplies</th><th>Calculus supplies</th></tr>
+        <tr><td>Neural network</td><td>layers as matrix products</td><td>chain rule for the gradients</td></tr>
+        <tr><td>PCA</td><td>eigenvectors of the covariance</td><td>Lagrange multipliers to maximise variance under ‖v‖=1</td></tr>
+        <tr><td>Optimiser design</td><td>eigenvalues of the Hessian</td><td>the step rule and its convergence</td></tr>
+        <tr><td>Markov / diffusion</td><td>the transition matrix and its powers</td><td>continuous-time limit as an ODE</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h4>If you only keep six things</h4>
+      <ol class="small">
+        <li><b>Ax is a combination of A's columns.</b> Solvability, rank, span and least squares all fall out of this one reading.</li>
+        <li><b>Determinant is an area factor.</b> Zero means collapse, which means no inverse, which means no unique solution.</li>
+        <li><b>Eigenvectors are the directions a matrix leaves alone.</b> Repeated application is then just scalar powers.</li>
+        <li><b>Every matrix is rotate–stretch–rotate.</b> The SVD always exists, and truncating it is provably the best low-rank summary.</li>
+        <li><b>A derivative is a local linear approximation.</b> Newton, gradient descent, Euler and Taylor are all that one sentence, iterated.</li>
+        <li><b>The gradient is perpendicular to the contour.</b> Steepest descent, Lagrange multipliers and the normal equations are the same geometry three times.</li>
+      </ol>
+    </div>
+
+    <div class="incode">
+      <span class="lbl">Practice</span>
+      <div>
+        <p>Reading proves nothing here. Re-derive by hand: the RREF of a 3×4 system with a free variable; the eigenvalues of a 2×2 Markov matrix; a least-squares line through four points; the Maclaurin series of <span class="m">e<sup>−x²</sup></span> (substitute into the series for <span class="m">e<sup>u</sup></span> rather than differentiating six times); and the critical points of <span class="m">f(x,y) = x³ − 3xy + y³</span>. Then check each one against the benches above.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <div>
+      <div class="mono">ted.sg &middot; brown bag</div>
+      <p class="small" style="margin:.4em 0 0">Structured after the published chapter lists of NUS MA1522 (Linear Algebra for Computing) and MA1521 (Calculus for Computing). Course content varies by semester — treat this as intuition and revision, not as the official syllabus.</p>
+    </div>
+    <div class="mono" style="white-space:nowrap">17 sections &middot; 17 benches</div>
+  </div>
+</footer>
+
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+/* ============================== core ============================== */
+var C={ink:"#EAF2EC",ink2:"#A6BCAE",blue:"#9FD6B4",mag:"#C97B5A",amber:"#D9A94E",paper:"#0C1B14",hair:"rgba(157,198,168,.11)",hair2:"rgba(157,198,168,.30)"};
+var REDRAWS=[];
+function SAFE(f){try{f();}catch(e){if(window.console&&console.error)console.error("bench failed:",e);}}
+function f2(x){return (Math.abs(x)<5e-3?0:x).toFixed(2);}
+function f3(x){return (Math.abs(x)<5e-4?0:x).toFixed(3);}
+function rows(a){var s="";for(var i=0;i<a.length;i++){s+='<div class="row"><span>'+a[i][0]+'</span><b>'+a[i][1]+'</b></div>';}return s;}
+function $(id){return document.getElementById(id);}
+
+function Sk(cv,spanY,cx,cy){
+  this.cv=cv;this.ctx=cv.getContext("2d");this.spanY=spanY;this.cx=cx||0;this.cy=cy||0;
+  /* read the authored height ONCE — assigning cv.height rewrites the attribute */
+  this.baseH=parseInt(cv.getAttribute("data-h")||cv.getAttribute("height"),10)||300;
+  cv.setAttribute("data-h",this.baseH);
+  this.resize();
+}
+Sk.prototype.resize=function(){
+  var dpr=Math.min(window.devicePixelRatio||1,2.5);
+  var w=this.cv.clientWidth||(this.cv.parentNode&&this.cv.parentNode.clientWidth)||600;
+  var vw=window.innerWidth||900,vh=window.innerHeight||800,h=this.baseH;
+  if(vw<560)h=Math.round(this.baseH*0.74);else if(vw<880)h=Math.round(this.baseH*0.86);
+  h=Math.max(210,Math.min(h,Math.round(vh*0.6)));
+  this.cv.width=Math.round(w*dpr);this.cv.height=Math.round(h*dpr);
+  this.cv.style.height=h+"px";this.cv.style.width="100%";
+  this.W=w;this.H=h;this.ctx.setTransform(dpr,0,0,dpr,0,0);
+  var sy=this.spanY,sx=sy*w/h;
+  this.xmin=this.cx-sx/2;this.xmax=this.cx+sx/2;this.ymin=this.cy-sy/2;this.ymax=this.cy+sy/2;
+};
+Sk.prototype.box=function(x0,x1,y0,y1){this.xmin=x0;this.xmax=x1;this.ymin=y0;this.ymax=y1;};
+Sk.prototype.X=function(x){return (x-this.xmin)/(this.xmax-this.xmin)*this.W;};
+Sk.prototype.Y=function(y){return this.H-(y-this.ymin)/(this.ymax-this.ymin)*this.H;};
+Sk.prototype.ix=function(p){return this.xmin+p/this.W*(this.xmax-this.xmin);};
+Sk.prototype.iy=function(p){return this.ymin+(this.H-p)/this.H*(this.ymax-this.ymin);};
+Sk.prototype.clear=function(){var c=this.ctx;c.clearRect(0,0,this.W,this.H);c.fillStyle=C.paper;c.fillRect(0,0,this.W,this.H);};
+Sk.prototype.grid=function(step){
+  var c=this.ctx,i;c.save();c.strokeStyle=C.hair;c.lineWidth=1;
+  for(i=Math.ceil(this.xmin/step)*step;i<=this.xmax;i+=step){c.beginPath();c.moveTo(this.X(i),0);c.lineTo(this.X(i),this.H);c.stroke();}
+  for(i=Math.ceil(this.ymin/step)*step;i<=this.ymax;i+=step){c.beginPath();c.moveTo(0,this.Y(i));c.lineTo(this.W,this.Y(i));c.stroke();}
+  c.restore();
+};
+Sk.prototype.axes=function(){
+  var c=this.ctx;c.save();c.strokeStyle=C.hair2;c.lineWidth=1.2;
+  c.beginPath();c.moveTo(0,this.Y(0));c.lineTo(this.W,this.Y(0));c.stroke();
+  c.beginPath();c.moveTo(this.X(0),0);c.lineTo(this.X(0),this.H);c.stroke();c.restore();
+};
+Sk.prototype.seg=function(x1,y1,x2,y2,col,w,dash){
+  var c=this.ctx;c.save();c.strokeStyle=col||C.ink;c.lineWidth=w||1.4;if(dash)c.setLineDash(dash);
+  c.beginPath();c.moveTo(this.X(x1),this.Y(y1));c.lineTo(this.X(x2),this.Y(y2));c.stroke();c.restore();
+};
+Sk.prototype.poly=function(pts,col,w,dash){
+  if(pts.length<2)return;var c=this.ctx;c.save();c.strokeStyle=col||C.ink;c.lineWidth=w||1.6;c.lineJoin="round";if(dash)c.setLineDash(dash);
+  c.beginPath();c.moveTo(this.X(pts[0][0]),this.Y(pts[0][1]));
+  for(var i=1;i<pts.length;i++){c.lineTo(this.X(pts[i][0]),this.Y(pts[i][1]));}
+  c.stroke();c.restore();
+};
+Sk.prototype.fn=function(g,col,w,dash,x0,x1){
+  var a=(x0===undefined?this.xmin:x0),b=(x1===undefined?this.xmax:x1),n=260,pts=[],i,x,y,prev=null,c=this.ctx;
+  c.save();c.strokeStyle=col||C.ink;c.lineWidth=w||1.7;c.lineJoin="round";if(dash)c.setLineDash(dash);c.beginPath();
+  var started=false;
+  for(i=0;i<=n;i++){x=a+(b-a)*i/n;y=g(x);
+    if(!isFinite(y)||y>this.ymax+40*(this.ymax-this.ymin)||y<this.ymin-40*(this.ymax-this.ymin)){started=false;continue;}
+    if(!started){c.moveTo(this.X(x),this.Y(y));started=true;}else{c.lineTo(this.X(x),this.Y(y));}
+  }
+  c.stroke();c.restore();
+};
+Sk.prototype.dot=function(x,y,r,col,hollow){
+  var c=this.ctx;c.save();c.beginPath();c.arc(this.X(x),this.Y(y),r||4,0,6.2832);
+  if(hollow){c.fillStyle=C.paper;c.fill();c.strokeStyle=col;c.lineWidth=1.8;c.stroke();}
+  else{c.fillStyle=col;c.fill();}c.restore();
+};
+Sk.prototype.arrow=function(x1,y1,x2,y2,col,w){
+  var c=this.ctx,X1=this.X(x1),Y1=this.Y(y1),X2=this.X(x2),Y2=this.Y(y2);
+  var a=Math.atan2(Y2-Y1,X2-X1),L=Math.hypot(X2-X1,Y2-Y1);if(L<1)return;
+  var hd=Math.min(9,L*0.4);
+  c.save();c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w||2;
+  c.beginPath();c.moveTo(X1,Y1);c.lineTo(X2,Y2);c.stroke();
+  c.beginPath();c.moveTo(X2,Y2);c.lineTo(X2-hd*Math.cos(a-0.4),Y2-hd*Math.sin(a-0.4));
+  c.lineTo(X2-hd*Math.cos(a+0.4),Y2-hd*Math.sin(a+0.4));c.closePath();c.fill();c.restore();
+};
+Sk.prototype.txt=function(s,x,y,col,align,size,px){
+  var c=this.ctx;c.save();c.fillStyle=col||C.ink2;c.font=(size||11)+'px "IBM Plex Mono",monospace';
+  c.textAlign=align||"left";c.textBaseline="middle";
+  c.fillText(s,px?x:this.X(x),px?y:this.Y(y));c.restore();
+};
+/* pen plotters cannot fill: they hatch */
+Sk.prototype.hatch=function(pts,col,spacing,ang,lw){
+  var c=this.ctx,i;if(pts.length<3)return;
+  c.save();c.beginPath();c.moveTo(this.X(pts[0][0]),this.Y(pts[0][1]));
+  for(i=1;i<pts.length;i++)c.lineTo(this.X(pts[i][0]),this.Y(pts[i][1]));
+  c.closePath();c.clip();
+  c.strokeStyle=col;c.lineWidth=lw||1;c.globalAlpha=0.55;
+  var sp=spacing||7,a=ang===undefined?-Math.PI/4:ang,dx=Math.cos(a),dy=Math.sin(a),D=Math.hypot(this.W,this.H);
+  for(var t=-D;t<D;t+=sp){
+    c.beginPath();c.moveTo(this.W/2+dx*(-D)-dy*t,this.H/2+dy*(-D)+dx*t);
+    c.lineTo(this.W/2+dx*D-dy*t,this.H/2+dy*D+dx*t);c.stroke();
+  }
+  c.restore();
+};
+Sk.prototype.outline=function(pts,col,w){
+  var c=this.ctx;c.save();c.strokeStyle=col;c.lineWidth=w||1.6;c.beginPath();
+  c.moveTo(this.X(pts[0][0]),this.Y(pts[0][1]));
+  for(var i=1;i<pts.length;i++)c.lineTo(this.X(pts[i][0]),this.Y(pts[i][1]));
+  c.closePath();c.stroke();c.restore();
+};
+function draggable(sk,getHandles,redraw){
+  var active=null;
+  function local(cx,cy){var r=sk.cv.getBoundingClientRect();return [cx-r.left,cy-r.top];}
+  function pick(p,rad){
+    var hs=getHandles(),best=null,bd=rad,i,d;
+    for(i=0;i<hs.length;i++){d=Math.hypot(sk.X(hs[i].x)-p[0],sk.Y(hs[i].y)-p[1]);if(d<bd){bd=d;best=hs[i];}}
+    return best;
+  }
+  function moveTo(p){active.set(sk.ix(p[0]),sk.iy(p[1]));redraw();}
+  /* --- mouse --- */
+  sk.cv.addEventListener("mousedown",function(e){
+    active=pick(local(e.clientX,e.clientY),24);
+    if(active){e.preventDefault();sk.cv.style.cursor="grabbing";}
+  });
+  window.addEventListener("mousemove",function(e){
+    var p=local(e.clientX,e.clientY);
+    if(!active){if(e.target===sk.cv)sk.cv.style.cursor=pick(p,24)?"grab":"default";return;}
+    moveTo(p);e.preventDefault();
+  });
+  window.addEventListener("mouseup",function(){active=null;sk.cv.style.cursor="default";});
+  /* --- touch: the gesture is only claimed if it begins on a handle --- */
+  sk.cv.addEventListener("touchstart",function(e){
+    if(e.touches.length!==1){active=null;return;}
+    var t=e.touches[0];
+    active=pick(local(t.clientX,t.clientY),44);
+    if(active)e.preventDefault();      /* no preventDefault => the page scrolls as usual */
+  },{passive:false});
+  sk.cv.addEventListener("touchmove",function(e){
+    if(!active||e.touches.length!==1)return;
+    e.preventDefault();
+    var t=e.touches[0];moveTo(local(t.clientX,t.clientY));
+  },{passive:false});
+  function end(){active=null;}
+  sk.cv.addEventListener("touchend",end);
+  sk.cv.addEventListener("touchcancel",end);
+}
+function tapOnly(cv,sk,blocked,act){
+  var t=null;
+  function at(e){var r=cv.getBoundingClientRect(),q=e.touches?e.changedTouches[0]:e;return [q.clientX-r.left,q.clientY-r.top];}
+  function start(e){var p=at(e);t=blocked(p[0],p[1])?null:{x:p[0],y:p[1],at:Date.now()};}
+  function fin(e){
+    if(!t)return;var p=at(e);
+    if(Math.hypot(p[0]-t.x,p[1]-t.y)<10&&Date.now()-t.at<700)act(p[0],p[1]);
+    t=null;
+  }
+  cv.addEventListener("mousedown",start);cv.addEventListener("mouseup",fin);
+  cv.addEventListener("touchstart",start,{passive:true});
+  cv.addEventListener("touchend",fin,{passive:true});
+  cv.addEventListener("touchcancel",function(){t=null;});
+}
+function group(sel,fn){var b=document.querySelectorAll(sel);for(var i=0;i<b.length;i++){(function(el){el.addEventListener("click",function(){for(var j=0;j<b.length;j++)b[j].classList.remove("on");el.classList.add("on");fn(el);});})(b[i]);}}
+function eig2(a,b,c,d){
+  var T=a+d,D=a*d-b*c,disc=T*T-4*D;
+  if(disc<-1e-12)return{real:false,re:T/2,im:Math.sqrt(-disc)/2,det:D,tr:T};
+  disc=Math.max(0,disc);var s=Math.sqrt(disc),l1=(T+s)/2,l2=(T-s)/2,v=function(l){
+    if(Math.abs(c)>1e-9)return[l-d,c];if(Math.abs(b)>1e-9)return[b,l-a];
+    return Math.abs(a-l)<1e-9?[1,0]:[0,1];};
+  return{real:true,l1:l1,l2:l2,v1:v(l1),v2:v(l2),det:D,tr:T};
+}
+function nrm(v){var m=Math.hypot(v[0],v[1]);return m<1e-12?[0,0]:[v[0]/m,v[1]/m];}
+function solveLin(A,b){ /* gaussian elim w/ partial pivot, A n×n */
+  var n=b.length,i,j,k,M=[];
+  for(i=0;i<n;i++){M.push(A[i].slice());M[i].push(b[i]);}
+  for(k=0;k<n;k++){
+    var p=k;for(i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;
+    var t=M[k];M[k]=M[p];M[p]=t;
+    if(Math.abs(M[k][k])<1e-12)return null;
+    for(i=k+1;i<n;i++){var f=M[i][k]/M[k][k];for(j=k;j<=n;j++)M[i][j]-=f*M[k][j];}
+  }
+  var x=new Array(n);
+  for(i=n-1;i>=0;i--){var s=M[i][n];for(j=i+1;j<n;j++)s-=M[i][j]*x[j];x[i]=s/M[i][i];}
+  return x;
+}
+
+/* ============================ bench 00 · hero ============================ */
+SAFE(function(){
+  var cv=$("c-hero");if(!cv)return;
+  var sk=new Sk(cv,6.2),out=$("hero-out"),showEig=true,showCirc=true;
+  var ids=["hero-a","hero-b","hero-c","hero-d"];
+  function M(){return ids.map(function(i){var v=parseFloat($(i).value);return isFinite(v)?v:0;});}
+  function ap(m,x,y){return [m[0]*x+m[1]*y,m[2]*x+m[3]*y];}
+  function draw(){
+    var m=M(),e=eig2(m[0],m[1],m[2],m[3]),i,pts;
+    sk.clear();sk.grid(1);sk.axes();
+    /* image of the grid */
+    for(i=-6;i<=6;i++){
+      var p1=ap(m,i,-8),p2=ap(m,i,8),q1=ap(m,-8,i),q2=ap(m,8,i);
+      var w=(i===0)?1.7:0.9,col=(i===0)?"rgba(159,214,180,.55)":"rgba(159,214,180,.28)";
+      sk.seg(p1[0],p1[1],p2[0],p2[1],col,w);sk.seg(q1[0],q1[1],q2[0],q2[1],col,w);
+    }
+    /* unit square image */
+    var s=[[0,0],ap(m,1,0),ap(m,1,1),ap(m,0,1)];
+    sk.hatch(s,m[0]*m[3]-m[1]*m[2]<0?C.mag:C.blue,8,m[0]*m[3]-m[1]*m[2]<0?Math.PI/4:-Math.PI/4,0.9);
+    sk.outline(s,C.blue,1.6);
+    if(showCirc){pts=[];for(i=0;i<=90;i++){var t=i/90*6.2832;pts.push(ap(m,Math.cos(t),Math.sin(t)));}
+      sk.poly(pts,C.amber,1.5,[4,3]);
+      var c0=[];for(i=0;i<=90;i++){var u=i/90*6.2832;c0.push([Math.cos(u),Math.sin(u)]);}
+      sk.poly(c0,"rgba(234,242,236,.22)",1,[2,3]);}
+    if(showEig&&e.real){
+      [[e.v1,e.l1],[e.v2,e.l2]].forEach(function(p){
+        var v=nrm(p[0]);if(v[0]===0&&v[1]===0)return;
+        sk.seg(-v[0]*9,-v[1]*9,v[0]*9,v[1]*9,C.amber,1.3,[7,4]);
+        sk.arrow(0,0,v[0]*1.6,v[1]*1.6,C.amber,2);
+        sk.txt("λ="+f2(p[1]),v[0]*2.1,v[1]*2.1,C.amber,"left",11);
+      });
+    }
+    var i1=ap(m,1,0),i2=ap(m,0,1);
+    sk.arrow(0,0,i1[0],i1[1],C.blue,2.4);sk.arrow(0,0,i2[0],i2[1],C.mag,2.4);
+    sk.txt("Ae₁",i1[0],i1[1],C.blue,"left",11);sk.txt("Ae₂",i2[0],i2[1],C.mag,"left",11);
+    var det=e.det;
+    $("hero-det").textContent="det = "+f2(det);
+    var eigTxt=e.real?(f2(e.l1)+", "+f2(e.l2)):(f2(e.re)+" ± "+f2(e.im)+"i");
+    var verdict=Math.abs(det)<1e-9?"singular — plane collapses to a line":(det<0?"invertible, orientation flipped":"invertible, orientation kept");
+    out.innerHTML=rows([["determinant",f2(det)],["area factor","×"+f2(Math.abs(det))],["trace",f2(e.tr)],["eigenvalues",eigTxt],["rank",Math.abs(det)<1e-9?(m.every(function(z){return Math.abs(z)<1e-9;})?"0":"1"):"2"]])+
+      '<div style="margin-top:6px;color:'+(Math.abs(det)<1e-9?C.mag:C.ink2)+'">'+verdict+(e.real?"":" · no real eigenvector: every direction turns")+"</div>";
+  }
+  ids.forEach(function(i){$(i).addEventListener("input",draw);});
+  var P={rot:[0.71,-0.71,0.71,0.71],scale:[1.8,0,0,0.6],shear:[1,1,0,1],flat:[1,2,0.5,1],flip:[1,0,0,-1]};
+  group('[data-preset]',function(el){var p=P[el.getAttribute("data-preset")];for(var i=0;i<4;i++)$(ids[i]).value=p[i];draw();});
+  $("hero-eig").addEventListener("click",function(){showEig=!showEig;this.classList.toggle("on");draw();});
+  $("hero-circ").addEventListener("click",function(){showCirc=!showCirc;this.classList.toggle("on");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 01 · dot ============================ */
+SAFE(function(){
+  var cv=$("c-dot");if(!cv)return;
+  var sk=new Sk(cv,6),out=$("dot-out"),u={x:2.4,y:0.6},v={x:1.0,y:2.0},showP=true;
+  function draw(){
+    sk.clear();sk.grid(1);sk.axes();
+    var uu=u.x*u.x+u.y*u.y,d=u.x*v.x+u.y*v.y,t=uu<1e-9?0:d/uu,px=t*u.x,py=t*u.y;
+    if(showP){
+      sk.seg(-u.x*4,-u.y*4,u.x*4,u.y*4,"rgba(159,214,180,.25)",1,[5,4]);
+      sk.seg(v.x,v.y,px,py,C.ink2,1.2,[3,3]);
+      sk.arrow(0,0,px,py,C.amber,3);
+      var n=nrm([u.x,u.y]),s=0.28;
+      if(Math.hypot(px,py)>0.1){var b=[px,py],p1=[b[0]-n[0]*s,b[1]-n[1]*s],p2=[p1[0]+(v.x-px)*s/Math.max(1e-6,Math.hypot(v.x-px,v.y-py)),p1[1]+(v.y-py)*s/Math.max(1e-6,Math.hypot(v.x-px,v.y-py))];
+        sk.poly([p1,p2,[b[0]+(p2[0]-p1[0]),b[1]+(p2[1]-p1[1])]],C.ink2,1);}
+    }
+    sk.arrow(0,0,u.x,u.y,C.blue,2.6);sk.arrow(0,0,v.x,v.y,C.mag,2.6);
+    sk.dot(u.x,u.y,5,C.blue,true);sk.dot(v.x,v.y,5,C.mag,true);
+    sk.txt("u",u.x+0.15,u.y+0.15,C.blue,"left",12);sk.txt("v",v.x+0.15,v.y+0.15,C.mag,"left",12);
+    var lu=Math.hypot(u.x,u.y),lv=Math.hypot(v.x,v.y),cos=(lu*lv<1e-9)?0:d/(lu*lv);
+    out.innerHTML=rows([
+      ["u",  "("+f2(u.x)+", "+f2(u.y)+")"],
+      ["v",  "("+f2(v.x)+", "+f2(v.y)+")"],
+      ["u · v",'<span class="k">'+f2(d)+"</span>"],
+      ["‖u‖, ‖v‖",f2(lu)+", "+f2(lv)],
+      ["cos θ",f3(cos)],
+      ["θ",f2(Math.acos(Math.max(-1,Math.min(1,cos)))*180/Math.PI)+"°"],
+      ["‖proj‖",f2(Math.hypot(t*u.x,t*u.y))]
+    ])+'<div style="margin-top:6px">'+(Math.abs(d)<0.06?"perpendicular — zero shadow":(d>0?"acute — same general direction":"obtuse — pointing apart"))+"</div>";
+  }
+  draggable(sk,function(){return [{x:u.x,y:u.y,set:function(a,b){u.x=a;u.y=b;}},{x:v.x,y:v.y,set:function(a,b){v.x=a;v.y=b;}}];},draw);
+  $("dot-proj").addEventListener("click",function(){showP=!showP;this.classList.toggle("on");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 02 · rref ============================ */
+SAFE(function(){
+  var host=$("rref-grid");if(!host)return;
+  var out=$("rref-out"),stepsEl=$("rref-steps");
+  var SYS={unique:[[1,1,1,2],[1,2,3,5],[2,3,1,3]],infinite:[[1,1,1,2],[1,2,3,5],[2,3,4,7]],none:[[1,1,1,2],[1,2,3,5],[2,3,4,9]]};
+  var orig=SYS.infinite.map(function(r){return r.slice();}),cur=null,plan=[],idx=0;
+  function g(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
+  function F(n,d){d=d===undefined?1:d;if(d<0){n=-n;d=-d;}var k=g(n,d);return{n:n/k,d:d/k};}
+  function add(a,b){return F(a.n*b.d+b.n*a.d,a.d*b.d);}
+  function mul(a,b){return F(a.n*b.n,a.d*b.d);}
+  function neg(a){return F(-a.n,a.d);}
+  function inv(a){return F(a.d,a.n);}
+  function str(a){return a.d===1?""+a.n:a.n+"/"+a.d;}
+  function isZ(a){return a.n===0;}
+  function toF(M){return M.map(function(r){return r.map(function(v){return F(Math.round(v*1000),1000);});});}
+  function clone(M){return M.map(function(r){return r.map(function(v){return {n:v.n,d:v.d};});});}
+  function build(M0){
+    var M=clone(M0),steps=[],r=0,rows_=M.length,cols=M[0].length-1,c,i,j;
+    for(c=0;c<cols&&r<rows_;c++){
+      var p=-1;for(i=r;i<rows_;i++)if(!isZ(M[i][c])){p=i;break;}
+      if(p<0)continue;
+      if(p!==r){var t=M[p];M[p]=M[r];M[r]=t;steps.push({M:clone(M),d:"R"+(r+1)+" ↔ R"+(p+1)+"  (bring a pivot up)"});}
+      if(!(M[r][c].n===M[r][c].d)){var f=inv(M[r][c]),lbl=str(f);
+        for(j=0;j<=cols;j++)M[r][j]=mul(M[r][j],f);
+        steps.push({M:clone(M),d:"R"+(r+1)+" → ("+lbl+")·R"+(r+1)+"  (make the pivot 1)"});}
+      for(i=0;i<rows_;i++){
+        if(i===r||isZ(M[i][c]))continue;
+        var m=neg(M[i][c]),lb=str(m);
+        for(j=0;j<=cols;j++)M[i][j]=add(M[i][j],mul(M[r][j],m));
+        steps.push({M:clone(M),d:"R"+(i+1)+" → R"+(i+1)+" + ("+lb+")·R"+(r+1)+"  (clear column "+(c+1)+")"});
+      }
+      r++;
+    }
+    return steps;
+  }
+  function analyse(M){
+    var rows_=M.length,cols=M[0].length-1,rank=0,bad=false,piv=[],i,j;
+    for(i=0;i<rows_;i++){
+      var lead=-1;for(j=0;j<cols;j++)if(!isZ(M[i][j])){lead=j;break;}
+      if(lead<0){if(!isZ(M[i][cols]))bad=true;}else{rank++;piv.push(lead);}
+    }
+    return{rank:rank,bad:bad,free:cols-rank,piv:piv};
+  }
+  function render(){
+    var M=cur,html='<table style="border-collapse:collapse">',i,j;
+    for(i=0;i<M.length;i++){
+      html+="<tr>";
+      for(j=0;j<4;j++){
+        var val=idx===0?orig[i][j]:str(M[i][j]);
+        var style="padding:5px 9px;text-align:right;"+(j===3?"border-left:1.6px solid "+C.ink2+";padding-left:14px;":"");
+        if(idx===0){html+='<td style="'+style+'"><input class="numin" data-i="'+i+'" data-j="'+j+'" style="width:52px;padding:3px" value="'+val+'"></td>';}
+        else{html+='<td style="'+style+'">'+val+"</td>";}
+      }
+      html+="</tr>";
+    }
+    html+="</table>";
+    host.innerHTML=html;
+    if(idx===0){
+      var ins=host.querySelectorAll("input");
+      for(i=0;i<ins.length;i++)ins[i].addEventListener("change",function(){
+        var v=parseFloat(this.value);orig[+this.getAttribute("data-i")][+this.getAttribute("data-j")]=isFinite(v)?v:0;reset();});
+    }
+    var a=analyse(M),verdict;
+    if(a.bad)verdict='<span style="color:'+C.mag+'">inconsistent — a row now reads 0 = nonzero. No solution.</span>';
+    else if(a.free>0)verdict='<span style="color:'+C.amber+'">'+a.free+" free variable"+(a.free>1?"s":"")+" — infinitely many solutions, a "+(a.free===1?"line":"plane")+" of them.</span>";
+    else verdict='<span style="color:'+C.blue+'">every variable has a pivot — exactly one solution.</span>';
+    out.innerHTML=rows([["move",idx+" / "+plan.length],["rank",""+a.rank],["free variables",""+a.free],["nullity",""+a.free]])+'<div style="margin-top:6px">'+(idx===plan.length?verdict:"reducing…")+"</div>";
+    stepsEl.textContent=idx===0?"edit any entry, then press Next move":plan[idx-1].d;
+  }
+  function reset(){cur=toF(orig);plan=build(cur);idx=0;render();}
+  function step(){if(idx<plan.length){idx++;cur=clone(plan[idx-1].M);render();}}
+  $("rref-step").addEventListener("click",step);
+  $("rref-all").addEventListener("click",function(){while(idx<plan.length)idx++;if(plan.length)cur=clone(plan[plan.length-1].M);render();stepsEl.textContent="reduced row-echelon form reached";});
+  $("rref-reset").addEventListener("click",reset);
+  group('[data-sys]',function(el){orig=SYS[el.getAttribute("data-sys")].map(function(r){return r.slice();});reset();});
+  reset();
+});
+
+/* ============================ bench 03 · rank ============================ */
+SAFE(function(){
+  var cv=$("c-rank");if(!cv)return;
+  var sk=new Sk(cv,6),out=$("rank-out"),a={x:2,y:0.5},b={x:0.7,y:2};
+  function draw(){
+    sk.clear();sk.grid(1);sk.axes();
+    var det=a.x*b.y-a.y*b.x,rank;
+    var za=Math.hypot(a.x,a.y)<0.08,zb=Math.hypot(b.x,b.y)<0.08;
+    rank=(za&&zb)?0:(Math.abs(det)<0.06?1:2);
+    if(rank===2){
+      sk.hatch([[-9,-9],[9,-9],[9,9],[-9,9]],"rgba(159,214,180,.5)",13,-Math.PI/4,0.7);
+      sk.txt("span = the whole plane (R²)",sk.W/2,18,C.blue,"center",11,true);
+      sk.hatch([[0,0],[a.x,a.y],[a.x+b.x,a.y+b.y],[b.x,b.y]],C.amber,7,Math.PI/4,0.9);
+      sk.outline([[0,0],[a.x,a.y],[a.x+b.x,a.y+b.y],[b.x,b.y]],"rgba(217,169,78,.7)",1.2);
+    }else if(rank===1){
+      var d=nrm(za?[b.x,b.y]:[a.x,a.y]);
+      sk.seg(-d[0]*12,-d[1]*12,d[0]*12,d[1]*12,C.mag,2.4);
+      sk.txt("span collapses to a line",sk.W/2,18,C.mag,"center",11,true);
+      var nsp=[-d[1],d[0]];
+      sk.seg(-nsp[0]*12,-nsp[1]*12,nsp[0]*12,nsp[1]*12,"rgba(217,169,78,.55)",1.2,[6,4]);
+      sk.txt("null space",nsp[0]*2.3,nsp[1]*2.3,C.amber,"center",10);
+    }else{sk.txt("span = {0}",sk.W/2,18,C.ink2,"center",11,true);}
+    sk.arrow(0,0,a.x,a.y,C.blue,2.6);sk.arrow(0,0,b.x,b.y,C.mag,2.6);
+    sk.dot(a.x,a.y,5,C.blue,true);sk.dot(b.x,b.y,5,C.mag,true);
+    sk.txt("a₁",a.x+0.15,a.y+0.15,C.blue,"left",12);sk.txt("a₂",b.x+0.15,b.y+0.15,C.mag,"left",12);
+    out.innerHTML=rows([
+      ["A = [a₁ a₂]","("+f2(a.x)+", "+f2(a.y)+") ("+f2(b.x)+", "+f2(b.y)+")"],
+      ["det",f2(det)],["rank",'<span class="k">'+rank+"</span>"],["nullity",""+(2-rank)],
+      ["independent?",rank===2?"yes":"no"],["invertible?",rank===2?"yes":"no"]
+    ])+'<div style="margin-top:6px">rank + nullity = '+rank+" + "+(2-rank)+" = 2 columns</div>";
+  }
+  draggable(sk,function(){return [{x:a.x,y:a.y,set:function(p,q){a.x=p;a.y=q;}},{x:b.x,y:b.y,set:function(p,q){b.x=p;b.y=q;}}];},draw);
+  var P={ind:[[2,0.5],[0.7,2]],dep:[[2,1],[-3,-1.5]],zero:[[0,0],[0,0]]};
+  group('[data-rank]',function(el){var p=P[el.getAttribute("data-rank")];a.x=p[0][0];a.y=p[0][1];b.x=p[1][0];b.y=p[1][1];draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 04 · eigen ============================ */
+SAFE(function(){
+  var cv=$("c-eig");if(!cv)return;
+  var sk=new Sk(cv,5.4),out=$("eig-out");
+  var MATS={generic:[1.4,0.5,0.3,1.1],markov:[0.9,0.2,0.1,0.8],decay:[0.6,0.15,0.1,0.45],rot:[0.87,-0.5,0.5,0.87]};
+  var key="generic",v={x:1.6,y:-1.4},hist=[],last=1;
+  function ap(m,p){return [m[0]*p[0]+m[1]*p[1],m[2]*p[0]+m[3]*p[1]];}
+  function draw(){
+    var m=MATS[key],e=eig2(m[0],m[1],m[2],m[3]),i;
+    sk.clear();sk.grid(1);sk.axes();
+    if(e.real){[[e.v1,e.l1],[e.v2,e.l2]].forEach(function(p){
+      var d=nrm(p[0]);if(!d[0]&&!d[1])return;
+      sk.seg(-d[0]*9,-d[1]*9,d[0]*9,d[1]*9,C.amber,1.3,[7,4]);
+      sk.txt("λ="+f2(p[1]),d[0]*2.35,d[1]*2.35,C.amber,"center",11);});}
+    for(i=0;i<hist.length;i++){
+      var u=nrm(hist[i]);if(!u[0]&&!u[1])continue;
+      sk.ctx.globalAlpha=0.18+0.75*(i+1)/hist.length;
+      sk.arrow(0,0,u[0]*2,u[1]*2,i===hist.length-1?C.mag:"rgba(159,214,180,.85)",i===hist.length-1?2.6:1.4);
+      sk.ctx.globalAlpha=1;
+    }
+    var vn=nrm([v.x,v.y]);
+    sk.arrow(0,0,v.x,v.y,C.blue,2.6);sk.dot(v.x,v.y,5,C.blue,true);
+    sk.txt("v",v.x+0.15,v.y+0.15,C.blue,"left",12);
+    var av=ap(m,[v.x,v.y]);
+    sk.arrow(0,0,av[0],av[1],"rgba(201,123,90,.55)",1.6);
+    sk.txt("Av",av[0]+0.12,av[1]+0.12,C.mag,"left",11);
+    var eigTxt=e.real?(f2(e.l1)+", "+f2(e.l2)):(f2(e.re)+" ± "+f2(e.im)+"i");
+    var gr=Math.hypot(av[0],av[1])/Math.max(1e-9,Math.hypot(v.x,v.y));
+    var msg;
+    if(!e.real)msg="complex eigenvalues — pure rotation, no direction is ever fixed";
+    else if(Math.abs(Math.abs(e.l1)-1)<1e-6)msg="dominant λ = 1 — converges to a steady state";
+    else if(Math.abs(e.l1)>1)msg="dominant |λ| > 1 — length grows, direction locks on";
+    else msg="all |λ| < 1 — everything decays to the origin";
+    var extra="";
+    if(key==="markov"){var s=v.x+v.y;if(Math.abs(s)>1e-9)extra='<div style="margin-top:5px">as proportions: ('+f2(v.x/s)+", "+f2(v.y/s)+") → target (0.67, 0.33)</div>";}
+    out.innerHTML=rows([
+      ["A","["+f2(m[0])+" "+f2(m[1])+" ; "+f2(m[2])+" "+f2(m[3])+"]"],
+      ["eigenvalues",eigTxt],["steps",""+hist.length],
+      ["v","("+f3(v.x)+", "+f3(v.y)+")"],
+      ["‖Av‖/‖v‖",'<span class="k">'+f3(gr)+"</span>"]
+    ])+'<div style="margin-top:6px">'+msg+"</div>"+extra;
+  }
+  function step(){var m=MATS[key],p=ap(m,[v.x,v.y]);hist.push([v.x,v.y]);if(hist.length>14)hist.shift();v.x=p[0];v.y=p[1];
+    var L=Math.hypot(v.x,v.y);if(L>3.2){v.x*=2.4/L;v.y*=2.4/L;}if(L<0.35&&L>1e-9){v.x*=1.6/L;v.y*=1.6/L;}draw();}
+  draggable(sk,function(){return [{x:v.x,y:v.y,set:function(p,q){v.x=p;v.y=q;hist=[];}}];},draw);
+  $("eig-step").addEventListener("click",step);
+  var runT=null;
+  $("eig-run").addEventListener("click",function(){if(runT)clearInterval(runT);var n=0;runT=setInterval(function(){step();if(++n>=12){clearInterval(runT);runT=null;}},110);});
+  $("eig-clear").addEventListener("click",function(){hist=[];draw();});
+  group('[data-eig]',function(el){key=el.getAttribute("data-eig");hist=[];v.x=1.6;v.y=-1.4;draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 05 · least squares ============================ */
+SAFE(function(){
+  var cv=$("c-ls");if(!cv)return;
+  var sk=new Sk(cv,7,3.5,2.4),out=$("ls-out"),deg=1,showRes=true;
+  var DEF=[[0.6,1.1],[1.4,1.6],[2.2,1.9],[3.1,3.2],[3.9,3.1],[4.8,4.4],[5.6,4.2]];
+  var pts=DEF.map(function(p){return {x:p[0],y:p[1]};});
+  function fit(){
+    var n=deg+1,i,j,k,A=[],b=[];
+    for(i=0;i<n;i++){A.push(new Array(n).fill(0));b.push(0);}
+    for(k=0;k<pts.length;k++){
+      var pw=[1];for(i=1;i<n;i++)pw.push(pw[i-1]*pts[k].x);
+      for(i=0;i<n;i++){for(j=0;j<n;j++)A[i][j]+=pw[i]*pw[j];b[i]+=pw[i]*pts[k].y;}
+    }
+    return solveLin(A,b);
+  }
+  function ev(c,x){var s=0,p=1;for(var i=0;i<c.length;i++){s+=c[i]*p;p*=x;}return s;}
+  function draw(){
+    sk.clear();sk.grid(1);sk.axes();
+    var c=pts.length>deg?fit():null,i,ss=0,st=0,my=0;
+    if(c){
+      sk.fn(function(x){return ev(c,x);},C.blue,2.2);
+      for(i=0;i<pts.length;i++)my+=pts[i].y;my/=pts.length;
+      for(i=0;i<pts.length;i++){
+        var r=pts[i].y-ev(c,pts[i].x);ss+=r*r;st+=(pts[i].y-my)*(pts[i].y-my);
+        if(showRes)sk.seg(pts[i].x,pts[i].y,pts[i].x,ev(c,pts[i].x),C.mag,1.2,[3,3]);
+      }
+    }
+    for(i=0;i<pts.length;i++)sk.dot(pts[i].x,pts[i].y,5,C.ink,true);
+    var lbl=["c₀","c₁","c₂","c₃"],r=[];
+    if(c)for(i=0;i<c.length;i++)r.push([lbl[i],f3(c[i])]);
+    r.push(["points",""+pts.length]);
+    if(c){r.push(["RMSE",f3(Math.sqrt(ss/pts.length))]);r.push(["R²",st>1e-12?f3(1-ss/st):"—"]);}
+    out.innerHTML=rows(r)+(c?'<div style="margin-top:6px">ŷ = '+c.map(function(v,i){return f2(v)+(i?"x"+(i>1?"^"+i:""):"");}).join(" + ").replace(/\+ -/g,"− ")+"</div>":'<div style="margin-top:6px;color:'+C.mag+'">not enough points for this degree</div>');
+  }
+  draggable(sk,function(){return pts.map(function(p){return {x:p.x,y:p.y,set:function(a,b){p.x=a;p.y=b;}};});},draw);
+  tapOnly(cv,sk,function(px,py){
+    for(var i=0;i<pts.length;i++)if(Math.hypot(sk.X(pts[i].x)-px,sk.Y(pts[i].y)-py)<30)return true;
+    return pts.length>=24;
+  },function(px,py){pts.push({x:sk.ix(px),y:sk.iy(py)});draw();});
+  group('[data-deg]',function(el){deg=+el.getAttribute("data-deg");draw();});
+  $("ls-reset").addEventListener("click",function(){pts=DEF.map(function(p){return {x:p[0],y:p[1]};});draw();});
+  $("ls-res").addEventListener("click",function(){showRes=!showRes;this.classList.toggle("on");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 06 · svd image ============================ */
+SAFE(function(){
+  var cv=$("c-svd");if(!cv)return;
+  var sk=new Sk(cv,1),out=$("svd-out"),slider=$("svd-slider"),W=96,H=32,A=[],comp=[],K=1;
+  (function buildImage(){
+    var o=document.createElement("canvas");o.width=W;o.height=H;var g=o.getContext("2d");
+    g.fillStyle="#fff";g.fillRect(0,0,W,H);g.fillStyle="#000";
+    g.font='bold 21px "IBM Plex Mono", monospace';g.textBaseline="middle";g.textAlign="center";
+    g.fillText("MA1522",W/2,H/2+1);
+    var d=g.getImageData(0,0,W,H).data,i,j;
+    for(i=0;i<H;i++){A.push([]);for(j=0;j<W;j++){var p=(i*W+j)*4;A[i].push(1-d[p]/255);}}
+  })();
+  (function svd(){
+    var B=[],i,j,k,t;
+    for(i=0;i<H;i++){B.push(new Array(H).fill(0));}
+    for(i=0;i<H;i++)for(j=0;j<H;j++){var s=0;for(k=0;k<W;k++)s+=A[i][k]*A[j][k];B[i][j]=s;}
+    var seed=7;function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff-0.5;}
+    for(t=0;t<24;t++){
+      var x=[];for(i=0;i<H;i++)x.push(rnd());
+      for(var it=0;it<160;it++){
+        var y=new Array(H).fill(0);
+        for(i=0;i<H;i++){var s2=0;for(j=0;j<H;j++)s2+=B[i][j]*x[j];y[i]=s2;}
+        var nn=Math.hypot.apply(null,y);if(nn<1e-12){y=x;break;}
+        for(i=0;i<H;i++)x[i]=y[i]/nn;
+      }
+      var Bx=new Array(H).fill(0),lam=0;
+      for(i=0;i<H;i++){var s3=0;for(j=0;j<H;j++)s3+=B[i][j]*x[j];Bx[i]=s3;}
+      for(i=0;i<H;i++)lam+=x[i]*Bx[i];
+      if(lam<1e-9)break;
+      var sg=Math.sqrt(lam),v=[];
+      for(j=0;j<W;j++){var s4=0;for(i=0;i<H;i++)s4+=A[i][j]*x[i];v.push(s4/sg);}
+      comp.push({s:sg,u:x.slice(),v:v});
+      for(i=0;i<H;i++)for(j=0;j<H;j++)B[i][j]-=lam*x[i]*x[j];
+    }
+    slider.max=Math.min(24,comp.length);
+  })();
+  function px(a){a=Math.max(0,Math.min(1,a));return "rgb("+Math.round(12+222*a)+","+Math.round(27+215*a)+","+Math.round(20+216*a)+")";}
+  function draw(){
+    if(!comp.length){sk.resize();sk.clear();sk.txt("image data unavailable",sk.W/2,sk.H/2,C.ink2,"center",12,true);return;}
+    K=Math.max(1,Math.min(K,comp.length));
+    sk.resize();var c=sk.ctx;sk.clear();
+    var pad=16,s=Math.max(1,Math.min(5,Math.floor((sk.W-pad*2)/W),Math.floor((sk.H-80)/(2*H)))),i,j,k;
+    var ox=Math.round((sk.W-W*s)/2),oy=24;
+    for(i=0;i<H;i++)for(j=0;j<W;j++){c.fillStyle=px(A[i][j]);c.fillRect(ox+j*s,oy+i*s,s,s);}
+    sk.txt("original · "+H+"×"+W+" = "+(H*W)+" numbers",ox,oy-10,C.ink2,"left",10,true);
+    var oy2=oy+H*s+34,err=0,tot=0;
+    for(i=0;i<H;i++)for(j=0;j<W;j++){
+      var r=0;for(k=0;k<K;k++)r+=comp[k].s*comp[k].u[i]*comp[k].v[j];
+      var d=A[i][j]-r;err+=d*d;tot+=A[i][j]*A[i][j];
+      c.fillStyle=px(r);c.fillRect(ox+j*s,oy2+i*s,s,s);
+    }
+    c.save();c.strokeStyle="rgba(157,198,168,.3)";c.lineWidth=1;
+    c.strokeRect(ox-.5,oy-.5,W*s+1,H*s+1);c.strokeRect(ox-.5,oy2-.5,W*s+1,H*s+1);c.restore();
+    sk.txt("rank-"+K+" approximation · "+(K*(H+W+1))+" numbers",ox,oy2-10,C.blue,"left",10,true);
+    var sv=comp.slice(0,6).map(function(x){return f2(x.s);}).join("  ");
+    out.innerHTML=rows([
+      ["k",'<span class="k">'+K+"</span>"],
+      ["σ₁…σ₆",sv],
+      ["σ_k",comp[K-1]?f2(comp[K-1].s):"—"],
+      ["storage",Math.round(K*(H+W+1)/(H*W)*100)+"% of original"],
+      ["relative error",f3(Math.sqrt(err/tot))]
+    ]);
+  }
+  slider.addEventListener("input",function(){K=+this.value;$("svd-k").textContent=K;draw();});
+  REDRAWS.push(draw);draw();
+});
+
+/* ============================ bench 07 · pca ============================ */
+SAFE(function(){
+  var cv=$("c-pca");if(!cv)return;
+  var sk=new Sk(cv,7),out=$("pca-out"),proj=true,pts=[];
+  function gen(){
+    var r=+$("pca-r").value/100,sx=+$("pca-s").value/100,seed=11,i;
+    function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+    function g(){var u=Math.max(1e-9,rnd()),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(6.2832*v);}
+    pts=[];for(i=0;i<90;i++){var a=g(),b=g();pts.push([a*sx,(r*a+Math.sqrt(Math.max(0,1-r*r))*b)*1.0]);}
+    $("pca-r-l").textContent=f2(r);$("pca-s-l").textContent=f2(sx);
+  }
+  function draw(){
+    sk.clear();sk.grid(1);sk.axes();
+    var n=pts.length,mx=0,my=0,i;
+    for(i=0;i<n;i++){mx+=pts[i][0];my+=pts[i][1];}mx/=n;my/=n;
+    var cxx=0,cyy=0,cxy=0;
+    for(i=0;i<n;i++){var dx=pts[i][0]-mx,dy=pts[i][1]-my;cxx+=dx*dx;cyy+=dy*dy;cxy+=dx*dy;}
+    cxx/=(n-1);cyy/=(n-1);cxy/=(n-1);
+    var T=cxx+cyy,D=cxx*cyy-cxy*cxy,s=Math.sqrt(Math.max(0,T*T-4*D)),l1=(T+s)/2,l2=(T-s)/2;
+    var v1=nrm(Math.abs(cxy)>1e-9?[l1-cyy,cxy]:[1,0]),v2=[-v1[1],v1[0]];
+    if(proj)for(i=0;i<n;i++){var t=(pts[i][0]-mx)*v1[0]+(pts[i][1]-my)*v1[1];
+      sk.seg(pts[i][0],pts[i][1],mx+t*v1[0],my+t*v1[1],"rgba(217,169,78,.5)",1,[2,3]);}
+    for(i=0;i<n;i++)sk.dot(pts[i][0],pts[i][1],2.6,"rgba(234,242,236,.62)");
+    if(proj)for(i=0;i<n;i++){var t2=(pts[i][0]-mx)*v1[0]+(pts[i][1]-my)*v1[1];sk.dot(mx+t2*v1[0],my+t2*v1[1],2.2,C.amber);}
+    var a1=2*Math.sqrt(Math.max(l1,1e-9)),a2=2*Math.sqrt(Math.max(l2,1e-9));
+    sk.arrow(mx,my,mx+v1[0]*a1,my+v1[1]*a1,C.mag,2.8);sk.arrow(mx,my,mx-v1[0]*a1,my-v1[1]*a1,C.mag,2.8);
+    sk.arrow(mx,my,mx+v2[0]*a2,my+v2[1]*a2,C.blue,2.2);sk.arrow(mx,my,mx-v2[0]*a2,my-v2[1]*a2,C.blue,2.2);
+    sk.txt("PC1",mx+v1[0]*(a1+0.35),my+v1[1]*(a1+0.35),C.mag,"center",11);
+    sk.txt("PC2",mx+v2[0]*(a2+0.35),my+v2[1]*(a2+0.35),C.blue,"center",11);
+    var tot=l1+l2;
+    out.innerHTML=rows([
+      ["covariance","["+f2(cxx)+" "+f2(cxy)+" ; "+f2(cxy)+" "+f2(cyy)+"]"],
+      ["λ₁, λ₂",f3(l1)+", "+f3(l2)],
+      ["PC1 direction","("+f2(v1[0])+", "+f2(v1[1])+")"],
+      ["variance on PC1",'<span class="k">'+Math.round(l1/tot*100)+"%</span>"],
+      ["variance on PC2",Math.round(l2/tot*100)+"%"],
+      ["σ₁/σ₂",f2(Math.sqrt(l1/Math.max(l2,1e-9)))]
+    ])+'<div style="margin-top:6px">'+(l1/tot>0.9?"one dimension carries nearly everything — safe to drop PC2":"both directions matter — little to gain from projecting")+"</div>";
+  }
+  function all(){gen();draw();}
+  $("pca-r").addEventListener("input",all);$("pca-s").addEventListener("input",all);
+  $("pca-proj").addEventListener("click",function(){proj=!proj;this.classList.toggle("on");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});all();
+});
+
+/* ============================ bench 08 · growth ============================ */
+SAFE(function(){
+  var cv=$("c-lim");if(!cv)return;
+  var sk=new Sk(cv,1),out=$("lim-out");
+  var FN=[
+    {k:"log",n:"log₂ n",f:function(n){return Math.log2(n+1);}},
+    {k:"sqrt",n:"√n",f:function(n){return Math.sqrt(n);}},
+    {k:"n",n:"n",f:function(n){return n;}},
+    {k:"100n",n:"100n",f:function(n){return 100*n;}},
+    {k:"nlogn",n:"n log₂ n",f:function(n){return n*Math.log2(n+1);}},
+    {k:"n2",n:"n²",f:function(n){return n*n;}},
+    {k:"n2/10",n:"n²/10",f:function(n){return n*n/10;}},
+    {k:"n3",n:"n³",f:function(n){return n*n*n;}},
+    {k:"exp",n:"1.05ⁿ",f:function(n){return Math.pow(1.05,n);}}
+  ];
+  var sf=$("lim-f"),sg=$("lim-g");
+  FN.forEach(function(o,i){var a=document.createElement("option");a.value=i;a.textContent=o.n;sf.appendChild(a);
+    var b=document.createElement("option");b.value=i;b.textContent=o.n;sg.appendChild(b);});
+  sf.value=3;sg.value=5;
+  function draw(){
+    var F=FN[+sf.value],G=FN[+sg.value],N=+$("lim-n").value,i,pts=[],mx=0;
+    $("lim-n-l").textContent=N;
+    for(i=1;i<=N;i++){var r=F.f(i)/G.f(i);if(isFinite(r)){pts.push([i,r]);if(r>mx)mx=r;}}
+    var top=Math.max(0.25,Math.min(mx*1.15,50));
+    sk.resize();sk.box(0,N*1.02,-top*0.06,top);
+    sk.clear();
+    var c=sk.ctx,st=Math.pow(10,Math.floor(Math.log10(top/4)));
+    if(top/st>8)st*=2;
+    c.save();c.strokeStyle=C.hair;c.lineWidth=1;
+    for(i=0;i<=top;i+=st){c.beginPath();c.moveTo(0,sk.Y(i));c.lineTo(sk.W,sk.Y(i));c.stroke();sk.txt(i>=1?""+Math.round(i*100)/100:f2(i),4,sk.Y(i)-7,C.ink2,"left",9,true);}
+    c.restore();
+    sk.seg(0,0,N,0,C.hair2,1.2);
+    sk.poly(pts,C.mag,2);
+    var last=pts.length?pts[pts.length-1][1]:0,half=pts.length>2?pts[Math.floor(pts.length/2)][1]:0;
+    var trend=last<half*0.9?"falling":(last>half*1.1?"rising":"flat");
+    var verdict;
+    if(trend==="falling")verdict="ratio → 0, so f = o(g): <b>"+G.n+" eventually dominates</b>";
+    else if(trend==="rising")verdict="ratio → ∞, so g = o(f): <b>"+F.n+" eventually dominates</b>";
+    else verdict="ratio settles at a constant: <b>f = Θ(g)</b>, same order";
+    var cross=null;for(i=1;i<pts.length;i++){if((pts[i-1][1]-1)*(pts[i][1]-1)<0){cross=pts[i][0];break;}}
+    sk.txt("f(n)/g(n)",8,14,C.mag,"left",11,true);
+    out.innerHTML=rows([["f(n)",F.n],["g(n)",G.n],["at n = "+N,f3(last)],["ratio trend",trend],["crossover",cross?"n ≈ "+cross:"none in range"]])+
+      '<div style="margin-top:6px">'+verdict+"</div>";
+  }
+  sf.addEventListener("change",draw);sg.addEventListener("change",draw);$("lim-n").addEventListener("input",draw);
+  REDRAWS.push(draw);draw();
+});
+
+/* ============================ bench 09 · secant ============================ */
+SAFE(function(){
+  var cv=$("c-der");if(!cv)return;
+  var sk=new Sk(cv,7,0.6,1.6),out=$("der-out"),key="sq";
+  var FS={sq:{f:function(x){return x*x;},d:function(x){return 2*x;},n:"x²",dn:"2x"},
+          sin:{f:Math.sin,d:Math.cos,n:"sin x",dn:"cos x"},
+          exp:{f:Math.exp,d:Math.exp,n:"eˣ",dn:"eˣ"},
+          cub:{f:function(x){return x*x*x-2*x;},d:function(x){return 3*x*x-2;},n:"x³−2x",dn:"3x²−2"}};
+  function draw(){
+    var F=FS[key],hv=+$("der-h").value,h=Math.pow(10,-3+3.3*hv/1000),x=+$("der-x").value/100;
+    $("der-h-l").textContent=h<0.01?h.toExponential(1):f3(h);$("der-x-l").textContent=f2(x);
+    sk.clear();sk.grid(1);sk.axes();
+    sk.fn(F.f,C.ink,2);
+    var y=F.f(x),y2=F.f(x+h),ms=(y2-y)/h,mt=F.d(x);
+    sk.seg(x-6,y-6*mt,x+6,y+6*mt,C.amber,1.4,[6,4]);
+    sk.seg(x-6,y-6*ms,x+6,y+6*ms,C.mag,2);
+    sk.seg(x,y,x+h,y,"rgba(234,242,236,.45)",1,[3,3]);
+    sk.seg(x+h,y,x+h,y2,"rgba(234,242,236,.45)",1,[3,3]);
+    sk.dot(x,y,5,C.blue);sk.dot(x+h,y2,4.5,C.mag,true);
+    sk.txt("secant slope "+f3(ms),8,16,C.mag,"left",11,true);
+    sk.txt("tangent slope "+f3(mt),8,32,C.amber,"left",11,true);
+    out.innerHTML=rows([
+      ["f",F.n],["f′",F.dn],["x",f2(x)],["h",h<0.01?h.toExponential(2):f3(h)],
+      ["(f(x+h)−f(x))/h",'<span class="k">'+f3(ms)+"</span>"],
+      ["f′(x) exact",f3(mt)],["error",Math.abs(ms-mt).toExponential(2)]
+    ])+'<div style="margin-top:6px">the error shrinks roughly in proportion to h — halve h, halve the error</div>';
+  }
+  $("der-h").addEventListener("input",draw);$("der-x").addEventListener("input",draw);
+  group('[data-fn]',function(el){key=el.getAttribute("data-fn");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 10 · backprop ============================ */
+SAFE(function(){
+  var host=$("bp-graph");if(!host)return;
+  var out=$("bp-out");
+  function draw(){
+    var w=+$("bp-w").value/100,b=+$("bp-b").value/100,x=+$("bp-x").value/100,y=+$("bp-y").value/100;
+    $("bp-w-l").textContent=f2(w);$("bp-b-l").textContent=f2(b);$("bp-x-l").textContent=f2(x);$("bp-y-l").textContent=f2(y);
+    var z=w*x+b,a=1/(1+Math.exp(-z)),L=(a-y)*(a-y);
+    var dLda=2*(a-y),dadz=a*(1-a),dLdz=dLda*dadz,dLdw=dLdz*x,dLdb=dLdz;
+    function node(t,v,g){
+      return '<div style="border:1px solid var(--rule);background:var(--panel-2);padding:8px 11px;min-width:104px;border-radius:8px">'+
+        '<div style="font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)">'+t+"</div>"+
+        '<div style="font-family:var(--mono);font-size:.95rem;color:'+C.blue+'">'+v+"</div>"+
+        (g!==null?'<div style="font-family:var(--mono);font-size:.72rem;color:'+C.mag+'">∂L/∂ = '+g+"</div>":"")+"</div>";
+    }
+    var ar='<div style="align-self:center;color:var(--ink-2);font-family:var(--mono)">→</div>';
+    host.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:9px;align-items:stretch">'+
+      node("input x",f2(x),null)+ar+node("z = wx+b",f3(z),f3(dLdz))+ar+node("a = σ(z)",f3(a),f3(dLda))+ar+node("L = (a−y)²",f3(L),"1")+"</div>"+
+      '<div style="margin-top:12px;font-family:var(--mono);font-size:.76rem;line-height:1.9;color:var(--ink-2)">'+
+      "forward &nbsp;&nbsp;z = "+f2(w)+"·"+f2(x)+" + "+f2(b)+" = "+f3(z)+" &nbsp;→&nbsp; a = σ(z) = "+f3(a)+" &nbsp;→&nbsp; L = "+f3(L)+"<br>"+
+      '<span style="color:'+C.mag+'">backward</span> ∂L/∂w = 2(a−y)·σ′(z)·x = '+f3(dLda)+" · "+f3(dadz)+" · "+f2(x)+" = <b>"+f3(dLdw)+"</b></div>";
+    out.innerHTML=rows([
+      ["z = wx + b",f3(z)],["a = σ(z)",f3(a)],["loss L",f3(L)],
+      ["∂L/∂a",f3(dLda)],["σ′(z) = a(1−a)",f3(dadz)],
+      ["∂L/∂w",'<span class="k">'+f3(dLdw)+"</span>"],["∂L/∂b",f3(dLdb)],
+      ["w after step η=0.5",f3(w-0.5*dLdw)]
+    ])+'<div style="margin-top:6px">'+(Math.abs(dadz)<0.05?"σ′ is nearly zero — the neuron is saturated and the gradient dies here":"gradient flowing normally")+"</div>";
+  }
+  ["bp-w","bp-b","bp-x","bp-y"].forEach(function(i){$(i).addEventListener("input",draw);});
+  draw();
+});
+
+/* ============================ bench 11 · newton ============================ */
+SAFE(function(){
+  var cv=$("c-newton");if(!cv)return;
+  var sk=new Sk(cv,8,1,0),out=$("nw-out"),key="cubic",x0=3.0,its=[3.0];
+  var FS={cubic:{f:function(x){return x*x*x-2*x-5;},d:function(x){return 3*x*x-2;},n:"x³−2x−5",root:2.0945515},
+          cos:{f:function(x){return Math.cos(x)-x;},d:function(x){return -Math.sin(x)-1;},n:"cos x − x",root:0.7390851},
+          sqrt:{f:function(x){return x*x-2;},d:function(x){return 2*x;},n:"x²−2",root:1.4142136}};
+  function draw(){
+    var F=FS[key],i;
+    sk.clear();sk.grid(1);sk.axes();
+    sk.fn(F.f,C.ink,2);
+    for(i=0;i<its.length;i++){
+      var x=its[i],y=F.f(x),d=F.d(x);
+      sk.ctx.globalAlpha=0.25+0.75*(i+1)/its.length;
+      sk.seg(x,0,x,y,"rgba(234,242,236,.4)",1,[3,3]);
+      if(Math.abs(d)>1e-9){var nx=x-y/d;sk.seg(x,y,nx,0,C.mag,1.5);sk.dot(nx,0,3.5,C.mag);}
+      sk.dot(x,y,4,C.blue);
+      sk.ctx.globalAlpha=1;
+      if(i===0)sk.txt("x₀",x,-0.5,C.blue,"center",11);
+    }
+    var cur=its[its.length-1];
+    sk.dot(cur,0,5,C.amber,true);
+    var tbl="";for(i=0;i<Math.min(its.length,6);i++)tbl+='<div class="row"><span>x'+i+"</span><b>"+its[i].toFixed(7)+"</b></div>";
+    out.innerHTML='<div class="row"><span>f</span><b>'+F.n+"</b></div>"+tbl+
+      rows([["|f(x)|",Math.abs(F.f(cur)).toExponential(2)],["error vs root",Math.abs(cur-F.root).toExponential(2)]])+
+      '<div style="margin-top:6px">'+(Math.abs(F.f(cur))<1e-12?"converged to machine precision":"digits roughly double each step")+"</div>";
+  }
+  function step(){var F=FS[key],x=its[its.length-1],d=F.d(x);if(Math.abs(d)<1e-12)return;its.push(x-F.f(x)/d);if(its.length>9)its.shift();draw();}
+  draggable(sk,function(){return [{x:its[0],y:FS[key].f(its[0]),set:function(a){x0=a;its=[a];}}];},draw);
+  tapOnly(cv,sk,function(){return its.length>1;},function(px){x0=sk.ix(px);its=[x0];draw();});
+  $("nw-step").addEventListener("click",step);
+  $("nw-run").addEventListener("click",function(){for(var i=0;i<5;i++)step();});
+  $("nw-reset").addEventListener("click",function(){its=[x0];draw();});
+  group('[data-nf]',function(el){key=el.getAttribute("data-nf");x0=key==="cos"?2:3;its=[x0];draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 12 · riemann ============================ */
+SAFE(function(){
+  var cv=$("c-riem");if(!cv)return;
+  var sk=new Sk(cv,1),out=$("riem-out"),mode="left",a=0,b=3;
+  function f(x){return 0.35*x*x*x-1.2*x*x+1.1*x+2.2;}
+  function Fi(x){return 0.0875*x*x*x*x-0.4*x*x*x+0.55*x*x+2.2*x;}
+  function draw(){
+    var n=+$("riem-n").value;$("riem-n-l").textContent=n;
+    sk.resize();sk.box(-0.5,3.5,-0.5,5.2);sk.clear();sk.grid(0.5);sk.axes();
+    var dx=(b-a)/n,sum=0,i;
+    for(i=0;i<n;i++){
+      var x0=a+i*dx,x1=x0+dx,h,pts;
+      if(mode==="left")h=f(x0);else if(mode==="right")h=f(x1);else if(mode==="mid")h=f((x0+x1)/2);
+      if(mode==="trap"){pts=[[x0,0],[x0,f(x0)],[x1,f(x1)],[x1,0]];sum+=(f(x0)+f(x1))/2*dx;}
+      else{pts=[[x0,0],[x0,h],[x1,h],[x1,0]];sum+=h*dx;}
+      sk.hatch(pts,"rgba(201,123,90,.75)",Math.max(4,Math.min(9,220/n)),-Math.PI/4,0.8);
+      sk.outline(pts,"rgba(201,123,90,.55)",1);
+    }
+    sk.fn(f,C.ink,2.2,null,-0.4,3.4);
+    var ex=Fi(b)-Fi(a),err=Math.abs(sum-ex);
+    var order=(mode==="mid"||mode==="trap")?"n²":"n";
+    var k=(mode==="mid"||mode==="trap")?err*n*n:err*n;
+    out.innerHTML=rows([
+      ["rule",mode],["n",""+n],["Δx",f3((b-a)/n)],
+      ["approximation",'<span class="k">'+f3(sum)+"</span>"],
+      ["exact ∫",f3(ex)],["error",err.toExponential(2)],
+      ["error × "+order,f3(k)]
+    ])+'<div style="margin-top:6px">that last row stays roughly constant as you slide n — that is what "error is O(1/'+order+')" means</div>';
+  }
+  $("riem-n").addEventListener("input",draw);
+  group('[data-rm]',function(el){mode=el.getAttribute("data-rm");draw();});
+  REDRAWS.push(draw);draw();
+});
+
+/* ============================ bench 13 · taylor ============================ */
+SAFE(function(){
+  var cv=$("c-taylor");if(!cv)return;
+  var sk=new Sk(cv,7,0,0),out=$("tay-out"),key="sin";
+  function fact(n){var r=1;for(var i=2;i<=n;i++)r*=i;return r;}
+  var FS={
+    sin:{f:Math.sin,n:"sin x",R:"∞",p:function(x,N){var s=0;for(var k=0;k<N;k++)s+=Math.pow(-1,k)*Math.pow(x,2*k+1)/fact(2*k+1);return s;},t:function(k){return (k?(k%2?"−":"+")+" x^"+(2*k+1)+"/"+(2*k+1)+"!":"x");}},
+    exp:{f:Math.exp,n:"eˣ",R:"∞",p:function(x,N){var s=0;for(var k=0;k<N;k++)s+=Math.pow(x,k)/fact(k);return s;},t:function(k){return k===0?"1":"+ x^"+k+"/"+k+"!";}},
+    geo:{f:function(x){return 1/(1-x);},n:"1/(1−x)",R:"1",p:function(x,N){var s=0;for(var k=0;k<N;k++)s+=Math.pow(x,k);return s;},t:function(k){return k===0?"1":"+ x^"+k;}},
+    log:{f:function(x){return Math.log(1+x);},n:"ln(1+x)",R:"1",p:function(x,N){var s=0;for(var k=1;k<=N;k++)s+=Math.pow(-1,k+1)*Math.pow(x,k)/k;return s;},t:function(k){return k===0?"x":(k%2?"+":"−")+" x^"+(k+1)+"/"+(k+1);}}
+  };
+  function draw(){
+    var F=FS[key],N=+$("tay-n").value;$("tay-n-l").textContent=N;
+    sk.clear();sk.grid(1);sk.axes();
+    if(F.R==="1"){sk.seg(-1,-9,-1,9,"rgba(217,169,78,.5)",1.2,[5,4]);sk.seg(1,-9,1,9,"rgba(217,169,78,.5)",1.2,[5,4]);
+      sk.txt("radius of convergence",1.1,3,C.amber,"left",10);}
+    sk.fn(F.f,C.ink,2.2);
+    sk.fn(function(x){return F.p(x,N);},C.mag,2);
+    sk.dot(0,F.f(0),4,C.blue);
+    var xs=[0.5,1,2],r=[];
+    for(var i=0;i<xs.length;i++){var t=F.f(xs[i]),ap=F.p(xs[i],N);
+      r.push(["error at x="+xs[i],isFinite(t)?Math.abs(t-ap).toExponential(1):"—"]);}
+    var terms="";for(var k=0;k<Math.min(N,5);k++)terms+=F.t(k)+" ";
+    out.innerHTML=rows([["f",F.n],["terms",""+N],["radius",F.R]].concat(r))+
+      '<div style="margin-top:6px;color:'+C.mag+'">'+terms+(N>5?"…":"")+"</div>";
+  }
+  $("tay-n").addEventListener("input",draw);
+  group('[data-tf]',function(el){key=el.getAttribute("data-tf");draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ contours ============================ */
+function sampleGrid(f,x0,x1,y0,y1,n){
+  var vals=[],i,j;
+  for(i=0;i<=n;i++){vals.push([]);for(j=0;j<=n;j++)vals[i].push(f(x0+(x1-x0)*i/n,y0+(y1-y0)*j/n));}
+  return vals;
+}
+function contourSegs(vals,x0,x1,y0,y1,L){
+  var segs=[],i,j,n=vals.length-1;
+  function ip(pa,pb,va,vb){var t=(L-va)/(vb-va);return [pa[0]+(pb[0]-pa[0])*t,pa[1]+(pb[1]-pa[1])*t];}
+  for(i=0;i<n;i++)for(j=0;j<n;j++){
+    var xa=x0+(x1-x0)*i/n,xb=x0+(x1-x0)*(i+1)/n,ya=y0+(y1-y0)*j/n,yb=y0+(y1-y0)*(j+1)/n;
+    var v0=vals[i][j],v1=vals[i+1][j],v2=vals[i+1][j+1],v3=vals[i][j+1];
+    var c0=[xa,ya],c1=[xb,ya],c2=[xb,yb],c3=[xa,yb],e=[];
+    if((v0>L)!==(v1>L))e.push(ip(c0,c1,v0,v1));
+    if((v1>L)!==(v2>L))e.push(ip(c1,c2,v1,v2));
+    if((v2>L)!==(v3>L))e.push(ip(c2,c3,v2,v3));
+    if((v3>L)!==(v0>L))e.push(ip(c3,c0,v3,v0));
+    if(e.length>=2){segs.push([e[0],e[1]]);if(e.length===4)segs.push([e[2],e[3]]);}
+  }
+  return segs;
+}
+
+/* ============================ bench 14 · gradient ============================ */
+SAFE(function(){
+  var cv=$("c-grad");if(!cv)return;
+  var sk=new Sk(cv,7),out=$("gr-out"),P={x:-0.6,y:1.2};
+  function f(x,y){return 3*Math.exp(-((x-1)*(x-1)+(y-1)*(y-1))/3)-2.2*Math.exp(-((x+1.5)*(x+1.5)+(y+0.6)*(y+0.6))/2)+0.12*x;}
+  function grad(x,y){var h=1e-4;return [(f(x+h,y)-f(x-h,y))/(2*h),(f(x,y+h)-f(x,y-h))/(2*h)];}
+  function draw(){
+    sk.clear();
+    var i,levels=[],vals=sampleGrid(f,sk.xmin,sk.xmax,sk.ymin,sk.ymax,40);
+    for(i=-2;i<=3.01;i+=0.4)levels.push(i);
+    levels.forEach(function(L){
+      var segs=contourSegs(vals,sk.xmin,sk.xmax,sk.ymin,sk.ymax,L),col=L>0?"rgba(159,214,180,.42)":"rgba(234,242,236,.22)";
+      for(var q=0;q<segs.length;q++)sk.seg(segs[q][0][0],segs[q][0][1],segs[q][1][0],segs[q][1][1],col,Math.abs(L)<0.06?1.8:1);
+    });
+    sk.axes();
+    var g=grad(P.x,P.y),gn=Math.hypot(g[0],g[1]),a=+$("gr-a").value*Math.PI/180,u=[Math.cos(a),Math.sin(a)];
+    $("gr-a-l").textContent=$("gr-a").value+"°";
+    var sc=Math.min(1.6,1.1/Math.max(gn,0.25));
+    sk.arrow(P.x,P.y,P.x+g[0]*sc,P.y+g[1]*sc,C.mag,2.8);
+    sk.arrow(P.x,P.y,P.x+u[0]*1.3,P.y+u[1]*1.3,C.amber,2.2);
+    var t=[-g[1],g[0]];if(gn>1e-9){t=[t[0]/gn,t[1]/gn];sk.seg(P.x-t[0]*1.4,P.y-t[1]*1.4,P.x+t[0]*1.4,P.y+t[1]*1.4,"rgba(234,242,236,.4)",1.2,[5,4]);}
+    sk.dot(P.x,P.y,5.5,C.ink,true);
+    var du=g[0]*u[0]+g[1]*u[1];
+    out.innerHTML=rows([
+      ["point","("+f2(P.x)+", "+f2(P.y)+")"],["f",f3(f(P.x,P.y))],
+      ["∂f/∂x",f3(g[0])],["∂f/∂y",f3(g[1])],
+      ["‖∇f‖ (steepest rate)",f3(gn)],
+      ["D_u f = ∇f · u",'<span class="k">'+f3(du)+"</span>"]
+    ])+'<div style="margin-top:6px">'+(Math.abs(du)<0.04?"u is along the contour — f is momentarily flat this way":(du>0?"walking uphill in direction u":"walking downhill in direction u"))+"</div>";
+  }
+  draggable(sk,function(){return [{x:P.x,y:P.y,set:function(a,b){P.x=a;P.y=b;}}];},draw);
+  $("gr-a").addEventListener("input",draw);
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 15 · gradient descent ============================ */
+SAFE(function(){
+  var cv=$("c-gd");if(!cv)return;
+  var sk=new Sk(cv,7),out=$("gd-out"),path=[[-2.4,1.9]],mom=false,vel=[0,0];
+  function K(){return +$("gd-k").value;}
+  function f(x,y){return 0.5*(x*x+K()*y*y);}
+  function draw(){
+    var k=K(),lr=+$("gd-lr").value/100,i;
+    $("gd-lr-l").textContent=f2(lr);$("gd-k-l").textContent=k;
+    sk.clear();sk.axes();
+    for(var c=0.15;c<14;c*=1.7){
+      var pts=[];for(i=0;i<=80;i++){var t=i/80*6.2832;pts.push([Math.sqrt(2*c)*Math.cos(t),Math.sqrt(2*c/k)*Math.sin(t)]);}
+      sk.poly(pts,"rgba(159,214,180,.35)",1.1);
+    }
+    sk.dot(0,0,4,C.amber);sk.txt("minimum",0.15,-0.35,C.amber,"left",10);
+    sk.poly(path,C.mag,1.8);
+    for(i=0;i<path.length;i++)sk.dot(path[i][0],path[i][1],i===path.length-1?5:2.6,i===path.length-1?C.mag:"rgba(201,123,90,.6)",i===path.length-1);
+    var p=path[path.length-1],lmax=Math.max(1,k),lmin=Math.min(1,k),stable=lr<2/lmax;
+    var d=Math.hypot(p[0],p[1]);
+    sk.txt(stable?"":"diverging — η exceeds 2/λmax",sk.W-10,16,C.mag,"right",11,true);
+    out.innerHTML=rows([
+      ["f","½(x² + "+k+"y²)"],["λmin, λmax",lmin+", "+lmax],
+      ["stability limit","η < "+f3(2/lmax)],["η",f2(lr)],
+      ["steps",""+(path.length-1)],["position","("+f3(p[0])+", "+f3(p[1])+")"],
+      ["f(x)",'<span class="k">'+f3(f(p[0],p[1]))+"</span>"],
+      ["momentum",mom?"on (β=0.9)":"off"]
+    ])+'<div style="margin-top:6px">'+(!stable?"unstable: the sharpest direction overshoots and grows":(k>8?"valley is "+k+"× steeper one way — the zig-zag is the condition number showing itself":"well-conditioned — descent goes almost straight in"))+"</div>";
+  }
+  function step(){
+    var lr=+$("gd-lr").value/100,k=K(),p=path[path.length-1],g=[p[0],k*p[1]];
+    var nx,ny;
+    if(mom){vel[0]=0.9*vel[0]-lr*g[0];vel[1]=0.9*vel[1]-lr*g[1];nx=p[0]+vel[0];ny=p[1]+vel[1];}
+    else{nx=p[0]-lr*g[0];ny=p[1]-lr*g[1];}
+    if(!isFinite(nx)||Math.abs(nx)>1e6)return;
+    path.push([nx,ny]);if(path.length>240)path.shift();draw();
+  }
+  draggable(sk,function(){return [{x:path[path.length-1][0],y:path[path.length-1][1],set:function(a,b){path=[[a,b]];vel=[0,0];}}];},draw);
+  $("gd-step").addEventListener("click",step);
+  var runT=null;
+  $("gd-run").addEventListener("click",function(){if(runT)clearInterval(runT);var n=0;runT=setInterval(function(){step();if(++n>=40){clearInterval(runT);runT=null;}},40);});
+  $("gd-reset").addEventListener("click",function(){path=[[-2.4,1.9]];vel=[0,0];draw();});
+  $("gd-mom").addEventListener("click",function(){mom=!mom;this.classList.toggle("on");vel=[0,0];draw();});
+  $("gd-lr").addEventListener("input",draw);$("gd-k").addEventListener("input",function(){path=[[-2.4,1.9]];vel=[0,0];draw();});
+  REDRAWS.push(function(){sk.resize();draw();});draw();
+});
+
+/* ============================ bench 16 · euler ============================ */
+SAFE(function(){
+  var cv=$("c-ode");if(!cv)return;
+  var sk=new Sk(cv,1),out=$("ode-out"),key="decay",field=true;
+  var FS={
+    decay:{f:function(x,y){return -1.5*y;},e:function(x){return Math.exp(-1.5*x);},y0:1,n:"y′ = −1.5y",box:[-0.2,4,-0.6,1.35]},
+    logistic:{f:function(x,y){return 1.6*y*(1-y);},e:function(x){var A=0.1/0.9;return A*Math.exp(1.6*x)/(1+A*Math.exp(1.6*x));},y0:0.1,n:"y′ = 1.6y(1−y)",box:[-0.2,4,-0.15,1.3]},
+    osc:{f:function(x,y){return Math.cos(x)-y;},e:function(x){return (Math.cos(x)+Math.sin(x))/2+0.5*Math.exp(-x);},y0:1,n:"y′ = cos x − y",box:[-0.2,7,-1.1,1.5]}
+  };
+  function draw(){
+    var F=FS[key],h=+$("ode-h").value/100;$("ode-h-l").textContent=f2(h);
+    sk.resize();sk.box(F.box[0],F.box[1],F.box[2],F.box[3]);sk.clear();sk.grid(0.5);sk.axes();
+    var i,j;
+    if(field){
+      for(i=0;i<=13;i++)for(j=0;j<=9;j++){
+        var x=F.box[0]+(F.box[1]-F.box[0])*i/13,y=F.box[2]+(F.box[3]-F.box[2])*j/9;
+        var s=F.f(x,y),L=0.16*(F.box[1]-F.box[0])/4,dx=L/Math.sqrt(1+s*s),dy=s*dx;
+        sk.seg(x-dx/2,y-dy/2,x+dx/2,y+dy/2,"rgba(234,242,236,.22)",1);
+      }
+    }
+    sk.fn(F.e,C.ink,2.2,null,0,F.box[1]);
+    var pts=[[0,F.y0]],x2=0,y2=F.y0,guard=0;
+    while(x2<F.box[1]&&guard++<4000){y2=y2+h*F.f(x2,y2);x2+=h;pts.push([x2,y2]);}
+    sk.poly(pts,C.mag,1.8);
+    for(i=0;i<pts.length&&i<120;i++)sk.dot(pts[i][0],pts[i][1],2.6,C.mag);
+    var endx=pts[pts.length-1][0],approx=pts[pts.length-1][1],exact=F.e(endx),err=Math.abs(approx-exact);
+    out.innerHTML=rows([
+      ["equation",F.n],["y(0)",""+F.y0],["step h",f2(h)],["steps",""+(pts.length-1)],
+      ["y at x="+f2(endx),f3(approx)],["exact",f3(exact)],
+      ["error",'<span class="k">'+(isFinite(err)?err.toExponential(2):"∞")+"</span>"]
+    ])+'<div style="margin-top:6px">'+(!isFinite(approx)||Math.abs(approx)>50?"numerically unstable — the step is too large for this slope":"halving h roughly halves the error: Euler is first order")+"</div>";
+  }
+  $("ode-h").addEventListener("input",draw);
+  $("ode-field").addEventListener("click",function(){field=!field;this.classList.toggle("on");draw();});
+  group('[data-of]',function(el){key=el.getAttribute("data-of");draw();});
+  REDRAWS.push(draw);draw();
+});
+
+/* ============================ page chrome ============================ */
+SAFE(function(){
+  function redrawAll(){for(var i=0;i<REDRAWS.length;i++){try{REDRAWS[i]();}catch(e){}}}
+  var t=null;
+  function later(){clearTimeout(t);t=setTimeout(redrawAll,140);}
+  var lastW=document.documentElement.clientWidth;
+  window.addEventListener("resize",function(){
+    var w=document.documentElement.clientWidth;
+    if(Math.abs(w-lastW)<2)return;   /* ignore mobile URL-bar height changes */
+    lastW=w;later();
+  });
+  window.addEventListener("orientationchange",later);
+  window.addEventListener("load",redrawAll);
+  if(document.fonts&&document.fonts.ready&&document.fonts.ready.then)document.fonts.ready.then(redrawAll);
+  if(window.ResizeObserver){
+    var ro=new ResizeObserver(function(){
+      var w=document.documentElement.clientWidth;
+      if(Math.abs(w-lastW)<2)return;lastW=w;later();
+    });
+    ro.observe(document.documentElement);
+  }
+  setTimeout(redrawAll,60);setTimeout(redrawAll,400);
+
+  var links=document.querySelectorAll("#rail a"),secs=[],i;
+  for(i=0;i<links.length;i++){var sec=document.querySelector(links[i].getAttribute("href"));if(sec)secs.push([links[i],sec]);}
+  var prog=$("prog"),rail=$("rail");
+  function chrome(){
+    var doc=document.documentElement,max=doc.scrollHeight-doc.clientHeight;
+    if(prog)prog.style.setProperty("--p",max>0?Math.min(1,(window.pageYOffset||doc.scrollTop)/max):0);
+    var best=null,bd=1e9,j;
+    for(j=0;j<secs.length;j++){var r=secs[j][1].getBoundingClientRect(),d=Math.abs(r.top-100);
+      if(r.top<window.innerHeight*0.6&&d<bd){bd=d;best=secs[j][0];}}
+    for(j=0;j<links.length;j++)links[j].classList.remove("on");
+    if(best&&rail){best.classList.add("on");
+      var lr=best.getBoundingClientRect(),rr=rail.getBoundingClientRect();
+      if(lr.left<rr.left+16||lr.right>rr.right-16){
+        try{rail.scrollTo({left:best.offsetLeft-rr.width/2+lr.width/2,behavior:"smooth"});}
+        catch(e){rail.scrollLeft=best.offsetLeft-rr.width/2;}
+      }
+    }
+  }
+  var tick=false;
+  window.addEventListener("scroll",function(){
+    if(tick)return;tick=true;
+    requestAnimationFrame(function(){tick=false;chrome();});
+  },{passive:true});
+  chrome();
+
+  if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches&&"IntersectionObserver" in window){
+    var els=document.querySelectorAll(".topic > .col, .box, .incode, .warn, .part");
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -6% 0px"});
+    for(i=0;i<els.length;i++){els[i].classList.add("reveal");io.observe(els[i]);}
+  }
+});
+})();
+</script>
+</body>
+</html>
