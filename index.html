@@ -33,6 +33,7 @@
       --cat-ai:    #E4C56B;  /* light through canopy */
       --cat-prod:  #C79BE0;  /* forest orchid */
       --cat-eng:   #6FC6E8;  /* kingfisher */
+      --cat-math:  #FBAED2;  /* Lavender */
       --cat-other: #E8896B;  /* heliconia */
 
       --serif: 'Fraunces', Georgia, serif;
@@ -327,6 +328,7 @@
     .cat-ai    { --tone: var(--cat-ai); }
     .cat-product { --tone: var(--cat-prod); }
     .cat-engineering { --tone: var(--cat-eng); }
+    .cat-mathematics { --tone: var(--cat-math); }
     .cat-others { --tone: var(--cat-other); }
 
     .shelf-empty {
@@ -563,23 +565,27 @@
         desc: 'Field notes on MCP — how models plug into tools and data, plus the distinction between MCP and agent-to-agent protocols.',
         url: '/brownbag/mcp', live: true },
 
+      /* Product */
       { cat: 'product', title: 'GenAI vs AI Agent vs Agentic AI',
         desc: 'Three terms that get used interchangeably, pulled apart using one banking chatbot as the case study.',
         url: '/brownbag/chatbot', live: true },
 
+      /* Engineering */
       { cat: 'engineering', title: 'Python for Data Science, then Data Analytics',
         desc: 'Python used analytically first, then operationally — the same language, two very different jobs.',
         url: '/brownbag/python', live: true },
       { cat: 'engineering', title: 'JavaScript, React Native, Flutter & PWAs',
         desc: 'One tour through the ways to ship a modern front end, and how to pick between them without a religious war.',
         url: '/brownbag/js', live: true },
-      { cat: 'engineering', title: 'Discrete Mathematics',
-        desc: 'Sets, logic, graphs and counting — the maths underneath computing, explained simply enough for a curious ten-year-old.',
-        url: '/brownbag/discretemath', live: true },
       { cat: 'engineering', title: 'Functional Programming in Scala',
         desc: 'Working through the red book by deriving functional programming from first principles rather than memorising the rules.',
         url: '/brownbag/scala', live: true },
-      { cat: 'engineering', title: 'Linear Algebra & Calculus',
+
+      /* Mathematics */
+      { cat: 'mathematics', title: 'Discrete Mathematics',
+        desc: 'Sets, logic, graphs and counting — the maths underneath computing, explained simply enough for a curious ten-year-old.',
+        url: '/brownbag/discretemath', live: true },
+      { cat: 'mathematics', title: 'Linear Algebra & Calculus',
         desc: 'Linear Algebra & Calculus in Computing.',
         url: '/brownbag/linearalgebra', live: true },
 
@@ -608,6 +614,7 @@
       { id: 'ai',          label: 'AI',          tone: 'var(--cat-ai)' },
       { id: 'product',     label: 'Product',     tone: 'var(--cat-prod)' },
       { id: 'engineering', label: 'Engineering', tone: 'var(--cat-eng)' },
+      { id: 'mathematics', label: 'Mathematics', tone: 'var(--cat-math)' },
       { id: 'others',      label: 'Others',      tone: 'var(--cat-other)' },
     ];
 
