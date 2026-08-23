@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Product Requirements — ted.sg</title>
+<meta name="description" content="A PRD structure built for AI features, where the requirement is a behaviour and an evaluation, not a fixed spec.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..600&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#06120D; --forest:#0B2117; --forest-2:#0F2C1F; --forest-3:#143726;
+  --bark:#1E4632; --bark-2:#2A5C43;
+  --sage:#A9C9B4; --mint:#8FD6AE; --gold:#E2A93C; --gold-2:#F2CE7E;
+  --bone:#F1EFE4; --muted:#8AA697; --rust:#C97A4A;
+  --f-display:"Fraunces",Georgia,serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-ui:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;
+  --w:1180px; --r:3px; --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--night);color:var(--bone);
+  font-family:var(--f-body);font-size:18px;line-height:1.62;font-optical-sizing:auto;
+  background-image:
+    radial-gradient(820px 460px at 50% -10%, rgba(30,70,50,.5), transparent 62%),
+    radial-gradient(620px 380px at 96% 8%, rgba(226,169,60,.07), transparent 62%);
+  background-repeat:no-repeat;
+}
+::selection{background:var(--gold);color:var(--night)}
+a{color:var(--gold-2);text-decoration:none;border-bottom:1px solid rgba(242,206,126,.32)}
+a:hover{border-bottom-color:var(--gold-2)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 26px}
+.narrow{max-width:760px}
+
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;letter-spacing:-.015em;line-height:1.1;margin:0}
+h2{font-size:clamp(30px,4.1vw,46px);font-variation-settings:"SOFT" 0,"WONK" 1}
+h3{font-size:22px;letter-spacing:-.01em}
+p{margin:0 0 1.05em}
+.lede{font-size:clamp(19px,2.1vw,22px);color:#DCE7DF;line-height:1.58}
+.eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);font-weight:500;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(143,214,174,.4),transparent)}
+.ui{font-family:var(--f-ui)}
+.dim{color:var(--muted)}
+em.key{font-style:normal;color:var(--gold-2);border-bottom:1px dotted rgba(242,206,126,.45)}
+
+.topbar{position:sticky;top:0;z-index:60;background:rgba(6,18,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(30,70,50,.7)}
+.topbar-in{max-width:var(--w);margin:0 auto;padding:0 26px;display:flex;align-items:center;gap:20px;height:56px}
+.brand{font-family:var(--f-display);font-size:17px;font-weight:600;color:var(--bone);border:0;white-space:nowrap}
+.brand span{color:var(--gold)}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-family:var(--f-ui);font-size:12.5px;color:var(--muted);border:0;padding:7px 10px;border-radius:var(--r);white-space:nowrap;transition:color .2s,background .2s}
+.navlinks a:hover{color:var(--bone);background:rgba(30,70,50,.5)}
+.navlinks a.on{color:var(--night);background:var(--mint);font-weight:500}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--gold);width:0}
+
+.hero{padding:78px 0 60px}
+.hero h1{font-size:clamp(40px,6.4vw,76px);line-height:.98;font-weight:400;font-variation-settings:"SOFT" 20,"WONK" 1;letter-spacing:-.03em}
+.hero h1 i{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 60,"WONK" 1}
+.hero .lede{max-width:660px;margin-top:26px}
+.herometa{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;font-family:var(--f-ui);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
+.herometa span{border:1px solid var(--bark);padding:6px 11px;border-radius:100px;background:rgba(15,44,31,.5)}
+
+button,.btn{font-family:var(--f-ui);font-size:13px;font-weight:500;letter-spacing:.03em;background:var(--gold);color:var(--night);border:1px solid var(--gold);padding:9px 17px;border-radius:100px;cursor:pointer;transition:.18s var(--ease)}
+button:hover,.btn:hover{background:var(--gold-2);border-color:var(--gold-2);transform:translateY(-1px)}
+button.ghost{background:transparent;color:var(--sage);border-color:var(--bark-2)}
+button.ghost:hover{background:rgba(30,70,50,.55);color:var(--bone);border-color:var(--mint)}
+button.ghost.on{background:var(--mint);color:var(--night);border-color:var(--mint);font-weight:600}
+
+/* ══ signature: the requirement rewrite ══ */
+.rwbox{margin-top:52px;border:1px solid var(--bark);border-radius:5px;background:linear-gradient(180deg,rgba(15,44,31,.85),rgba(11,33,23,.5));padding:26px}
+.rw-title{font-family:var(--f-ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.rw-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.rw-head p{margin:0;font-size:15.5px;color:var(--sage);max-width:520px;line-height:1.5}
+.rw-picker{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 22px}
+.rw-picker button{font-size:12px;padding:7px 13px}
+.rw-old{border:1px dashed var(--bark-2);border-radius:4px;padding:15px 18px;background:rgba(6,18,13,.4)}
+.rw-old .lbl{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.rw-old .txt{font-family:var(--f-ui);font-size:16px;color:var(--muted);line-height:1.4}
+.rw-arrow{text-align:center;color:var(--gold);font-size:20px;line-height:1;margin:12px 0 14px;font-family:var(--f-ui)}
+.rw-parts{display:grid;gap:8px}
+.rw-part{border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:4px;padding:13px 16px;background:rgba(11,33,23,.6);opacity:0;transform:translateY(6px);animation:rise .45s var(--ease) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.rw-part .lbl{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);margin-bottom:6px}
+.rw-part .txt{font-family:var(--f-ui);font-size:14.5px;color:#D6E5DB;line-height:1.5}
+.rw-part.guard{border-left-color:var(--rust)}
+.rw-part.guard .lbl{color:var(--rust)}
+.rw-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(30,70,50,.7);padding-top:16px;margin-top:20px}
+.readout{display:flex;gap:26px;flex-wrap:wrap}
+.readout div{font-family:var(--f-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.readout b{display:block;font-size:22px;text-transform:none;margin-top:3px;font-weight:500;font-variant-numeric:tabular-nums}
+.readout .g{color:var(--mint)}.readout .y{color:var(--gold-2)}
+
+section{padding:74px 0;border-top:1px solid rgba(30,70,50,.55)}
+section:first-of-type{border-top:0}
+.sec-head{margin-bottom:38px;max-width:850px}
+.sec-head p{margin:14px 0 0;color:#CBDCD0;font-size:18.5px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px}
+.card{border:1px solid var(--bark);border-radius:5px;padding:22px;background:linear-gradient(180deg,rgba(15,44,31,.6),rgba(11,33,23,.35))}
+.card h3{margin-bottom:9px}
+.card p:last-child{margin-bottom:0}
+.card .tag{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:10px;display:block}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.spec{font-family:var(--f-ui);font-size:13.5px;line-height:1.65;background:rgba(6,18,13,.72);border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:var(--r);padding:15px 17px;color:#D6E5DB;white-space:pre-wrap;overflow-x:auto}
+.spec-lbl{font-family:var(--f-ui);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin:18px 0 7px}
+.spec-lbl.no{color:var(--rust)}
+.spec.no{border-left-color:var(--rust)}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-in">
+    <a href="#top" class="brand">ted<span>.</span>sg</a>
+    <div class="navlinks" id="navlinks"></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Brown bag &nbsp;·&nbsp; Product</div>
+    <h1>AI product<br><i>requirements</i></h1>
+    <p class="lede">A PRD structure built for features that don't behave the same way twice — where a requirement is a behaviour and an evaluation, not a fixed spec, and "done" is a threshold on a dataset rather than a tick in a column.</p>
+    <div class="herometa"><span>~35 min read</span><span>15-section reference</span><span>Working PRD generator</span><span>Copyable clauses</span></div>
+
+    <div class="rwbox">
+      <div class="rw-head">
+        <div>
+          <div class="rw-title">The move this whole page is about</div>
+          <p>One deterministic line goes in. A behaviour contract comes out — the same intent, expressed so that an engineer knows what to build and a reviewer knows when to stop.</p>
+        </div>
+      </div>
+      <div class="rw-picker" id="rwPicker"></div>
+      <div class="rw-old"><div class="lbl">Written the old way</div><div class="txt" id="rwOld"></div></div>
+      <div class="rw-arrow">↓</div>
+      <div class="rw-parts" id="rwParts"></div>
+      <div class="rw-foot">
+        <div class="readout">
+          <div>Words in<b class="y" id="rIn">—</b></div>
+          <div>Clauses out<b class="g" id="rOut">—</b></div>
+          <div>Decisions engineering no longer guesses at<b class="g" id="rDec">—</b></div>
+        </div>
+        <p class="dim ui" style="font-size:12.5px;margin:0;max-width:380px">Every clause you leave out gets invented by someone else, later, in a Slack thread, under pressure.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+/* ══ break list ══ */
+.breaks{display:grid;gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.brk{display:grid;grid-template-columns:1fr 1fr;background:var(--forest)}
+.brk > div{padding:16px 20px}
+.brk .a{border-right:1px solid var(--bark)}
+.brk .lbl{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px}
+.brk .a .lbl{color:var(--muted)}
+.brk .b .lbl{color:var(--mint)}
+.brk .a{color:var(--muted);font-size:15.5px;line-height:1.45}
+.brk .b{font-size:15.5px;line-height:1.45;color:#CDDDD3}
+.brk .b b{color:var(--gold-2);font-weight:500}
+@media(max-width:700px){.brk{grid-template-columns:1fr}.brk .a{border-right:0;border-bottom:1px solid var(--bark)}}
+
+/* ══ document map ══ */
+.docmap{display:grid;grid-template-columns:minmax(250px,320px) 1fr;gap:20px;align-items:start}
+@media(max-width:880px){.docmap{grid-template-columns:1fr}}
+#structure{position:relative;isolation:isolate}
+.docmap{position:relative;z-index:0}
+.toc{border:1px solid var(--bark);border-radius:5px;background:#0A1D14;position:sticky;top:70px;max-height:calc(100vh - 90px);overflow-y:auto;overscroll-behavior:contain;z-index:2;transform:translateZ(0);backface-visibility:hidden}
+@media(max-width:880px){.toc{position:static;max-height:none;transform:none}}
+@media(max-height:760px){.toc{position:static;max-height:none;transform:none}}
+.toc-group{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);padding:14px 16px 8px;border-bottom:1px solid rgba(30,70,50,.6);background:#0A1D14;position:sticky;top:0;z-index:1}
+.toc button{display:flex;gap:11px;width:100%;text-align:left;background:#0A1D14;border:0;border-bottom:1px solid rgba(30,70,50,.45);border-radius:0;color:var(--sage);font-family:var(--f-ui);font-size:13.5px;padding:11px 16px;transition:.18s;align-items:baseline}
+.toc button:hover{background:#16382A;color:var(--bone);transform:none}
+.toc button.on{background:#2A2617;color:var(--gold-2)}
+.toc button .num{font-size:10.5px;color:var(--muted);min-width:20px}
+.toc button.on .num{color:var(--gold)}
+.toc button.spine{color:var(--muted);font-style:italic}
+.docpanel{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:26px;background:#102A1E;position:relative;z-index:1}
+.docpanel .kicker{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}
+.docpanel h3{color:var(--gold-2);font-size:25px;margin-bottom:12px}
+.docpanel .why{font-size:17px;color:#CBDCD0;line-height:1.55}
+.docpanel .meta{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--f-ui);font-size:11.5px;color:var(--muted);border-top:1px dashed var(--bark-2);padding-top:14px;margin-top:20px}
+.docpanel .meta b{color:var(--sage);font-weight:500;display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+
+/* ══ tables ══ */
+.tbl{width:100%;border-collapse:collapse;font-size:15px}
+.tbl th{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:left;padding:0 13px 12px;color:var(--mint);font-weight:500;border-bottom:1px solid var(--bark)}
+.tbl td{padding:14px 13px;border-bottom:1px solid rgba(30,70,50,.5);vertical-align:top;line-height:1.45}
+.tbl tr:hover td{background:rgba(15,44,31,.45)}
+.tbl td:first-child{font-family:var(--f-ui);font-size:12.5px;color:var(--gold-2)}
+.tbl td.mono{font-family:var(--f-ui);font-size:12.5px;color:#CDDDD3}
+.tblwrap{overflow-x:auto;border:1px solid var(--bark);border-radius:5px;padding:18px 20px;background:rgba(11,33,23,.4)}
+.tbl .yes{color:var(--mint)}.tbl .no{color:var(--rust)}
+
+/* ══ grammar ══ */
+.grammar{border:1px solid var(--bark);border-radius:5px;padding:26px;background:rgba(11,33,23,.5)}
+.gline{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:20px}
+.gslot{border:1px solid var(--bark-2);border-radius:4px;padding:12px 15px;flex:1;min-width:150px;background:rgba(15,44,31,.6)}
+.gslot .k{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.gslot .v{font-family:var(--f-ui);font-size:14px;color:#D6E5DB;line-height:1.4}
+.gslot .h{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.4}
+.gjoin{display:flex;align-items:center;color:var(--muted);font-family:var(--f-ui);font-size:12px;padding:0 2px}
+
+/* ══ builder ══ */
+.builder{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.builder{grid-template-columns:1fr}}
+.bform{border:1px solid var(--bark);border-radius:5px;padding:20px;background:rgba(15,44,31,.5)}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:var(--f-ui);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--sage);margin-bottom:5px}
+.field .hint{font-family:var(--f-ui);font-size:11px;color:var(--muted);margin-top:4px;display:block;line-height:1.4}
+input[type=text],input[type=number],select,textarea{font-family:var(--f-ui);font-size:13.5px;background:rgba(6,18,13,.7);color:var(--bone);border:1px solid var(--bark-2);border-radius:var(--r);padding:9px 11px;width:100%}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+.rangewrap{display:flex;align-items:center;gap:12px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;background:var(--bark-2);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+.rangeval{font-family:var(--f-ui);font-size:12.5px;color:var(--gold-2);min-width:64px;text-align:right}
+.bout{border:1px solid var(--bark);border-radius:5px;background:rgba(6,18,13,.72);overflow:hidden}
+.bout-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bark);background:rgba(15,44,31,.5);flex-wrap:wrap}
+.bout-head .t{font-family:var(--f-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint)}
+.bout pre{margin:0;padding:20px;font-family:var(--f-ui);font-size:12.8px;line-height:1.62;color:#D6E5DB;white-space:pre-wrap;max-height:640px;overflow:auto}
+.bnote{font-family:var(--f-ui);font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+
+/* ══ checklist ══ */
+.checks{display:grid;gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.chk{display:flex;gap:14px;align-items:flex-start;background:var(--forest);padding:14px 18px;cursor:pointer;transition:background .2s;text-align:left;border:0;border-radius:0;color:var(--bone);font-family:var(--f-body);width:100%}
+.chk:hover{background:var(--forest-3);transform:none}
+.chk .box{width:19px;height:19px;border:1.5px solid var(--bark-2);border-radius:3px;flex:0 0 auto;margin-top:3px;position:relative;transition:.2s}
+.chk.on .box{background:var(--mint);border-color:var(--mint)}
+.chk.on .box::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--night);font-size:13px;font-weight:700;font-family:var(--f-ui)}
+.chk .txt{font-size:16px;line-height:1.45}
+.chk .txt small{display:block;font-family:var(--f-ui);font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.chk.on .txt{color:var(--mint)}
+.chkscore{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:18px 20px;margin-top:16px;background:rgba(15,44,31,.5);font-size:16.5px;line-height:1.55}
+.chkscore b{color:var(--gold-2);font-weight:500}
+
+/* ══ tiers ══ */
+.tier{border:1px solid var(--bark);border-radius:5px;padding:20px;background:rgba(15,44,31,.5);border-top:2px solid var(--mint)}
+.tier .cad{font-family:var(--f-ui);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.tier h3{font-size:19px;margin-bottom:8px}
+.tier ul{margin:0;padding-left:17px;font-size:15px;line-height:1.5;color:#CBDCD0}
+.tier li{margin-bottom:6px}
+
+/* ══ accordion ══ */
+details.acc{border:1px solid var(--bark);border-radius:5px;margin-bottom:10px;background:rgba(15,44,31,.4);overflow:hidden}
+details.acc summary{cursor:pointer;padding:16px 20px;font-family:var(--f-ui);font-size:14.5px;color:var(--bone);list-style:none;display:flex;align-items:center;gap:14px;transition:background .2s}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:hover{background:rgba(30,70,50,.45)}
+details.acc summary::after{content:"+";margin-left:auto;color:var(--gold);font-size:19px;line-height:1}
+details.acc[open] summary::after{content:"–"}
+details.acc[open] summary{background:rgba(30,70,50,.4);color:var(--gold-2)}
+details.acc .accbody{padding:4px 20px 22px;border-top:1px solid rgba(30,70,50,.6)}
+details.acc .accbody p{margin:16px 0 0;color:#CBDCD0;font-size:16.5px}
+
+footer{border-top:1px solid var(--bark);padding:52px 0 70px;margin-top:40px}
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:20px}
+.srcs a{font-family:var(--f-ui);font-size:13px;color:var(--sage);border:1px solid var(--bark);border-radius:var(--r);padding:10px 13px;display:block;transition:.2s}
+.srcs a:hover{border-color:var(--mint);color:var(--bone);background:rgba(30,70,50,.4)}
+.srcs a span{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
+
+@media(max-width:640px){body{font-size:17px}section{padding:54px 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<main class="wrap">
+
+<!-- 1 WHY IT BREAKS -->
+<section id="breaks">
+  <div class="sec-head">
+    <div class="eyebrow">The premise</div>
+    <h2>Five assumptions your PRD template is quietly making</h2>
+    <p>A classical PRD is a good document resting on five load-bearing beliefs. An AI feature removes all five at once, which is why the template doesn't feel wrong so much as <em>insufficient</em> — engineering reads it, nods, and then makes a dozen consequential decisions you never wrote down.</p>
+  </div>
+  <div class="breaks" id="breakList"></div>
+  <div class="card" style="margin-top:24px;border-left:3px solid var(--mint)">
+    <span class="tag">The reframe</span>
+    <p style="font-size:17px;margin:0">A classical requirement describes <b style="color:var(--gold-2);font-weight:500">an output</b>. An AI requirement describes <b style="color:var(--gold-2);font-weight:500">a behaviour, a way of measuring it, a bar it must clear, and what happens when it doesn't.</b> Same intent, four times the surface — because the three extra parts are the decisions someone has to make regardless. The only question is whether you make them or they get made for you at 4pm on release day.</p>
+  </div>
+</section>
+
+<!-- 2 DOCUMENT MAP -->
+<section id="structure">
+  <div class="sec-head">
+    <div class="eyebrow">The structure</div>
+    <h2>The document, section by section</h2>
+    <p>Keep your existing spine — problem, users, scope, metrics, dependencies. Add a layer on top of it. Click any section for its purpose, a real clause, the anti-pattern to avoid, and who signs it off.</p>
+  </div>
+  <div class="docmap">
+    <div class="toc" id="toc"></div>
+    <div class="docpanel" id="docpanel"></div>
+  </div>
+</section>
+
+<!-- 3 GRAMMAR -->
+<section id="grammar">
+  <div class="sec-head">
+    <div class="eyebrow">The core clause</div>
+    <h2>The grammar of a behaviour contract</h2>
+    <p>Nearly every AI requirement worth writing fits one sentence pattern. Learn the five slots and you can write these quickly, consistently, and in a form a reviewer can argue with — which is the actual goal.</p>
+  </div>
+  <div class="grammar">
+    <div class="gline" id="gline"></div>
+    <div class="spec-lbl" style="margin-top:4px">Reads out as</div>
+    <div class="spec" id="grammarOut"></div>
+    <p class="bnote" style="margin-top:16px">Change the slots to see the sentence rebuild. The value isn't the sentence — it's that every slot is a decision, and an empty slot is a decision you've delegated by accident.</p>
+    <div class="pills" id="gPresets" style="margin:18px 0 0"></div>
+  </div>
+</section>
+
+<!-- 4 ACCEPTANCE -->
+<section id="acceptance">
+  <div class="sec-head">
+    <div class="eyebrow">Acceptance criteria</div>
+    <h2>Three kinds of check, and when each is honest</h2>
+    <p>Not everything needs a judge. Reach for the cheapest evaluator that is trustworthy for the criterion, because cheap checks run on every commit and expensive ones don't. Most good AI PRDs use all three, explicitly labelled.</p>
+  </div>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead><tr><th style="width:15%">Check</th><th style="width:26%">Use it when</th><th style="width:33%">Example clause</th><th style="width:26%">Where it fails</th></tr></thead>
+      <tbody id="accTable"></tbody>
+    </table>
+  </div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="card"><span class="tag">The rule that saves arguments</span><p style="font-size:16px;margin:0">Anything objective gets a deterministic check, always. Was the date parsed correctly, did the JSON validate, does every figure appear in the retrieved source, is the client ID one this adviser is entitled to see. These are free, instant, never drift, and they catch the failures that actually get you in trouble.</p></div>
+    <div class="card"><span class="tag">The rule that saves credibility</span><p style="font-size:16px;margin:0">A judged criterion without a calibration number is decoration. State the agreement between your automated judge and human labels in the PRD itself. If you can't, the honest clause is "human-rated on a sample of N per release" — slower, but true.</p></div>
+  </div>
+</section>
+
+<!-- 5 FAILURE TABLE -->
+<section id="failure">
+  <div class="sec-head">
+    <div class="eyebrow">The section everyone skips</div>
+    <h2>Failure modes, in three columns</h2>
+    <p>For every way the feature can fail: how the system detects it, what the user sees, how it recovers. Three things, every time, no exceptions. This is the section most PRDs omit and most post-mortems demand — and it's also the cheapest to write, because your team already knows the answers, they've just never been asked to write them down.</p>
+  </div>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead><tr><th style="width:19%">Failure</th><th style="width:27%">Detect</th><th style="width:27%">User sees</th><th style="width:27%">Recover</th></tr></thead>
+      <tbody id="fmTable"></tbody>
+    </table>
+  </div>
+  <p class="dim" style="margin-top:20px;font-size:16px;max-width:780px">Copy this table structure directly into your PRD and fill a row per failure mode you've actually observed in traces. Rows invented at a desk are worth about a third of rows harvested from production — start with the four or five you've seen, and add one every time error review turns up something new.</p>
+</section>
+
+<!-- 6 AUTONOMY -->
+<section id="autonomy">
+  <div class="sec-head">
+    <div class="eyebrow">For anything agentic</div>
+    <h2>Permissions belong in the spec, per action</h2>
+    <p>The permission surface <em>is</em> the primary safety control, which makes it a product decision rather than an implementation detail. Assign autonomy per action and tie it to reversibility, never per product. Reading an order status can be autonomous because it's read-only; issuing a refund cannot.</p>
+  </div>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead><tr><th style="width:24%">Action</th><th style="width:14%">Autonomy</th><th style="width:14%">Reversible</th><th style="width:24%">Side effects</th><th style="width:24%">Rationale in the spec</th></tr></thead>
+      <tbody id="permTable"></tbody>
+    </table>
+  </div>
+  <div class="card" style="margin-top:22px;border-left:3px solid var(--gold)">
+    <span class="tag">Write the escalation rule too</span>
+    <p style="font-size:16.5px;margin:0">Separately from per-action autonomy, state when the agent should stop and ask regardless: low confidence, an anomaly, a value threshold, an irreversibility flag, an approaching SLA. A useful target is escalation on roughly <b style="color:var(--gold-2);font-weight:500">5–15% of tasks</b>. Too frequent and users lose faith in the thing; too rare and it will eventually make a very confident, very wrong decision unsupervised.</p>
+  </div>
+</section>
+
+<!-- 7 ENVELOPE -->
+<section id="envelope">
+  <div class="sec-head">
+    <div class="eyebrow">Non-functional, but decisive</div>
+    <h2>The cost and latency envelope</h2>
+    <p>In classical PRDs these are footnotes owned by infrastructure. In AI PRDs they're product decisions with a direct quality tradeoff, and if you don't state them, the team optimises quality alone until finance notices.</p>
+  </div>
+  <div class="grid3" id="envGrid"></div>
+  <div class="spec-lbl">Example envelope clause</div>
+  <div class="spec" id="envSpec"></div>
+</section>
+
+<!-- 8 BUILDER -->
+<section id="builder">
+  <div class="sec-head">
+    <div class="eyebrow">The generator</div>
+    <h2>Build your PRD skeleton</h2>
+    <p>Fill in what you know. The output adapts to the task type and risk tier — a high-risk action feature gets a different set of mandatory clauses than a low-risk generation feature. It's a skeleton with your decisions in it, not a finished document: everything in square brackets is still yours to answer.</p>
+  </div>
+  <div class="builder">
+    <div class="bform">
+      <div class="field"><label>Feature name</label><input type="text" id="fName" value="Adviser answer assistant" maxlength="60"></div>
+      <div class="field"><label>Who uses it</label><input type="text" id="fUser" value="Relationship managers" maxlength="60"></div>
+      <div class="field"><label>The job it does</label>
+        <textarea id="fJob" maxlength="240">Answer product and policy questions during client conversations, grounded in approved documents.</textarea></div>
+      <div class="field"><label>Task type</label>
+        <select id="fType">
+          <option value="gen">Generation — writes something a human reads</option>
+          <option value="ext">Extraction — pulls structured fields from documents</option>
+          <option value="cls">Classification — routes, scores or labels</option>
+          <option value="act">Action — calls tools and changes state</option>
+          <option value="rec">Recommendation — suggests what to do next</option>
+        </select></div>
+      <div class="field"><label>Risk tier</label>
+        <select id="fRisk">
+          <option value="low">Low — internal, reversible, low visibility</option>
+          <option value="med" selected>Medium — affects client-facing work, human reviews</option>
+          <option value="high">High — affects a client outcome or a regulated decision</option>
+        </select></div>
+      <div class="field"><label>Primary quality metric</label><input type="text" id="fMetric" value="Groundedness" maxlength="48">
+        <span class="hint">Groundedness, field accuracy, precision, task success, suitability — whatever "good" means here.</span></div>
+      <div class="field"><label>The bar</label>
+        <div class="rangewrap"><input type="range" id="fBar" min="60" max="100" value="95"><span class="rangeval" id="vBar">0.95</span></div></div>
+      <div class="field"><label>Golden set size</label>
+        <div class="rangewrap"><input type="range" id="fSet" min="40" max="500" step="20" value="180"><span class="rangeval" id="vSet">180</span></div></div>
+      <div class="field"><label>Latency target, p95 (seconds)</label>
+        <div class="rangewrap"><input type="range" id="fLat" min="1" max="30" value="5"><span class="rangeval" id="vLat">5s</span></div></div>
+      <div class="field" style="margin-bottom:0"><label>Cost ceiling per completed task (US cents)</label>
+        <div class="rangewrap"><input type="range" id="fCost" min="1" max="200" value="14"><span class="rangeval" id="vCost">$0.14</span></div></div>
+    </div>
+    <div>
+      <div class="bout">
+        <div class="bout-head">
+          <span class="t">Generated · markdown</span>
+          <span style="display:flex;gap:8px"><button id="copyPrd">Copy</button><button class="ghost" id="dlPrd">Download .md</button></span>
+        </div>
+        <pre id="prdOut"></pre>
+      </div>
+      <p class="bnote">Paste it into Confluence, Notion, or a markdown file in the repo your coding agents read. The shorter and more machine-readable it is, the more likely it survives contact with a sprint — long PRDs that say nothing are a genuine 2026 problem, and an AI-drafted 30-page spec is worse than a two-page one someone argued over.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 TIERS -->
+<section id="living">
+  <div class="sec-head">
+    <div class="eyebrow">After you write it</div>
+    <h2>It's a living document, on three clocks</h2>
+    <p>An AI PRD that isn't revised is out of date within a quarter — a model version bump, a new failure mode from error review, a routing change. But not all of it moves at the same speed. Split it by cadence so the review is fifteen minutes rather than a rewrite.</p>
+  </div>
+  <div class="grid3" id="tierGrid"></div>
+  <div class="card" style="margin-top:22px">
+    <span class="tag">Keep it lean</span>
+    <p style="font-size:16.5px;margin:0">Three audiences read this document and none of them read all of it. Leadership needs the strategic tier; cross-functional teams need the behaviour and quality tiers; engineering and operations need the operational detail. Put the core in the main document and push eval samples, conversation examples, competitor capability matrices and the AI-literacy primer into appendices. <b style="color:var(--gold-2);font-weight:500">A spec's job is to align humans</b> — length is not evidence of thought, and post-assistant it's often evidence of the opposite.</p>
+  </div>
+</section>
+
+<!-- 10 REVIEW -->
+<section id="review">
+  <div class="sec-head">
+    <div class="eyebrow">Before you circulate it</div>
+    <h2>The reviewer's twelve</h2>
+    <p>One test underneath all of them: <em class="key">would an engineer have to invent this decision themselves?</em> If yes, it belongs in the document. Tick honestly.</p>
+  </div>
+  <div class="checks" id="checks"></div>
+  <div class="chkscore" id="chkscore">Nothing ticked yet. Work down the list against a PRD you've actually written — it's a more useful exercise than reading it in the abstract.</div>
+</section>
+
+<!-- 11 ANTIPATTERNS -->
+<section id="traps">
+  <div class="sec-head">
+    <div class="eyebrow">Failure modes of the document itself</div>
+    <h2>How AI PRDs go wrong</h2>
+  </div>
+  <div id="trapList"></div>
+</section>
+
+<!-- 12 CLOSE -->
+<section id="close">
+  <div class="sec-head">
+    <div class="eyebrow">Last thing</div>
+    <h2>The spec is the part that survives</h2>
+  </div>
+  <div class="narrow">
+    <p>Prompts get rewritten. Models get deprecated. The orchestration layer you built gets absorbed into a platform primitive. What persists across all of it is the artefact that says what good means here, how you'd know, and what the system does when it falls short.</p>
+    <p>That's a strange thing to realise about a document that most teams treat as overhead. But the behaviour contract, the failure table, the permission surface and the eval spec are the only parts of an AI feature that a model upgrade can't invalidate — they're the definition the new model gets measured against. <em class="key">Write them once, properly, and every future model decision gets cheaper.</em></p>
+    <p style="margin-bottom:0">Which is the honest reason to spend an afternoon on this rather than a paragraph: not process, leverage.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="eyebrow">Sources &amp; further reading</div>
+    <p class="dim" style="max-width:720px;font-size:16px">Synthesised from current practitioner templates and writing on AI specification. All figures in the examples and the generator are illustrative placeholders — replace them with numbers from your own evals.</p>
+    <div class="srcs" id="srcs"></div>
+    <p class="dim ui" style="font-size:12px;margin-top:34px">Third in a series with <a href="#top">A Guide to the AI PM</a> and <a href="#top">AI Product Strategy</a> · ted.sg · August 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ── nav ── */
+const NAV=[["breaks","Why it breaks"],["structure","The structure"],["grammar","The clause"],["acceptance","Acceptance"],["failure","Failure table"],["autonomy","Permissions"],["envelope","Envelope"],["builder","Generator"],["living","Living doc"],["review","Reviewer's twelve"],["traps","Anti-patterns"]];
+const nl=$("#navlinks");
+NAV.forEach(([id,l])=>{const a=el("a",null,l);a.href="#"+id;a.dataset.sec=id;nl.appendChild(a);});
+const secs=NAV.map(([id])=>document.getElementById(id)).filter(Boolean);
+let tick=false;
+function onScroll(){
+  const y=scrollY,h=document.body.scrollHeight-innerHeight;
+  $("#progress").style.width=(h>0?Math.min(100,y/h*100):0)+"%";
+  let cur=null;secs.forEach(s=>{if(s.getBoundingClientRect().top<160)cur=s.id;});
+  $$(".navlinks a").forEach(a=>a.classList.toggle("on",a.dataset.sec===cur));
+  const on=$(".navlinks a.on");
+  if(on&&on.offsetLeft<nl.scrollLeft)nl.scrollLeft=on.offsetLeft-16;
+  else if(on&&on.offsetLeft+on.offsetWidth>nl.scrollLeft+nl.clientWidth)nl.scrollLeft=on.offsetLeft+on.offsetWidth-nl.clientWidth+16;
+  tick=false;
+}
+addEventListener("scroll",()=>{if(!tick){tick=true;requestAnimationFrame(onScroll);}},{passive:true});
+
+/* ── hero: the rewrite ── */
+const RW=[
+ {k:"Answering",old:"The assistant returns the correct answer to the adviser's question.",
+  parts:[["Behaviour","Answers only from retrieved approved documents, and says so when it can't find a confident answer."],
+   ["Measure","Groundedness, scored by a calibrated LLM judge (κ ≥ 0.7 against human labels) on the 180-case golden set."],
+   ["Bar","≥ 0.95 overall; ≥ 0.98 on the fee and rate subset. Release blocks on any regression greater than 2pp."],
+   ["Fallback","Below retrieval confidence 0.6: show the sources found, state that no confident answer exists, offer search. Never improvise."],
+   ["Guardrail","Never state a fee, rate or figure that does not appear verbatim in a retrieved source. Deterministic check, hard gate.",1]]},
+ {k:"Summarising",old:"Summarise the client meeting accurately.",
+  parts:[["Behaviour","Produces a structured summary with decisions, actions and owners, in house tone, without adding facts not present in the transcript."],
+   ["Measure","Fabrication rate (deterministic entity check against the transcript) plus a human-rated usefulness score on 40 samples per release."],
+   ["Bar","Fabrication rate 0%. Usefulness ≥ 0.85. Adviser edit rate tracked as the leading adoption signal."],
+   ["Fallback","Transcript under 200 words or diarisation confidence low: return the transcript with a note rather than a summary."],
+   ["Guardrail","Never infer sentiment, intent or suitability. Never name a person not present in the transcript.",1]]},
+ {k:"Extracting",old:"Extract the fields from the client statement.",
+  parts:[["Behaviour","Returns the twelve defined fields as validated JSON, with a per-field confidence and the page each value came from."],
+   ["Measure","Per-field exact-match accuracy against a 250-document labelled set, reported per field rather than averaged."],
+   ["Bar","≥ 0.99 on identifiers and amounts; ≥ 0.95 on free-text fields. No field below 0.90 ships at all."],
+   ["Fallback","Any field below confidence 0.8 routes to the review queue pre-filled, rather than being submitted or silently dropped."],
+   ["Guardrail","Never output a value absent from the document. Never coerce a malformed date into a plausible one.",1]]},
+ {k:"Acting",old:"The agent books the client meeting.",
+  parts:[["Behaviour","Proposes a slot, drafts the invitation, and stages it for the adviser. Executes only after explicit confirmation."],
+   ["Measure","End-to-end task success on 60 scripted scenarios, plus tool-choice accuracy and argument validity scored separately at step level."],
+   ["Bar","Task success ≥ 0.90. Tool-choice accuracy ≥ 0.98. Zero unapproved sends across the full suite — a single one blocks release."],
+   ["Fallback","Ambiguous timing, external attendees, or any calendar conflict: present options and ask rather than choosing."],
+   ["Guardrail","Never send on the adviser's behalf without confirmation. Never invite an address outside the approved contact record.",1]]},
+ {k:"Responding fast",old:"The feature should respond quickly.",
+  parts:[["Behaviour","Streams a first token early and completes within the envelope, degrading gracefully rather than making the user wait."],
+   ["Measure","p50 and p95 time-to-first-token and time-to-complete, segmented by path (cached / retrieved / cold)."],
+   ["Bar","TTFT p95 ≤ 1.2s. Complete p95 ≤ 4.5s. Breach for two consecutive weeks triggers a routing review."],
+   ["Fallback","At 8s: stream what exists, mark the answer partial, offer to continue. Never a spinner with no state."],
+   ["Guardrail","Never silently truncate mid-sentence. Never drop retrieved sources to save latency.",1]]}
+];
+const picker=$("#rwPicker");
+RW.forEach((r,i)=>{
+  const b=el("button","ghost"+(i===0?" on":""),r.k);
+  b.addEventListener("click",()=>{$$("#rwPicker button").forEach(x=>x.classList.remove("on"));b.classList.add("on");showRw(i);});
+  picker.appendChild(b);
+});
+function showRw(i){
+  const r=RW[i];
+  $("#rwOld").textContent=r.old;
+  const wrap=$("#rwParts");wrap.innerHTML="";
+  r.parts.forEach((p,j)=>{
+    const d=el("div","rw-part"+(p[2]?" guard":""),`<div class="lbl">${p[0]}</div><div class="txt">${p[1]}</div>`);
+    d.style.animationDelay=(j*70)+"ms";
+    wrap.appendChild(d);
+  });
+  $("#rIn").textContent=r.old.split(/\s+/).length;
+  $("#rOut").textContent=r.parts.length;
+  $("#rDec").textContent=r.parts.length*2+1;
+}
+showRw(0);
+
+/* ── five breaks ── */
+const BREAKS=[
+ ["Same input, same output.","Same input, a distribution of outputs. So the requirement must state a <b>tolerance</b>, not a result — and every acceptance criterion needs a dataset attached, because a single example proves nothing."],
+ ["Correct is binary.","Correct is a spectrum. A feature can be excellent on 94% of queries and destroy trust because the 6% clusters on your highest-value use case. The spec has to say <b>which 6% is acceptable</b>."],
+ ["Done stays done.","Done decays. A model version bump, a stale index or drifting user behaviour can undo a passing feature overnight. The document needs a <b>monitoring section</b>, or done was never real."],
+ ["Behaviour can be fully specified.","Behaviour can only be bounded. Trying to script every possible output fails; the workable middle is a contract — <b>given failure type X, the system does Y, and the user sees Z</b>."],
+ ["Cost is somebody else's section.","Every call has a price and a latency, and both trade directly against quality. Leave the envelope out and the team optimises quality alone until <b>finance discovers the feature</b>."]
+];
+$("#breakList").innerHTML=BREAKS.map(([a,b])=>`<div class="brk"><div class="a"><div class="lbl">Your template assumes</div>${a}</div><div class="b"><div class="lbl">An AI feature gives you</div>${b}</div></div>`).join("");
+
+/* ── document map ── */
+const DOC=[
+ {g:"The spine you already have",items:[
+  {n:"—",t:"Problem &amp; job to be done",spine:1,why:"Unchanged, and still the most important section. One sentence with no technology in it. If the problem statement mentions a model, it's a solution statement wearing a disguise.",ex:"Relationship managers interrupt client conversations to look up product terms, averaging 4 lookups per meeting and 90 seconds each.",anti:"Leading with the capability. \"We will use GenAI to…\" is not a problem.",who:"PM"},
+  {n:"—",t:"Users, scope &amp; out of scope",spine:1,why:"Unchanged. Out-of-scope matters more here than usual, because AI features attract scope like nothing else — everyone has an idea for one more thing the assistant could do.",ex:"In scope: approved product and policy documents. Out of scope: client portfolio data, anything requiring a suitability judgement, any outbound message.",anti:"An empty out-of-scope list. It means the boundaries haven't been decided, just deferred.",who:"PM"},
+  {n:"—",t:"Success metrics",spine:1,why:"Unchanged in form, but state the layer. Model metrics are not business metrics, and reporting one as the other is the fastest way to lose a budget conversation.",ex:"Business: lookup interruptions per meeting down 60%. Product: accept-unedited rate ≥ 70%. Model: groundedness ≥ 0.95.",anti:"An F1 score presented as the headline outcome to a steering committee.",who:"PM · sponsor"}]},
+ {g:"The AI layer you add",items:[
+  {n:"01",t:"Why a model at all",why:"The section that saves the most money. Models add cost, latency and failure modes that deterministic code doesn't have. State plainly why a form, a rules engine or a single query is insufficient, and name what you rejected.",ex:"Rejected — rules engine: cannot handle paraphrased questions (41% miss rate measured on 200 real queries). Rejected — keyword search: already exists, 32% of lookups fail.",anti:"Skipping it because the decision was made above you. Write it anyway; it's the section that gets quoted when the project is challenged.",who:"PM"},
+  {n:"02",t:"Task definition &amp; examples",why:"Five to ten realistic inputs, including messy ones, with what a good response looks like. Writing these is spec work and eval work at the same time — they become the seed of your golden set.",ex:"\"whats the min for the income fund\" → answers with the current minimum from the approved factsheet, cites it, notes the segment it applies to.",anti:"Only clean examples. The value is in the typo, the ambiguous pronoun, the question that shouldn't be answered at all.",who:"PM · domain experts"},
+  {n:"03",t:"Model strategy &amp; fallback",why:"Which model, why, at what pinned version, and what happens when it's unavailable or deprecated. This is product strategy, not implementation — your cost structure and migration risk both live here.",ex:"Primary: mid-tier, version-pinned. Fallback: small tier, degraded mode acceptable for lookup, not for drafting. Provider outage: serve cached, else disable with an explicit notice.",anti:"\"We'll use the best model.\" Defaulting to frontier is the most common cause of cost overrun.",who:"PM · engineering"},
+  {n:"04",t:"Data &amp; context contract",why:"What goes into the window and where it comes from. Retrieval corpus, freshness, entitlement scoping, history handling, and what gets masked before the call.",ex:"Corpus: approved product and policy documents only, reindexed nightly, as-of date shown in the answer. Retrieval scoped by adviser entitlement. PII masked pre-call.",anti:"Leaving chunking and freshness to engineering. Most \"the model is bad\" complaints resolve to a retrieval problem.",who:"PM · data engineering"},
+  {n:"05",t:"Behaviour contract",why:"The core of the document, and the replacement for your functional requirements. One clause per behaviour, each with the five slots: behaviour, measure, bar, fallback, guardrail.",ex:"See the clause grammar below — this section is usually 6 to 12 clauses, and it's the part reviewers should spend their time arguing about.",anti:"Prose paragraphs describing what the assistant \"should generally do\". Unarguable, therefore unreviewable, therefore useless.",who:"PM owns"},
+  {n:"06",t:"Quality bar &amp; eval spec",why:"Metric, dataset, threshold, evaluator type, calibration, and who can approve an exception. Without it, engineering invents its own bar and you find out at launch.",ex:"Golden set: 180 cases across common path, long tail, and each named failure mode. Judge calibrated κ ≥ 0.7. Full suite runs on any prompt, model, retrieval or tool change.",anti:"A bar with no dataset behind it. \"95% accurate\" on what, measured how, by whom?",who:"PM sets · engineering implements"},
+  {n:"07",t:"Failure modes &amp; fallback UX",why:"Three columns per failure: detect, user sees, recover. The section that turns a demo into something you can run.",ex:"See the failure table below. Harvest rows from real traces rather than inventing them at a desk.",anti:"Only the happy path. Users spend more time in failure states than you think, and that's where trust is decided.",who:"PM · design"},
+  {n:"08",t:"Behavioural constraints",why:"What the system must never do, regardless of input. These become deterministic guardrails outside the model — not prompt suggestions.",ex:"Never state a figure absent from a retrieved source. Never recommend a specific security. Never assert suitability. Never echo a full account identifier.",anti:"Putting a compliance rule in the system prompt. A prompt is a suggestion to a probabilistic system.",who:"PM · compliance"},
+  {n:"09",t:"Autonomy &amp; tool permissions",why:"Per action: autonomy level, reversibility, side effects, and whether approval is required. The permission surface is your primary safety control.",ex:"read_product_terms — autonomous, read-only. draft_client_message — suggest only. send_message — out of scope for v1.",anti:"A single global autonomy setting for the whole feature.",who:"PM · risk"},
+  {n:"10",t:"Cost &amp; latency envelope",why:"Maximum acceptable cost per completed task, latency targets by percentile, token budget, and what breach triggers. Makes the tradeoff explicit so it's revisited with evidence rather than relitigated each standup.",ex:"≤ $0.014 per completed task. TTFT p95 ≤ 1.2s, complete p95 ≤ 4.5s. Budget 6k in / 900 out with a 2.1k cached prefix.",anti:"Omitting it. The team will optimise quality alone, which is rational and expensive.",who:"PM · engineering"},
+  {n:"11",t:"Trust &amp; interaction design",why:"What the interface shows when the system is confident, uncertain, and wrong. Attribution, confidence signals, correction paths, and how user edits are captured.",ex:"Every answer shows its sources inline. Uncertainty shown only where the user can act on it. Every edit captured as a labelled example for the golden set.",anti:"Designing only the confident state, then bolting on an error toast.",who:"Design · PM"},
+  {n:"12",t:"Safety, abuse &amp; red team",why:"Injection resistance, refusal policy, abuse cases, and a scheduled adversarial pass with findings logged. Increasingly evidence a reviewer expects to see.",ex:"Retrieved content treated as data, never instructions. Injection cases in the eval suite. Red team pass before each major release, findings and fixes recorded.",anti:"Treating this as a security review at the end rather than a design input at the start.",who:"PM · security · risk"},
+  {n:"13",t:"Monitoring &amp; production evals",why:"What you sample, what you score continuously, what alerts, and who reads it. This is the second half of shipping, not an operational afterthought.",ex:"Sample 3% of traffic, score groundedness and refusal rate daily, alert on rate shifts rather than single events. Weekly error review with 25 sampled traces.",anti:"Dashboards nobody owns. Name the person and the cadence.",who:"PM · engineering"},
+  {n:"14",t:"Rollout &amp; evidence pack",why:"How it reaches users, and what you can hand a reviewer. In regulated settings the evidence pack is part of the deliverable rather than an afterthought.",ex:"Internal dogfood 2 weeks → 5% cohort shadow mode → 25% → full. Kill switch via feature flag, no deploy, owner named on the runbook.",anti:"Assembling the evidence after the fact. Produce it as you build and the submission becomes assembly, not archaeology.",who:"PM · compliance"},
+  {n:"15",t:"Living-document cadence",why:"What gets reviewed quarterly, monthly, and per release — plus a changelog. An AI PRD that isn't revised is stale within a quarter.",ex:"Strategic tier quarterly. Behaviour and quality tiers monthly. Operational tier every significant change. Changelog at the top, newest first.",anti:"A document with no revision date. Nobody knows whether to trust it.",who:"PM"}]}
+];
+const toc=$("#toc"),panel=$("#docpanel");
+const FLAT=[];
+DOC.forEach(sec=>{
+  toc.appendChild(el("div","toc-group",sec.g));
+  sec.items.forEach(it=>{
+    const i=FLAT.length;FLAT.push(it);
+    const b=el("button",it.spine?"spine":"",`<span class="num">${it.n}</span><span>${it.t}</span>`);
+    b.dataset.i=i;
+    b.addEventListener("click",()=>{$$(".toc button").forEach(x=>x.classList.remove("on"));b.classList.add("on");showDoc(i);});
+    toc.appendChild(b);
+  });
+});
+function showDoc(i){
+  const d=FLAT[i];
+  panel.innerHTML=`<div class="kicker">${d.spine?"Existing section — keep it":"Section "+d.n+" — added for AI"}</div>
+   <h3>${d.t}</h3><p class="why">${d.why}</p>
+   <div class="spec-lbl">Example clause</div><div class="spec">${d.ex}</div>
+   <div class="spec-lbl no">Anti-pattern</div><div class="spec no">${d.anti}</div>
+   <div class="meta"><div><b>Owner</b>${d.who}</div><div><b>Position</b>${d.spine?"Existing spine":"AI layer, section "+d.n}</div></div>`;
+}
+const first=$$(".toc button")[3];first.classList.add("on");showDoc(3);
+
+/* ── grammar ── */
+const SLOTS=[
+ {k:"Behaviour",id:"gB",v:"Answers only from retrieved approved documents",h:"What the system does, observably. Verbs, not adjectives."},
+ {k:"Measure",id:"gM",v:"groundedness, calibrated judge on the 180-case golden set",h:"How you'd know. Name the metric AND the dataset."},
+ {k:"Bar",id:"gR",v:"≥ 0.95, blocking on regressions over 2pp",h:"The number, and what happens when it isn't met."},
+ {k:"Fallback",id:"gF",v:"below confidence 0.6, show sources and state that no confident answer exists",h:"The defined behaviour underneath the bar."},
+ {k:"Guardrail",id:"gG",v:"never states a figure absent from a retrieved source",h:"The deterministic must-never, enforced outside the model."}
+];
+const glineEl=$("#gline");
+SLOTS.forEach((s,i)=>{
+  if(i>0)glineEl.appendChild(el("div","gjoin","+"));
+  const d=el("div","gslot",`<div class="k">${s.k}</div><input type="text" id="${s.id}" value="${s.v.replace(/"/g,"&quot;")}"><div class="h">${s.h}</div>`);
+  glineEl.appendChild(d);
+});
+function grammarOut(){
+  const g=id=>$("#"+id).value.trim()||"[…]";
+  $("#grammarOut").textContent=
+`The assistant ${g("gB")},
+measured by ${g("gM")},
+meeting ${g("gR")}.
+Where the bar is not met: ${g("gF")}.
+Regardless of input, the system ${g("gG")}.`;
+}
+SLOTS.forEach(s=>$("#"+s.id).addEventListener("input",grammarOut));
+grammarOut();
+const PRESETS=[
+ ["Extraction clause",["returns the twelve defined fields as validated JSON with per-field confidence","per-field exact-match accuracy on a 250-document labelled set","≥ 0.99 on identifiers and amounts, no field below 0.90","any field under confidence 0.8 routes to the review queue pre-filled","never outputs a value absent from the source document"]],
+ ["Action clause",["stages the booking and waits for explicit adviser confirmation","task success on 60 scripted scenarios plus tool-choice accuracy at step level","≥ 0.90 task success, zero unapproved sends across the suite","on any ambiguity or conflict, presents options and asks","never sends on the adviser's behalf without confirmation"]],
+ ["Reset",["Answers only from retrieved approved documents","groundedness, calibrated judge on the 180-case golden set","≥ 0.95, blocking on regressions over 2pp","below confidence 0.6, show sources and state that no confident answer exists","never states a figure absent from a retrieved source"]]
+];
+const gp=$("#gPresets");
+PRESETS.forEach(([label,vals])=>{
+  const b=el("button","ghost",label);b.style.fontSize="12px";
+  b.addEventListener("click",()=>{SLOTS.forEach((s,i)=>$("#"+s.id).value=vals[i]);grammarOut();});
+  gp.appendChild(b);
+});
+
+/* ── acceptance table ── */
+const ACC=[
+ ["Deterministic","The criterion has one objectively right answer: a parsed date, a valid schema, a figure that must match a system of record, an entitlement check.",
+  "Every monetary figure in the response appears verbatim in a retrieved source. Hard gate, blocks the merge, no exception path.",
+  "Nothing subjective fits. Trying to force tone or usefulness into a regex produces a check that passes while the product is bad."],
+ ["Judged","The criterion is real but subjective: groundedness, tone, usefulness, suitability of register. Scored by a model against an explicit rubric.",
+  "Groundedness ≥ 0.95 on the 180-case golden set, LLM judge with the published rubric, calibrated at κ ≥ 0.7 against three human labellers.",
+  "Uncalibrated judges. Also judge drift — standards shift after a model update, so your metric moves while quality doesn't. Pin the judge version."],
+ ["Human-rated","No trustworthy automated proxy exists yet, or the stakes justify the cost. Sampled, not exhaustive.",
+  "Suitability of tone: ≥ 0.85 human-rated on a 40-case stratified sample per release, two raters, disagreements adjudicated by the domain lead.",
+  "Doesn't scale and doesn't run in CI. Treat every recurring human review as a missing eval and work to automate the rubric behind it."]
+];
+$("#accTable").innerHTML=ACC.map(([k,w,e,f])=>`<tr><td>${k}</td><td>${w}</td><td class="mono">${e}</td><td>${f}</td></tr>`).join("");
+
+/* ── failure table ── */
+const FM=[
+ ["Retrieval miss","Retrieval hit-rate metric on the golden set, scored separately from answer quality.","Sources found, plus a plain statement that no confident answer exists, plus a search affordance.","Log the query into the gap list; it becomes a golden case and a corpus request."],
+ ["Confabulated figure","Deterministic check: every number in the output must appear in a retrieved source.","Answer suppressed, sources shown, adviser prompted to check the factsheet directly.","Trace flagged for error review. Recurring patterns become a new guardrail, not a prompt tweak."],
+ ["Schema validation failure","Output parser rejects the structure.","Nothing — one silent retry with stricter constraints, then a template fallback.","Second failure escalates to the review queue with the raw output attached."],
+ ["Stale index","Freshness monitor plus a canary document that changes daily.","As-of date displayed on every answer, visibly stale when it is.","Alert to the data owner; feature degrades to search-only if freshness breaches 48 hours."],
+ ["Guardrail trip","Constraint check fires pre-response.","A generic decline with an alternative path. No explanation of which rule fired.","Trace logged with the rule ID. Reviewed weekly for false-positive rate."],
+ ["Prompt injection","Injection cases in the eval suite; anomaly detection on tool-call patterns.","Nothing unusual — the instruction is simply not followed.","Retrieved content is data, never instruction. Incident logged and the source document quarantined."],
+ ["Latency breach","p95 monitoring, segmented by cached / retrieved / cold path.","Streamed partial answer marked incomplete, with an option to continue.","Route to the faster tier for the remainder of the session; alert if sustained."],
+ ["Provider outage","Health check plus error-rate threshold.","Feature disabled with an explicit notice naming what still works.","Fall back to the small tier in degraded mode; kill switch available without a deploy."],
+ ["Cost anomaly","Per-user and per-feature cost dashboards, p99 not mean.","Rate limit message written in advance, not improvised.","Circuit breaker trips at 1.5× the envelope; routing reviewed within the day."]
+];
+$("#fmTable").innerHTML=FM.map(([a,b,c,d])=>`<tr><td>${a}</td><td>${b}</td><td>${c}</td><td>${d}</td></tr>`).join("");
+
+/* ── permissions ── */
+const PERM=[
+ ["read_product_terms","Autonomous","<span class='yes'>Yes</span>","None. Read-only against approved corpus.","Read-only and reversible, so approval adds friction without adding safety."],
+ ["read_client_portfolio","Autonomous","<span class='yes'>Yes</span>","Entitlement-scoped read. Access logged.","Read-only, but logged because the data is sensitive and access is auditable."],
+ ["draft_client_message","Suggest only","<span class='yes'>Yes</span>","Creates a draft. Nothing leaves.","Output is client-facing; the adviser is accountable for what's sent."],
+ ["book_meeting","Act with confirmation","<span class='yes'>Yes</span>","Calendar write, invitation to attendees.","Reversible but externally visible. Confirmation is cheap, embarrassment isn't."],
+ ["send_client_message","<span class='no'>Out of scope, v1</span>","<span class='no'>No</span>","Irreversible external communication.","Not until we have production eval data on drafting quality and a supervision model agreed."],
+ ["submit_instruction","<span class='no'>Out of scope</span>","<span class='no'>No</span>","Financial effect. Regulated action.","Not a v1 conversation. Requires a separate risk submission and a different approval regime."]
+];
+$("#permTable").innerHTML=PERM.map(r=>`<tr><td class="mono">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join("");
+
+/* ── envelope ── */
+const ENV=[
+ ["Cost","State the ceiling per <em>completed task</em>, not per call. Failed attempts still consume tokens, and retries consume them twice — a cheap model that fails half the time is the expensive option.","Also state the token budget: input, output, and what's cached."],
+ ["Latency","Percentiles, not averages, and segmented by path. Time-to-first-token often matters more than total time, because streaming changes what waiting feels like.","Name the degradation behaviour at the ceiling, not just the target."],
+ ["Breach","What actually happens when the envelope is exceeded — a routing review, a circuit breaker, a rate limit. An envelope with no consequence is a wish.","Give it a trigger condition and an owner, the same as any other gate."]
+];
+$("#envGrid").innerHTML=ENV.map(([t,a,b])=>`<div class="card"><span class="tag">${t}</span><p style="font-size:15.5px;color:#CBDCD0">${a}</p><p style="font-size:14px;color:var(--sage);margin:0;font-family:var(--f-ui);line-height:1.45">${b}</p></div>`).join("");
+$("#envSpec").textContent=
+`Cost ceiling:      ≤ $0.014 per completed task at target volume
+Token budget:      6,000 in / 900 out, with a 2,100-token cached prefix
+Latency:           TTFT p95 ≤ 1.2s · complete p95 ≤ 4.5s
+Degradation:       at 8s, stream partial and mark incomplete
+Breach trigger:    1.5× ceiling for two consecutive weeks → routing review
+Owner:             [name] · reviewed monthly alongside the quality dashboard`;
+
+/* ── builder ── */
+const TYPE_BITS={
+ gen:{metric:"Groundedness",unit:"score",extra:["- Never asserts a fact absent from the retrieved sources.","- Never infers intent, sentiment or suitability."],
+   fail:["Retrieval miss","Confabulated figure","Tone or register breach"],
+   act:["- No tool calls. Generation only.","- Output is staged for a human, never delivered directly to a client."]},
+ ext:{metric:"Per-field accuracy",unit:"score",extra:["- Never outputs a value absent from the source document.","- Never coerces a malformed value into a plausible one."],
+   fail:["Field misread","Schema validation failure","Low-confidence field"],
+   act:["- Writes to the review queue only. No downstream system writes in v1."]},
+ cls:{metric:"Precision on the positive class",unit:"score",extra:["- Never assigns a class outside the defined taxonomy.","- Never suppresses an item without logging the reason."],
+   fail:["False positive","False negative on a high-value case","Distribution drift"],
+   act:["- Routing only. Any state change downstream requires a separate approval."]},
+ act:{metric:"Task success",unit:"score",extra:["- Never executes an irreversible action without explicit confirmation.","- Never calls a tool outside the declared permission surface."],
+   fail:["Wrong tool call","Invalid arguments","Cascading step error","Unapproved execution attempt"],
+   act:["- Per-action permission table is MANDATORY for this feature type — see section 9.","- Escalation target: 5–15% of tasks. Below 5%, check the confidence signal is real."]},
+ rec:{metric:"Acceptance rate of recommendations",unit:"rate",extra:["- Never recommends a specific security or instrument.","- Never asserts suitability for a segment not present in the request."],
+   fail:["Unsuitable recommendation","Stale underlying data","Recommendation the user cannot action"],
+   act:["- Suggest only. The human decides and is accountable for the decision."]}
+};
+const RISK_BITS={
+ low:{review:"Quarterly",roll:"Internal dogfood → full release",eviden:"Eval results and a monitoring dashboard.",extra:"Human review optional. Kill switch still required."},
+ med:{review:"Monthly",roll:"Internal dogfood (2 wks) → 10% cohort → 50% → full",eviden:"Eval results, failure-mode table, red-team findings, monitoring plan, rollback procedure.",extra:"Human reviews output before it reaches a client. Weekly error review with 25 sampled traces."},
+ high:{review:"Monthly, with the strategic tier re-approved quarterly",roll:"Internal dogfood → shadow mode on 5% → 25% → full, with a hold point at each stage",eviden:"Eval results, failure-mode table, fairness assessment, red-team findings, explainability design, human-oversight design, monitoring plan, incident and rollback procedure, model-inventory entry.",extra:"Human approval required before any client-visible output. Independent validation engaged at design review, not launch review. Explainability is a hard requirement: every output must be accountable."}
+};
+function fmt(n){return (n/100).toFixed(2);}
+function buildPrd(){
+  const name=$("#fName").value.trim()||"[Feature name]";
+  const user=$("#fUser").value.trim()||"[User]";
+  const job=$("#fJob").value.trim()||"[The job it does]";
+  const type=$("#fType").value, risk=$("#fRisk").value;
+  const metric=$("#fMetric").value.trim()||TYPE_BITS[type].metric;
+  const bar=fmt(+$("#fBar").value), set=+$("#fSet").value;
+  const lat=+$("#fLat").value, cost=+$("#fCost").value;
+  $("#vBar").textContent=bar;$("#vSet").textContent=set;
+  $("#vLat").textContent=lat+"s";$("#vCost").textContent="$"+(cost/100).toFixed(2);
+  const T=TYPE_BITS[type], R=RISK_BITS[risk];
+  const riskName={low:"Low",med:"Medium",high:"High"}[risk];
+  const typeName={gen:"Generation",ext:"Extraction",cls:"Classification",act:"Action",rec:"Recommendation"}[type];
+  const out=
+`# ${name}
+Owner: [name] · Risk tier: ${riskName} · Task type: ${typeName}
+Status: [draft] · Last revised: [date] · Changelog at the bottom
+
+## 1. Problem
+${job}
+Today: [what happens now, with a number attached]
+Cost of the status quo: [time, error rate, missed revenue]
+
+## 2. Users and scope
+Primary user: ${user}
+In scope: [surfaces, data, actions]
+Out of scope: [the things people will ask for — name them now]
+
+## 3. Why a model at all
+Rejected alternative — [rules engine / form / query]: [why it fails, with evidence]
+Chosen because: [the input is unstructured / the output tolerance allows review]
+
+## 4. Success metrics
+Business:  [the outcome the sponsor is buying]
+Product:   [accept-unedited rate, task completion, repeat use at 28 days]
+Model:     ${metric} ≥ ${bar}
+
+## 5. Task definition — seed examples
+These become the first rows of the golden set.
+1. [realistic input] → [what good looks like]
+2. [messy input — typo, ambiguity] → [what good looks like]
+3. [input that should NOT be answered] → [the correct refusal]
+4. [edge case from a real trace] → [what good looks like]
+5. [high-value case where failure hurts most] → [what good looks like]
+
+## 6. Model strategy and fallback
+Primary:        [tier], version-pinned to [version]
+Fallback:       [smaller tier] — degraded mode, acceptable for [X], not for [Y]
+Provider issue: [cached response / disable with notice / non-AI path]
+Fine-tuning:    Not now. Revisit at [volume trigger].
+
+## 7. Data and context contract
+Corpus:      [sources], reindexed [cadence], as-of date surfaced to the user
+Scoping:     retrieval filtered by [entitlement model]
+PII:         masked before the call · traces retained [N] days in-region
+Training:    no customer data used for provider training (contractual)
+
+## 8. Behaviour contract
+Each clause: behaviour · measure · bar · fallback · guardrail.
+
+C1. The system [behaviour],
+    measured by ${metric} on the ${set}-case golden set,
+    meeting ≥ ${bar}, blocking release on any regression over 2pp.
+    Below the bar: [defined fallback behaviour].
+    Regardless of input: [the must-never].
+
+C2. [second behaviour — repeat the pattern]
+C3. [third behaviour]
+
+## 9. Behavioural constraints (deterministic, enforced outside the model)
+${T.extra.join("\n")}
+- Never echoes a full account or client identifier into the response body.
+
+## 10. Autonomy and tool permissions
+${T.act.join("\n")}
+| Action | Autonomy | Reversible | Side effects | Rationale |
+|---|---|---|---|---|
+| [tool_name] | [autonomous / confirm / suggest] | [y/n] | [what changes] | [why] |
+
+Escalate to a human when: confidence below [threshold] · anomaly detected ·
+value exceeds [amount] · action is irreversible · SLA approaching.
+
+## 11. Quality bar and eval spec
+Golden set:   ${set} cases — common path, long tail, one block per named failure mode
+Labelling:    [domain experts], majority vote where contested, rationale retained
+Evaluators:   deterministic for objective criteria · judge with published rubric for
+              subjective ones, calibrated at κ ≥ 0.7 against human labels
+Gates:        full suite on any prompt, model, retrieval or tool change
+Exceptions:   approved by [name] only, recorded with a reason
+
+## 12. Failure modes
+| Failure | Detect | User sees | Recover |
+|---|---|---|---|
+${T.fail.map(f=>`| ${f} | [signal] | [state shown] | [recovery path] |`).join("\n")}
+| Provider outage | health check | explicit notice | fallback tier, kill switch |
+| Latency breach | p95 monitor | partial, marked incomplete | route to faster tier |
+
+## 13. Cost and latency envelope
+Cost ceiling:  ≤ $${(cost/100).toFixed(3)} per completed task at target volume
+Token budget:  [N] in / [N] out, with a [N]-token cached prefix
+Latency:       TTFT p95 ≤ [N]s · complete p95 ≤ ${lat}s
+Breach:        1.5× ceiling for two consecutive weeks → routing review, owner [name]
+
+## 14. Trust and interaction design
+Confident state:   [what the user sees, including attribution]
+Uncertain state:   [how uncertainty is shown, only where actionable]
+Wrong state:       [how the user notices, corrects, and keeps their work]
+Correction loop:   every user edit captured as a labelled example
+
+## 15. Safety and red team
+Retrieved content is treated as data, never as instructions.
+Injection cases included in the eval suite.
+Red-team pass before [each major release], findings and fixes recorded.
+Refusal policy: [what it declines, and what it offers instead]
+
+## 16. Monitoring
+Sampling:   [N]% of production traffic scored continuously
+Watch:      ${metric} · refusal rate · escalation rate · cost per task · p95 latency
+Alerting:   on rate shifts, not single events
+Cadence:    weekly error review, [N] sampled traces, owner [name]
+
+## 17. Rollout and evidence
+Stages:     ${R.roll}
+Evidence:   ${R.eviden}
+Oversight:  ${R.extra}
+Kill switch: feature flag, no deploy required, owner [name] on the runbook
+
+## 18. Review cadence
+Strategic tier (1–4):    quarterly
+Behaviour and quality (5–12): ${R.review.toLowerCase()}
+Operational (13–17):     every significant change
+
+## Changelog
+[date] — [what changed and why] — [who]
+
+---
+Everything in [square brackets] is an unmade decision. If it ships with
+brackets still in it, someone downstream made that decision instead of you.`;
+  $("#prdOut").textContent=out;
+  return out;
+}
+["fName","fUser","fJob","fType","fRisk","fMetric","fBar","fSet","fLat","fCost"].forEach(id=>{
+  $("#"+id).addEventListener("input",buildPrd);$("#"+id).addEventListener("change",buildPrd);
+});
+buildPrd();
+$("#copyPrd").addEventListener("click",async e=>{
+  const b=e.currentTarget;
+  try{await navigator.clipboard.writeText(buildPrd());b.textContent="Copied";}
+  catch(err){b.textContent="Select the text to copy";}
+  setTimeout(()=>b.textContent="Copy",2200);
+});
+$("#dlPrd").addEventListener("click",()=>{
+  const blob=new Blob([buildPrd()],{type:"text/markdown"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=($("#fName").value.trim()||"ai-prd").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".md";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+
+/* ── tiers ── */
+const TIERS=[
+ ["Reviewed quarterly","Strategic tier","Sections that change only when the bet changes.",
+  ["Problem and job to be done","Users, scope, out of scope","Why a model at all","Business success metrics"]],
+ ["Reviewed monthly","Behaviour &amp; quality tier","Sections that move as you learn what the system actually does.",
+  ["Behaviour contract","Quality bar and eval spec","Failure modes","Behavioural constraints","Autonomy and permissions"]],
+ ["Every significant change","Operational tier","Sections that track the system as it runs.",
+  ["Model version and fallback","Cost and latency envelope","Monitoring and alerting","Rollout stage and evidence","Changelog"]]
+];
+$("#tierGrid").innerHTML=TIERS.map(([c,t,s,li])=>`<div class="tier"><div class="cad">${c}</div><h3>${t}</h3><p style="font-size:15px;color:var(--sage);margin:0 0 12px;line-height:1.45">${s}</p><ul>${li.map(x=>`<li>${x}</li>`).join("")}</ul></div>`).join("");
+
+/* ── reviewer's twelve ── */
+const CHECKS=[
+ ["Every acceptance criterion names a metric AND a dataset.","\"95% accurate\" without a dataset is a number, not a criterion."],
+ ["Every quality bar states what happens when it isn't met.","A bar with no consequence is an aspiration."],
+ ["There are at least five realistic sample inputs, including messy ones.","And at least one that the system should refuse."],
+ ["Failure modes have detect, user-sees, and recover — all three.","Two out of three is the most common gap, and it's always 'recover' that's missing."],
+ ["Must-nevers are specified as deterministic checks, not prompt instructions.","Anything with a regulator attached fails this test regularly."],
+ ["Autonomy is assigned per action and tied to reversibility.","A single global autonomy setting means it hasn't been thought through."],
+ ["A cost ceiling per completed task is stated.","Per call is the wrong unit. Failed attempts cost money too."],
+ ["Latency is stated as percentiles, with degradation behaviour at the ceiling.","Averages hide the experience that actually loses users."],
+ ["The model version is pinned and a fallback is named.","Including what the user sees during a provider outage."],
+ ["Monitoring names what's sampled, what alerts, and who reads it.","A dashboard without an owner is decoration."],
+ ["The rollout stages are listed with a kill switch and a named owner.","The kill switch should not require a deploy."],
+ ["Nothing important is left in square brackets.","Every unfilled bracket is a decision someone downstream will make for you."]
+];
+const cw=$("#checks");let ticked=0;
+CHECKS.forEach(c=>{
+  const b=el("button","chk",`<span class="box"></span><span class="txt">${c[0]}<small>${c[1]}</small></span>`);
+  b.addEventListener("click",()=>{b.classList.toggle("on");ticked=$$(".chk.on").length;score();});
+  cw.appendChild(b);
+});
+function score(){
+  const n=ticked,s=$("#chkscore");
+  if(n===0){s.innerHTML="Nothing ticked yet. Work down the list against a PRD you've actually written — it's a more useful exercise than reading it in the abstract.";return;}
+  let t;
+  if(n<=4) t=`<b>${n} of 12 — this is a classical PRD with AI in the title.</b> Engineering will make the missing calls themselves, competently and invisibly, and you'll discover what they decided during the first incident. Start with the failure-mode table: it's the fastest section to fill and the one that changes the most conversations.`;
+  else if(n<=8) t=`<b>${n} of 12 — the shape is right, the edges aren't.</b> Usually what's missing is the operational half: envelope, monitoring, kill switch, owner names. These feel like someone else's job right up until the week they aren't.`;
+  else if(n<=11) t=`<b>${n} of 12 — this is a document a team can build from.</b> Close the last gaps, then check the other direction: is it short enough that a sponsor reads all of it? Length isn't evidence of thought.`;
+  else t=`<b>12 of 12.</b> Circulate it. Then put a revision date at the top and a changelog at the bottom, because the useful life of this document is about a quarter unless someone maintains it.`;
+  s.innerHTML=t;
+}
+
+/* ── anti-patterns ── */
+const TRAPS=[
+ ["The deterministic hangover","Writing \"returns the correct answer\" and letting engineering interpret it. This is the single clearest tell that a PRD hasn't caught up with what it's specifying — and it's usually not ignorance, it's the template's inertia."],
+ ["The 30-page assistant-generated spec","Length used to signal effort. Now it signals a prompt. Overly long PRDs that say nothing were a problem before, and got considerably worse — a spec's job is to align humans, and nobody aligns around forty pages they skimmed."],
+ ["Scripting the model","Trying to specify every possible output. You can't, and attempting it produces a document that's simultaneously enormous and unenforceable. Bound the behaviour instead: given failure type X, the system does Y, the user sees Z."],
+ ["Happy path only","The failure section left as \"handle errors gracefully\". Users spend more time in failure states than the spec implies, and that's where trust is actually decided."],
+ ["Compliance rules in the prompt","A prompt is a suggestion to a probabilistic system. If a rule must hold every time, it belongs in a deterministic guardrail outside the model, and the PRD should say so explicitly."],
+ ["The unowned bar","A quality threshold with no dataset, no evaluator type, and no named person who can approve an exception. It reads like rigour and functions like a vibe."],
+ ["Copying the numbers","Lifting 0.95 or κ ≥ 0.7 from a template — including this one — without deriving them from what failure costs your users. The structure travels; the numbers never do."],
+ ["The document with no revision date","AI PRDs go stale within a quarter. Without a date and a changelog nobody knows whether to trust it, so they ask you, which is the cost you were trying to avoid."],
+ ["Writing it alone","The behaviour contract needs domain experts, the constraints need compliance, the failure UX needs design, and the envelope needs engineering. A PRD written solo is a PRD renegotiated in every standup."],
+ ["Treating it as a gate rather than a tool","The document exists to make the argument happen early and in one place. If it's produced to satisfy a process and never referred to again, the process got what it needed and the product didn't."]
+];
+$("#trapList").innerHTML=TRAPS.map(([t,d],i)=>`
+ <details class="acc"><summary><span class="ui" style="color:var(--rust);font-size:11px;letter-spacing:.1em">${String(i+1).padStart(2,"0")}</span>${t}</summary>
+ <div class="accbody"><p>${d}</p></div></details>`).join("");
+
+/* ── sources ── */
+const SRC=[
+ ["A proven AI PRD template","Product Compass · Miqdad Jaffer","https://www.productcompass.pm/p/ai-prd-template"],
+ ["Writing PRDs for AI products","Nima Torabi","https://neemz.medium.com/writing-prds-for-ai-products-a-practical-guide-for-senior-product-and-cross-functional-teams-f8f5040474a5"],
+ ["How to write a PRD for AI features","Ideaplan","https://www.ideaplan.io/blog/how-to-write-prd-for-ai-features"],
+ ["AI PRD template: the full structure","Product Map","https://www.productmap.io/blog/ai-prd-template"],
+ ["Rethinking product requirements for AI","Innovation Mode","https://theinnovationmode.com/the-innovation-blog/ai-prd-for-ai-products"],
+ ["How to write PRDs in the AI era","Aakash Gupta","https://www.news.aakashg.com/p/ai-prd"],
+ ["From deterministic to probabilistic PRDs","Ainna","https://ainna.ai/resources/faq/ai-prd-guide-faq"],
+ ["AI feature PRD template","Institute of AI PM","https://www.institutepm.com/knowledge-hub/ai-feature-prd-template"],
+ ["Eval-driven development","evaldriven.org","https://evaldriven.org/"],
+ ["LLM evals FAQ","Hamel Husain","https://hamel.dev/blog/posts/evals-faq/"],
+ ["Designing for agentic AI: UX patterns","Smashing Magazine","https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/"],
+ ["Why roadmaps break for AI agents","Product Map","https://www.productmap.io/blog/why-roadmaps-break-for-ai-agents"]
+];
+$("#srcs").innerHTML=SRC.map(([t,d,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}<span>${d}</span></a>`).join("");
+
+onScroll();
+})();
+</script>
+</body>
+</html>
