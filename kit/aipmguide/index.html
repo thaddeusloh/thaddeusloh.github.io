@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Guide to the AI PM — ted.sg</title>
+<meta name="description" content="What the AI product manager role actually involves day to day — the vocabulary, the tradeoffs, and how it differs from classical product management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..600&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<style>
+/* ══ tokens ══ future meets nature ══ */
+:root{
+  --night:#06120D;
+  --forest:#0B2117;
+  --forest-2:#0F2C1F;
+  --forest-3:#143726;
+  --bark:#1E4632;
+  --bark-2:#2A5C43;
+  --sage:#A9C9B4;
+  --mint:#8FD6AE;
+  --gold:#E2A93C;
+  --gold-2:#F2CE7E;
+  --bone:#F1EFE4;
+  --muted:#8AA697;
+  --rust:#C97A4A;
+
+  --f-display:"Fraunces",Georgia,serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-ui:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;
+
+  --w:1180px;
+  --r:3px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--night);color:var(--bone);
+  font-family:var(--f-body);font-size:18px;line-height:1.62;
+  font-optical-sizing:auto;
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, rgba(30,70,50,.55), transparent 60%),
+    radial-gradient(700px 420px at 92% 4%, rgba(226,169,60,.07), transparent 62%);
+  background-repeat:no-repeat;
+}
+::selection{background:var(--gold);color:var(--night)}
+a{color:var(--gold-2);text-decoration:none;border-bottom:1px solid rgba(242,206,126,.32)}
+a:hover{border-bottom-color:var(--gold-2)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:var(--w);margin:0 auto;padding:0 26px}
+.narrow{max-width:760px}
+
+/* ══ type ══ */
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;letter-spacing:-.015em;line-height:1.1;margin:0}
+h2{font-size:clamp(30px,4.1vw,46px);font-variation-settings:"SOFT" 0,"WONK" 1}
+h3{font-size:22px;letter-spacing:-.01em}
+p{margin:0 0 1.05em}
+.lede{font-size:clamp(19px,2.1vw,22px);color:#DCE7DF;line-height:1.58}
+.eyebrow{
+  font-family:var(--f-ui);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mint);font-weight:500;display:flex;align-items:center;gap:12px;margin-bottom:18px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(143,214,174,.4),transparent)}
+.ui{font-family:var(--f-ui)}
+.dim{color:var(--muted)}
+.mono-num{font-family:var(--f-ui);font-variant-numeric:tabular-nums}
+em.key{font-style:normal;color:var(--gold-2);border-bottom:1px dotted rgba(242,206,126,.45)}
+
+/* ══ nav ══ */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  background:rgba(6,18,13,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(30,70,50,.7);
+}
+.topbar-in{max-width:var(--w);margin:0 auto;padding:0 26px;display:flex;align-items:center;gap:20px;height:56px}
+.brand{font-family:var(--f-display);font-size:17px;font-weight:600;color:var(--bone);border:0;white-space:nowrap}
+.brand span{color:var(--gold)}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{
+  font-family:var(--f-ui);font-size:12.5px;color:var(--muted);border:0;
+  padding:7px 10px;border-radius:var(--r);white-space:nowrap;transition:color .2s,background .2s;
+}
+.navlinks a:hover{color:var(--bone);background:rgba(30,70,50,.5)}
+.navlinks a.on{color:var(--night);background:var(--mint);font-weight:500}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--gold);width:0}
+
+/* ══ hero ══ */
+.hero{padding:78px 0 60px;position:relative;overflow:hidden}
+.hero h1{
+  font-size:clamp(44px,7.4vw,86px);line-height:.98;font-weight:400;
+  font-variation-settings:"SOFT" 20,"WONK" 1;letter-spacing:-.03em;
+}
+.hero h1 i{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 60,"WONK" 1}
+.hero .lede{max-width:640px;margin-top:26px}
+.herometa{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:30px;font-family:var(--f-ui);font-size:11.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--sage);
+}
+.herometa span{border:1px solid var(--bark);padding:6px 11px;border-radius:100px;background:rgba(15,44,31,.5)}
+
+/* ══ signature: the spread ══ */
+.spreadbox{
+  margin-top:52px;border:1px solid var(--bark);border-radius:5px;
+  background:linear-gradient(180deg,rgba(15,44,31,.85),rgba(11,33,23,.5));
+  padding:26px 26px 20px;position:relative;
+}
+.spread-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+.spread-head p{margin:0;font-size:15.5px;color:var(--sage);max-width:520px;line-height:1.5}
+.spread-title{font-family:var(--f-ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.strip{position:relative;height:138px;margin:26px 0 6px}
+.strip-axis{position:absolute;left:0;right:0;bottom:26px;height:1px;background:linear-gradient(90deg,rgba(169,201,180,.15),rgba(169,201,180,.45),rgba(169,201,180,.15))}
+.tick{position:absolute;bottom:8px;transform:translateX(-50%);font-family:var(--f-ui);font-size:10.5px;color:var(--muted);letter-spacing:.08em}
+.tick::before{content:"";position:absolute;left:50%;top:-12px;width:1px;height:7px;background:rgba(169,201,180,.35)}
+.dot{
+  position:absolute;bottom:34px;width:13px;height:13px;border-radius:50%;
+  background:var(--mint);transform:translate(-50%,0);
+  box-shadow:0 0 0 4px rgba(143,214,174,.12);
+  transition:left .75s var(--ease),bottom .75s var(--ease),background .3s;
+}
+.dot.bad{background:var(--rust);box-shadow:0 0 0 5px rgba(201,122,74,.2)}
+.dot.mean{background:transparent;border:2px dashed var(--gold);width:0;height:72px;border-radius:0;border-width:0 0 0 2px;border-left-style:dashed;box-shadow:none;bottom:26px}
+.dot .lbl{position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);font-family:var(--f-ui);font-size:10px;color:var(--gold);white-space:nowrap;letter-spacing:.08em}
+.spread-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(30,70,50,.7);padding-top:16px}
+.readout{display:flex;gap:26px;flex-wrap:wrap}
+.readout div{font-family:var(--f-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.readout b{display:block;font-size:21px;letter-spacing:-.01em;text-transform:none;margin-top:3px;font-weight:500;font-variant-numeric:tabular-nums}
+.readout .g{color:var(--mint)}.readout .r{color:var(--rust)}.readout .y{color:var(--gold-2)}
+
+button,.btn{
+  font-family:var(--f-ui);font-size:13px;font-weight:500;letter-spacing:.03em;
+  background:var(--gold);color:var(--night);border:1px solid var(--gold);
+  padding:9px 17px;border-radius:100px;cursor:pointer;transition:.18s var(--ease);
+}
+button:hover,.btn:hover{background:var(--gold-2);border-color:var(--gold-2);transform:translateY(-1px)}
+button.ghost{background:transparent;color:var(--sage);border-color:var(--bark-2)}
+button.ghost:hover{background:rgba(30,70,50,.55);color:var(--bone);border-color:var(--mint)}
+button.ghost.on{background:var(--mint);color:var(--night);border-color:var(--mint);font-weight:600}
+
+/* ══ sections ══ */
+section{padding:74px 0;border-top:1px solid rgba(30,70,50,.55);position:relative}
+section:first-of-type{border-top:0}
+.sec-head{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:38px;max-width:820px}
+.sec-head p{margin:14px 0 0;color:#CBDCD0;font-size:18.5px}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:14px}
+
+.card{
+  border:1px solid var(--bark);border-radius:5px;padding:22px;
+  background:linear-gradient(180deg,rgba(15,44,31,.6),rgba(11,33,23,.35));
+}
+.card h3{margin-bottom:9px}
+.card p:last-child{margin-bottom:0}
+.card .tag{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:10px;display:block}
+
+/* pill row */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+
+/* ══ archetypes ══ */
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:22px}
+.arch{
+  text-align:left;background:rgba(15,44,31,.45);border:1px solid var(--bark);color:var(--bone);
+  border-radius:5px;padding:18px;cursor:pointer;transition:.2s var(--ease);font-family:var(--f-body);
+}
+.arch:hover{border-color:var(--bark-2);background:rgba(20,55,38,.65);transform:none}
+.arch.on{border-color:var(--gold);background:rgba(226,169,60,.09)}
+.arch .n{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;color:var(--muted);display:block;margin-bottom:8px}
+.arch .t{font-family:var(--f-display);font-size:19px;display:block;line-height:1.2;margin-bottom:6px}
+.arch.on .t{color:var(--gold-2)}
+.arch .s{font-size:14.5px;color:var(--sage);line-height:1.45}
+.arch-panel{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:26px;background:rgba(15,44,31,.5)}
+.arch-panel h3{color:var(--gold-2);margin-bottom:12px}
+.arch-panel dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:20px 0 0}
+.arch-panel dt{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:6px}
+.arch-panel dd{margin:0;font-size:15.5px;color:#CBDCD0;line-height:1.5}
+
+/* ══ time bars ══ */
+.bars{display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:190px 1fr 54px;align-items:center;gap:14px}
+.bar-row .nm{font-family:var(--f-ui);font-size:12.5px;color:var(--sage);letter-spacing:.02em}
+.bar-track{height:22px;background:rgba(30,70,50,.4);border-radius:2px;overflow:hidden;position:relative}
+.bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--bark-2),var(--mint));transition:width .8s var(--ease),background .4s}
+.bar-fill.up{background:linear-gradient(90deg,#8a6a1e,var(--gold))}
+.bar-row .v{font-family:var(--f-ui);font-size:12.5px;color:var(--bone);text-align:right;font-variant-numeric:tabular-nums}
+.delta{font-family:var(--f-ui);font-size:11px;color:var(--muted)}
+
+/* ══ table ══ */
+.tbl{width:100%;border-collapse:collapse;font-size:15.5px}
+.tbl th{
+  font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  text-align:left;padding:0 14px 12px;color:var(--mint);font-weight:500;border-bottom:1px solid var(--bark);
+}
+.tbl td{padding:15px 14px;border-bottom:1px solid rgba(30,70,50,.5);vertical-align:top;line-height:1.5}
+.tbl tr:hover td{background:rgba(15,44,31,.45)}
+.tbl td:first-child{font-family:var(--f-ui);font-size:13px;color:var(--gold-2);letter-spacing:.02em;width:20%}
+.tbl td.old{color:var(--muted)}
+.tblwrap{overflow-x:auto}
+
+/* ══ glossary ══ */
+.gl-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+input[type=search],input[type=number],select{
+  font-family:var(--f-ui);font-size:13.5px;background:rgba(6,18,13,.7);color:var(--bone);
+  border:1px solid var(--bark-2);border-radius:100px;padding:10px 16px;min-width:210px;
+}
+input[type=number]{border-radius:var(--r);min-width:0;width:100%;padding:8px 11px}
+select{border-radius:var(--r);padding:8px 11px}
+input::placeholder{color:var(--muted)}
+.gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.gl-item{background:var(--forest);padding:17px 19px;transition:background .2s}
+.gl-item:hover{background:var(--forest-3)}
+.gl-item .t{font-family:var(--f-ui);font-size:14px;font-weight:500;color:var(--gold-2);margin-bottom:3px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.gl-item .c{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap;font-weight:400}
+.gl-item .d{font-size:15px;line-height:1.48;color:#CDDDD3;margin-bottom:7px}
+.gl-item .w{font-size:13.5px;line-height:1.45;color:var(--sage);font-family:var(--f-ui);border-left:2px solid var(--bark-2);padding-left:10px}
+.gl-count{font-family:var(--f-ui);font-size:12px;color:var(--muted);margin-left:auto}
+.gl-empty{padding:36px;text-align:center;color:var(--muted);font-family:var(--f-ui);font-size:14px;background:var(--forest)}
+
+/* ══ stepper ══ */
+.step-nav{display:flex;gap:0;margin-bottom:0;border:1px solid var(--bark);border-radius:5px 5px 0 0;overflow:hidden;flex-wrap:wrap}
+.step-nav button{
+  flex:1;min-width:96px;border-radius:0;background:rgba(15,44,31,.6);color:var(--sage);
+  border:0;border-right:1px solid var(--bark);padding:13px 8px;font-size:12px;text-align:center;
+}
+.step-nav button:last-child{border-right:0}
+.step-nav button:hover{background:rgba(30,70,50,.7);color:var(--bone);transform:none}
+.step-nav button.on{background:var(--gold);color:var(--night);font-weight:600}
+.step-nav button .sn{display:block;font-size:10px;letter-spacing:.14em;opacity:.7;margin-bottom:2px}
+.step-body{border:1px solid var(--bark);border-top:0;border-radius:0 0 5px 5px;padding:28px;background:rgba(11,33,23,.55);min-height:250px}
+.step-body h3{color:var(--gold-2);margin-bottom:6px}
+.step-body .who{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);margin-bottom:16px}
+.step-body ul{margin:16px 0 0;padding-left:0;list-style:none}
+.step-body li{padding-left:22px;position:relative;margin-bottom:9px;font-size:16.5px;line-height:1.5}
+.step-body li::before{content:"";position:absolute;left:3px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--mint)}
+.step-body .out{margin-top:20px;padding:14px 16px;border:1px dashed var(--bark-2);border-radius:var(--r);font-family:var(--f-ui);font-size:13.5px;color:var(--sage)}
+.step-body .out b{color:var(--gold-2);font-weight:500}
+
+/* ══ accordion ══ */
+details.acc{border:1px solid var(--bark);border-radius:5px;margin-bottom:10px;background:rgba(15,44,31,.4);overflow:hidden}
+details.acc summary{
+  cursor:pointer;padding:16px 20px;font-family:var(--f-ui);font-size:14.5px;color:var(--bone);
+  list-style:none;display:flex;align-items:center;gap:14px;transition:background .2s;
+}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:hover{background:rgba(30,70,50,.45)}
+details.acc summary::after{content:"+";margin-left:auto;color:var(--gold);font-size:19px;line-height:1}
+details.acc[open] summary::after{content:"–"}
+details.acc[open] summary{background:rgba(30,70,50,.4);color:var(--gold-2)}
+details.acc .accbody{padding:4px 20px 22px;border-top:1px solid rgba(30,70,50,.6)}
+details.acc .accbody p:first-child{margin-top:16px}
+.spec{
+  font-family:var(--f-ui);font-size:13.5px;line-height:1.6;background:rgba(6,18,13,.7);
+  border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:var(--r);
+  padding:14px 16px;margin:14px 0 0;color:#D6E5DB;white-space:pre-wrap;
+}
+.spec-lbl{font-family:var(--f-ui);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-top:18px}
+.bad-good{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:16px}
+.bg-cell{border:1px solid var(--bark);border-radius:var(--r);padding:14px 16px;font-size:15px;line-height:1.5}
+.bg-cell.no{border-left:3px solid var(--rust)}
+.bg-cell.yes{border-left:3px solid var(--mint)}
+.bg-cell .h{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}
+.bg-cell.no .h{color:var(--rust)}
+.bg-cell.yes .h{color:var(--mint)}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-in">
+    <a href="#top" class="brand">ted<span>.</span>sg</a>
+    <div class="navlinks" id="navlinks"></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Brown bag &nbsp;·&nbsp; Product</div>
+    <h1>A guide to the<br><i>AI PM</i></h1>
+    <p class="lede">What the role actually involves day to day — the vocabulary you're expected to already have, the tradeoffs nobody warns you about, and the specific places it stops behaving like classical product management.</p>
+    <div class="herometa">
+      <span>~45 min read</span><span>18 sections</span><span>85-term glossary</span><span>Working calculators</span>
+    </div>
+
+    <div class="spreadbox">
+      <div class="spread-head">
+        <div>
+          <div class="spread-title">The whole role in one picture</div>
+          <p>Same prompt. Same model. Same settings. Ten runs. Each dot is one user getting one answer, scored 0–100 on whether it was actually any good.</p>
+        </div>
+        <button id="reroll">Run it again →</button>
+      </div>
+      <div class="strip" id="strip">
+        <div class="strip-axis"></div>
+        <div class="tick" style="left:2%">Wrong</div>
+        <div class="tick" style="left:50%">Usable</div>
+        <div class="tick" style="left:98%">Excellent</div>
+      </div>
+      <div class="spread-foot">
+        <div class="readout">
+          <div>Mean score<b class="y" id="r-mean">—</b></div>
+          <div>Worst run<b class="r" id="r-worst">—</b></div>
+          <div>Below bar<b class="g" id="r-fail">—</b></div>
+        </div>
+        <p class="dim ui" style="font-size:12.5px;margin:0;max-width:390px">Classical PM ships the mean. AI PM ships the whole distribution — and gets judged on the red dot.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ═══ 1 THESIS ═══ -->
+<section id="thesis">
+  <div class="sec-head">
+    <div class="eyebrow">The premise</div>
+    <h2>The job changed when the output stopped being the same twice</h2>
+    <p class="lede">Everything else follows from this one property.</p>
+  </div>
+  <div class="grid2" style="align-items:start">
+    <div class="narrow">
+      <p>Classical product management rests on a quiet assumption: given the same input, the system does the same thing. That assumption is load-bearing. It's why you can write an acceptance criterion, why QA can sign off, why a bug is reproducible, why "it works" is a binary, and why a demo is evidence.</p>
+      <p>An AI feature breaks all of it at once. The same input can produce a different output on consecutive runs. <em class="key">Correct is a spectrum, not a bit.</em> A feature that is excellent for 94% of queries can destroy trust because the 6% clusters on your highest-value use case. Quality degrades silently when the model version changes, when the retrieval index goes stale, or when real users drift away from the traffic you tested on. And every single call costs money.</p>
+      <p>So the AI PM's job is not "PM, but the feature has AI in it." It is a different operating posture: <em class="key">you are making confident product calls on top of a system whose behaviour you can only characterise statistically.</em></p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gold)">
+      <span class="tag">What actually moves</span>
+      <h3 style="margin-bottom:14px">Five load-bearing shifts</h3>
+      <ol style="margin:0;padding-left:20px;font-size:16px;line-height:1.55">
+        <li style="margin-bottom:11px"><b style="color:var(--gold-2);font-weight:500">Spec → behaviour contract.</b> You stop writing "returns the right answer" and start writing thresholds, confidence bands, and named fallbacks.</li>
+        <li style="margin-bottom:11px"><b style="color:var(--gold-2);font-weight:500">QA → evals.</b> Test suites become graded datasets. You own the definition of good.</li>
+        <li style="margin-bottom:11px"><b style="color:var(--gold-2);font-weight:500">Fixed cost → marginal cost.</b> For the first time since 2005, serving one more user has a real price attached.</li>
+        <li style="margin-bottom:11px"><b style="color:var(--gold-2);font-weight:500">Ship → keep shipping.</b> Launch is where measurement starts, not where it ends. Nothing you shipped stays shipped.</li>
+        <li><b style="color:var(--gold-2);font-weight:500">Usability → trust.</b> The bottleneck on adoption is rarely whether people can use it. It's whether they'll rely on it.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 ARCHETYPES ═══ -->
+<section id="archetypes">
+  <div class="sec-head">
+    <div class="eyebrow">Taxonomy</div>
+    <h2>Four roles wearing the same title</h2>
+    <p>"AI PM" on a job description can mean four materially different jobs, with different skills, different stakeholders, and different pay bands. Before you take the role — or write the req — settle which one it is. Mis-labelling the archetype is the single most common reason an AI PM hire goes badly.</p>
+  </div>
+  <div class="arch-grid" id="archGrid"></div>
+  <div class="arch-panel" id="archPanel"></div>
+</section>
+
+<!-- ═══ 3 DAY IN THE LIFE ═══ -->
+<section id="day">
+  <div class="sec-head">
+    <div class="eyebrow">Day to day</div>
+    <h2>Where the week actually goes</h2>
+    <p>The honest version. Same nominal job, same 40 hours — but the allocation moves sharply. Toggle between them and watch which bars grow.</p>
+  </div>
+  <div class="pills">
+    <button class="ghost on" id="btnClassical">Classical PM</button>
+    <button class="ghost" id="btnAI">AI PM</button>
+    <button class="ghost" id="btnBoth">Show the delta</button>
+  </div>
+  <div class="bars" id="bars"></div>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card"><span class="tag">The new standing meeting</span><p style="font-size:16px">Weekly <b style="color:var(--gold-2);font-weight:500">error review</b>: the team sits down with 20–40 real traces where the system did something wrong, reads them line by line, and names the failure modes. This is the highest-leverage hour in an AI PM's week and the one most often skipped.</p></div>
+    <div class="card"><span class="tag">The new artefact</span><p style="font-size:16px">The <b style="color:var(--gold-2);font-weight:500">golden set</b> — a hand-curated file of representative inputs with agreed-good outputs. It is a product document, not a test fixture, and the PM is usually the right owner because it encodes what "good" means to the customer.</p></div>
+    <div class="card"><span class="tag">The new escalation</span><p style="font-size:16px"><b style="color:var(--gold-2);font-weight:500">"The model provider deprecated it."</b> Your dependency has a roadmap you don't control and a sunset date you didn't pick. Version pinning, migration evals, and a fallback model are now standing items, not incidents.</p></div>
+  </div>
+</section>
+
+<!-- ═══ 4 DIFF TABLE ═══ -->
+<section id="diff">
+  <div class="sec-head">
+    <div class="eyebrow">Side by side</div>
+    <h2>The same words mean different things now</h2>
+    <p>Most of the AI PM vocabulary problem isn't new terms. It's old terms that quietly changed definition.</p>
+  </div>
+  <div class="tblwrap">
+    <table class="tbl">
+      <thead><tr><th style="width:18%">Concept</th><th style="width:41%">Classical product management</th><th style="width:41%">AI product management</th></tr></thead>
+      <tbody id="diffBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 5 GLOSSARY ═══ -->
+<section id="vocab">
+  <div class="sec-head">
+    <div class="eyebrow">The vocabulary</div>
+    <h2>85 terms you're assumed to already know</h2>
+    <p>Not a dictionary — a working vocabulary. Each entry has the definition and, below it, the reason a product manager specifically cares. Search it, or filter by layer.</p>
+  </div>
+  <div class="gl-controls">
+    <input type="search" id="glSearch" placeholder="Search terms and definitions…" aria-label="Search glossary">
+    <div class="pills" id="glCats" style="margin:0"></div>
+    <span class="gl-count" id="glCount"></span>
+  </div>
+  <div class="gl-grid" id="glGrid"></div>
+</section>
+
+<!-- ═══ 6 EVAL LOOP ═══ -->
+<section id="evals">
+  <div class="sec-head">
+    <div class="eyebrow">The core loop</div>
+    <h2>Eval-driven development</h2>
+    <p>If you learn one thing from this page, learn this loop. It is the scientific method wearing a product hat, and it is the clearest single dividing line between AI PMs who ship reliably and ones who ship demos. Evals are written <em>before</em> the system can pass them — the same instinct as test-driven development, applied to a system that can't be unit-tested.</p>
+  </div>
+  <div class="step-nav" id="stepNav"></div>
+  <div class="step-body" id="stepBody"></div>
+  <div class="grid2" style="margin-top:26px">
+    <div class="card"><span class="tag">Sizing it</span><p style="font-size:16px">Start at roughly <b style="color:var(--gold-2);font-weight:500">100 high-quality goldens</b> and cap around 500. Unlike unit tests, evals cost money and time to run, so you keep the set small and sharp rather than exhaustive. Quality beats volume — a few hundred well-labelled examples is enough to build an effective eval.</p></div>
+    <div class="card"><span class="tag">The discipline</span><p style="font-size:16px"><b style="color:var(--gold-2);font-weight:500">Every manual review is a missing eval.</b> When a human judges an output, extract that judgement into a rubric, automate the rubric, then evaluate the evaluator. Otherwise the knowledge stays in one person's head and the system regresses the moment they're on leave.</p></div>
+  </div>
+</section>
+
+<!-- ═══ 7 PRD ═══ -->
+<section id="prd">
+  <div class="sec-head">
+    <div class="eyebrow">The artefact</div>
+    <h2>What an AI PRD adds</h2>
+    <p>You don't throw out your PRD template. You bolt on the sections that a probabilistic system needs and that a deterministic one never did. Each of these below is a section engineering will otherwise have to invent for themselves — usually badly, usually in a Slack thread, usually after launch.</p>
+  </div>
+  <div id="prdAcc"></div>
+  <p class="dim" style="margin-top:22px;font-size:16px;max-width:760px">Two failure modes to avoid: over-specifying model behaviour by trying to script every possible output (you can't — that's the point), and under-specifying failure by writing only the happy path. The useful middle is a behaviour contract: <em class="key">given failure type X, the system does Y, and the user sees Z.</em></p>
+</section>
+
+<style>
+/* ══ calculator ══ */
+.calc{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:22px;align-items:start}
+@media(max-width:820px){.calc{grid-template-columns:1fr}}
+.calc-in{border:1px solid var(--bark);border-radius:5px;padding:20px;background:rgba(15,44,31,.5)}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:var(--f-ui);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--sage);margin-bottom:5px}
+.field .hint{font-family:var(--f-ui);font-size:11px;color:var(--muted);margin-top:4px;display:block}
+.rangewrap{display:flex;align-items:center;gap:12px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;background:var(--bark-2);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:0}
+.rangeval{font-family:var(--f-ui);font-size:13px;color:var(--gold-2);min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+.calc-out{display:grid;gap:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--bark);border-radius:5px;padding:16px 18px;background:rgba(11,33,23,.6)}
+.kpi .k{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:30px;font-weight:500;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums;line-height:1}
+.kpi .s{font-family:var(--f-ui);font-size:11.5px;color:var(--sage);margin-top:6px}
+.kpi.good .v{color:var(--mint)}.kpi.warn .v{color:var(--gold-2)}.kpi.bad .v{color:var(--rust)}
+.verdict{border:1px solid var(--bark);border-left:3px solid var(--gold);border-radius:5px;padding:16px 18px;background:rgba(15,44,31,.5);font-size:16px;line-height:1.55}
+.stackbar{display:flex;height:30px;border-radius:3px;overflow:hidden;border:1px solid var(--bark)}
+.stackbar div{transition:width .5s var(--ease);display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);font-size:10.5px;color:var(--night);font-weight:600;overflow:hidden;white-space:nowrap}
+
+/* ══ ladder ══ */
+.ladder{display:grid;gap:2px;border:1px solid var(--bark);border-radius:5px;overflow:hidden;background:var(--bark)}
+.rung{display:grid;grid-template-columns:80px 1fr;gap:0;background:var(--forest);cursor:pointer;transition:background .2s;text-align:left;border:0;border-radius:0;color:var(--bone);font-family:var(--f-body);padding:0}
+.rung:hover{background:var(--forest-3);transform:none}
+.rung.on{background:rgba(226,169,60,.1)}
+.rung .lv{display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);font-size:11px;letter-spacing:.1em;color:var(--muted);border-right:1px solid var(--bark);background:rgba(6,18,13,.35)}
+.rung.on .lv{color:var(--gold);background:rgba(226,169,60,.08)}
+.rung .body{padding:16px 20px}
+.rung .ttl{font-family:var(--f-display);font-size:19px;margin-bottom:4px}
+.rung.on .ttl{color:var(--gold-2)}
+.rung .sub{font-size:15px;color:var(--sage);line-height:1.45}
+.rung .detail{display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--bark-2)}
+.rung.on .detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.rung .detail div{font-size:14.5px;line-height:1.45;color:#CBDCD0}
+.rung .detail b{display:block;font-family:var(--f-ui);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--mint);margin-bottom:5px;font-weight:500}
+
+/* ══ failure cards ══ */
+.fail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.fail{border:1px solid var(--bark);border-radius:5px;padding:18px;background:rgba(15,44,31,.45);border-top:2px solid var(--rust)}
+.fail h4{font-family:var(--f-display);font-size:18px;font-weight:500;margin:0 0 4px}
+.fail .sev{font-family:var(--f-ui);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block}
+.fail p{font-size:15px;line-height:1.45;margin:0 0 12px;color:#CBDCD0}
+.fail .row{font-family:var(--f-ui);font-size:13px;line-height:1.45;color:var(--sage);margin-bottom:7px;padding-left:52px;position:relative}
+.fail .row b{position:absolute;left:0;top:0;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mint);font-weight:500}
+
+/* ══ timeline ══ */
+.tl{position:relative;padding-left:26px}
+.tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,var(--gold),var(--bark-2))}
+.tl-item{position:relative;margin-bottom:22px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--night);border:2px solid var(--gold)}
+.tl-item .when{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.tl-item .what{font-size:16px;line-height:1.5}
+.tl-item .what b{color:var(--bone);font-weight:500}
+
+/* ══ q&a ══ */
+.qa{border:1px solid var(--bark);border-radius:5px;margin-bottom:10px;background:rgba(15,44,31,.4);overflow:hidden}
+.qa summary{cursor:pointer;padding:16px 20px;font-family:var(--f-body);font-size:17px;color:var(--bone);list-style:none;display:flex;gap:14px;align-items:flex-start}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{background:rgba(30,70,50,.4)}
+.qa summary .qn{font-family:var(--f-ui);font-size:11px;color:var(--gold);letter-spacing:.1em;padding-top:5px}
+.qa[open] summary{color:var(--gold-2);background:rgba(30,70,50,.4)}
+.qa .a{padding:18px 20px 20px 54px;border-top:1px solid rgba(30,70,50,.6);font-size:16px;line-height:1.55}
+.qa .a .lbl{font-family:var(--f-ui);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);display:block;margin-bottom:8px}
+.qa .a .tell{margin-top:14px;padding-top:12px;border-top:1px dashed var(--bark-2);font-size:15px;color:var(--sage)}
+.qa .a .tell b{color:var(--rust);font-weight:500;font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:5px}
+
+/* ══ assessment ══ */
+.assess{display:grid;grid-template-columns:1fr minmax(240px,320px);gap:24px;align-items:start}
+@media(max-width:820px){.assess{grid-template-columns:1fr}}
+.axis{margin-bottom:16px}
+.axis .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.axis .nm{font-family:var(--f-ui);font-size:13.5px;color:var(--bone)}
+.axis .lv{font-family:var(--f-ui);font-size:11.5px;color:var(--gold-2);text-align:right}
+.axis .desc{font-family:var(--f-ui);font-size:11.5px;color:var(--muted);margin-top:5px;min-height:16px}
+.score-card{border:1px solid var(--bark);border-left:3px solid var(--mint);border-radius:5px;padding:22px;background:rgba(15,44,31,.55);position:sticky;top:74px}
+.score-card .big{font-family:var(--f-display);font-size:56px;line-height:1;font-weight:500;color:var(--gold-2);font-variant-numeric:tabular-nums}
+.score-card .band{font-family:var(--f-ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);margin:10px 0 14px}
+.score-card p{font-size:15px;line-height:1.5;margin:0;color:#CBDCD0}
+.score-card .gap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--bark-2);font-size:14.5px;color:var(--sage)}
+.score-card .gap b{color:var(--gold-2);font-weight:500}
+
+/* ══ footer ══ */
+footer{border-top:1px solid var(--bark);padding:52px 0 70px;margin-top:40px}
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:20px}
+.srcs a{font-family:var(--f-ui);font-size:13px;color:var(--sage);border:1px solid var(--bark);border-radius:var(--r);padding:10px 13px;display:block;transition:.2s}
+.srcs a:hover{border-color:var(--mint);color:var(--bone);background:rgba(30,70,50,.4)}
+.srcs a span{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.05em}
+
+@media(max-width:640px){
+  body{font-size:17px}
+  section{padding:54px 0}
+  .bar-row{grid-template-columns:120px 1fr 46px;gap:9px}
+  .bar-row .nm{font-size:11.5px}
+  .gl-grid{grid-template-columns:1fr}
+  .qa .a{padding-left:20px}
+  .step-nav button{min-width:33%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<!-- ═══ 8 UNIT ECONOMICS ═══ -->
+<section id="economics">
+  <div class="sec-head">
+    <div class="eyebrow">The tradeoff nobody warned you about</div>
+    <h2>Marginal cost came back</h2>
+    <p>SaaS taught a generation of PMs that serving one more user is free. Inference is a real variable cost on every single call, and it does not shrink with scale. Gross margins on AI products commonly land in the 60–70% range rather than the 80–90% SaaS norm. Model this before launch, not after the margin crisis.</p>
+  </div>
+  <div class="calc">
+    <div class="calc-in">
+      <div class="field">
+        <label for="cModel">Primary model tier</label>
+        <select id="cModel"></select>
+        <span class="hint">Prices per million tokens, in/out. Illustrative 2026 tiers.</span>
+      </div>
+      <div class="field">
+        <label for="cUsers">Monthly active users</label>
+        <input type="number" id="cUsers" value="20000" min="1">
+      </div>
+      <div class="field">
+        <label for="cCalls">Calls per user per month</label>
+        <input type="number" id="cCalls" value="40" min="1">
+      </div>
+      <div class="field">
+        <label for="cIn">Input tokens per call</label>
+        <input type="number" id="cIn" value="4000" min="1">
+        <span class="hint">System prompt + retrieved context + history. This is where bloat hides.</span>
+      </div>
+      <div class="field">
+        <label for="cOut">Output tokens per call</label>
+        <input type="number" id="cOut" value="700" min="1">
+      </div>
+      <div class="field">
+        <label for="cCache">Prompt cache hit rate <span class="dim">— repeated input, ~90% cheaper</span></label>
+        <div class="rangewrap"><input type="range" id="cCache" min="0" max="90" value="0"><span class="rangeval" id="vCache">0%</span></div>
+      </div>
+      <div class="field">
+        <label for="cRoute">Routed to the cheap model <span class="dim">— the biggest COGS lever</span></label>
+        <div class="rangewrap"><input type="range" id="cRoute" min="0" max="95" value="0"><span class="rangeval" id="vRoute">0%</span></div>
+      </div>
+      <div class="field">
+        <label for="cSucc">Task success rate</label>
+        <div class="rangewrap"><input type="range" id="cSucc" min="30" max="100" value="72"><span class="rangeval" id="vSucc">72%</span></div>
+        <span class="hint">Failed attempts still cost tokens. Retries cost them twice.</span>
+      </div>
+      <div class="field">
+        <label for="cPrice">Price per user per month (US$)</label>
+        <input type="number" id="cPrice" value="12" min="0" step="0.5">
+      </div>
+    </div>
+    <div class="calc-out">
+      <div class="kpis">
+        <div class="kpi"><div class="k">Cost per call</div><div class="v" id="kCall">—</div><div class="s">blended across routing</div></div>
+        <div class="kpi warn"><div class="k">Cost per successful outcome</div><div class="v" id="kSucc">—</div><div class="s">the number that matters</div></div>
+        <div class="kpi"><div class="k">Monthly inference COGS</div><div class="v" id="kCogs">—</div><div class="s">before infra, evals, retries</div></div>
+        <div class="kpi" id="kMarginBox"><div class="k">Gross margin</div><div class="v" id="kMargin">—</div><div class="s" id="kMarginSub">on subscription revenue</div></div>
+      </div>
+      <div>
+        <div class="spec-lbl" style="margin-top:4px">Where the money goes</div>
+        <div class="stackbar" id="stack"></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <div class="grid2" style="gap:14px">
+        <div class="card" style="padding:17px"><span class="tag">Lever 1 — routing</span><p style="font-size:15px;margin:0">Within one vendor the spread between the cheap tier and the frontier tier runs 5× or more. Most surfaces don't need frontier intelligence, they need consistency. Send the hard 10–20% to the expensive model and the rest to a small one, and validate the split with evals rather than vibes.</p></div>
+        <div class="card" style="padding:17px"><span class="tag">Lever 2 — token discipline</span><p style="font-size:15px;margin:0">A bloated system prompt is re-sent on every single call. Trimming 4,000 tokens down to 800 cuts input cost by 80% forever. Teams that instrument tokens from launch and audit prompts quarterly typically find 40–60% savings in the first six months with no quality loss — because they're removing accretion, not optimising something already tight.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9 METRICS ═══ -->
+<section id="metrics">
+  <div class="sec-head">
+    <div class="eyebrow">Measurement</div>
+    <h2>Four layers of metric, and the trap between them</h2>
+    <p>The most common analytical failure in AI product work is reporting a model metric to an executive as though it were a business metric. They are four different altitudes and they move independently — accuracy can rise while retention falls.</p>
+  </div>
+  <div id="metricStack"></div>
+  <div class="card" style="margin-top:20px;border-left:3px solid var(--rust)">
+    <span class="tag" style="color:var(--rust)">The trap</span>
+    <p style="font-size:16.5px;margin:0">Layers 1 and 2 are the ones you can move in a sprint, so they're the ones teams optimise. Layers 3 and 4 are the ones the business is paying for. If you can't draw a causal line from "F1 improved 4 points" to "advisors accepted 11% more recommendations", you have not yet made a product argument — you've made an engineering observation. <b style="color:var(--gold-2);font-weight:500">Write the line down in the PRD before you build.</b></p>
+  </div>
+</section>
+
+<!-- ═══ 10 UX / AUTONOMY ═══ -->
+<section id="ux">
+  <div class="sec-head">
+    <div class="eyebrow">Interaction design</div>
+    <h2>Designing for a system that's sometimes wrong</h2>
+    <p>AI UX is the design discipline classical UX never had to address: what does the interface show when the model is uncertain? Users don't expect AI to be perfect — they expect to know when they can rely on it. Confident wrong answers destroy trust; visible uncertainty preserves it.</p>
+  </div>
+  <h3 style="margin-bottom:6px;color:var(--gold-2)">The autonomy ladder</h3>
+  <p class="dim" style="margin-bottom:20px;max-width:720px;font-size:16px">Autonomy is not a switch, it's a rung you earn. Most teams should target level 2 for v1. Pick a rung deliberately per action, not per product — reading an order status can be autonomous because it's read-only and reversible; issuing a refund is not.</p>
+  <div class="ladder" id="ladder"></div>
+  <h3 style="margin:38px 0 16px;color:var(--gold-2)">Patterns worth stealing</h3>
+  <div class="grid3" id="uxPatterns"></div>
+</section>
+
+<!-- ═══ 11 FAILURE MODES ═══ -->
+<section id="failures">
+  <div class="sec-head">
+    <div class="eyebrow">Field identification</div>
+    <h2>The failure catalogue</h2>
+    <p>AI features fail differently from software features. They rarely throw an exception — they return something plausible and wrong. Learning to name failure modes precisely is most of the skill, because a named failure mode becomes an eval, and an eval becomes a regression gate.</p>
+  </div>
+  <div class="fail-grid" id="failGrid"></div>
+</section>
+
+<!-- ═══ 12 GOVERNANCE ═══ -->
+<section id="governance">
+  <div class="sec-head">
+    <div class="eyebrow">Constraints</div>
+    <h2>Shipping inside a regulated perimeter</h2>
+    <p>In most industries governance is a review gate. In financial services it's a design input — a bank deploying a model in 2026 sits inside model risk management guidance, fair-lending law, prudential supervision, data protection rules, and, for EU exposure, a horizontal AI law with its own penalty regime. No other sector carries that many overlapping regimes at once. The AI PM who treats compliance as a late-stage checkpoint ships six months late.</p>
+  </div>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <h3 style="margin-bottom:18px;color:var(--gold-2)">What moved recently</h3>
+      <div class="tl" id="govTl"></div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:18px;color:var(--gold-2)">What it means at your desk</h3>
+      <div class="grid3" style="grid-template-columns:1fr;gap:12px" id="govPractice"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:26px;border-left:3px solid var(--mint)">
+    <span class="tag">The 2026 shift worth internalising</span>
+    <p style="font-size:16.5px;margin:0">The principles didn't move; the implementation surface did. With single-shot scoring models, governance asked: was it fair, was it explainable, who was accountable for this decision? With agentic systems that plan, call tools, and act over many steps, the risk surface is no longer the model in isolation — it's <b style="color:var(--gold-2);font-weight:500">the operating environment the model runs inside</b>: what it's allowed to touch, what it logs, where a human can intervene, and how intent is recorded. Recent guidance reads like an operations manual rather than an ethics statement. Your permission surface <em>is</em> your primary safety control.</p>
+  </div>
+</section>
+
+<!-- ═══ 13 PEOPLE ═══ -->
+<section id="people">
+  <div class="sec-head">
+    <div class="eyebrow">The org</div>
+    <h2>Who you're actually working with</h2>
+    <p>The AI PM sits at a busier intersection than a classical PM. Each of these counterparts speaks a different dialect, optimises a different variable, and will give you a different answer to "is it ready?"</p>
+  </div>
+  <div class="grid3" id="peopleGrid"></div>
+</section>
+
+<!-- ═══ 14 INTERVIEWS ═══ -->
+<section id="interviews">
+  <div class="sec-head">
+    <div class="eyebrow">The bar</div>
+    <h2>What the interview actually tests</h2>
+    <p>The prep that worked in 2023 gets rejected now. Loops have shifted from "explain what a transformer is" to "make a call under uncertainty and show your arithmetic." Behavioural questions got AI-specific: not "tell me about a trade-off" but "describe a time you chose between accuracy and serving latency, and explain the reasoning." Open each one for what a strong answer sounds like.</p>
+  </div>
+  <div id="qaList"></div>
+</section>
+
+<!-- ═══ 15 RAMP ═══ -->
+<section id="ramp">
+  <div class="sec-head">
+    <div class="eyebrow">Getting there</div>
+    <h2>A 90-day ramp that actually works</h2>
+    <p>Whether you're moving into an AI PM seat or trying to level up in one. The bar rose sharply through 2025–26: hiring managers now want shipped artefacts, eval fluency, and a point of view. Certificates move the needle least; a golden set you built yourself moves it most.</p>
+  </div>
+  <div class="grid3" id="rampGrid"></div>
+  <div class="card" style="margin-top:22px;border-left:3px solid var(--gold)">
+    <span class="tag">The arbitrage</span>
+    <p style="font-size:16.5px;margin:0">Eval work is unglamorous, so most PMs underinvest in it — which is exactly why it's the differentiator. If you can walk through golden-set design, LLM-as-judge tradeoffs, and regression-suite maintenance in a panel without being coached, you're in the top quartile of candidates. Everything else on your CV is table stakes.</p>
+  </div>
+</section>
+
+<!-- ═══ 16 TRAPS ═══ -->
+<section id="traps">
+  <div class="sec-head">
+    <div class="eyebrow">Hard truths</div>
+    <h2>Anti-patterns, ranked by how often they land</h2>
+  </div>
+  <div id="trapList"></div>
+</section>
+
+<!-- ═══ 17 ASSESS ═══ -->
+<section id="assess">
+  <div class="sec-head">
+    <div class="eyebrow">Self-assessment</div>
+    <h2>Where are you on each axis?</h2>
+    <p>Nine dimensions that hiring loops and promotion committees actually probe. Slide each to where you honestly sit. Nothing is stored or sent anywhere.</p>
+  </div>
+  <div class="assess">
+    <div id="axes"></div>
+    <div class="score-card">
+      <div class="k ui" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Readiness</div>
+      <div class="big" id="scoreVal">—</div>
+      <div class="band" id="scoreBand">move a slider</div>
+      <p id="scoreText">Nine axes, each 0–4. The profile matters more than the total — a spiky profile with deep eval fluency beats a flat middling one.</p>
+      <div class="gap" id="scoreGap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 18 CLOSE ═══ -->
+<section id="close">
+  <div class="sec-head">
+    <div class="eyebrow">One more thing</div>
+    <h2>The title probably dissolves. The skills don't.</h2>
+  </div>
+  <div class="narrow">
+    <p>We've been through this title cycle before — Mobile PM, Web3 PM, Growth PM, Data PM. Each had its moment as a separate specialty and each quietly merged back into "just product management" once the tooling became baseline. There's a reasonable argument that the AI PM title goes the same way inside two years.</p>
+    <p>That's not a reason to skip any of this. It's the opposite. When the title dissolves, what's left is the residue: the ability to specify behaviour you can't fully control, to define good precisely enough to automate the judgement, to hold a cost-quality-latency tradeoff in your head while a stakeholder asks for all three, and to say <em class="key">"we don't ship this yet"</em> with evidence rather than instinct.</p>
+    <p style="margin-bottom:0">Those become table stakes for every PM. The people who built them early just get there first.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="eyebrow">Sources &amp; further reading</div>
+    <p class="dim" style="max-width:720px;font-size:16px">Synthesised from current practitioner writing, vendor documentation, and regulatory material. Figures marked illustrative are for modelling, not quotation. Follow the primary sources for anything load-bearing.</p>
+    <div class="srcs" id="srcs"></div>
+    <p class="dim ui" style="font-size:12px;margin-top:34px">Built for a brown bag · ted.sg · Last revised August 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+
+/* ───────── nav ───────── */
+const NAV=[["thesis","Premise"],["archetypes","Archetypes"],["day","Day to day"],["diff","Old vs new"],["vocab","Vocabulary"],["evals","Evals"],["prd","The PRD"],["economics","Economics"],["metrics","Metrics"],["ux","AI UX"],["failures","Failures"],["governance","Governance"],["people","The org"],["interviews","Interviews"],["ramp","90-day ramp"],["traps","Anti-patterns"],["assess","Assess yourself"]];
+const nl=$("#navlinks");
+NAV.forEach(([id,label])=>{const a=el("a",null,label);a.href="#"+id;a.dataset.sec=id;nl.appendChild(a);});
+const secs=NAV.map(([id])=>document.getElementById(id)).filter(Boolean);
+let ticking=false;
+function onScroll(){
+  const y=window.scrollY, h=document.body.scrollHeight-innerHeight;
+  $("#progress").style.width=(h>0?Math.min(100,y/h*100):0)+"%";
+  let cur=null;
+  secs.forEach(s=>{if(s.getBoundingClientRect().top<160)cur=s.id;});
+  $$(".navlinks a").forEach(a=>a.classList.toggle("on",a.dataset.sec===cur));
+  const on=$(".navlinks a.on");
+  if(on&&on.offsetLeft<nl.scrollLeft){nl.scrollLeft=on.offsetLeft-16;}
+  else if(on&&on.offsetLeft+on.offsetWidth>nl.scrollLeft+nl.clientWidth){nl.scrollLeft=on.offsetLeft+on.offsetWidth-nl.clientWidth+16;}
+  ticking=false;
+}
+addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(onScroll);}},{passive:true});
+
+/* ───────── hero: the spread ───────── */
+const strip=$("#strip");
+function beta(){ // skewed-good with a fat left tail
+  let r=Math.random();
+  let v=100*(1-Math.pow(r,0.42));
+  if(Math.random()<0.13) v=Math.random()*38;   // occasional bad run
+  return Math.max(2,Math.min(99,v));
+}
+let dots=[];
+function roll(){
+  const vals=Array.from({length:10},beta).sort((a,b)=>a-b);
+  const mean=vals.reduce((a,b)=>a+b,0)/10;
+  const worst=vals[0];
+  const fails=vals.filter(v=>v<50).length;
+  if(!dots.length){
+    for(let i=0;i<10;i++){const d=el("div","dot");strip.appendChild(d);dots.push(d);}
+    const m=el("div","dot mean",'<span class="lbl">mean</span>');strip.appendChild(m);dots.push(m);
+  }
+  vals.forEach((v,i)=>{
+    const d=dots[i];
+    d.style.left=(3+v*0.94)+"%";
+    d.style.bottom=(34+(i%4)*17)+"px";
+    d.classList.toggle("bad",v<50);
+    d.title="Run "+(i+1)+" — quality "+Math.round(v);
+  });
+  dots[10].style.left=(3+mean*0.94)+"%";
+  $("#r-mean").textContent=Math.round(mean);
+  $("#r-worst").textContent=Math.round(worst);
+  $("#r-fail").textContent=fails+" / 10";
+  $("#r-fail").className=fails>2?"r":fails>0?"y":"g";
+}
+$("#reroll").addEventListener("click",roll);
+roll();
+
+/* ───────── archetypes ───────── */
+const ARCH=[
+ {n:"01",t:"AI-powered PM",s:"Classical product, accelerated by AI tools.",
+  own:"A normal product surface. AI is in your workflow, not in the product.",
+  day:"Drafting specs, synthesising research, and analysing data with an assistant. Discovery becomes continuous rather than a quarterly sprint.",
+  skill:"Prompting fluency, judgement about when to trust synthesis, and the discipline to keep strategy human.",
+  risk:"This is the baseline in 2026, not a specialism. Being only this is the position that erodes.",
+  ex:"A payments PM who writes PRDs with an assistant and runs AI-moderated user interviews."},
+ {n:"02",t:"Applied AI PM",s:"AI is the value proposition, on top of someone else's model.",
+  own:"A copilot, an assistant, a summariser, a recommender — built on a foundation-model API.",
+  day:"Eval design, prompt and context architecture, latency and cost tuning, trust UX, failure-mode triage, model migration when the provider deprecates a version.",
+  skill:"Eval fluency, context engineering, unit economics, guardrail design, and the ability to write a behaviour contract.",
+  risk:"The applied-only ceiling: you get very good at bolting a model onto an existing product and never own the model, the data, or the retrieval pipeline. There's a comp ceiling on that.",
+  ex:"The largest population by far, and where most bank and enterprise AI product work sits."},
+ {n:"03",t:"AI platform / ML PM",s:"You own the model, the data, or the tooling others build on.",
+  own:"Training pipelines, retrieval infrastructure, the internal eval platform, the model gateway, feature stores.",
+  day:"Negotiating between research and application teams, roadmapping capability rather than features, data acquisition and labelling strategy, deciding what gets exposed as an internal API.",
+  skill:"Genuine ML literacy — training dynamics, data curation, benchmark design. Your users are engineers.",
+  risk:"Success is invisible. Your metrics are adoption and unblocking, not revenue, and you must be very good at articulating leverage.",
+  ex:"A model-gateway PM at a bank owning routing, guardrails, and cost allocation across every business unit."},
+ {n:"04",t:"AI product owner",s:"Closest to the delivery team and the deployment pipeline.",
+  own:"Defining what an AI system should do, how its outputs get evaluated, and where humans must stay in the loop.",
+  day:"Backlog and acceptance criteria with quality clauses, sitting with the squad, running the error review, shepherding the model-risk submission.",
+  skill:"Agile delivery craft plus eval literacy plus governance navigation. Deep, not broad.",
+  risk:"Can get squeezed into ticket-writing if strategy sits elsewhere. Clarify who owns the outcome.",
+  ex:"Exploded in enterprise postings through 2025–26, mostly for internal AI workflows rather than AI-native products."}
+];
+const ag=$("#archGrid"),ap=$("#archPanel");
+ARCH.forEach((a,i)=>{
+  const b=el("button","arch"+(i===0?" on":""),`<span class="n">${a.n}</span><span class="t">${a.t}</span><span class="s">${a.s}</span>`);
+  b.addEventListener("click",()=>{$$(".arch").forEach(x=>x.classList.remove("on"));b.classList.add("on");showArch(i);});
+  ag.appendChild(b);
+});
+function showArch(i){
+  const a=ARCH[i];
+  ap.innerHTML=`<h3>${a.t}</h3><p style="max-width:680px;margin:0;color:#CBDCD0">${a.own}</p>
+  <dl>
+    <div><dt>Where the day goes</dt><dd>${a.day}</dd></div>
+    <div><dt>Skills that get tested</dt><dd>${a.skill}</dd></div>
+    <div><dt>The career risk</dt><dd>${a.risk}</dd></div>
+    <div><dt>Typical sighting</dt><dd>${a.ex}</dd></div>
+  </dl>`;
+}
+showArch(0);
+
+/* ───────── day in the life ───────── */
+const TIME=[
+ ["Stakeholder alignment & comms",22,17],
+ ["Discovery & customer research",16,10],
+ ["Writing specs & requirements",14,9],
+ ["Prioritisation & roadmap",12,8],
+ ["Looking at outputs / error review",1,14],
+ ["Eval design & quality gates",0,12],
+ ["Cost, latency & model tradeoffs",1,9],
+ ["Risk, legal & governance",6,11],
+ ["Analytics & experiment readout",14,7],
+ ["Delivery & release management",15,3]
+];
+const barsEl=$("#bars");
+TIME.forEach(([nm,c,a],i)=>{
+  const row=el("div","bar-row");
+  row.innerHTML=`<div class="nm">${nm}</div><div class="bar-track"><div class="bar-fill" data-i="${i}"></div></div><div class="v" data-v="${i}"></div>`;
+  barsEl.appendChild(row);
+});
+let mode="c";
+function drawBars(){
+  TIME.forEach(([nm,c,a],i)=>{
+    const f=$(`.bar-fill[data-i="${i}"]`),v=$(`.v[data-v="${i}"]`);
+    if(mode==="c"){f.style.width=c*3.6+"%";f.classList.remove("up");v.textContent=c+"%";v.style.color="";}
+    else if(mode==="a"){f.style.width=a*3.6+"%";f.classList.toggle("up",a>c);v.textContent=a+"%";v.style.color="";}
+    else{const d=a-c;f.style.width=Math.abs(d)*3.6+"%";f.classList.toggle("up",d>0);v.textContent=(d>0?"+":"")+d;v.style.color=d>0?"var(--gold-2)":d<0?"var(--muted)":"var(--sage)";}
+  });
+}
+function setMode(m,btn){mode=m;$$("#btnClassical,#btnAI,#btnBoth").forEach(b=>b.classList.remove("on"));btn.classList.add("on");drawBars();}
+$("#btnClassical").addEventListener("click",e=>setMode("c",e.currentTarget));
+$("#btnAI").addEventListener("click",e=>setMode("a",e.currentTarget));
+$("#btnBoth").addEventListener("click",e=>setMode("d",e.currentTarget));
+new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){drawBars();o.disconnect();}})},{threshold:.2}).observe(barsEl);
+
+/* ───────── diff table ───────── */
+const DIFF=[
+ ["Requirement","\"The system returns the correct answer.\" Binary, testable, signed off once.","\"Returns a grounded answer with precision above 0.82 on the validation set, with a defined fallback below confidence 0.6.\" A threshold and a behaviour, not a promise."],
+ ["Done","Feature works, tests pass, ship it. Done stays done.","Passes the eval suite at the agreed bar, with monitoring live and a rollback path. Done decays — a model update or index drift can undo it while you sleep."],
+ ["Bug","Reproducible defect. File it, fix it, close it.","A failure mode with a frequency. You can rarely fix it outright; you reduce its rate, catch it with a gate, or design a graceful failure around it."],
+ ["QA","A phase before release, owned by QA.","A continuous practice, owned jointly, split into offline evals (pre-merge gates) and online evals (production monitoring)."],
+ ["Demo","Strong evidence. If it works in the demo it works.","Weak evidence. A demo proves something can work once; an eval proves it works repeatedly. The gap between the two is where AI projects die."],
+ ["Cost","Fixed. Marginal cost of one more user ≈ zero.","Variable and per-call. Every interaction has a token bill, and heavy users can go margin-negative on a flat plan."],
+ ["Roadmap","Quarterly feature commitments with dates.","Capability bets with a re-evaluation cadence. Half your roadmap can be obsoleted by a model release you didn't schedule."],
+ ["Latency","A non-functional requirement, mostly infra's problem.","A first-class product tradeoff. Faster usually means a smaller model, which usually means lower quality. You own that dial."],
+ ["Experiment","A/B test with a clean control.","A/B test, shadow mode, and staged rollout — plus the awareness that user behaviour drifts as people learn what the system can do."],
+ ["Competitive moat","Features, distribution, switching costs.","Rarely the model — anyone can rent the same one. It's proprietary data, workflow depth, distribution, and evals nobody else has."],
+ ["Prioritisation","RICE, value vs effort, whoever shouted loudest.","Same frameworks plus a feasibility screen: is this on the capable side of the jagged frontier today, and what does it cost per successful outcome?"],
+ ["Safety","Edge case handling and abuse prevention.","A design input woven through every decision — refusals, injection resistance, red teaming, and evidence you can hand a regulator."]
+];
+const db=$("#diffBody");
+DIFF.forEach(([k,o,n])=>{db.appendChild(el("tr",null,`<td>${k}</td><td class="old">${o}</td><td>${n}</td>`));});
+
+/* ───────── glossary ───────── */
+const CATS={model:"Models",context:"Context",agents:"Agents",evals:"Evaluation",ops:"Operations",money:"Economics",risk:"Risk",craft:"Craft"};
+const G=[
+["Token","model","The unit models actually read and write — roughly ¾ of a word in English. Pricing, context limits and latency are all denominated in tokens.","It is your unit of cost and your unit of capacity. Every product decision about verbosity, history and retrieved context is a token decision."],
+["Context window","model","The maximum tokens a model can consider in one call, covering system prompt, history, retrieved documents and the answer.","It's a hard product constraint. When conversations get long or documents get big, something must be dropped or summarised — you decide what."],
+["System prompt","model","The standing instruction set prepended to every call: role, rules, tone, output format, refusals.","It is product surface area, not config. Behaviour changes here ship instantly and silently, so version it and gate changes with evals."],
+["Temperature","model","A sampling parameter controlling randomness. Lower is more deterministic, higher is more varied.","The lever people reach for first and misuse most. It doesn't fix wrongness; it just narrows or widens the spread."],
+["Non-determinism","model","The same input can yield different outputs across runs, even at low temperature.","The root cause of nearly every other item on this page. It breaks reproducibility, so you specify distributions, not outputs."],
+["Frontier model","model","The most capable and most expensive tier from a provider.","Reach for it for genuinely hard reasoning, not for everything. Defaulting to frontier is the most common cause of cost overrun."],
+["Small / fast model","model","Cheaper, lower-latency tiers, often 5–50× cheaper than frontier.","Most product surfaces need consistency, not brilliance. Proving a small model clears your bar is a margin win you keep forever."],
+["Reasoning model","model","A model that spends extra inference computing intermediate reasoning before answering.","Buys accuracy on hard tasks with latency and tokens. A real product tradeoff: think about whether the user is waiting."],
+["Thinking budget","model","A cap on how much internal reasoning a model may spend before it must answer.","Your dial between deliberation and responsiveness. Set it per surface, not globally."],
+["Fine-tuning","model","Further training a base model on your own examples to shape behaviour or format.","Rarely the first answer. Try prompt and context work first — fine-tuning adds cost, a maintenance burden and a migration problem at the next model release."],
+["Distillation","model","Training a smaller model to imitate a larger one's outputs.","How you get frontier-ish quality at small-model economics once volume justifies the effort."],
+["Embedding","model","A numeric vector representing meaning, so similar text sits nearby in vector space.","The machinery underneath search, retrieval, clustering and dedup. You don't need the maths, you need to know when semantic similarity is the wrong tool."],
+["Multimodal","model","Handling more than text — images, audio, documents, video.","Opens product surfaces (scan a statement, read a chart) but multiplies your eval surface and your privacy review."],
+["Model card","model","The provider's documentation of a model's capabilities, training approach, evaluations and known limits.","Your primary due-diligence artefact, and increasingly something governance will ask you to file."],
+["Version pinning","model","Locking to a specific dated model version rather than a floating alias.","Prevents behaviour changing under you overnight. The cost is that pinned versions get deprecated and you must schedule migrations."],
+["Deprecation","model","A provider retiring a model version on a published timeline.","A roadmap item you don't control. Every pinned model needs a migration eval and a sunset date on your plan."],
+["Time to first token","model","Latency until the first character appears.","Perceived speed. Streaming a fast first token can beat a lower total latency for how responsive something feels."],
+["Throughput","model","Tokens generated per second once streaming starts.","Determines whether long answers feel alive or stalled. Pair with output-length discipline."],
+["Structured output","model","Constraining a model to return valid JSON or a fixed schema.","Turns prose into something your system can act on. Also a failure mode: schema-valid and semantically wrong is still wrong."],
+["Function / tool calling","model","The model emits a request to invoke a defined function, and your code runs it.","The bridge from text generator to system that does things. Every tool you expose is permission surface."],
+["Prompt caching","model","Reusing already-processed input tokens across calls, typically at a large discount on cache reads.","Near-universal ~90% discount on repeated input across major providers. Free margin on stable system prompts and few-shot examples."],
+["RAG","context","Retrieval-augmented generation — fetching relevant documents at query time and putting them in the prompt.","The default architecture for grounding answers in your own data. Most RAG failures are retrieval failures, not model failures."],
+["Chunking","context","Splitting source documents into retrievable pieces.","Boring and decisive. Bad chunk boundaries silently cut the answer in half and no amount of model quality recovers it."],
+["Vector database","context","A store optimised for nearest-neighbour lookup over embeddings.","Infrastructure with a real cost line and a real staleness problem. Ask who owns reindexing."],
+["Hybrid search","context","Combining keyword and semantic retrieval.","Pure semantic search misses exact identifiers — account numbers, product codes, policy references. In finance you almost always want hybrid."],
+["Reranking","context","A second pass that reorders retrieved candidates by relevance before they reach the model.","Cheap accuracy. Often a bigger quality win than upgrading the model."],
+["Groundedness","context","Whether the answer is actually supported by the retrieved source.","The metric that matters most for any advice-adjacent product, and the one you can automate a judge for."],
+["Attribution","context","Showing which source each claim came from.","Trust UX and audit trail in one move. In regulated contexts it is frequently non-negotiable."],
+["Context engineering","context","Deliberately deciding what goes into the window: instructions, examples, retrieved data, history, tools.","The core craft skill of applied AI product work. More consequential than prompt wording and much more consequential than model choice."],
+["Lost in the middle","context","Models attend less reliably to information buried in the middle of a long context.","Stuffing the window is not free. Position and pruning matter — more context can mean worse answers."],
+["Memory","context","Persisted state about a user or task carried across sessions.","A product feature with a privacy review attached. Decide explicitly what is remembered, what is shown, and how a user deletes it."],
+["MCP","context","Model Context Protocol — an open standard for connecting models to tools and data sources.","Turns bespoke integrations into a reusable surface. Changes your build-vs-integrate maths and your access-control conversation."],
+["Agent-to-agent","context","Protocols for agents from different systems to delegate and coordinate.","Distinct from MCP, which connects an agent to tools. A2A connects agents to each other — different trust model, different failure modes."],
+["Agent","agents","A system that pursues a goal over multiple steps, choosing actions and calling tools rather than answering once.","Every added step multiplies failure probability and cost. Justify why a form or a single call isn't enough before you build one."],
+["Harness","agents","The loop and scaffolding around the model: what it sees each turn, which tools it has, when it stops.","Most of the perceived quality of an agent lives here, not in the model. It's also where your product decisions actually get encoded."],
+["Planning","agents","Decomposing a goal into steps before acting.","Makes progress legible to users and creates natural approval points."],
+["Reflection","agents","The agent critiques and revises its own output before returning it.","Reduces obvious errors at the cost of tokens and latency. Cap the iterations or you get infinite revision loops."],
+["Orchestration","agents","Coordinating multiple specialised agents or steps.","Powerful and expensive. Compounding error rates mean a five-step chain at 95% each is a coin flip end to end."],
+["Autonomy level","agents","How much an agent may do without asking: suggest only, act with approval, act freely.","Assign per action, not per product, and tie it to reversibility. Read-only can be autonomous; irreversible cannot."],
+["Human in the loop","agents","A person must approve before an action executes.","Your primary control for high-stakes steps. Design the review to be fast, or people rubber-stamp it and you've bought nothing."],
+["Human on the loop","agents","A person supervises and can interrupt, but doesn't approve each step.","The middle rung. Requires real interruptibility — pause, override, rollback, escalate as first-class controls."],
+["Escalation","agents","The agent hands off to a human on low confidence, high risk or anomaly.","Target roughly 5–15% of tasks. Too frequent and users lose faith; too rare and the system will eventually be confidently, expensively wrong."],
+["Guardrail","agents","A deterministic check around the model: input filters, output validators, refusal rules, hard limits.","Where you put things that must never happen. Never rely on the prompt alone for a rule with a regulator attached."],
+["Permission surface","agents","The full set of tools, data and actions an agent can reach.","Your primary safety control in agentic systems. Enumerate it, document side effects and reversibility per tool, and review it like a change to access rights."],
+["Trace","agents","The complete record of one request: prompts, tool calls, retrievals, intermediate steps, final output.","The unit of debugging and the unit of governance evidence. If you can't read a trace, you can't run an error review."],
+["Idempotency","agents","Whether repeating an action twice causes harm.","Determines which steps can be retried automatically and which need a human. Send-email and place-trade are not idempotent."],
+["Eval","evals","A repeatable measurement of system quality against defined criteria on a defined dataset.","The AI PM's core artefact. If you own only one technical practice, own this one."],
+["Golden set","evals","A curated set of representative inputs with agreed-good outputs, usually hand-labelled by domain experts.","Encodes what good means to the customer, which makes the PM the natural owner. Start near 100 examples, stay under 500, and keep it living."],
+["Eval-driven development","evals","Writing evals before the system can pass them, then iterating until it does.","Test-driven development for probabilistic systems. Converts arguments about quality into a number the team can move."],
+["Offline eval","evals","Running a fixed dataset against a candidate change before it ships, usually as a CI gate.","Catches regressions before users do. Limited to failures you thought to include."],
+["Online eval","evals","Scoring real production traffic continuously.","Catches what you didn't anticipate, and detects drift. Sample it — scoring everything is expensive."],
+["LLM-as-judge","evals","Using a model with a rubric to grade outputs at scale.","How eval work scales past manual review. Only trustworthy once calibrated against human labels."],
+["Rubric","evals","The explicit criteria a judge scores against, with named failure modes per rating level.","Writing the rubric is the product work. Vague criteria mean the judge invents its own standard."],
+["Judge calibration","evals","Measuring agreement between the automated judge and human labels.","Without it your metric is decoration. Recheck periodically — judges drift when models update."],
+["Failure mode","evals","A specific, named way the system fails, e.g. \"invents a fee that isn't in the fee table\".","Naming is half the fix. A named failure becomes an eval, an eval becomes a gate, a gate becomes a guarantee."],
+["Error analysis","evals","Reading real failing traces and coding them into categories.","The highest-leverage hour in the week. Nothing substitutes for looking at the data."],
+["Regression suite","evals","A fixed dataset replayed on every change to catch quality going backwards.","Your protection against the silent degradation that follows prompt tweaks and model upgrades."],
+["Precision / recall","evals","Of what you flagged, how much was right; of what was there, how much you caught.","The classic tradeoff with a product owner attached. Which error hurts your user more is a PM call, not a data science call."],
+["Hallucination rate","evals","How often the system asserts something unsupported or false.","Set a tolerance explicitly, per surface. Zero is not achievable; unstated is not acceptable."],
+["Pass rate","evals","Share of eval cases meeting the bar.","Your headline quality number. Only meaningful alongside the composition of the set."],
+["Benchmark","evals","A public, general-purpose test of model capability.","Useful for model shortlisting, useless as evidence your product works. Your evals are the ones that count."],
+["Shadow mode","evals","Running a new version on live traffic without showing results to users.","How you de-risk a launch in a regulated environment where an A/B test on customers isn't acceptable."],
+["Drift","evals","Quality moving over time as data, users or models change.","The reason done decays. Monitoring is not optional; it is the second half of shipping."],
+["Observability","ops","Logging, tracing and dashboards covering prompts, retrievals, tool calls, latency, cost and quality.","Instrument on day one. Retrofitting observability after launch is the most common and most avoidable AI project regret."],
+["Circuit breaker","ops","Automatic cutoff when cost, error rate or latency breaches a threshold.","Prevents a bad prompt change from becoming a five-figure weekend."],
+["Rate limiting","ops","Per-user or per-feature caps on usage.","Protects margin and blast radius. Design the limit message before you need it, or users feel ambushed."],
+["Fallback","ops","What the product does when the model fails, times out or is unavailable.","A PRD section, not an incident response. Degrade to a cheaper model, a cached answer or a non-AI path — and say which."],
+["Cost per successful outcome","money","Total inference spend divided by tasks actually completed well.","The only cost metric worth reporting. Cheap tokens that fail twice are more expensive than one good call."],
+["Token budget","money","A per-request, per-user or per-agent ceiling on spend.","Especially vital for agents, which can loop. Budget both the typical and the tail."],
+["Tail cost","money","What the 99th-percentile user or request costs, not the average.","Flat pricing that works at the mean can be margin-negative on power users. Model the tail before you price."],
+["Semantic caching","money","Serving a stored answer when a new question is close enough to an old one.","Can eliminate a meaningful share of inference on FAQ-shaped traffic. Watch for stale answers to time-sensitive questions."],
+["Batch processing","money","Submitting non-urgent work asynchronously at a discount, commonly around 50%.","Reclassifying a workload from real-time to overnight can halve its cost. Ask which of your jobs actually need to be live."],
+["Model routing","money","Sending each request to the cheapest model that clears the quality bar.","The single biggest lever on inference cost. Requires evals to know where the bar is — which is why eval work pays for itself."],
+["Outcome pricing","money","Charging per resolved ticket, qualified lead or completed task rather than per seat.","Aligns price with value, transfers cost variance to you. Only viable with tight unit economics and an unambiguous outcome."],
+["Per-seat trap","money","Flat per-user pricing on a feature whose usage scales with engagement.","The canonical AI pricing mistake: your best users become your worst customers."],
+["Model risk management","risk","The supervisory discipline covering model governance, independent validation, ongoing monitoring and effective challenge.","In banking this is decades old and now stretched over AI. Learn your institution's inventory, tiering and validation process early — it sets your timeline."],
+["Explainability","risk","Being able to say why the system produced a given output.","Frequently mandatory where customer outcomes are affected. Design for it — attribution, decision logs, structured rationale — rather than retrofitting."],
+["Fairness testing","risk","Checking outcomes for disparity across protected or sensitive groups.","Documented assessment is expected in credit, insurance and employment contexts. Decide the metric with compliance before you build."],
+["Red teaming","risk","Deliberately adversarial testing to find harmful or leaking behaviour.","Schedule it, staff it, and log what you found and fixed. It is increasingly evidence a regulator expects to see."],
+["Prompt injection","risk","Instructions hidden in retrieved content or user input that hijack the model.","The defining security failure of tool-using systems. Treat all retrieved content as untrusted data, never as instructions."],
+["Data residency","risk","Where data is processed and stored, and which jurisdictions apply.","Decides which providers and deployment modes are even available to you. Settle it before architecture, not after."],
+["Audit trail","risk","Immutable records of what the system did, on what inputs, under whose authority.","Your evidence base. In agentic systems it also has to capture intent and the human intervention points."],
+["Model inventory","risk","The register of every AI system in use, with owner, tier and controls.","Increasingly extended to cover business-unit tools and generative assistants that never went through model risk. Expect to be asked to register yours."],
+["Kill switch","risk","The ability to disable an AI feature immediately without a deploy.","Ask for it in the first design review. You will eventually need it at an inconvenient hour."],
+["Jagged frontier","craft","Capability is uneven — models are superhuman at some tasks and unreliable at adjacent, seemingly easier ones.","Why feasibility can't be reasoned about from first principles. You have to probe the specific task, not the general capability."],
+["Trust debt","craft","Accumulated user scepticism after visible failures.","Repays far more slowly than it accrues. One confidently wrong answer in a high-stakes moment can cost a quarter of adoption."],
+["Automation bias","craft","Users over-trusting system output and stopping their own checking.","The mirror risk of hallucination and the harder one to detect. Design deliberately to keep the human engaged where it matters."],
+["Cold start","craft","Having no usage data, no golden set and no signal at launch.","Plan the first 100 labelled examples before launch. Design partners and internal dogfooding are how you buy signal early."],
+["Demo-to-durable gap","craft","The distance between something that works in a demo and something that holds up in production.","Where most AI initiatives quietly die. Evals are the bridge; there isn't another one."],
+["Vibe check","craft","Informal eyeballing of output quality.","Fine as a first filter, dangerous as evidence. If a vibe check is the only gate, you're shipping on hope."]
+];
+const glGrid=$("#glGrid"),glCount=$("#glCount"),glCats=$("#glCats");
+let glCat="all";
+const catBtn=(k,label)=>{const b=el("button","ghost"+(k==="all"?" on":""),label);b.style.fontSize="12px";b.style.padding="7px 13px";
+  b.addEventListener("click",()=>{glCat=k;$$("#glCats button").forEach(x=>x.classList.remove("on"));b.classList.add("on");renderGl();});glCats.appendChild(b);};
+catBtn("all","All");
+Object.entries(CATS).forEach(([k,v])=>catBtn(k,v));
+function renderGl(){
+  const q=$("#glSearch").value.trim().toLowerCase();
+  const rows=G.filter(([t,c,d,w])=>(glCat==="all"||c===glCat)&&(!q||(t+" "+d+" "+w).toLowerCase().includes(q)));
+  glGrid.innerHTML="";
+  if(!rows.length){glGrid.appendChild(el("div","gl-empty","No term matches that. Try a shorter word, or clear the filter."));}
+  else rows.forEach(([t,c,d,w])=>glGrid.appendChild(el("div","gl-item",
+    `<div class="t"><span>${t}</span><span class="c">${CATS[c]}</span></div><div class="d">${d}</div><div class="w">${w}</div>`)));
+  glCount.textContent=rows.length+" of "+G.length+" terms";
+}
+$("#glSearch").addEventListener("input",renderGl);
+renderGl();
+
+/* ───────── eval loop ───────── */
+const STEPS=[
+ {n:"01",k:"Look",t:"Look at the data",who:"PM leads · with design and support",
+  b:"Before any metric exists, read real inputs and real outputs. Not a sample your engineer picked — a stratified sample across segments, difficulty and channels. You are hunting for the specific, repeatable ways this system embarrasses you.",
+  li:["Pull 50–100 real traces across your actual traffic mix","Read them end to end, including the retrieval and tool steps","Write down every wrong thing you see, in plain language","Resist the urge to fix anything yet"],
+  out:"<b>Output:</b> a messy list of observed wrongness, in the words of someone who knows the domain."},
+ {n:"02",k:"Name",t:"Name the failure modes",who:"PM owns · domain experts validate",
+  b:"Cluster your observations into named, mutually distinguishable failure modes. \"Bad answers\" is not a failure mode. \"Quotes a fee tier that doesn't apply to this client segment\" is. Precision here determines everything downstream, because each name becomes a measurable thing.",
+  li:["Group observations into 5–12 named categories","Define each one so two people would label the same trace the same way","Rank by frequency × harm, not by how interesting they are","Decide which ones you are choosing to tolerate, explicitly"],
+  out:"<b>Output:</b> a failure-mode taxonomy — the single most reusable artefact you will build."},
+ {n:"03",k:"Curate",t:"Build the golden set",who:"PM owns outright",
+  b:"Assemble representative inputs with agreed-good outputs or clear criteria for good. Draw from production logs (privacy-filtered), user research, and deliberately constructed edge cases. Keep it small and high quality — around 100 to start, 500 at the outside.",
+  li:["Cover the common path, the long tail, and each named failure mode","Have domain experts label; use majority vote where judgement is contested","Keep the rationale alongside the label — it becomes your rubric","Version it, review it quarterly, add every new production failure"],
+  out:"<b>Output:</b> a living golden set that outlives any particular model or prompt."},
+ {n:"04",k:"Grade",t:"Choose how you grade",who:"PM defines · engineering implements",
+  b:"Pick the cheapest evaluator that is trustworthy for each criterion. Deterministic checks for anything objective — was the date parsed correctly, did the JSON validate, did it cite a real document. LLM judges with an explicit rubric for anything subjective. Human review only where neither works.",
+  li:["Deterministic first: it's free, instant and never drifts","Write the judge rubric with named failure levels, not a 1–5 vibe scale","Calibrate the judge against human labels and record the agreement","Re-calibrate after any model or rubric change"],
+  out:"<b>Output:</b> a scoring pipeline you trust enough to block a merge with."},
+ {n:"05",k:"Gate",t:"Wire it into the pipeline",who:"Engineering owns · PM sets the bar",
+  b:"Evals only change behaviour when they have teeth. Tier them the way you tier tests: fast, cheap smoke evals on every commit; the full suite on anything touching prompts, models, retrieval or tools; nightly runs for the expensive checks.",
+  li:["Define the pass bar per criterion and who can approve an exception","Block the merge when a regression crosses the bar","Run the full suite on every model version bump — this is your migration test","Track eval cost; judges consume tokens too"],
+  out:"<b>Output:</b> a quality floor that holds when you're on leave."},
+ {n:"06",k:"Watch",t:"Monitor and feed back",who:"PM and engineering jointly",
+  b:"Offline evals only test what you thought to include. Real users type things you never anticipated. Sample production traffic, score it continuously, and route new failures straight back into step 2 — the loop closes here and starts again.",
+  li:["Sample and score live traffic; alert on rate changes, not single events","Watch cost and latency on the same dashboard as quality","Every new production failure becomes a new golden case","Re-run error review weekly, forever"],
+  out:"<b>Output:</b> a system that gets measurably better instead of anecdotally better."}
+];
+const sn=$("#stepNav"),sb=$("#stepBody");
+STEPS.forEach((s,i)=>{
+  const b=el("button",i===0?"on":"",`<span class="sn">${s.n}</span>${s.k}`);
+  b.addEventListener("click",()=>{$$("#stepNav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");showStep(i);});
+  sn.appendChild(b);
+});
+function showStep(i){const s=STEPS[i];
+  sb.innerHTML=`<h3>${s.t}</h3><div class="who">${s.who}</div><p style="font-size:17px;color:#CBDCD0">${s.b}</p><ul>${s.li.map(x=>`<li>${x}</li>`).join("")}</ul><div class="out">${s.out}</div>`;}
+showStep(0);
+
+/* ───────── AI PRD ───────── */
+const PRD=[
+ {t:"Why a model at all",d:"The section that saves the most money. Agents and models add cost, latency and failure modes that deterministic code doesn't have. State plainly why a form, a rules engine or a single database query is not enough.",
+  spec:"Rejected alternatives:\n · Rules engine — cannot handle free-text client notes (est. 60% of inbound)\n · Keyword search — misses paraphrased product queries (measured 41% miss rate)\nChosen because: the input is unstructured and the output tolerance allows review."},
+ {t:"Model strategy and fallback",d:"Which model, why, at what version, and what happens when it's unavailable or gets deprecated. This is product strategy, not an implementation detail — your cost structure and your migration risk both live here.",
+  spec:"Primary: mid-tier model, version-pinned\nFallback: small model — degraded mode, acceptable for summarisation, not for recommendations\nProvider outage: serve cached response, else disable the panel with an explicit notice\nFine-tuning: not now. Volume doesn't justify it. Revisit at 100k monthly calls."},
+ {t:"Quality bar and eval criteria",d:"The replacement for 'works correctly'. Name the metric, the dataset, the threshold, and who signs off on an exception. Without this, engineering invents its own bar and you find out at launch.",
+  spec:"Groundedness ≥ 0.95 on the 180-case golden set (LLM judge, calibrated κ ≥ 0.7)\nFee-accuracy: 100% — deterministic check against the fee table, hard gate\nTone/suitability: ≥ 0.85 human-rated on a 40-case sample per release\nRelease blocks on any regression > 2pp versus the previous version."},
+ {t:"Failure modes and fallback UX",d:"For each way it can fail: how the system detects it, what the user sees, and how it recovers. Three things, every time. This is the section most PRDs skip and most post-mortems demand.",
+  spec:"Low retrieval confidence → show sources found + \"I couldn't find a confident answer\" + link to search\nOutput fails schema validation → retry once with stricter constraints, then fall back to a template\nGuardrail trips → generic decline, log the trace, no explanation of the rule\nTimeout at 8s → stream what exists, mark the answer partial"},
+ {t:"Behavioural constraints",d:"What the system must never do, regardless of input. These become deterministic guardrails, not prompt suggestions — anything with a regulator attached belongs here, not in the system prompt.",
+  spec:"Never state a price, fee or rate not present in the retrieved source\nNever recommend a specific security\nNever assert suitability for a client segment not in the request\nNever echo full account identifiers into the response body"},
+ {t:"Autonomy and human checkpoints",d:"Per action — not per product — the autonomy level, its rationale, and where a human must sign off. Tie the level to reversibility, and list each tool's side effects.",
+  spec:"read_client_portfolio — autonomous (read-only, reversible)\ndraft_client_message — suggest only, adviser edits and sends\nbook_meeting — act with confirmation\nsubmit_instruction — out of scope for v1"},
+ {t:"Cost and latency envelope",d:"The maximum acceptable cost per interaction and the latency target, plus what triggers a re-architecture. State the tradeoff explicitly so it can be revisited with evidence instead of relitigated in every standup.",
+  spec:"Target: ≤ $0.014 per completed task, p95 ≤ 4.5s to full answer\nToken budget: 6k input / 900 output, cache the 2.1k static prefix\nBreach at 1.5× target for two consecutive weeks triggers a routing review."},
+ {t:"Data, privacy and residency",d:"Where the training, retrieval and logging data come from, what's in them, where they're processed and how long they're kept. Settle this before architecture — it determines which providers you can even consider.",
+  spec:"Retrieval corpus: approved product and policy documents only, reindexed nightly\nPII: masked before the call; traces stored 90 days in-region\nNo customer data used for provider training (contractual)\nDeletion path documented and tested."},
+ {t:"Rollout, monitoring and evidence",d:"How it reaches users, what you watch, and what you can hand to a reviewer. In regulated settings the evidence pack is part of the deliverable, not an afterthought.",
+  spec:"Internal dogfood (2 wks) → 5% adviser cohort shadow mode → 25% → full\nDashboards: pass rate, groundedness, escalation rate, cost/task, p95 latency\nWeekly error review with 25 sampled traces\nKill switch: feature flag, no deploy required, owner named on the runbook."}
+];
+const acc=$("#prdAcc");
+PRD.forEach((p,i)=>{
+  const d=el("details","acc");
+  d.innerHTML=`<summary><span class="ui" style="color:var(--gold);font-size:11px;letter-spacing:.1em">§${String(i+1).padStart(2,"0")}</span>${p.t}</summary>
+  <div class="accbody"><p style="color:#CBDCD0;font-size:16.5px">${p.d}</p><div class="spec-lbl">Example clause</div><div class="spec">${p.spec}</div></div>`;
+  acc.appendChild(d);
+});
+
+/* ───────── unit economics ───────── */
+const MODELS=[
+ {n:"Frontier tier — $5 in / $25 out",i:5,o:25,ci:1,co:5},
+ {n:"Mid tier — $3 in / $15 out",i:3,o:15,ci:1,co:5},
+ {n:"Small tier — $1 in / $5 out",i:1,o:5,ci:.35,co:1.75},
+ {n:"Budget tier — $0.30 in / $1.50 out",i:.3,o:1.5,ci:.1,co:.5}
+];
+const mSel=$("#cModel");
+MODELS.forEach((m,i)=>{const o=el("option",null,m.n);o.value=i;mSel.appendChild(o);});
+mSel.value=1;
+const CHEAP={i:.3,o:1.5};
+const fmt=(n,d)=>n.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const money=n=>n>=1000?"$"+Math.round(n).toLocaleString():n>=1?"$"+fmt(n,2):"$"+fmt(n,4);
+function calc(){
+  const m=MODELS[+mSel.value];
+  const users=Math.max(1,+$("#cUsers").value||0), calls=Math.max(1,+$("#cCalls").value||0);
+  const tin=Math.max(1,+$("#cIn").value||0), tout=Math.max(1,+$("#cOut").value||0);
+  const cache=+$("#cCache").value/100, route=+$("#cRoute").value/100, succ=+$("#cSucc").value/100;
+  const price=Math.max(0,+$("#cPrice").value||0);
+  $("#vCache").textContent=Math.round(cache*100)+"%";
+  $("#vRoute").textContent=Math.round(route*100)+"%";
+  $("#vSucc").textContent=Math.round(succ*100)+"%";
+  const perM=1e6;
+  // primary model cost per call, with cached input priced at ~10% of normal
+  const inCostP=(tin*(1-cache)*m.i + tin*cache*m.i*0.1)/perM;
+  const outCostP=tout*m.o/perM;
+  const inCostC=(tin*(1-cache)*CHEAP.i + tin*cache*CHEAP.i*0.1)/perM;
+  const outCostC=tout*CHEAP.o/perM;
+  const costPrimary=inCostP+outCostP, costCheap=inCostC+outCostC;
+  const perCall=costPrimary*(1-route)+costCheap*route;
+  const totalCalls=users*calls;
+  const cogs=perCall*totalCalls;
+  const perSuccess=perCall/Math.max(.01,succ);
+  const revenue=users*price;
+  const margin=revenue>0?(revenue-cogs)/revenue*100:-100;
+  const inShare=(inCostP*(1-route)+inCostC*route)/perCall*100;
+  $("#kCall").textContent=money(perCall);
+  $("#kSucc").textContent=money(perSuccess);
+  $("#kCogs").textContent=money(cogs)+"/mo";
+  $("#kMargin").textContent=revenue>0?Math.round(margin)+"%":"n/a";
+  $("#kMarginSub").textContent=revenue>0?money(revenue)+" revenue − "+money(cogs)+" inference":"set a price to see margin";
+  const box=$("#kMarginBox");
+  box.className="kpi "+(margin>=70?"good":margin>=45?"warn":"bad");
+  $("#stack").innerHTML=
+   `<div style="width:${inShare}%;background:var(--bark-2);color:var(--bone)">${inShare>16?"Input "+Math.round(inShare)+"%":""}</div>`+
+   `<div style="width:${100-inShare}%;background:var(--gold)">${100-inShare>16?"Output "+Math.round(100-inShare)+"%":""}</div>`;
+  let v;
+  if(revenue===0) v="Set a subscription price to see whether this survives contact with finance.";
+  else if(margin<0) v=`<b style="color:var(--rust)">Margin-negative.</b> You are paying ${money(cogs-revenue)} a month for the privilege of serving these users. Route more traffic to a smaller model, cut the system prompt, or move to usage-based pricing before you scale this.`;
+  else if(margin<45) v=`<b style="color:var(--rust)">Thin.</b> At ${Math.round(margin)}% you have no room for retries, evals, infra or a bad month. Note that inference alone is only part of your COGS — observability, judge calls and failed attempts all sit on top.`;
+  else if(margin<70) v=`<b style="color:var(--gold-2)">Workable, and typical.</b> ${Math.round(margin)}% is in the normal band for AI products — below classic SaaS, above break-even. Watch the tail: a power user at 5× the average call volume will not look like this.`;
+  else v=`<b style="color:var(--mint)">Healthy.</b> ${Math.round(margin)}% gives you room to raise quality where it matters. Consider spending some of it on the hard 10–20% of queries rather than banking all of it.`;
+  const flag=succ<.6?` <br><br><span style="color:var(--rust)">Note:</span> at a ${Math.round(succ*100)}% success rate you are paying ${money(perSuccess)} per <em>useful</em> outcome — ${fmt(perSuccess/perCall,1)}× the headline cost per call. Quality work is cost work.`:"";
+  $("#verdict").innerHTML=v+flag;
+}
+["cUsers","cCalls","cIn","cOut","cPrice"].forEach(id=>$("#"+id).addEventListener("input",calc));
+["cCache","cRoute","cSucc"].forEach(id=>$("#"+id).addEventListener("input",calc));
+mSel.addEventListener("change",calc);
+calc();
+
+/* ───────── metric stack ───────── */
+const MSTACK=[
+ {l:"Layer 1",t:"Model metrics",who:"Data science reads these daily",
+  ex:"Precision, recall, F1, pass rate on the golden set, groundedness, hallucination rate, judge agreement",
+  note:"Necessary, never sufficient. A model metric is evidence about a component, not evidence about a product."},
+ {l:"Layer 2",t:"System metrics",who:"Engineering owns the alerts",
+  ex:"p50/p95 latency, time to first token, error and timeout rate, retrieval hit rate, escalation rate, cost per call, cache hit rate",
+  note:"This is where quality meets operations. Latency and cost belong on the same dashboard as accuracy, or you will optimise one into the ground."},
+ {l:"Layer 3",t:"Product metrics",who:"You own these",
+  ex:"Adoption, task completion rate, edit-and-accept rate, regeneration rate, thumbs-down rate, abandonment mid-task, repeat usage at 7 and 28 days",
+  note:"The best AI product signal is behavioural, not stated. How often does a user accept the output unedited? How often do they hit regenerate? Those two ratios tell you more than any survey."},
+ {l:"Layer 4",t:"Business metrics",who:"Your steering committee only cares about these",
+  ex:"Time saved per task, conversion or acceptance uplift, cost to serve, revenue per user, retention, cases deflected, gross margin",
+  note:"Frame every AI investment here or it gets cut in the next budget cycle. Translate token spend into cost per customer or per workflow, never raw compute."}
+];
+$("#metricStack").innerHTML=MSTACK.map(m=>`
+ <div class="card" style="margin-bottom:12px;border-left:3px solid var(--mint)">
+   <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline">
+     <h3 style="margin:0"><span class="ui" style="color:var(--muted);font-size:11px;letter-spacing:.14em;margin-right:10px">${m.l}</span>${m.t}</h3>
+     <span class="ui" style="font-size:11.5px;color:var(--mint)">${m.who}</span>
+   </div>
+   <p class="ui" style="font-size:13.5px;color:var(--sage);margin:12px 0 10px">${m.ex}</p>
+   <p style="font-size:16px;margin:0;color:#CBDCD0">${m.note}</p>
+ </div>`).join("");
+
+/* ───────── autonomy ladder ───────── */
+const LADDER=[
+ {lv:"L0",t:"Invisible",s:"AI improves something behind the scenes; the user never sees a decision point.",
+  ui:"Nothing special. Ranking, routing, deduplication.",risk:"Low — but silent quality drift is easy to miss.",when:"Ranking, matching, classification, prioritisation."},
+ {lv:"L1",t:"Suggest",s:"The system proposes, the human disposes. Nothing happens without a person acting.",
+  ui:"Inline suggestion, draft, ghost text, ranked options with sources.",risk:"Low. The main hazard is automation bias — people accepting without reading.",when:"Your default for anything customer-facing in a regulated setting."},
+ {lv:"L2",t:"Act with approval",s:"The agent plans and stages the work, then waits at an explicit checkpoint before executing.",
+  ui:"Visible plan, approve/edit/reject, action receipts, activity timeline, stop button.",risk:"Moderate. Design the review to be genuinely fast or it becomes a rubber stamp.",when:"Where most teams should aim for v1 of an agentic feature."},
+ {lv:"L3",t:"Act, escalate on doubt",s:"Reversible actions run autonomously; the agent escalates on low confidence, high risk or anomaly.",
+  ui:"Risk-tiered approvals, evidence panel, budget and time boxes, full undo, clear escalation path.",risk:"High. Requires calibrated confidence and a working audit trail before you go near it.",when:"Once you have production eval data proving where the agent is reliable."},
+ {lv:"L4",t:"Trusted autonomy",s:"The agent runs unattended within a bounded permission surface; humans supervise in aggregate.",
+  ui:"Dashboards, sampling, exception queues, kill switch, continuous evaluation.",risk:"Highest. Governance shifts from the model to the operating environment around it.",when:"Internal, reversible, well-evaluated workflows. Rare for anything touching a client."}
+];
+const lad=$("#ladder");
+LADDER.forEach((r,i)=>{
+  const b=el("button","rung"+(i===2?" on":""));
+  b.innerHTML=`<div class="lv">${r.lv}</div><div class="body"><div class="ttl">${r.t}</div><div class="sub">${r.s}</div>
+   <div class="detail"><div><b>Interface needs</b>${r.ui}</div><div><b>Risk posture</b>${r.risk}</div><div><b>Use it when</b>${r.when}</div></div></div>`;
+  b.addEventListener("click",()=>{$$(".rung").forEach(x=>x.classList.remove("on"));b.classList.add("on");});
+  lad.appendChild(b);
+});
+
+/* ───────── ux patterns ───────── */
+const UXP=[
+ ["Show the working","Surface the plan, the sources and the steps rather than hiding them behind a chat bubble. Hidden reasoning erodes trust the moment something goes wrong and leaves users unable to intervene usefully."],
+ ["Ask instead of guessing","When intent is ambiguous, request clarification or present options. An agent that acknowledges its limits builds more trust than one that guesses confidently and happens to be right most of the time."],
+ ["Make failure cheap","When something breaks mid-task, restore the user exactly where they were and say what happened. Errors should never cost someone their work, and they should never be vague about the cause."],
+ ["Design the return moment","For anything asynchronous, the moment the user comes back matters as much as the moment they delegated. What changed, what needs them, what can they undo?"],
+ ["Calibrate the confidence signal","Don't paint a percentage on everything. Show uncertainty where the user can act on it, and reserve strong signals for genuinely high-stakes moments so they keep their meaning."],
+ ["Make correction a feature","Every edit a user makes is a labelled example. Capture it, route it into the golden set, and close the loop — otherwise you are throwing away the best training signal you'll ever get, for free."]
+];
+$("#uxPatterns").innerHTML=UXP.map(([t,d])=>`<div class="card"><h3 style="font-size:19px">${t}</h3><p style="font-size:15.5px;margin:0;color:#CBDCD0">${d}</p></div>`).join("");
+
+/* ───────── failure catalogue ───────── */
+const FAILS=[
+ ["Confabulation","Very common · high harm","The system asserts something specific, plausible and untrue — a fee, a date, a policy clause, a citation.","Groundedness judge against retrieved sources; deterministic checks against systems of record for anything numeric.","Force citation, constrain to retrieved content, hard-gate figures against the source table, and design the UI so the source is one click away."],
+ ["Retrieval miss","Very common · quietly fatal","The right document existed but wasn't retrieved, so the model answers from general knowledge instead.","Retrieval hit-rate metric on the golden set, evaluated separately from answer quality.","Hybrid search, reranking, better chunk boundaries. Answer with \"I couldn't find that\" rather than improvising."],
+ ["Stale index","Common · high harm in finance","Retrieval is working perfectly against a corpus that is three weeks out of date.","Freshness monitoring on the index; a canary document that changes daily.","Reindex on a schedule tied to source-of-truth updates, and show the as-of date in the answer."],
+ ["Silent regression","Common · very hard to spot","A prompt tweak, model version bump or library update degrades quality with no error anywhere.","Regression suite on every change; production eval sampling with alerting on rate shifts.","Version pinning, blocking eval gates in CI, and a rollback path you have actually tested."],
+ ["Prompt injection","Growing fast · severe","Instructions hidden inside a retrieved document, email or web page hijack the agent's behaviour.","Injection test cases in the eval suite; anomaly detection on tool-call patterns.","Treat all retrieved content as data, never instructions. Enforce tool permissions outside the model, and require approval for anything irreversible."],
+ ["Cascading step error","Agentic systems · compounding","A small error in step two silently corrupts steps three through seven.","Step-level trace evaluation, not just final-output scoring.","Cap chain length, validate between steps, checkpoint state, and let the agent escalate on doubt rather than pressing on."],
+ ["Wrong tool call","Agentic systems · variable harm","The agent calls the right-sounding tool with the wrong arguments, or the wrong tool entirely.","Tool-choice accuracy as its own eval metric with a labelled set.","Fewer, clearer tools with sharper descriptions. Validate arguments deterministically before execution."],
+ ["Over-refusal","Common · silent adoption killer","The system declines reasonable requests because guardrails are tuned too tightly.","Track refusal rate as a first-class metric with a false-refusal eval set.","Tune the guardrail against a labelled set, and always explain what the user can do instead."],
+ ["Sycophancy","Common · corrosive","The model agrees with the user's framing rather than the evidence, especially under pushback.","Adversarial eval cases where the user asserts something false and pushes back twice.","Explicit instruction to hold position on verifiable facts, plus judges that score for it."],
+ ["Cost blowout","Common · budget-visible","A prompt change, a retry loop or a power user cohort quietly multiplies the bill.","Per-user and per-feature cost dashboards, p99 not just mean, with anomaly alerts.","Token budgets, rate limits, circuit breakers, and a cost regression check alongside the quality one."],
+ ["Latency spike","Common · adoption impact","p95 drifts past the point where users stop waiting and abandon the task.","Percentile latency monitoring segmented by path, and abandonment rate as a product metric.","Stream early, route simple queries to a faster model, cap context length, cache aggressively."],
+ ["Eval overfitting","Insidious","The team tunes prompts until the golden set passes, and production quality doesn't move.","Hold out a slice of the golden set; compare offline pass rate against online sampling.","Refresh the set continuously from production failures. Never optimise directly against the full eval."],
+ ["Judge drift","Insidious","The LLM judge's standards shift after a model update, so your metric moves while quality doesn't.","Periodic re-calibration against a fixed human-labelled reference set.","Pin the judge model version, re-calibrate on a schedule, and record agreement over time."],
+ ["Automation bias","Under-detected · high harm","Users stop checking because the system is usually right, so the rare wrong answer goes straight through.","Measure edit rate and time-on-review; a collapsing review time is the warning sign.","Design friction where stakes are high, vary the presentation, and require an active confirmation rather than a passive one."],
+ ["PII leakage","Rare · career-defining","Sensitive data reaches a log, a prompt, a third party or another user's context.","Automated PII scanning of prompts and logs; red teaming for extraction."," Mask before the call, scope retrieval by entitlement, isolate tenant context, and set log retention deliberately."],
+ ["Capability gap surprise","Planning failure","A task that seems trivially easier than one the model handles well turns out to be unreliable.","Probe the specific task with 20 real examples before committing it to a roadmap.","Never reason about feasibility from general capability. The frontier is jagged — test the actual task."]
+];
+$("#failGrid").innerHTML=FAILS.map(([t,sev,d,det,mit])=>`
+ <div class="fail"><h4>${t}</h4><span class="sev">${sev}</span><p>${d}</p>
+ <div class="row"><b>Detect</b>${det}</div><div class="row"><b>Mitigate</b>${mit}</div></div>`).join("");
+
+/* ───────── governance ───────── */
+const GOV=[
+ ["Aug 2024","The <b>EU AI Act</b> entered into force, establishing the first horizontal AI law with a dedicated enforcement body for foundation models."],
+ ["Feb 2025","Prohibited AI practices and AI-literacy obligations began to apply."],
+ ["Aug 2025","Obligations for general-purpose AI models took effect."],
+ ["Apr 2026","US banking supervisors replaced the long-standing SR 11-7 model risk guidance with <b>SR 26-2</b>, keeping governance, independent validation, monitoring and effective challenge while moving to a more risk-based approach. Generative and agentic AI sit outside its explicit scope — but supervisors expect enterprise risk practice to cover them anyway."],
+ ["Aug 2026","Most remaining EU AI Act obligations became applicable, including transparency duties and high-risk system rules. Penalties reach up to €35m or 7% of global turnover for prohibited practices."],
+ ["2026 onward","Singapore's <b>MAS FEAT</b> principles — fairness, ethics, accountability, transparency — were not rewritten. Instead a wave of implementation artefacts translated them into practice for generative and agentic systems, alongside IMDA's agentic AI governance work. The principles held; the implementation surface moved."],
+ ["Dec 2027","High-risk obligations for standalone systems, including credit scoring, apply. Obligations for AI embedded in regulated products follow in Aug 2028."]
+];
+$("#govTl").innerHTML=GOV.map(([w,t])=>`<div class="tl-item"><div class="when">${w}</div><div class="what">${t}</div></div>`).join("");
+
+const GOVP=[
+ ["Register it early","Assume your feature belongs in the model inventory, with an owner, a risk tier and documented controls. Inventories are being extended to cover business-unit tools and generative assistants that never went through model risk. Finding out late costs you a release cycle."],
+ ["Design for explainability","If the output affects a customer outcome, you will be asked why it said that. Attribution, decision logs and structured rationale are cheap to build in and expensive to retrofit."],
+ ["Bring validation in at design","Independent validation and effective challenge are not a sign-off queue — they're a second opinion that changes your architecture. Invite them to the design review, not the launch review."],
+ ["Write the evidence as you go","Eval results, red-team findings, fairness assessment, human-oversight design, incident and rollback procedure. If you produce these as you build, the governance submission is assembly rather than archaeology."]
+];
+$("#govPractice").innerHTML=GOVP.map(([t,d])=>`<div class="card" style="padding:17px"><h3 style="font-size:18px">${t}</h3><p style="font-size:15px;margin:0;color:#CBDCD0">${d}</p></div>`).join("");
+
+/* ───────── people ───────── */
+const PEOPLE=[
+ ["Data scientist / ML engineer","Optimises model quality.","Ask them what the eval says, not whether it feels good. Your job is to supply the definition of good and the priority order of failure modes; theirs is to move the number. Where you add value: telling them which 3 points of accuracy actually matter to a user."],
+ ["Data engineer","Optimises pipeline reliability.","Retrieval quality, index freshness and lineage all live here. Most 'the model is bad' complaints resolve to a data problem. Get freshness and coverage on your dashboard early."],
+ ["Designer","Optimises the experience of uncertainty.","The most underrated partner in AI work. The hard problems — what to show when confident, when unsure, when wrong — are design problems with product consequences. Bring them in before the model works, not after."],
+ ["Backend / platform engineer","Optimises latency, cost and blast radius.","Owns routing, caching, rate limits and circuit breakers. Your cost envelope is only real if they've built the controls to enforce it."],
+ ["Legal & compliance","Optimises defensibility.","Adversarial only if you arrive late. Come with the risk register already drafted and you convert a gate into an ally. Ask early which regime bites: model risk, fair treatment, data protection, or all three."],
+ ["Model risk / validation","Optimises independent challenge.","Their job is to disagree with you competently. Treat the challenge as free red teaming. Have your evals, limitations and monitoring plan ready and the process shortens dramatically."],
+ ["Support & operations","Optimises the mess you create.","They see every failure first and know the traffic mix better than your analytics. The best golden set cases come from their queue. Also your escalation path — staff it before you launch."],
+ ["Executive sponsor","Optimises the story.","Wants layer-4 metrics and a defensible narrative. Translate: not 'F1 improved', but 'advisers now accept 11% more recommendations at $0.011 per completed task'. Manage expectations on probabilistic quality before the first demo, not after the first complaint."]
+];
+$("#peopleGrid").innerHTML=PEOPLE.map(([t,o,d])=>`<div class="card"><span class="tag">${o}</span><h3 style="font-size:19px;margin-bottom:9px">${t}</h3><p style="font-size:15.5px;margin:0;color:#CBDCD0">${d}</p></div>`).join("");
+
+/* ───────── interviews ───────── */
+const QA=[
+ ["How would you decide whether a feature should use an LLM at all?",
+  "Start from the cost of being wrong and the structure of the input. Unstructured input plus tolerance for review favours a model; structured input plus zero error tolerance favours deterministic code. Then check feasibility empirically — probe the actual task with 20 real examples, because capability is jagged and you cannot reason it out. Finally, price it: cost per successful outcome against the value of the outcome.",
+  "Reaching for a model because it's available. Strong candidates name the rejected alternatives."],
+ ["Your model is 92% accurate. Is that good enough to ship?",
+  "Unanswerable as posed, and saying so is the point. Which 8% fails, how visible is it, how recoverable, and how does it cluster? An 8% error rate spread evenly across low-stakes queries is fine; the same rate concentrated on your highest-value segment is not shippable. Then: what does the user see when it fails, and can they tell?",
+  "Answering with a number. The question is testing whether you interrogate the metric."],
+ ["Walk me through how you'd build an eval set from scratch.",
+  "Read production traces first, name the failure modes, then curate roughly 100 examples across common path, long tail and each named failure. Domain experts label; keep the rationale as the seed of your rubric. Deterministic checks for objective criteria, calibrated LLM judge for subjective ones, with agreement measured against human labels. Wire it as a CI gate, then feed production failures back in continuously.",
+  "Describing benchmarks instead of product evals. They are not the same thing."],
+ ["Describe a time you traded model accuracy against serving latency.",
+  "A specific instance with numbers: what the latency budget was, where quality sat on each option, how you measured the user impact of the delay, what you shipped and what you'd revisit. The reasoning matters more than the outcome.",
+  "A generic STAR story with 'AI' substituted in. Loops now probe for AI-specific depth in every behavioural answer."],
+ ["How do you handle hallucination in a customer-facing product?",
+  "Layer it. Ground in retrieval and constrain to retrieved content; gate anything numeric deterministically against a system of record; measure groundedness with a calibrated judge; design UI that shows sources and makes uncertainty visible; set an explicit tolerance per surface. Zero is not a target you can hit — unstated is the actual failure.",
+  "Claiming you can eliminate it, or treating it purely as a prompting problem."],
+ ["Your inference bill tripled last month. Walk me through the diagnosis.",
+  "Segment before you act: is it volume, tokens per call, model mix or retries? Check whether a prompt change grew the input, whether a cohort of power users emerged, whether retry logic is looping, and what the p99 looks like versus the mean. Then the levers in order of impact: routing, prompt trimming, caching, batching, rate limits.",
+  "Jumping to a cheaper model before establishing what actually changed."],
+ ["How would you evaluate an agent, as opposed to a single-turn feature?",
+  "End-to-end task success is necessary but insufficient, because it hides where the chain broke. Evaluate at the step level too: tool-choice accuracy, argument validity, plan quality, recovery from a bad step. Then measure escalation rate — too high and users lose confidence, too low and you're heading for a confident wrong action.",
+  "Only scoring the final output. Step-level evaluation is the signal that you've actually shipped one."],
+ ["How much autonomy would you give an agent in a banking workflow?",
+  "Per action, tied to reversibility, not per product. Read-only lookups can be autonomous; anything irreversible needs synchronous approval; the middle tier goes to an async review queue. State the permission surface explicitly, log intent and interventions, and start one rung lower than you think you need.",
+  "A single global answer. Autonomy is a per-action decision."],
+ ["Model quality improved but adoption is flat. What's happening?",
+  "Almost always trust or workflow, not quality. Check whether users saw the failures that shaped their priors — trust debt repays slowly. Check whether the output lands in the workflow they actually use. Check the behavioural ratios: accept-unedited rate, regeneration rate, abandonment mid-task. Then talk to the five heaviest non-adopters.",
+  "Proposing more model work. The bottleneck at scale is usually trust, not accuracy."],
+ ["How do you write an acceptance criterion for a probabilistic feature?",
+  "As a behaviour contract with thresholds: the metric, the dataset, the bar, and the defined fallback below it. 'Groundedness at or above 0.95 on the 180-case golden set, with a defined low-confidence path' rather than 'returns the correct answer'. Add what must never happen as a deterministic guardrail.",
+  "Writing deterministic criteria and hoping. This is the single clearest tell."],
+ ["A provider is deprecating the model you pinned. What now?",
+  "Treat it as a planned migration, not an incident. Run the full eval suite against candidate replacements, compare on your criteria rather than published benchmarks, budget for prompt rework because behaviour shifts, and stage the rollout with shadow mode. Also revisit the routing split — a new tier may change your cost structure favourably.",
+  "Assuming a newer model is a drop-in improvement. It usually isn't, for your specific prompts."],
+ ["How do you prioritise between three AI features?",
+  "Same frameworks as always, plus two AI-specific screens: is it on the capable side of the frontier today (probed, not assumed), and what is the cost per successful outcome against the value created? Then sequence by evidence — the feature where you can build a golden set fastest usually deserves to go first.",
+  "High/medium/low without numbers. Loops now expect actual estimates attached."],
+ ["What would you refuse to ship, and how would you argue it?",
+  "Name a real line — an irreversible action without approval, an unexplainable output affecting a customer outcome, a feature whose failure mode you can't detect in production. Then argue with evidence: the eval result, the failure rate, the harm profile. 'We don't ship this yet' is a strong answer when it comes with a number.",
+  "Having no line at all. Safety woven through every answer is the expectation now, not a separate round."],
+ ["Where does your AI product actually have a moat?",
+  "Rarely the model — anyone can rent the same one. Proprietary data, workflow depth, distribution, regulatory position, and the evals nobody else has. If the only advantage is 'we use a good model', any competitor with API access matches it next quarter.",
+  "Naming the model as the differentiator."]
+];
+$("#qaList").innerHTML=QA.map(([q,a,tell],i)=>`
+ <details class="qa"><summary><span class="qn">Q${String(i+1).padStart(2,"0")}</span><span>${q}</span></summary>
+ <div class="a"><span class="lbl">What a strong answer covers</span>${a}<div class="tell"><b>Common tell</b>${tell}</div></div></details>`).join("");
+
+/* ───────── ramp ───────── */
+const RAMP=[
+ ["Days 1–30","Get fluent, cheaply",
+  ["Build one small thing end to end — a RAG document assistant is fine — and then deliberately break it","Read 100 real traces from any AI system you have access to and write down every failure you see","Learn the token maths well enough to estimate a feature's cost in your head","Read the model cards for the two models your organisation actually uses"]],
+ ["Days 31–60","Own a quality bar",
+  ["Build a golden set for something real, even 60 cases, with domain experts labelling","Write one rubric and calibrate an LLM judge against human labels","Instrument cost and latency alongside quality on a single dashboard","Run your first weekly error review and keep the notes"]],
+ ["Days 61–90","Make it institutional",
+  ["Write one AI PRD with the behaviour contract, failure modes and cost envelope filled in","Get the eval wired into CI as a real merge gate","Take one feature through your governance process and document what it actually required","Present the failure-mode taxonomy to stakeholders — it reframes every quality conversation you'll have afterwards"]]
+];
+$("#rampGrid").innerHTML=RAMP.map(([w,t,li])=>`
+ <div class="card"><span class="tag">${w}</span><h3 style="margin-bottom:12px">${t}</h3>
+ <ul style="margin:0;padding-left:18px;font-size:15.5px;line-height:1.5;color:#CBDCD0">${li.map(x=>`<li style="margin-bottom:8px">${x}</li>`).join("")}</ul></div>`).join("");
+
+/* ───────── traps ───────── */
+const TRAPS=[
+ ["Shipping the demo","The demo works, so the feature is done. But a demo proves something can work once; production asks it to work on traffic you've never seen. Almost every stalled AI initiative failed here, and the bridge is evals — there isn't another one."],
+ ["Treating the model as the product","Anyone can rent the same model next quarter. If your differentiation is the model, you have none. It's the data, the workflow, the distribution and the evals."],
+ ["Skipping the golden set because there's no time","There's never time, and it compounds. Without it you cannot tell improvement from noise, you cannot safely change a prompt, and you cannot survive a model migration. Sixty examples beats zero by an enormous margin."],
+ ["Reporting model metrics upward","F1 means nothing to a steering committee. Translate to layer 4 or watch the budget move to a project that did."],
+ ["Letting the prompt hold a compliance rule","Prompts are suggestions to a probabilistic system. Anything with a regulator attached belongs in a deterministic guardrail outside the model."],
+ ["Defaulting to the frontier model","The most expensive habit in AI product work. Prove a smaller model fails your bar before you pay 5× for one that might not be better on your task."],
+ ["Designing for the happy path","Users spend more time in the failure states than you think, and that's where trust is actually decided. Specify what they see when it's wrong."],
+ ["Treating governance as a final gate","In a bank it's a design input. Arriving at the review with an architecture that can't explain itself costs a release cycle."],
+ ["Confusing usage with value","Engagement with an AI feature can mean it's useful or that it's unreliable and people keep retrying. Watch the accept-unedited and regeneration ratios."],
+ ["Assuming done stays done","Nothing you shipped stays shipped. Model updates, index drift and changing user behaviour all erode quality silently. Monitoring is the second half of the job."]
+];
+$("#trapList").innerHTML=TRAPS.map(([t,d],i)=>`
+ <details class="acc"><summary><span class="ui" style="color:var(--rust);font-size:11px;letter-spacing:.1em">${String(i+1).padStart(2,"0")}</span>${t}</summary>
+ <div class="accbody"><p style="margin:16px 0 0;color:#CBDCD0;font-size:16.5px">${d}</p></div></details>`).join("");
+
+/* ───────── self-assessment ───────── */
+const AXES=[
+ ["Eval fluency",["Never built one","Read a dashboard","Curated a golden set","Calibrated a judge","Run the loop as practice"]],
+ ["Context engineering",["Prompt by feel","Structured prompts","Designed a retrieval pipeline","Tuned chunking and reranking","Own the context budget"]],
+ ["Unit economics",["Cost isn't my problem","Know the token model","Can estimate cost per call","Model cost per outcome","Drive routing decisions"]],
+ ["Failure-mode literacy",["\"It's inaccurate\"","Can list common ones","Named taxonomy for my product","Taxonomy drives the roadmap","Detection designed in from the spec"]],
+ ["AI UX judgement",["Chat window","Confidence indicators","Designed fallback states","Autonomy assigned per action","Trust is my primary metric"]],
+ ["Agentic systems",["Conceptual only","Used one seriously","Specced tool permissions","Shipped with human checkpoints","Evaluate at step level"]],
+ ["Governance navigation",["Compliance says no","Know who to ask","Been through the process","Build the evidence as I go","Shape controls at design time"]],
+ ["Technical conversation",["Rely on translation","Follow the discussion","Ask sharp questions","Challenge the approach","Trusted peer to the DS team"]],
+ ["Probabilistic writing",["Deterministic criteria","Add caveats","Thresholds in the spec","Full behaviour contracts","Others copy my PRDs"]]
+];
+const axesEl=$("#axes"),vals=AXES.map(()=>0);
+AXES.forEach(([nm,levels],i)=>{
+  const d=el("div","axis");
+  d.innerHTML=`<div class="top"><span class="nm">${nm}</span><span class="lv" id="lv${i}">—</span></div>
+   <input type="range" min="0" max="4" value="0" id="ax${i}" style="width:100%" aria-label="${nm}">
+   <div class="desc" id="ds${i}">${levels[0]}</div>`;
+  axesEl.appendChild(d);
+  const r=$("#ax"+i);
+  r.addEventListener("input",()=>{vals[i]=+r.value;$("#lv"+i).textContent=r.value+" / 4";$("#ds"+i).textContent=levels[+r.value];score();});
+});
+function score(){
+  const total=vals.reduce((a,b)=>a+b,0),max=AXES.length*4;
+  const pct=Math.round(total/max*100);
+  $("#scoreVal").textContent=total+"/"+max;
+  let band,txt;
+  if(pct<25){band="Adjacent";txt="You're a capable PM who hasn't yet built the AI-specific muscles. The fastest route in is one small shipped thing plus one real golden set — that combination beats any certificate on a CV.";}
+  else if(pct<50){band="Applied, early";txt="You can run an AI feature but you're still leaning on others for the quality definition. Take ownership of one eval set end to end; that single move changes how the team treats you.";}
+  else if(pct<72){band="Practising";txt="You're doing the job properly. The next step up is usually institutional rather than personal — making the loop something the org runs without you, and translating quality into business metrics leadership acts on.";}
+  else if(pct<90){band="Strong";txt="You'd clear most AI PM loops on craft. The differentiators from here are strategy and judgement: which bets to place, when to say no, and how to shape governance rather than navigate it.";}
+  else{band="Setting the bar";txt="At this level the constraint isn't skill, it's leverage — write down what you know, because the org's ceiling is now your ability to make other people this good.";}
+  $("#scoreBand").textContent=band;$("#scoreText").textContent=txt;
+  const weakest=vals.map((v,i)=>[v,i]).sort((a,b)=>a[0]-b[0]).slice(0,2).map(([v,i])=>AXES[i][0]);
+  $("#scoreGap").innerHTML=total>0?`<b>Thinnest axes:</b> ${weakest.join(" · ")}. Profiles are spiky by nature — pick one and go deep rather than levelling everything.`:"";
+}
+
+/* ───────── sources ───────── */
+const SRC=[
+ ["Eugene Yan — the eval process","eugeneyan.com","https://eugeneyan.com/writing/eval-process/"],
+ ["Hamel Husain — LLM evals FAQ","hamel.dev","https://hamel.dev/blog/posts/evals-faq/"],
+ ["AI evals for product managers","Amplitude","https://amplitude.com/blog/ai-evals-for-product-managers"],
+ ["A pragmatic guide to LLM evals","Pragmatic Engineer","https://newsletter.pragmaticengineer.com/p/evals"],
+ ["Eval-driven development","evaldriven.org","https://evaldriven.org/"],
+ ["Unit economics of AI products","Institute of AI PM","https://www.institutepm.com/knowledge-hub/unit-economics-ai-products"],
+ ["How to price AI products","Aakash Gupta","https://www.news.aakashg.com/p/how-to-price-ai-products"],
+ ["Designing for agentic AI: UX patterns","Smashing Magazine","https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/"],
+ ["Agent UX patterns","Hatchworks","https://hatchworks.com/blog/ai-agents/agent-ux-patterns/"],
+ ["Writing PRDs for AI products","Nima Torabi","https://neemz.medium.com/writing-prds-for-ai-products-a-practical-guide-for-senior-product-and-cross-functional-teams-f8f5040474a5"],
+ ["AI PM interview guide 2026","Product Growth","https://www.news.aakashg.com/p/ai-pm-interview-guide-2026"],
+ ["The AI product manager role","Arize","https://arize.com/resources/ai-product-manager-role/"],
+ ["MAS AI risk management in 2026","Origin Pi","https://originpi.com/blog/mas-ai-risk-management-2026/"],
+ ["AI governance in financial services","AI Governance Core","https://www.aigovernancecore.com/blog/ai-governance-financial-services"],
+ ["EU AI Act — regulatory framework","European Commission","https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"],
+ ["Is AI product management a lie?","Userpilot","https://userpilot.com/blog/what-is-product-management/"]
+];
+$("#srcs").innerHTML=SRC.map(([t,d,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}<span>${d}</span></a>`).join("");
+
+onScroll();
+})();
+</script>
+</body>
+</html>
