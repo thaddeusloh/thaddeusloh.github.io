@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A General History of the Chinese in Singapore — chapter guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plaster:#E7EBE3;
+    --plaster-deep:#DDE3D9;
+    --ink:#17241F;
+    --teal:#14584F;
+    --teal-soft:#4E837A;
+    --rose:#A85B70;
+    --ochre:#B08028;
+    --mute:#66756D;
+    --rule:#C3CDC0;
+    --measure:66ch;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--plaster);
+    color:var(--ink);
+    font-family:"Spectral", "Iowan Old Style", Georgia, serif;
+    font-weight:400;
+    font-size:17px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 28px 100px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  header.masthead{
+    padding:76px 0 40px;
+    border-bottom:1px solid var(--rule);
+  }
+
+  .kicker{
+    font-size:15px;
+    font-style:italic;
+    color:var(--mute);
+    margin:0 0 18px;
+  }
+
+  h1{
+    font-weight:300;
+    font-size:clamp(2.4rem, 6.2vw, 4.15rem);
+    line-height:1.03;
+    letter-spacing:-0.018em;
+    margin:0;
+    max-width:16ch;
+  }
+
+  h1 .the{
+    display:block;
+    font-size:0.44em;
+    font-weight:400;
+    font-style:italic;
+    letter-spacing:0.01em;
+    color:var(--teal);
+    margin-bottom:0.35em;
+  }
+
+  .byline{
+    margin:26px 0 0;
+    font-size:17px;
+    color:var(--mute);
+    max-width:var(--measure);
+  }
+  .byline strong{font-weight:500;color:var(--ink);}
+
+  .facts{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    margin:34px 0 0;
+    border-top:1px solid var(--rule);
+  }
+  .fact{
+    padding:14px 26px 14px 0;
+    margin-right:26px;
+    border-right:1px solid var(--rule);
+  }
+  .fact:last-child{border-right:0;}
+  .fact b{
+    display:block;
+    font-weight:300;
+    font-size:1.85rem;
+    line-height:1;
+    color:var(--teal);
+  }
+  .fact span{
+    font-size:14px;
+    font-style:italic;
+    color:var(--mute);
+  }
+
+  /* ---------- intro ---------- */
+
+  .intro{
+    padding:44px 0 40px;
+    max-width:var(--measure);
+  }
+  .intro p{margin:0 0 1.1em;}
+  .intro p:last-child{margin-bottom:0;}
+
+  .caveat{
+    margin-top:34px;
+    padding:18px 22px;
+    background:var(--plaster-deep);
+    border-left:3px solid var(--ochre);
+    font-size:15.5px;
+    line-height:1.55;
+    color:#3C4A44;
+  }
+
+  /* ---------- filter ---------- */
+
+  .toolbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--plaster);
+    padding:16px 0 14px;
+    border-bottom:1px solid var(--rule);
+    display:flex;
+    align-items:baseline;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .toolbar label{
+    font-style:italic;
+    font-size:15px;
+    color:var(--mute);
+  }
+  #filter{
+    flex:1 1 260px;
+    min-width:180px;
+    font-family:inherit;
+    font-size:16px;
+    color:var(--ink);
+    background:transparent;
+    border:0;
+    border-bottom:1px solid var(--teal-soft);
+    padding:5px 2px;
+  }
+  #filter:focus{
+    outline:none;
+    border-bottom-width:2px;
+    border-bottom-color:var(--teal);
+  }
+  #filter::placeholder{color:#95A199;font-style:italic;}
+  #count{
+    font-size:14.5px;
+    font-style:italic;
+    color:var(--mute);
+    white-space:nowrap;
+  }
+
+  /* ---------- chapter spine ---------- */
+
+  .chapters{
+    position:relative;
+    margin-top:8px;
+  }
+
+  .ch{
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:0 32px;
+    padding:44px 0 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  .ch[hidden]{display:none;}
+
+  .num{
+    font-size:3.5rem;
+    font-weight:200;
+    line-height:0.85;
+    color:var(--teal);
+    text-align:right;
+    padding-top:4px;
+    font-variant-numeric:lining-nums;
+  }
+  .num .period{
+    display:block;
+    margin-top:12px;
+    font-size:0.245em;
+    font-weight:400;
+    font-style:italic;
+    line-height:1.35;
+    color:var(--mute);
+    letter-spacing:0.01em;
+  }
+
+  h2{
+    font-weight:400;
+    font-size:1.62rem;
+    line-height:1.24;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;
+    max-width:32ch;
+  }
+  h2 .author{
+    display:block;
+    font-size:0.63em;
+    font-style:italic;
+    font-weight:300;
+    color:var(--mute);
+    margin-top:7px;
+    letter-spacing:0;
+  }
+
+  .gist{
+    margin:0;
+    max-width:var(--measure);
+    color:#2A3832;
+  }
+
+  /* ---------- sub-chapters ---------- */
+
+  .subs{
+    list-style:none;
+    margin:26px 0 0;
+    padding:0 0 0 22px;
+    border-left:1px solid var(--rule);
+    max-width:var(--measure);
+  }
+  .subs li{
+    padding:0 0 20px;
+  }
+  .subs li:last-child{padding-bottom:0;}
+
+  .sub-head{
+    font-weight:500;
+    font-size:16.5px;
+    line-height:1.4;
+  }
+  .sub-head .tag{
+    color:var(--rose);
+    font-weight:400;
+    font-style:italic;
+    margin-right:8px;
+  }
+  .sub-author{
+    font-style:italic;
+    font-weight:300;
+    color:var(--mute);
+  }
+  .sub-note{
+    margin:5px 0 0;
+    font-size:16px;
+    line-height:1.55;
+    color:#3D4B45;
+  }
+
+  /* ---------- appendices ---------- */
+
+  .appendix{
+    margin-top:56px;
+    padding:34px 34px 30px;
+    background:var(--plaster-deep);
+  }
+  .appendix h2{
+    font-size:1.35rem;
+    margin-bottom:8px;
+    max-width:none;
+  }
+  .appendix p.lead{
+    margin:0 0 22px;
+    max-width:var(--measure);
+    font-size:16px;
+    color:#3D4B45;
+  }
+  .appendix ol{
+    margin:0;
+    padding-left:1.15em;
+    max-width:var(--measure);
+  }
+  .appendix li{margin-bottom:12px;}
+  .appendix li:last-child{margin-bottom:0;}
+  .appendix li b{font-weight:500;}
+
+  /* ---------- reading paths ---------- */
+
+  .paths{
+    margin-top:56px;
+    padding-top:34px;
+    border-top:2px solid var(--teal);
+  }
+  .paths h2{font-size:1.35rem;margin-bottom:20px;max-width:none;}
+  .paths dl{margin:0;max-width:var(--measure);}
+  .paths dt{
+    font-weight:500;
+    margin-top:20px;
+  }
+  .paths dt:first-child{margin-top:0;}
+  .paths dd{
+    margin:4px 0 0;
+    color:#3D4B45;
+  }
+  .paths .route{
+    font-style:italic;
+    color:var(--teal);
+  }
+
+  footer{
+    margin-top:60px;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+    font-size:14.5px;
+    font-style:italic;
+    color:var(--mute);
+    max-width:var(--measure);
+  }
+  footer a{color:var(--teal);}
+
+  .empty{
+    padding:60px 0;
+    font-style:italic;
+    color:var(--mute);
+  }
+  .empty[hidden]{display:none;}
+
+  a:focus-visible, input:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:3px;
+  }
+
+  @media (max-width:720px){
+    body{font-size:16.5px;}
+    .wrap{padding:0 20px 70px;}
+    header.masthead{padding:48px 0 32px;}
+    .ch{
+      grid-template-columns:1fr;
+      gap:0;
+      padding:36px 0 32px;
+    }
+    .num{
+      text-align:left;
+      font-size:2.1rem;
+      margin-bottom:14px;
+    }
+    .num .period{
+      display:inline;
+      margin:0 0 0 14px;
+      font-size:0.38em;
+    }
+    .fact{padding-right:18px;margin-right:18px;}
+    .appendix{padding:26px 22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">A chapter-by-chapter guide to a 969-page volume</p>
+  <h1><span class="the">A General History of the</span>Chinese in Singapore</h1>
+  <p class="byline">Edited by <strong>Kwa Chong Guan</strong> and <strong>Kua Bak Lim</strong>. Published 2019 by World Scientific with the Singapore Federation of Chinese Clan Associations, supported by a National Heritage Board project grant.</p>
+
+  <div class="facts">
+    <div class="fact"><b>18</b><span>chapters</span></div>
+    <div class="fact"><b>38</b><span>separately authored pieces</span></div>
+    <div class="fact"><b>969</b><span>pages</span></div>
+    <div class="fact"><b>700+</b><span>years covered</span></div>
+  </div>
+</header>
+
+<section class="intro">
+  <p>This is not a single-author narrative. It is a curated collection: eighteen numbered chapters, most of them split into lettered sections written by different specialists, running from the pre-colonial South China Sea trading world through to Chinese new immigrants in the 2010s. The editors' organising claim is that the story does not begin with Raffles in 1819 — it begins with a Hokkien maritime world that was already centuries old when the British arrived.</p>
+  <p>The early chapters are broadly chronological. The middle ones are thematic and cut across the whole period — business, printing, education, religion, art, remittance. The last three return to chronology through the war, independence and the present.</p>
+
+  <p class="caveat">The chapter titles, authors and structure below are taken from the published contents listing. The summaries of what each chapter covers are written here as orientation, drawn from the titles and the wider historical record rather than from the book's own text — treat them as a map of the territory, not a substitute for reading the chapters.</p>
+</section>
+
+<div class="toolbar">
+  <label for="filter">Filter chapters</label>
+  <input id="filter" type="search" placeholder="try: education, Peranakan, war, temples, trade" autocomplete="off">
+  <span id="count">18 of 18 chapters</span>
+</div>
+
+<div class="chapters" id="chapters">
+
+  <article class="ch">
+    <div class="num">1<span class="period">14th century to 1819</span></div>
+    <div>
+      <h2>Prelude to the History of the Chinese in Singapore<span class="author">Kwa Chong Guan</span></h2>
+      <p class="gist">The framing chapter, and the one that sets the book's argument. It pushes the starting line back well before the British settlement — to fourteenth-century Temasek, the Chinese ceramics pulled out of Singapore's soil, and Wang Dayuan's traveller's account of the region. Its central move is to describe a millennium-old Hokkien trading world in the South China Sea, mapped in things like the Selden Map, that had already produced sojourning merchant communities across the Nanyang. Merchants such as Tan Che Sang and Choa Chong Long did not arrive in 1819 as pioneers into emptiness; they arrived from Malacca and Riau carrying capital, credit and trading connections built inside that older world.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">2<span class="period">1819–1860s</span></div>
+    <div>
+      <h2>Junk Trade and Gambier Industry</h2>
+      <p class="gist">Two accounts of what the early Chinese population in Singapore actually did for a living — one at sea, one on the land — and how each shaped the settlement's growth.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">2A</span>Chinese Junk Trade in Early Singapore <span class="sub-author">— Lee Yip Lim</span></p>
+          <p class="sub-note">The seasonal monsoon-driven arrival of junks from Amoy, Swatow and beyond, the goods they carried in both directions, and the way this trade both fed the free port's commerce and delivered the first waves of migrants.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">2B</span>Gambier and Early Development of Singapore <span class="sub-author">— Lim Guan Hock</span></p>
+          <p class="sub-note">Gambier and pepper cultivation in the island's interior, organised through the kangchu system under mainly Teochew planters and financiers. Covers the labour regime, the soil exhaustion that drove the industry onward into Johor, and how plantation capital fed back into urban commerce.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">3<span class="period">1822 onwards</span></div>
+    <div>
+      <h2>Chinatown: Cradle of Chinese Community Development<span class="author">Lim Guan Hock</span></h2>
+      <p class="gist">How the Chinese quarter allotted under Raffles' Town Plan became the physical container for everything else in the book. The shophouse blocks, coolie lodging houses, trade streets, temples and death houses of Kreta Ayer are treated as the place where clan associations, guilds, schools and mutual-aid bodies were incubated before they became institutions in their own right.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">4<span class="period">19th to 20th century</span></div>
+    <div>
+      <h2>Singapore Chinese Community</h2>
+      <p class="gist">The longest structural chapter, and arguably the book's core. Four writers take apart the internal organisation of the community: how it divided itself, who led it, who controlled the streets, and what its dead can still tell us.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">4A</span>Social Structure and Bang Interactions <span class="sub-author">— Lim How Seng</span></p>
+          <p class="sub-note">The bang — dialect-and-origin groupings of Hokkien, Teochew, Cantonese, Hakka and Hainanese — as the real unit of Chinese social organisation. Their separate institutions, territories and occupational niches, the friction between them, and the slow emergence of bodies that could speak across them.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">4B</span>Chinese Leadership and its Political Transformation <span class="sub-author">— C. F. Yong</span></p>
+          <p class="sub-note">The shift in what made a Chinese leader legitimate: from wealthy merchant-philanthropists whose authority rested on donations, temple patronage and honours from both the Qing court and the colonial state, towards leadership grounded in political mobilisation and mass organisation.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">4C</span>The Knots of the Chinese Secret Societies in Early Singapore <span class="sub-author">— Mak Lau-Fong</span></p>
+          <p class="sub-note">Sworn brotherhoods as labour-recruitment machinery, protection rackets and mutual-aid networks all at once. The riots that made them a colonial problem, and the suppression that followed the Societies Ordinance of 1890.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">4D</span>Bukit Brown Chronicles: A Brief Cultural History Through the Lens of a Cemetery <span class="sub-author">— Hui Yew-Foong</span></p>
+          <p class="sub-note">The most unusual piece in the chapter: reading the municipal Chinese cemetery as a physical archive. Tomb inscriptions, ancestral origins, epitaph iconography and burial arrangements are used to reconstruct social history, against the backdrop of the contemporary argument over the road cut through the site.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">5<span class="period">1877–1912</span></div>
+    <div>
+      <h2>Qing Government and Singapore Chinese Community</h2>
+      <p class="gist">A tug-of-war over who these migrants belonged to. Both the Qing state and the colonial government wanted authority over the same people, and both used status and patronage to get it.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">5A</span>Rivalry between Straits Settlements Government and Chinese Consulate in Singapore, 1877–1894 <span class="sub-author">— Lim How Seng</span></p>
+          <p class="sub-note">The opening of a Qing consulate in Singapore set against the founding of the Chinese Protectorate in the same period. Two administrations competing to register, adjudicate for and claim the loyalty of the same population.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">5B</span>Sales of Qing Titles and the Chinese Leadership in Singapore, 1877–1912 <span class="sub-author">— Yen Ching-hwang</span></p>
+          <p class="sub-note">The imperial court raising revenue by selling brevet ranks and honours to wealthy overseas merchants — and what those titles bought locally. Status inside the community, standing in negotiations with the British, and a continuing thread of obligation back to China.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">6<span class="period">19th century to present</span></div>
+    <div>
+      <h2>Straits-born Chinese</h2>
+      <p class="gist">Three perspectives on the Peranakan or Baba community — locally born, Malay-inflected in language and food, English-educated and often closely tied to the colonial order, and distinct enough from newer migrants to constitute a separate social world.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">6A</span>The Colonial State in the Making of a Peranakan Community <span class="sub-author">— Kwa Chong Guan</span></p>
+          <p class="sub-note">Argues that the category itself was partly produced by colonial administration — by legal classification, English-medium schooling, census categories and the privileges that came with British subjecthood — and consolidated through bodies like the Straits Chinese British Association.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">6B</span>The Peranakan's Interconnected World: Hybridity, Diversity and Challenges <span class="sub-author">— John Teo</span></p>
+          <p class="sub-note">The community read across its whole regional span — Malacca, Penang, Singapore, the Indonesian coast — with attention to internal variation and to the difficulty of defining membership as intermarriage, migration and language shift continue.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">6C</span>Peranakan Community and Culture <span class="sub-author">— Ng Fooi Beng</span></p>
+          <p class="sub-note">The material and everyday culture: Baba Malay, nyonya cooking, beadwork and embroidery, the kebaya, wedding and mourning rites, domestic architecture — and the revival of interest in all of it in recent decades.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">7<span class="period">1899–1911</span></div>
+    <div>
+      <h2>Confucianism Revived in Early Singapore and Malaya, 1899–1911<span class="author">Yen Ching-hwang</span></h2>
+      <p class="gist">A short, tightly dated chapter on a reform movement that mattered more than its length suggests. English-educated Straits Chinese figures, working alongside reformist visitors from China, promoted a modernised Confucianism as a cultural anchor — through schools, associations, the press and campaigns against practices they considered backward. It is a study of an elite trying to answer a question that runs through the whole book: what should it mean to be Chinese, here, now.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">8<span class="period">19th century to present</span></div>
+    <div>
+      <h2>Chinese Business Community</h2>
+      <p class="gist">How commerce was organised, how historians have explained its success, and how its central institution evolved.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">8A</span>Bang Trade Specialisation of the Chinese Community in Singapore <span class="sub-author">— Cheng Lim Keak</span></p>
+          <p class="sub-note">The tendency of each dialect group to concentrate in particular trades — and how that clustering was reproduced through recruitment from the same home districts, credit inside the group, and control of specific market segments.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">8B</span>Chinese Business in Singapore: A Historical and Historiographical Survey <span class="sub-author">— Koh Keng We</span></p>
+          <p class="sub-note">Both the history and the debate about it. Family firms, partnership and credit structures, regional trading networks, and a critical look at the competing scholarly explanations for Chinese commercial performance — culture, network, or opportunity structure.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">8C</span>Singapore Chinese Chamber of Commerce and Industry: An Institution in Transition <span class="sub-author">— Jeremy Goh</span></p>
+          <p class="sub-note">Founded in 1906, the Chamber became the community's most powerful representative body — negotiating with the colonial government, later with the independent state — and this piece follows its adaptation as its constituency and its role changed.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">9<span class="period">1810s–1980s</span></div>
+    <div>
+      <h2>Chinese Printing and Dailies</h2>
+      <p class="gist">The infrastructure of Chinese public opinion: who could print, what they printed, and how newspapers became the arena where political allegiance was argued out.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">9A</span>19th-century Printing in the Chinese Language <span class="sub-author">— Lee Ching Seng</span></p>
+          <p class="sub-note">The technical and institutional beginnings — mission presses, movable type and lithography, early commercial printers — and the first Chinese-language publishing to circulate in the region.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">9B</span>A Century of the Chinese Dailies <span class="sub-author">— Choi Kwai Keong</span></p>
+          <p class="sub-note">From the founding of the first Chinese daily in the 1880s through the mass-circulation papers of the twentieth century, their role in fundraising and political mobilisation, wartime shutdown, postwar competition, and the consolidation that produced today's single Chinese daily.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">10<span class="period">1819–1980</span></div>
+    <div>
+      <h2>Chinese Education</h2>
+      <p class="gist">The most politically charged theme in the volume. Chinese-medium education was where language, identity, class and Cold War politics collided hardest.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">10A</span>Development of Chinese Education in Singapore, 1819–1979 <span class="sub-author">— Lim Guan Hock</span></p>
+          <p class="sub-note">The long arc: old-style private tutorial schools, clan- and guild-funded schools, the shift to modern curricula and Mandarin instruction after the 1910s, the growth of Chinese middle schools, the student politics of the 1950s, and the decline in enrolment that ended with conversion to a national system.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">10B</span>A Window into Nanyang University: Controversy over the 1965 Wang Gungwu Report <span class="sub-author">— Huang Jianli</span></p>
+          <p class="sub-note">A case study in miniature. Nanyang University was built by community subscription as the apex of Chinese-medium education; a curriculum review commissioned at independence became a flashpoint over academic standards, language policy and political control. The chapter uses the dispute to open up the wider struggle.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">11<span class="period">19th century to present</span></div>
+    <div>
+      <h2>Traditional Chinese Culture and Religious Beliefs</h2>
+      <p class="gist">Religion treated as social infrastructure rather than private belief — temples as the places where migrants registered themselves as a community, and festivals as the moments when that community became visible.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">11A</span>Traditional Religious Beliefs, Emigration and the Social Structure of the Chinese in Singapore <span class="sub-author">— Cheng Lim Keak</span></p>
+          <p class="sub-note">How beliefs and deity cults travelled with emigrants from specific home districts, and how the resulting temple congregations mapped onto — and reinforced — the bang and clan structure described earlier in the book.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">11B</span>Chinese Temples and the Transnational Networks: Hokkien Community in Singapore <span class="sub-author">— Hue Guan Thye</span></p>
+          <p class="sub-note">The temple as a node in a network rather than a building. Ties of donation, pilgrimage, incense-division and correspondence linking Singapore's Hokkien temples back to founding temples in Fujian and outward to other Nanyang settlements.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">11C</span>Festival, Community and Identity: The Nine Emperor Gods Festival in Singapore <span class="sub-author">— Koh Keng We</span></p>
+          <p class="sub-note">A close study of one nine-day festival — its ritual sequence, vegetarian observance, processions and spirit mediums — as a way of showing how identity is periodically enacted and renegotiated in public space.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">12<span class="period">20th century to present</span></div>
+    <div>
+      <h2>Culture and Art</h2>
+      <p class="gist">Three cultural industries and traditions, and the recurring question of what happens when Chinese forms are made in Southeast Asia.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">12A</span>The Story of Art in Singapore <span class="sub-author">— Teo Han Wue</span></p>
+          <p class="sub-note">Chinese ink traditions carried by immigrant artists, the art schools and societies that trained the next generation, and the emergence of a distinctly regional idiom drawing on tropical subject matter and Western technique.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">12B</span>Chinese Performing Arts <span class="sub-author">— Chua Soo Pong</span></p>
+          <p class="sub-note">Street opera and puppet theatre performed for temple festivals, the amusement-park stage shows, modern Chinese-language drama, and the shift of much of this into subsidised and amateur cultural activity.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">12C</span>Chinese Movie and TV Serial Industry <span class="sub-author">— Yap Soo Ei</span></p>
+          <p class="sub-note">The studio era and the regional distribution empires built out of Singapore, and later the locally produced Mandarin television serials that became a shared reference point for a generation of viewers.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">13<span class="period">Late 19th c.–1970s</span></div>
+    <div>
+      <h2>Money by Mail to China: Qiaopi and Chinese Remittance in Singapore<span class="author">Kua Bak Lim</span></h2>
+      <p class="gist">Qiaopi were combined letters and remittances sent home by migrants — money and news travelling together in one envelope. The chapter follows the whole apparatus: the couriers who carried them by hand, the remittance houses and shops that grew into a semi-formal banking system, the eventual regulation of the trade, and the arrival of modern banks. It also treats the surviving envelopes as a documentary source, a rare direct record of what ordinary migrants earned, felt and owed. One of the more distinctive chapters in the volume: a functioning cross-border payments network built almost entirely on trust and dialect-group reputation.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">14<span class="period">1937–1941</span></div>
+    <div>
+      <h2>The Anti-Japanese National Salvation Movement<span class="author">Lim How Seng</span></h2>
+      <p class="gist">After the outbreak of war in China in 1937, Singapore became a centre of overseas Chinese fundraising and mobilisation. The chapter covers the relief-fund organisation that drew together previously rival dialect groups under a single leadership, the boycott of Japanese goods, the propaganda and cultural campaigns, and the mechanics and drivers who volunteered to serve on the supply routes into wartime China. It also explains why this activity would make the community a specific target once Japan took Singapore.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">15<span class="period">1942–1945</span></div>
+    <div>
+      <h2>The Chinese Community in Singapore During the Japanese Occupation<span class="author">Lee Geok Boi</span></h2>
+      <p class="gist">The darkest chapter, and the hinge of the book's political narrative. It covers the screening operation and mass killings of Chinese men in the weeks after the surrender, the forced levy extracted from the community, the collaborationist association set up under occupation, resistance and intelligence work in the jungle, and the grinding conditions of daily life under Syonan-to. Its longer argument is that the occupation shattered the assumption that British protection was reliable, and left a political vacuum that the postwar decade would fill.</p>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">16<span class="period">1945–1965</span></div>
+    <div>
+      <h2>Political Awakening and Nation-building</h2>
+      <p class="gist">Three biographical and community studies covering the decolonisation years, deliberately chosen to represent very different political answers to the same moment.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">16A</span>The Political Dilemmas and Transformation of the Straits-born Chinese Community in the Era of Decolonisation <span class="sub-author">— Kwa Chong Guan</span></p>
+          <p class="sub-note">A community whose standing had rested on its relationship with the British, forced to choose a new political home. Questions of citizenship, language and loyalty, and the movement from loyalist politics towards a Malayan and then Singaporean identity.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">16B</span>Lim Chin Siong and his Legacy of Left-wing Activism in the Fight for Nationhood <span class="sub-author">— Kevin Y. L. Tan</span></p>
+          <p class="sub-note">The career of the most formidable left-wing organiser of the period — Chinese-educated, a mass mobiliser of unions and students in his early twenties, a founder-member of the ruling party who then split from it, and a long-term detainee. The chapter engages directly with the continuing contest over how he should be remembered.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">16C</span>Lee Kuan Yew: Founding Father of Modern Singapore <span class="sub-author">— Giam Meng Tuck</span></p>
+          <p class="sub-note">Read here specifically through his relationship with the Chinese-speaking ground: an English-educated leader who learned Mandarin and Hokkien to contest it, competed for it against the left, and then reshaped it through language and education policy.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">17<span class="period">1979 to present</span></div>
+    <div>
+      <h2>Chinese Society in the 21st Century</h2>
+      <p class="gist">What a Chinese community looks like once it is the majority population of an independent state rather than a migrant minority — and what happens when new migration starts again.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">17A</span>The Speak Mandarin Campaign <span class="sub-author">— Eddie C. Y. Kuo</span></p>
+          <p class="sub-note">The long state campaign to replace dialects with Mandarin as the common Chinese language: its original rationale, its measurable success, the generational loss of dialect it produced, and how its justification shifted over the decades from national efficiency to cultural roots to economic opportunity.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">17B</span>Singapore Federation of Chinese Clan Associations: Apex of Singapore Chinese Community <span class="sub-author">— Kua Bak Lim</span></p>
+          <p class="sub-note">The founding and work of the umbrella body that also sponsored this volume — established to coordinate clan associations, arrest their decline, and give them a cultural and educational role after their original welfare functions were absorbed by the state.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">17C</span>Chinese New Immigrants <span class="sub-author">— Ou Yali</span></p>
+          <p class="sub-note">The post-1990 arrivals from mainland China: who they are, the associations they have formed, how they relate to the established community, and the frictions of integration. The chapter closes the circle — a book about migrants describing a new generation of them.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="ch">
+    <div class="num">18<span class="period">Historiography</span></div>
+    <div>
+      <h2>Retrospect and Reflection</h2>
+      <p class="gist">The book turning to look at itself: how this history has been written, by whom, and what gets fought over when it is put on public display.</p>
+      <ul class="subs">
+        <li>
+          <p class="sub-head"><span class="tag">18A</span>The Study of Singapore Chinese in Retrospect <span class="sub-author">— Choi Kwai Keong, Lim How Seng and Kua Bak Lim</span></p>
+          <p class="sub-note">A survey of the scholarship: the archives, newspapers, inscriptions and association records available; the parallel Chinese-language and English-language research traditions and how little they sometimes spoke to each other; and the gaps still open.</p>
+        </li>
+        <li>
+          <p class="sub-head"><span class="tag">18B</span>The Sun Yat Sen Nanyang Memorial Hall and the Chinese Community of Singapore: History, Repositioning and Contestation <span class="sub-author">— Huang Jianli</span></p>
+          <p class="sub-note">The villa that served as the revolutionary movement's Southeast Asian base, traced through its later lives as a memorial, a national monument and a museum. A study of how a site gets repurposed to tell whichever story the present needs — and who argues about it.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+</div>
+
+<p class="empty" id="empty" hidden>No chapters match that. Clear the filter to see all eighteen.</p>
+
+<section class="appendix">
+  <h2>Three appendices</h2>
+  <p class="lead">Worth knowing about separately — they are reference material rather than argument, and they are where most readers will actually start browsing.</p>
+  <ol>
+    <li><b>Chronology of Singapore Chinese history.</b> A dated timeline running the full span of the book, useful for placing any individual chapter in sequence.</li>
+    <li><b>Fifty prominent Chinese in Singapore.</b> Short biographical entries on the merchants, philanthropists, educators and community leaders who recur throughout the chapters.</li>
+    <li><b>Important historical monuments and artefacts.</b> Buildings, temples, cemeteries, inscriptions and objects, each tied back to the history — effectively a walking list for anyone who wants to go and look at the sources.</li>
+  </ol>
+</section>
+
+<section class="paths">
+  <h2>Four ways to read it</h2>
+  <p class="gist" style="margin-bottom:24px;">At 969 pages this is not a cover-to-cover book for most people. Some routes through it, depending on what you want:</p>
+  <dl>
+    <dt>The narrative spine</dt>
+    <dd>Chapters <span class="route">1, 2, 3, 4, 14, 15, 16, 17</span> — the chronological story from pre-colonial trade to the present, skipping the thematic middle.</dd>
+
+    <dt>Money and institutions</dt>
+    <dd>Chapters <span class="route">2, 8, 13</span> plus <span class="route">5B</span> — trade, business organisation, remittance, and how commercial standing converted into political standing.</dd>
+
+    <dt>Identity and language</dt>
+    <dd>Chapters <span class="route">6, 7, 10, 17A</span> — the recurring argument about what being Chinese in Singapore should mean, from the Confucian revival to the Speak Mandarin Campaign.</dd>
+
+    <dt>Everyday and material culture</dt>
+    <dd>Chapters <span class="route">3, 4D, 11, 12</span> plus Appendix III — streets, cemeteries, temples, festivals, art and performance.</dd>
+  </dl>
+</section>
+
+<footer>
+  <p>Contents, chapter titles and contributor names follow the published listing for the 2019 World Scientific edition (ISBN 9789813278325). Chapter descriptions on this page are summaries written for orientation, not extracts from the book.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var input = document.getElementById('filter');
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.ch'));
+  var count = document.getElementById('count');
+  var empty = document.getElementById('empty');
+
+  var haystacks = chapters.map(function(ch){
+    return ch.textContent.toLowerCase().replace(/\s+/g, ' ');
+  });
+
+  function apply(){
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    chapters.forEach(function(ch, i){
+      var hit = !q || haystacks[i].indexOf(q) !== -1;
+      ch.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = shown + ' of ' + chapters.length + ' chapters';
+    empty.hidden = shown !== 0;
+  }
+
+  input.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>
