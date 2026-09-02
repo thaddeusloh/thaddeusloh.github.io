@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The cook, the sockets and the manager — harness, MCP and the agentic control plane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#07160E;--forest:#0E2519;--lift:#163524;--edge:#255139;
+  --sage:#8FD6A8;--mint:#C7EED4;--gold:#E9B549;--gold-soft:#F3D492;
+  --rust:#E09468;--body:#BCCEBF;--paper:#F0F6EF;--dim:#7E9484;
+  --display:"Fraunces",Georgia,serif;--read:"Newsreader",Georgia,serif;--ui:"Space Grotesk",system-ui,sans-serif;
+  --measure:34rem;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(1100px 620px at 12% -8%, #12331f 0%, rgba(18,51,31,0) 62%),
+    radial-gradient(900px 520px at 96% 4%, #17301f 0%, rgba(23,48,31,0) 58%),
+    var(--deep);
+  color:var(--body);font-family:var(--read);font-size:1.075rem;line-height:1.68;font-optical-sizing:auto;
+}
+.wrap{max-width:64rem;margin:0 auto;padding:0 1.5rem 6rem}
+p{max-width:var(--measure)}
+h1,h2,h3{font-family:var(--display);color:var(--paper);font-weight:600;line-height:1.05;letter-spacing:-.015em;margin:0}
+h1{font-size:clamp(2.4rem,6.2vw,4.2rem);text-wrap:balance}
+h2{font-size:clamp(1.85rem,4vw,2.7rem);margin-bottom:.6rem;text-wrap:balance}
+h3{font-family:var(--ui);font-size:1.02rem;font-weight:700;color:var(--mint)}
+
+header.top{padding:1.4rem 0 0}
+.crumb{font-family:var(--ui);font-size:.78rem;color:var(--dim);letter-spacing:.06em;margin:0 0 1rem}
+.worldpick{display:inline-flex;flex-wrap:wrap;gap:.4rem;padding:.4rem;border:1px solid var(--edge);border-radius:99px;background:#0b1d13}
+.worldpick button{font-family:var(--ui);font-size:.84rem;font-weight:500;color:var(--body);background:transparent;border:0;border-radius:99px;padding:.5rem 1.1rem;cursor:pointer;transition:background .18s,color .18s}
+.worldpick button:hover{color:var(--paper)}
+.worldpick button[aria-pressed="true"]{background:var(--gold);color:#0b1d13;font-weight:700}
+.worldnote{font-family:var(--ui);font-size:.8rem;color:var(--dim);margin:.7rem 0 0;max-width:38rem}
+
+.hero{padding:2.6rem 0 1rem}
+.lede{font-size:1.2rem;color:var(--mint);max-width:38rem;margin:1.4rem 0 0}
+.lede em{font-style:italic;color:var(--gold-soft)}
+
+.threeup{display:grid;gap:1.1rem;grid-template-columns:repeat(3,1fr);margin:2.2rem 0 0}
+@media (max-width:820px){.threeup{grid-template-columns:1fr}}
+.tile{border:1px solid var(--edge);border-radius:12px;padding:1.1rem 1.2rem;background:#0b1d13}
+.tile .ico{font-size:1.5rem;line-height:1}
+.tile h3{margin:.5rem 0 .3rem}
+.tile p{margin:0;font-size:.98rem;max-width:none}
+
+section{padding:4.5rem 0 0}
+.rule{height:1px;background:linear-gradient(90deg,var(--edge),rgba(37,81,57,0))}
+.kicker{font-family:var(--ui);font-size:.8rem;color:var(--gold);margin:2rem 0 .7rem}
+
+/* loop */
+.loopgrid{display:grid;gap:1.4rem;grid-template-columns:minmax(300px,1.05fr) .95fr;margin-top:2rem;align-items:start}
+@media (max-width:880px){.loopgrid{grid-template-columns:1fr}}
+.ringbox{border:1px solid var(--edge);border-radius:14px;background:linear-gradient(180deg,#0c2015,#091a11);overflow-x:auto}
+.ringbox svg{display:block;width:100%;min-width:420px;height:auto}
+.st-disc{fill:var(--lift);stroke:var(--edge);stroke-width:1.6;transition:stroke .3s,stroke-width .3s,fill .3s}
+.st.on .st-disc{stroke:var(--gold);stroke-width:3;fill:#20301a}
+.st-ico{font-size:22px;text-anchor:middle;dominant-baseline:central}
+.st-lbl{font-family:var(--ui);font-size:12px;fill:var(--body);transition:fill .3s}
+.st.on .st-lbl{fill:var(--gold-soft)}
+.arc{fill:none;stroke:var(--edge);stroke-width:1.6}
+.arc.live{stroke:var(--sage)}
+.exit{fill:none;stroke:var(--edge);stroke-width:1.6;stroke-dasharray:5 5}
+.exit.live{stroke:var(--gold);stroke-dasharray:none}
+.puck{fill:var(--gold);transition:transform .5s cubic-bezier(.6,.05,.3,1)}
+.ctrlpanel{border:1px solid var(--edge);border-radius:14px;padding:1.3rem 1.4rem;background:#0b1d13}
+.turnrow{font-family:var(--ui);font-size:.76rem;color:var(--dim);margin:0 0 .7rem}
+.stepttl{font-family:var(--display);font-size:1.35rem;color:var(--paper);margin:0 0 .5rem;line-height:1.2;min-height:1.2em}
+.stepbody{margin:0;font-size:1rem;max-width:none;min-height:5.4em}
+.lesson{font-family:var(--ui);font-size:.85rem;color:var(--gold-soft);border-left:2px solid var(--gold);padding:.5rem 0 .5rem .9rem;margin:1rem 0 0;min-height:3.6em;background:linear-gradient(90deg,rgba(233,181,73,.07),rgba(233,181,73,0))}
+.btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem}
+button.solid{font-family:var(--ui);font-size:.85rem;font-weight:700;color:#08170F;background:var(--sage);border:1px solid var(--sage);border-radius:8px;padding:.5rem 1.1rem;cursor:pointer;transition:opacity .15s}
+button.solid:hover{opacity:.86}
+button.solid:disabled{opacity:.35;cursor:default}
+button.ghost{font-family:var(--ui);font-size:.82rem;color:var(--body);background:transparent;border:1px solid var(--edge);border-radius:8px;padding:.5rem .95rem;cursor:pointer;transition:border-color .15s,color .15s}
+button.ghost:hover{border-color:var(--sage);color:var(--paper)}
+.tape{margin:1.4rem 0 0;border-top:1px solid var(--edge);padding-top:.9rem;max-height:15rem;overflow:auto}
+.tape .ln{font-family:var(--ui);font-size:.8rem;margin:0 0 .45rem;display:flex;gap:.6rem;max-width:none}
+.tape .tag{flex:0 0 4.6rem;color:var(--dim)}
+.tape .tag.chip{color:var(--gold)}
+.tape .tag.tool{color:var(--sage)}
+.tape .txt{color:var(--mint)}
+
+/* switches */
+.switches{display:grid;gap:1rem;grid-template-columns:1fr 1fr;margin-top:2rem}
+@media (max-width:760px){.switches{grid-template-columns:1fr}}
+.sw{border:1px solid var(--edge);border-radius:12px;padding:1.1rem 1.2rem;background:#0b1d13}
+.sw.off{border-color:#7c4630;background:#1d130e}
+.swhead{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.swhead h3{margin:0}
+.sw button{position:relative;flex:0 0 auto;width:46px;height:24px;border-radius:99px;border:1px solid var(--edge);background:var(--lift);cursor:pointer;padding:0;transition:background .2s,border-color .2s}
+.sw button::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--sage);transition:transform .2s,background .2s}
+.sw button[aria-pressed="true"]::after{transform:translateX(22px)}
+.sw.off button{border-color:var(--rust);background:#2a1710}
+.sw.off button::after{background:var(--rust)}
+.sw p{margin:.6rem 0 0;font-size:.97rem;max-width:none}
+.sw .fail{color:var(--rust);font-family:var(--ui);font-size:.92rem}
+
+/* mcp counter */
+.nmbox{border:1px solid var(--edge);border-radius:14px;background:#091a11;margin-top:2rem;overflow:hidden}
+.nmbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:1rem 1.2rem;border-bottom:1px solid var(--edge)}
+.nmbar .grp{display:flex;align-items:center;gap:.4rem;font-family:var(--ui);font-size:.82rem;color:var(--body)}
+.nmbar .grp button{width:1.9rem;height:1.9rem;border-radius:7px;border:1px solid var(--edge);background:#0d2416;color:var(--mint);font-family:var(--ui);font-size:1rem;cursor:pointer;line-height:1}
+.nmbar .grp button:hover{border-color:var(--sage)}
+.nmbar .spacer{flex:1}
+.nmcanvas{overflow-x:auto}
+.nmcanvas svg{display:block;width:100%;min-width:520px;height:auto}
+.nmnode{fill:var(--lift);stroke:var(--edge);stroke-width:1.4}
+.nmnode.app{stroke:var(--sage)}
+.nmnode.tool{stroke:var(--gold)}
+.nmtxt{font-family:var(--ui);font-size:11px;fill:var(--body);dominant-baseline:central}
+.nmwire{stroke:#7c4630;stroke-width:1.2;opacity:.8}
+.nmwire.clean{stroke:var(--sage);stroke-width:1.6;opacity:1}
+.rail{stroke:var(--gold);stroke-width:5;stroke-linecap:round}
+.railtxt{font-family:var(--ui);font-size:11px;fill:var(--gold);text-anchor:middle}
+.tally{display:grid;gap:0;grid-template-columns:1fr 1fr;border-top:1px solid var(--edge)}
+@media (max-width:600px){.tally{grid-template-columns:1fr}}
+.tally div{padding:1rem 1.2rem}
+.tally div:first-child{border-right:1px solid var(--edge)}
+.tally .num{font-family:var(--display);font-size:2.4rem;line-height:1;color:var(--paper);display:block}
+.tally .lbl{font-family:var(--ui);font-size:.79rem;color:var(--dim)}
+.tally .bad .num{color:var(--rust)}
+.tally .good .num{color:var(--sage)}
+
+/* servers */
+.srvpick{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.8rem 0 1.1rem}
+button.srv{font-family:var(--ui);font-size:.85rem;color:var(--mint);background:#0c2014;border:1px solid var(--edge);border-radius:9px;padding:.55rem .95rem;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+button.srv:hover{border-color:var(--sage);color:var(--paper)}
+button.srv[aria-pressed="true"]{background:var(--lift);border-color:var(--gold);color:var(--gold-soft)}
+.srvcard{border:1px solid var(--edge);border-radius:12px;background:#08190f;padding:1.2rem 1.3rem}
+.srvcard .hd{font-family:var(--ui);font-size:.79rem;color:var(--dim);margin:0 0 .9rem}
+.tool{border-top:1px solid var(--edge);padding:.8rem 0 0;margin-top:.8rem}
+.tool:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.tool .sig{font-family:var(--ui);font-size:.92rem;color:var(--gold-soft)}
+.tool .dsc{margin:.2rem 0 0;font-size:.97rem;max-width:none;color:var(--body)}
+
+ul.nots{list-style:none;padding:0;margin:1.6rem 0 0;max-width:44rem}
+ul.nots li{position:relative;padding-left:1.9rem;margin-bottom:.95rem}
+ul.nots li::before{content:"\00D7";position:absolute;left:0;top:0;font-family:var(--ui);color:var(--rust);font-size:1.1rem}
+ul.nots b{font-family:var(--ui);font-size:.95rem;font-weight:500;color:var(--paper)}
+
+ul.jobs{list-style:none;padding:0;margin:1.6rem 0 0;max-width:44rem}
+ul.jobs li{position:relative;padding-left:1.7rem;margin-bottom:.85rem}
+ul.jobs li::before{content:"";position:absolute;left:0;top:.72em;width:.55rem;height:.55rem;border:1px solid var(--gold);border-radius:2px}
+ul.jobs b{font-family:var(--ui);font-size:.95rem;font-weight:500;color:var(--paper)}
+
+/* quiz */
+.quiz{border:1px solid var(--edge);border-radius:14px;background:#0b1d13;padding:1.4rem 1.5rem;margin-top:2rem}
+.qcount{font-family:var(--ui);font-size:.77rem;color:var(--dim);margin:0 0 .7rem}
+.qtext{font-family:var(--display);font-size:1.4rem;color:var(--paper);margin:0 0 1.2rem;line-height:1.25;min-height:2.5em}
+.qopts{display:flex;flex-wrap:wrap;gap:.55rem}
+button.opt{font-family:var(--ui);font-size:.86rem;color:var(--mint);background:#0d2416;border:1px solid var(--edge);border-radius:9px;padding:.55rem 1.05rem;cursor:pointer;transition:border-color .15s,background .15s}
+button.opt:hover:not(:disabled){border-color:var(--sage)}
+button.opt:disabled{cursor:default}
+button.opt.right{border-color:var(--sage);background:#14301d;color:var(--sage)}
+button.opt.wrong{border-color:var(--rust);background:#2a1710;color:var(--rust)}
+.qwhy{font-family:var(--ui);font-size:.88rem;margin:1.1rem 0 0;min-height:3.4em;color:var(--mint)}
+.qscore{font-family:var(--ui);font-size:.8rem;color:var(--dim);margin:1rem 0 0}
+
+/* table */
+.cmp{margin-top:2rem;border:1px solid var(--edge);border-radius:12px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{text-align:left;padding:.95rem 1.1rem;border-top:1px solid var(--edge);vertical-align:top;font-size:.97rem}
+thead th{border-top:0;font-family:var(--ui);font-size:.86rem;color:var(--paper);background:#0c2014}
+tbody th{font-family:var(--ui);font-size:.82rem;color:var(--gold-soft);font-weight:500;width:11rem;background:#0b1d13}
+
+.stack{margin-top:2rem;border-left:2px solid var(--edge);padding-left:1.4rem;max-width:44rem}
+.stack .s{margin-bottom:1.4rem}
+.stack .s b{font-family:var(--ui);font-size:.94rem;color:var(--paper);font-weight:500;display:block}
+.stack .s p{margin:.2rem 0 0;font-size:1rem}
+
+footer{padding:4.5rem 0 0;font-family:var(--ui);font-size:.84rem;color:var(--dim)}
+footer p{max-width:40rem}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="crumb">A brown bag on what actually surrounds a model</p>
+  <div class="worldpick" role="group" aria-label="Choose which example world to explain with">
+    <button id="wKid" type="button" aria-pressed="true">Explain it with a robot cook</button>
+    <button id="wWork" type="button" aria-pressed="false">Explain it with a wealth desk</button>
+  </div>
+  <p class="worldnote" id="worldnote"></p>
+</header>
+
+<div class="hero">
+  <h1>A brilliant cook with no hands.</h1>
+  <p class="lede" data-copy="lede"></p>
+
+  <div class="threeup">
+    <div class="tile"><div class="ico">🔁</div><h3>The harness</h3><p data-copy="t1"></p></div>
+    <div class="tile"><div class="ico">🔌</div><h3>MCP</h3><p data-copy="t2"></p></div>
+    <div class="tile"><div class="ico">🗄️</div><h3>The control plane</h3><p data-copy="t3"></p></div>
+  </div>
+</div>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">The harness, one click at a time</p>
+  <h2>The loop is the whole trick.</h2>
+  <p>A model is a text-in, text-out function. It has no hands, no memory between calls, and no way to check anything. Everything that makes it feel like an agent is a loop somebody built around it. Step through one.</p>
+
+  <div class="loopgrid">
+    <div class="ringbox">
+      <svg id="ring" viewBox="0 0 700 490" role="img" aria-label="A four-station loop: pack the note, the model thinks, do the thing, write it down, with an exit to done."></svg>
+    </div>
+    <div class="ctrlpanel">
+      <p class="turnrow" id="turnrow"></p>
+      <p class="stepttl" id="stepttl"></p>
+      <p class="stepbody" id="stepbody"></p>
+      <p class="lesson" id="lesson"></p>
+      <div class="btnrow">
+        <button class="solid" id="next" type="button">Run one step</button>
+        <button class="ghost" id="rewind" type="button">Start again</button>
+      </div>
+      <div class="tape" id="tape" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <p style="margin-top:2rem">Notice what the model never did. It never opened anything, never remembered anything, and never decided the job was over. It only ever read a note and wrote a note back. <b style="color:var(--paper);font-family:var(--ui);font-size:.98rem;font-weight:500">Harness engineering is the craft of designing everything in that loop except the thinking.</b></p>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">Why it's a craft and not plumbing</p>
+  <h2>Switch off one part and watch it fall over.</h2>
+  <p>Each of these is a decision somebody has to make. Get one wrong and the agent fails in a way that looks like the model being stupid, when it isn't.</p>
+  <div class="switches" id="switches"></div>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">Where most of the confusion sits</p>
+  <h2>MCP is the shape of the plug.</h2>
+  <p data-copy="mcp1"></p>
+  <p data-copy="mcp2"></p>
+
+  <div class="nmbox">
+    <div class="nmbar">
+      <span class="grp">Apps <button type="button" data-act="app-">−</button><b id="nApps">3</b><button type="button" data-act="app+">+</button></span>
+      <span class="grp">Systems <button type="button" data-act="tool-">−</button><b id="nTools">4</b><button type="button" data-act="tool+">+</button></span>
+      <span class="spacer"></span>
+      <span class="grp"><button type="button" class="ghost" id="nmToggle" style="width:auto;height:auto;padding:.4rem .9rem">Show it with MCP</button></span>
+    </div>
+    <div class="nmcanvas"><svg id="nm" viewBox="0 0 640 340" role="img" aria-label="Apps wired to systems, before and after MCP."></svg></div>
+    <div class="tally">
+      <div class="bad"><span class="num" id="tBefore">12</span><span class="lbl">bits of bespoke wiring, before</span></div>
+      <div class="good"><span class="num" id="tAfter">7</span><span class="lbl">with MCP, and each new system costs exactly one</span></div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:3.2rem;font-size:clamp(1.4rem,3vw,1.95rem)">And every socket introduces itself.</h2>
+  <p data-copy="mcp3"></p>
+  <div class="srvpick" id="srvpick" role="group" aria-label="Choose a system to plug into"></div>
+  <div class="srvcard" id="srvcard"></div>
+
+  <h2 style="margin-top:3.2rem;font-size:clamp(1.4rem,3vw,1.95rem)">Which end is which</h2>
+  <p>The detail people reliably get backwards: <b style="color:var(--paper)">the agent is the client and the system is the server</b>. It reads the wrong way round, because the system sounds like the bigger thing. But a server is whoever offers abilities, and a client is whoever asks. Your harness holds the plug. The fridge holds the socket.</p>
+
+  <h2 style="margin-top:3.2rem;font-size:clamp(1.4rem,3vw,1.95rem)">What MCP is not</h2>
+  <p>Almost every argument about MCP comes from expecting it to do a job it was never meant to do.</p>
+  <ul class="nots">
+    <li><b>Not the brain.</b> MCP never decides that a tool should be used. The model proposes, the harness runs it. MCP only standardises how the asking and answering are shaped.</li>
+    <li><b>Not the loop.</b> Take MCP away and you still have a harness — you just hand-write custom glue for every system, forever. MCP removes the glue, not the loop.</li>
+    <li><b>Not a replacement API.</b> Your system already had an API. An MCP server is a thin standard wrapper in front of it that describes what's available in a form a model can discover and call at runtime.</li>
+    <li><b>Not the rulebook.</b> MCP does not decide who is allowed to open which drawer, what it costs, or whether a human should approve first. That is the control plane's job, and it is the single most common mix-up.</li>
+    <li><b>Not agent-to-agent.</b> MCP connects an agent to tools and data. One agent handing work to another agent is a different problem with different protocols. Same word "connect", completely different shape.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">One flight up</p>
+  <h2>The control plane never does the work.</h2>
+  <p data-copy="cp1"></p>
+  <p>A harness makes one agent good. A control plane makes a hundred agents governable. They are different floors of the same building, which is why "should we build a harness or a control plane" is the wrong question — you will end up with both, in that order.</p>
+
+  <ul class="jobs">
+    <li><b>Routing.</b> Which model or which agent takes this job, given what it costs, how fast it must be, and how hard it is.</li>
+    <li><b>Identity.</b> The agent is acting on somebody's behalf. Whose? An agent with no identity cannot be held to any rule.</li>
+    <li><b>Permission.</b> Which sockets this agent may plug into, and which rows it may see once it's in. Enforced at retrieval, not by asking the model nicely.</li>
+    <li><b>Budget.</b> Spend ceilings, rate limits, maximum steps. The loop that runs away is a cost incident, not a bug report.</li>
+    <li><b>Audit.</b> Every prompt, tool call and result kept and replayable. If you cannot reconstruct what happened, you cannot answer the only question anyone will ask afterwards.</li>
+    <li><b>Rollout.</b> Prompts and tool definitions are code. They need versions, canaries and a way back.</li>
+    <li><b>Escalation.</b> The point where a human must approve before the action commits, decided by policy rather than by the agent's own confidence.</li>
+    <li><b>The stop button.</b> One place to halt everything, that works even when the agents disagree.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">Check yourself</p>
+  <h2>Whose job is this?</h2>
+  <p>Eight questions that come up in real projects. For each one, decide which layer owns it. This is the fastest way to find out whether the distinction has landed.</p>
+
+  <div class="quiz">
+    <p class="qcount" id="qcount"></p>
+    <p class="qtext" id="qtext"></p>
+    <div class="qopts" id="qopts"></div>
+    <p class="qwhy" id="qwhy" role="status" aria-live="polite"></p>
+    <p class="qscore" id="qscore"></p>
+    <div class="btnrow"><button class="solid" id="qnext" type="button" hidden>Next question</button><button class="ghost" id="qreset" type="button">Start over</button></div>
+  </div>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">Side by side</p>
+  <h2>The whole thing on one page.</h2>
+  <div class="cmp">
+    <table>
+      <thead><tr><th></th><th>Harness</th><th>MCP</th><th>Control plane</th></tr></thead>
+      <tbody>
+        <tr><th>What it is</th><td>The loop around one model that turns thinking into doing.</td><td>A shared standard for how an agent reaches a tool or data source.</td><td>The layer above many agents that decides who may do what, and records it.</td></tr>
+        <tr><th>Scope</th><td>One agent, one task.</td><td>One connection between an agent and a system.</td><td>Every agent in the organisation.</td></tr>
+        <tr><th>Kitchen version</th><td>The cook's station: recipe, order slip, timer, taste-and-adjust.</td><td>The sockets on the appliances, all the same shape.</td><td>The manager's office for fifty kitchens.</td></tr>
+        <tr><th>Usually owned by</th><td>The team building the agent.</td><td>The team that owns the system being exposed.</td><td>Platform, plus risk and compliance.</td></tr>
+        <tr><th>Without it you get</th><td>An agent that loops forever, forgets the task, or stops halfway.</td><td>A custom integration per app per system, and nobody willing to maintain them.</td><td>Agents that work fine until the day somebody asks what they did.</td></tr>
+        <tr><th>You need it when</th><td>Immediately. There is no agent without one.</td><td>Your second app needs your first system, or your second system needs your first app.</td><td>More than one team is shipping agents that touch real data or real money.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="rule"></div>
+  <p class="kicker">In what order</p>
+  <h2>You don't build all three at once.</h2>
+  <div class="stack">
+    <div class="s"><b>One agent, one team, one task</b><p>Harness only. Spend the effort on context, tool design, stopping rules and an honest eval set. A control plane here is furniture nobody sits on.</p></div>
+    <div class="s"><b>Second app, or second system</b><p>Now MCP pays for itself, because the alternative is bespoke wiring that grows by multiplication. Add structured logging at the same time — it is much cheaper to start logging than to backfill it.</p></div>
+    <div class="s"><b>Several teams, real users, real money</b><p>Control plane. Routing, identity, entitlements, budgets, audit, escalation, stop button. The trigger is usually an incident, a regulator, or a bill — and all three arrive late.</p></div>
+    <div class="s"><b>The trap</b><p>Building a control plane before you have shipped one agent that works. You end up governing a system whose actual failure modes you have never seen, and every rule is a guess.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="rule" style="margin-bottom:2rem"></div>
+  <p data-copy="foot"></p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+function el(n,a){const e=document.createElementNS(NS,n);if(a)for(const k in a)e.setAttribute(k,a[k]);return e;}
+
+/* =============== worlds =============== */
+const W={};
+
+W.kid={
+ note:"Everything is explained with the same robot cook. Switch worlds at any point and the loop, the sockets and the examples all change with you.",
+ copy:{
+  lede:"Meet Thaddeus. Thaddeus is a genius cook who has no hands, no eyes, and forgets everything the moment he stops reading. He can do exactly one thing: read a note and write a note back. Every clever agent you have ever seen is a very talented Thaddeus with a lot of machinery built around him. This page is about that machinery.",
+  t1:"The routine at one cook's station that turns Thaddeus's notes into an actual finished dish.",
+  t2:"The shape of the plug, so any kitchen can use any appliance without learning its private handshake.",
+  t3:"The manager's office for fifty kitchens. It never cooks. It decides who cooks what, with what, and keeps the camera roll.",
+  mcp1:"Thaddeus can ask for things, but he cannot reach them. The harness has to go and get them. And here is the problem: the fridge speaks fridge, the oven speaks oven, and the delivery van speaks something else entirely. Somebody has to learn all three private languages, for every kitchen.",
+  mcp2:"MCP is everyone agreeing on one socket shape. The appliance builds a socket once. The kitchen builds a plug once. They fit, and nobody had to learn anybody else's language.",
+  mcp3:"Here's the part that makes it more than a cable. When you plug in, the appliance says out loud what it can do and what it needs to be told. So Thaddeus can be handed a fridge he has never seen and immediately know what to ask it for. Tap an appliance to hear it introduce itself.",
+  foot:"Thaddeus the robot cook is made up. The failure modes are not. If you remember one thing: the harness is how one agent works, MCP is how it reaches your systems, and the control plane is how you sleep at night once there are fifty of them.",
+  cp1:"Now imagine fifty kitchens, each with its own Thaddeus and its own harness, all in one restaurant chain. Nobody worries about one kitchen. Everybody worries about the chain. So there is an office upstairs that never cooks a single thing: it decides which kitchen gets which order, which cook is allowed near the safe, how much anyone may spend on cheese, keeps the camera footage, and owns the one big red button."
+ },
+ ring:{s1:"Pack the note",s2:"Thaddeus thinks",s3:"Do the thing",s4:"Write it down",out:"Serve it",
+       icons:["\u{1F4DD}","\u{1F9E0}","\u{1F373}","\u270F\uFE0F","\u{1F37D}\uFE0F"]},
+ task:"Order for table 4: one cheese omelette.",
+ trace:[
+  {st:0,t:"Pack the note",b:"The harness writes Thaddeus a note from scratch: the order, the kitchen rules, and a list of appliances he is allowed to ask for. Thaddeus contributes nothing to this. Somebody decided what goes in.",l:"This is context engineering. What goes in the note, and what gets left out, is the single biggest lever on how good the agent is.",tag:"harness",log:"packed the note: order + rules + list of appliances"},
+  {st:1,t:"Thaddeus thinks",b:"Thaddeus reads it and writes back: \u201CI don\u2019t know what\u2019s in the fridge. Ask the fridge what\u2019s inside.\u201D That is all he did. He wrote a sentence.",l:"The model proposes an action. It cannot take one. Everything after this is the harness acting on a suggestion.",tag:"chip",log:"proposes: fridge.list_contents()"},
+  {st:2,t:"Do the thing",b:"The harness walks over and opens the fridge. Thaddeus stays exactly where he is, knowing nothing.",l:"Every real-world side effect in your system is caused by the harness, not the model. That is where your permission checks belong.",tag:"tool",log:"fridge: 6 eggs, cheddar, butter, no milk"},
+  {st:3,t:"Write it down",b:"The fridge\u2019s answer is written into the story so far. If the harness forgets to do this, Thaddeus will ask the same question forever.",l:"The observation has to be fed back in a shape the model can actually use. Raw dumps waste the note; over-summarised results lose the detail.",tag:"harness",log:"appended the fridge result to the story"},
+  {st:0,t:"Pack the note, again",b:"Thaddeus has forgotten everything. Everything. So the harness rebuilds the whole note: order, rules, appliance list, and every single thing that has happened so far.",l:"This is the bit people find hardest to believe. There is no ongoing conversation \u2014 the entire history is re-sent every turn, and it is re-sent because the harness chose to.",tag:"harness",log:"repacked: everything, from the top"},
+  {st:1,t:"Thaddeus thinks",b:"Now he can see there is no milk. He writes: \u201CCrack three eggs into the bowl and beat them.\u201D",l:"Better note in, better move out. Most \u201Cthe model is dumb\u201D complaints are really \u201Cthe note was missing something\u201D.",tag:"chip",log:"proposes: bowl.crack(eggs=3) then bowl.beat()"},
+  {st:2,t:"Do the thing",b:"Harness cracks three eggs. One is bad. It has to decide what to tell Thaddeus: hide it, or say so.",l:"Error handling is a design choice, not an accident. Silent failures produce agents that confidently continue on a false picture.",tag:"tool",log:"bowl: 2 eggs in, 1 was off and discarded"},
+  {st:3,t:"Write it down",b:"The harness writes the honest version into the story, including the bad egg.",l:"Tell the model the truth about failures and it will usually adapt. Hide them and it cannot.",tag:"harness",log:"appended: 2 usable eggs, 1 discarded"},
+  {st:0,t:"Pack the note, and trim it",b:"The story is getting long. The harness summarises the early turns into one line so the note still fits through the hatch.",l:"Compaction. Decide what gets compressed and what must survive verbatim, or the agent will forget the actual task somewhere around turn thirty.",tag:"harness",log:"compacted turns 1-3 into one summary line"},
+  {st:1,t:"Thaddeus thinks",b:"Thaddeus writes: \u201CThe omelette is finished. Serve it.\u201D No tool request this time \u2014 just a sentence saying he believes he\u2019s done.",l:"The model claiming it is finished is a claim, not a fact. Something has to check.",tag:"chip",log:"proposes: finished, no further tool calls"},
+  {st:4,t:"Serve it",b:"The harness recognises the stop signal, checks there is actually an omelette on the plate, ends the loop and sends it out.",l:"The stopping rule is the harness\u2019s job and it is the most commonly botched part of the whole design.",tag:"harness",log:"verified, loop ended, dish served"}
+ ],
+ switches:[
+  {n:"Feeding the story back",on:"Every turn, Thaddeus gets the order plus everything that has happened.",off:"Thaddeus: \u201CHello! What am I making? Who are you?\u201D \u2014 every single turn, forever."},
+  {n:"Passing tool results back",on:"When the fridge answers, that answer goes into the next note.",off:"Thaddeus asks the fridge what\u2019s inside. Then asks again. Then asks again. He never hears back, so he never moves on."},
+  {n:"A rule for stopping",on:"The harness decides when the dish is done and ends the loop.",off:"Omelette served. Garnished. Re-garnished. Plated differently. Four hundred turns later, still improving it."},
+  {n:"Handling things going wrong",on:"When an appliance jams, the harness decides what to tell Thaddeus and whether to retry.",off:"The fridge door sticks once and the entire dinner service stops, with no note explaining why."},
+  {n:"Trimming the note",on:"Old turns get summarised so the note stays a sensible length.",off:"By turn forty the note is so long that the order itself has fallen off the top, and Thaddeus is cooking something else entirely."},
+  {n:"Checking the work",on:"Before serving, the harness verifies there is actually an omelette.",off:"Thaddeus announces success. The plate is empty. Nobody looked."}
+ ],
+ servers:[
+  {n:"Fridge",i:"\u{1F9CA}",tools:[
+    {s:"list_contents()",d:"Tells you everything inside right now, with amounts."},
+    {s:"check_expiry(item)",d:"Says whether one thing is still good to use."},
+    {s:"chill(item, minutes)",d:"Cools something down for a set time."}]},
+  {n:"Timer",i:"\u23F2\uFE0F",tools:[
+    {s:"start(minutes, label)",d:"Begins a countdown you can name, so several can run at once."},
+    {s:"check(label)",d:"How long is left on a countdown."}]},
+  {n:"Order pad",i:"\u{1F4CB}",tools:[
+    {s:"read_orders(table)",d:"Everything a table has asked for, and any notes about allergies."},
+    {s:"mark_served(order_id)",d:"Records that a dish has gone out."}]},
+  {n:"Delivery van",i:"\u{1F69A}",tools:[
+    {s:"stock_level(item)",d:"How much of something is left in the store room."},
+    {s:"order_more(item, qty)",d:"Requests a delivery. Costs money, so somebody has to approve it."}]}
+ ],
+};
+
+W.work={
+ note:"Same page, same loop, same sockets \u2014 populated with an advisory desk instead of a kitchen. The names are invented; the shapes are not.",
+ copy:{
+  lede:"A model is a text-in, text-out function. No hands, no memory between calls, no ability to verify anything it says. Every agent you have seen demoed is that function wrapped in machinery. This page is about the machinery \u2014 the loop around one agent, the standard it uses to reach your systems, and the layer that governs all of them at once.",
+  t1:"The loop around one agent that turns proposed actions into completed work.",
+  t2:"A shared standard for reaching a system, so integrations stop being bespoke per app.",
+  t3:"The layer above every agent. It does no work. It decides who may act, on what, at what cost, and keeps the record.",
+  mcp1:"The model can propose calling your CRM. It cannot call it. The harness has to. And every system has its own auth, its own schema, its own quirks \u2014 so somebody writes custom glue, per system, per application. Four systems and three applications is twelve pieces of glue, each with an owner who leaves.",
+  mcp2:"MCP is an agreed protocol for that connection. The system owner builds one server. Each application ships one client. They fit, and the integration count stops multiplying.",
+  mcp3:"The part that makes it more than a transport: a server advertises its own tools at runtime, with names, descriptions and input schemas. An agent can be pointed at a system it has never seen and discover what it offers. Tap a system to see what it exposes.",
+  foot:"The names here are invented. The failure modes are not. If you remember one thing: the harness is how one agent works, MCP is how it reaches your systems, and the control plane is how you answer for fifty of them.",
+  cp1:"Now imagine fifty agents across six teams, all built by different squads, all touching client data. Nobody worries about one agent. Everyone worries about the estate. So there is a layer above them that performs no task at all: it routes work to the right model, gives each agent an identity, decides which servers it may reach and which rows it may see, caps what it can spend, records every step, and owns the switch that stops all of it."
+ },
+ ring:{s1:"Build context",s2:"Model call",s3:"Execute tool",s4:"Record result",out:"Return",
+       icons:["\u{1F4E6}","\u{1F9E0}","\u2699\uFE0F","\u{1F4C4}","\u2705"]},
+ task:"Prepare the review pack for Thaddeus's Thursday meeting.",
+ trace:[
+  {st:0,t:"Build context",b:"The harness assembles the prompt: the task, the operating policy, the client scope this agent is allowed to touch, and the list of tools available this turn. None of this comes from the model.",l:"Context engineering. What you include, exclude and order here moves quality more than any prompt-wording tweak.",tag:"harness",log:"context built: task + policy + scope + 6 tool definitions"},
+  {st:1,t:"Model call",b:"The model returns a proposed tool call: fetch the client record. It has produced text describing an intention. Nothing has happened yet.",l:"The model proposes; it never acts. Every side effect downstream is the harness executing on a suggestion.",tag:"chip",log:"proposes: crm.get_client(id=TL-8841)"},
+  {st:2,t:"Execute tool",b:"The harness makes the call \u2014 under its own credentials, against its own entitlements, with its own timeout.",l:"This is the enforcement point. Permission checks belong here, not in prompt instructions asking the model to behave.",tag:"tool",log:"crm: profile returned, segment Priority, RM Sarah Ng"},
+  {st:3,t:"Record result",b:"The result is normalised and written into the running transcript. Skip this and the model re-requests the same record indefinitely.",l:"Shape the observation deliberately. Raw payloads burn context; over-summarised ones lose the field you needed.",tag:"harness",log:"appended: client profile (trimmed to 8 fields)"},
+  {st:0,t:"Rebuild context",b:"The model retains nothing between calls. The harness rebuilds the entire prompt: task, policy, scope, tools, and the full history so far.",l:"There is no persistent conversation. Statefulness is an illusion the harness maintains by re-sending everything, every turn.",tag:"harness",log:"context rebuilt: full history re-sent"},
+  {st:1,t:"Model call",b:"With the profile in hand it proposes the next call: list the client's holdings.",l:"Better context in, better action out. Most \u201Cthe model got it wrong\u201D findings are really missing context.",tag:"chip",log:"proposes: portfolio.list_holdings(client=TL-8841)"},
+  {st:2,t:"Execute tool",b:"The call partially fails \u2014 one custody feed times out. The harness decides whether to retry, degrade, or surface it.",l:"Error policy is a design decision. Swallowed failures produce agents that reason confidently over an incomplete picture.",tag:"tool",log:"portfolio: 11 of 12 positions, 1 feed timed out"},
+  {st:3,t:"Record result",b:"The gap is recorded explicitly, including the fact that one feed is missing.",l:"Tell the model the truth about partial data and it can flag it. Hide it and the output looks complete when it isn't.",tag:"harness",log:"appended: 11 positions + explicit gap note"},
+  {st:0,t:"Rebuild and compact",b:"The transcript is long now. The harness compresses earlier turns into a summary while keeping the task and the data gap verbatim.",l:"Compaction policy. Decide what compresses and what must survive intact, or the original instruction quietly falls out of the window.",tag:"harness",log:"compacted turns 1-3; task and gap preserved verbatim"},
+  {st:1,t:"Model call",b:"The model returns a drafted pack and states it is ready for advisor review. No tool call this time \u2014 just a claim of completion.",l:"A completion claim is a claim. Something outside the model has to decide whether it is true.",tag:"chip",log:"proposes: complete, draft attached, flags 1 data gap"},
+  {st:4,t:"Return",b:"The harness checks the required sections exist, ends the loop, and routes the draft to a human for approval rather than sending it.",l:"Stopping rules and the handoff to a human are harness responsibilities \u2014 though which actions require approval is set one floor up.",tag:"harness",log:"validated, loop ended, routed for advisor approval"}
+ ],
+ switches:[
+  {n:"Re-sending the transcript",on:"Every turn carries the task and the full history so far.",off:"Turn two begins with no idea what turn one established. The agent restarts the task from scratch, forever."},
+  {n:"Feeding tool results back",on:"Tool output is written into the next prompt.",off:"The agent requests the same client record on every turn, because it never learns that it already has it."},
+  {n:"A stopping rule",on:"The harness decides when the work is complete and terminates.",off:"The pack is drafted, refined, re-refined, restructured. Two hundred turns later you have a token bill and no output."},
+  {n:"Error policy",on:"Failures are caught, classified, and either retried or surfaced.",off:"One timed-out feed kills the run with a stack trace, or worse, is silently dropped and the output looks complete."},
+  {n:"Context compaction",on:"Older turns are summarised so the window holds.",off:"Around turn forty the original task scrolls out of the window and the agent starts optimising something nobody asked for."},
+  {n:"Verification",on:"Output is checked against required structure before it is returned.",off:"The agent reports success. The pack is missing the holdings table. Nobody checked."}
+ ],
+ servers:[
+  {n:"CRM",i:"\u{1F464}",tools:[
+    {s:"get_client(client_id)",d:"Profile, segment, coverage and household links for one client."},
+    {s:"search_notes(query, client_id)",d:"Free-text search across call reports and meeting notes."},
+    {s:"list_meetings(client_id, from)",d:"Scheduled and past meetings with attendees."}]},
+  {n:"Portfolio",i:"\u{1F4C8}",tools:[
+    {s:"list_holdings(client_id)",d:"Current positions with weights and book cost."},
+    {s:"get_performance(client_id, period)",d:"Returns and attribution over a period."}]},
+  {n:"Market data",i:"\u{1F4CA}",tools:[
+    {s:"get_price(instrument)",d:"Last price and as-of timestamp for one instrument."},
+    {s:"get_commentary(sector)",d:"Latest published house view for a sector."}]},
+  {n:"Document store",i:"\u{1F4C1}",tools:[
+    {s:"search(query, segment)",d:"Semantic search across factsheets, policies and prior packs."},
+    {s:"fetch(doc_id)",d:"Retrieves one document with its provenance metadata."}]}
+ ],
+};
+
+let V="kid";
+const D=()=>W[V];
+
+/* =============== ring =============== */
+const CX=290,CY=240,R=150;
+const STP=[[CX,CY-R],[CX+R,CY],[CX,CY+R],[CX-R,CY]];
+const OUT=[640,104];
+const ring=document.getElementById("ring");
+const defs=el("defs");
+const mk=el("marker",{id:"ah",viewBox:"0 0 10 10",refX:"8",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse"});
+mk.appendChild(el("path",{d:"M0,0 L10,5 L0,10 z",fill:"#255139"}));
+const mk2=el("marker",{id:"ahg",viewBox:"0 0 10 10",refX:"8",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse"});
+mk2.appendChild(el("path",{d:"M0,0 L10,5 L0,10 z",fill:"#E9B549"}));
+defs.append(mk,mk2);ring.appendChild(defs);
+const gArc=el("g"),gSt=el("g");ring.append(gArc,gSt);
+const arcs=[];
+for(let i=0;i<4;i++){
+  const a=STP[i],b=STP[(i+1)%4];
+  const p=el("path",{class:"arc","marker-end":"url(#ah)",
+    d:"M"+a[0]+","+a[1]+" A"+R+","+R+" 0 0,1 "+b[0]+","+b[1]});
+  gArc.appendChild(p);arcs.push(p);
+}
+const exitPath=el("path",{class:"exit","marker-end":"url(#ah)",d:"M"+(STP[1][0]+30)+","+(STP[1][1]-20)+" L"+(OUT[0]-36)+","+(OUT[1]+22)});
+gArc.appendChild(exitPath);
+const stEls=[];
+const LBL=[{x:CX,y:CY-R-58,a:"middle"},{x:CX+R+52,y:CY+4,a:"start"},{x:CX,y:CY+R+62,a:"middle"},{x:CX-R-52,y:CY+4,a:"end"},{x:OUT[0],y:OUT[1]-48,a:"middle"}];
+[...STP,OUT].forEach((p,i)=>{
+  const g=el("g",{class:"st",transform:"translate("+p[0]+","+p[1]+")"});
+  g.appendChild(el("circle",{class:"st-disc",r:i===4?32:40}));
+  const ic=el("text",{class:"st-ico",y:1});g.appendChild(ic);
+  gSt.appendChild(g);
+  const lb=el("text",{class:"st-lbl",x:LBL[i].x,y:LBL[i].y,"text-anchor":LBL[i].a});
+  gSt.appendChild(lb);
+  stEls.push({g,ic,lb});
+});
+const puck=el("circle",{class:"puck",r:9,cx:0,cy:0});gSt.appendChild(puck);
+
+const turnrow=document.getElementById("turnrow"),stepttl=document.getElementById("stepttl"),
+      stepbody=document.getElementById("stepbody"),lesson=document.getElementById("lesson"),
+      tape=document.getElementById("tape"),nextBtn=document.getElementById("next"),
+      rewind=document.getElementById("rewind");
+let ti=-1;
+function paintRingLabels(){
+  const r=D().ring;
+  const names=[r.s1,r.s2,r.s3,r.s4,r.out];
+  stEls.forEach((s,i)=>{s.lb.textContent=names[i];s.ic.textContent=r.icons[i];});
+}
+function ringReset(){
+  ti=-1;tape.innerHTML="";
+  stEls.forEach(s=>s.g.classList.remove("on"));
+  arcs.forEach(a=>a.classList.remove("live"));
+  exitPath.classList.remove("live");
+  puck.setAttribute("transform","translate("+STP[0][0]+","+STP[0][1]+")");
+  turnrow.textContent="Task: "+D().task;
+  stepttl.textContent="Ready";
+  stepbody.textContent="Nothing has happened yet. The model has not been called. Press the button and the harness will do its first job \u2014 which is not thinking.";
+  lesson.textContent="";
+  nextBtn.disabled=false;nextBtn.textContent="Run one step";
+}
+function ringStep(){
+  const tr=D().trace;
+  if(ti>=tr.length-1)return;
+  ti++;
+  const s=tr[ti];
+  const p=s.st===4?OUT:STP[s.st];
+  puck.setAttribute("transform","translate("+p[0]+","+p[1]+")");
+  stEls.forEach((x,i)=>x.g.classList.toggle("on",i===s.st));
+  arcs.forEach((a,i)=>a.classList.toggle("live",s.st!==4&&i===((s.st+3)%4)));
+  exitPath.classList.toggle("live",s.st===4);
+  turnrow.textContent="Step "+(ti+1)+" of "+tr.length+"  \u00B7  Task: "+D().task;
+  stepttl.textContent=s.t;
+  stepbody.textContent=s.b;
+  lesson.textContent=s.l;
+  const ln=document.createElement("p");
+  ln.className="ln";
+  const who=s.tag==="chip"?"model":s.tag==="tool"?"system":"harness";
+  ln.innerHTML='<span class="tag '+(s.tag==="chip"?"chip":s.tag==="tool"?"tool":"")+'"></span><span class="txt"></span>';
+  ln.querySelector(".tag").textContent=who;
+  ln.querySelector(".txt").textContent=s.log;
+  tape.appendChild(ln);tape.scrollTop=tape.scrollHeight;
+  if(ti>=tr.length-1){nextBtn.disabled=true;nextBtn.textContent="Loop finished";}
+}
+nextBtn.addEventListener("click",ringStep);
+rewind.addEventListener("click",ringReset);
+
+/* =============== switches =============== */
+const swBox=document.getElementById("switches");
+function paintSwitches(){
+  swBox.innerHTML="";
+  D().switches.forEach(s=>{
+    const d=document.createElement("div");
+    d.className="sw";
+    d.innerHTML='<div class="swhead"><h3></h3><button type="button" role="switch" aria-pressed="true"></button></div><p class="txt"></p>';
+    d.querySelector("h3").textContent=s.n;
+    const p=d.querySelector(".txt");p.textContent=s.on;
+    const b=d.querySelector("button");
+    b.setAttribute("aria-label","Turn off: "+s.n);
+    b.addEventListener("click",()=>{
+      const on=b.getAttribute("aria-pressed")!=="true";
+      b.setAttribute("aria-pressed",on);
+      d.classList.toggle("off",!on);
+      p.className=on?"txt":"txt fail";
+      p.textContent=on?s.on:s.off;
+      b.setAttribute("aria-label",(on?"Turn off: ":"Turn on: ")+s.n);
+    });
+    swBox.appendChild(d);
+  });
+}
+
+/* =============== N x M =============== */
+let nApps=3,nTools=4,mcpOn=false;
+const nm=document.getElementById("nm");
+const nmToggle=document.getElementById("nmToggle");
+function drawNM(){
+  while(nm.firstChild)nm.removeChild(nm.firstChild);
+  const H=340,ax=95,tx=545,railx=320;
+  const ys=(count,i)=>{const gap=Math.min(62,(H-90)/Math.max(count-1,1));const top=H/2-gap*(count-1)/2;return top+gap*i;};
+  const g=el("g");nm.appendChild(g);
+  if(mcpOn){
+    g.appendChild(el("line",{class:"rail",x1:railx,y1:52,x2:railx,y2:H-42}));
+    const rt=el("text",{class:"railtxt",x:railx,y:36});rt.textContent="one agreed socket shape";g.appendChild(rt);
+  }
+  for(let i=0;i<nApps;i++){
+    for(let j=0;j<nTools;j++){
+      if(mcpOn)continue;
+      g.appendChild(el("line",{class:"nmwire",x1:ax+34,y1:ys(nApps,i),x2:tx-42,y2:ys(nTools,j)}));
+    }
+  }
+  if(mcpOn){
+    for(let i=0;i<nApps;i++)g.appendChild(el("line",{class:"nmwire clean",x1:ax+34,y1:ys(nApps,i),x2:railx,y2:ys(nApps,i)}));
+    for(let j=0;j<nTools;j++)g.appendChild(el("line",{class:"nmwire clean",x1:railx,y1:ys(nTools,j),x2:tx-42,y2:ys(nTools,j)}));
+  }
+  for(let i=0;i<nApps;i++){
+    const y=ys(nApps,i);
+    g.appendChild(el("rect",{class:"nmnode app",x:ax-34,y:y-15,width:68,height:30,rx:8}));
+    const t=el("text",{class:"nmtxt",x:ax,y:y,"text-anchor":"middle"});t.textContent="app "+(i+1);g.appendChild(t);
+  }
+  for(let j=0;j<nTools;j++){
+    const y=ys(nTools,j);
+    g.appendChild(el("rect",{class:"nmnode tool",x:tx-42,y:y-15,width:84,height:30,rx:8}));
+    const t=el("text",{class:"nmtxt",x:tx,y:y,"text-anchor":"middle"});t.textContent="system "+(j+1);g.appendChild(t);
+  }
+  document.getElementById("nApps").textContent=nApps;
+  document.getElementById("nTools").textContent=nTools;
+  document.getElementById("tBefore").textContent=nApps*nTools;
+  document.getElementById("tAfter").textContent=nApps+nTools;
+  nmToggle.textContent=mcpOn?"Show it without MCP":"Show it with MCP";
+}
+document.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",()=>{
+  const a=b.dataset.act;
+  if(a==="app+"&&nApps<6)nApps++;
+  if(a==="app-"&&nApps>2)nApps--;
+  if(a==="tool+"&&nTools<6)nTools++;
+  if(a==="tool-"&&nTools>2)nTools--;
+  drawNM();
+}));
+nmToggle.addEventListener("click",()=>{mcpOn=!mcpOn;drawNM();});
+
+/* =============== servers =============== */
+const srvpick=document.getElementById("srvpick"),srvcard=document.getElementById("srvcard");
+let srvIdx=0;
+function paintServers(){
+  srvpick.innerHTML="";
+  D().servers.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="srv";b.type="button";b.textContent=s.i+"  "+s.n;
+    b.addEventListener("click",()=>{srvIdx=i;showServer();});
+    srvpick.appendChild(b);
+  });
+  showServer();
+}
+function showServer(){
+  const s=D().servers[srvIdx];
+  [...srvpick.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===srvIdx));
+  srvcard.innerHTML='<p class="hd"></p>';
+  srvcard.querySelector(".hd").textContent="Plugged in. "+s.n+" says: here is what I can do, and here is what you have to tell me.";
+  s.tools.forEach(t=>{
+    const d=document.createElement("div");
+    d.className="tool";
+    d.innerHTML='<div class="sig"></div><p class="dsc"></p>';
+    d.querySelector(".sig").textContent=t.s;
+    d.querySelector(".dsc").textContent=t.d;
+    srvcard.appendChild(d);
+  });
+}
+
+/* =============== quiz =============== */
+const QUIZ=[
+ {q:"How many times should the agent loop before it gives up?",a:"Harness",
+  why:"A stopping rule lives in the loop that runs the agent. The control plane may cap the maximum, but the decision to stop this task belongs to the harness."},
+ {q:"Which of our three models should answer this request?",a:"Control plane",
+  why:"Routing across models is an estate-level decision about cost, latency and capability. One agent's harness shouldn't be picking on its own."},
+ {q:"How does the agent ask the CRM for a client record?",a:"MCP",
+  why:"That's exactly the connection MCP standardises \u2014 the shape of the call and the way the CRM advertises what it offers."},
+ {q:"What exactly goes into the prompt on each turn?",a:"Harness",
+  why:"Context engineering is the core of harness work: what to include, what to leave out, and in what order."},
+ {q:"May this agent see private-bank clients?",a:"Control plane",
+  why:"Entitlements are policy about identity and data scope. They must hold across every agent, so they cannot live inside one agent's loop."},
+ {q:"A tool returned an error. Retry, degrade, or surface it?",a:"Harness",
+  why:"Error policy for one task is a loop decision. The control plane cares that failures are logged, not how this particular retry is handled."},
+ {q:"What did agent 7 do at three in the morning last Tuesday?",a:"Control plane",
+  why:"Audit and replay are estate-level concerns. If each team logs in its own way, this question has no answer."},
+ {q:"How does a newly-built system tell agents what it can do?",a:"MCP",
+  why:"Runtime discovery of tools, with names, descriptions and input schemas, is the thing MCP adds beyond a plain API."}
+];
+const OPTS=["Harness","MCP","Control plane"];
+const qcount=document.getElementById("qcount"),qtext=document.getElementById("qtext"),
+      qopts=document.getElementById("qopts"),qwhy=document.getElementById("qwhy"),
+      qscore=document.getElementById("qscore"),qnext=document.getElementById("qnext");
+let qi=0,score=0,answered=false;
+function renderQ(){
+  qnext.hidden=true;
+  if(qi>=QUIZ.length){
+    qcount.textContent="Finished";
+    qtext.textContent=score===QUIZ.length?"All eight. The distinction has landed.":"You got "+score+" of "+QUIZ.length+".";
+    qopts.innerHTML="";
+    qwhy.textContent=score>=6?"The ones people miss are usually routing and entitlements \u2014 both feel like agent decisions until you have more than one agent.":"Worth a second pass. The rule of thumb: if the answer would change per task, it's the harness. If it must hold across every agent, it's the control plane. If it's about reaching a system, it's MCP.";
+    qscore.textContent="";
+    return;
+  }
+  answered=false;
+  const it=QUIZ[qi];
+  qcount.textContent="Question "+(qi+1)+" of "+QUIZ.length;
+  qtext.textContent=it.q;
+  qopts.innerHTML="";
+  OPTS.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt";b.type="button";b.textContent=o;
+    b.addEventListener("click",()=>answer(b,o));
+    qopts.appendChild(b);
+  });
+  qwhy.textContent="";
+  qscore.textContent="Score so far: "+score;
+}
+function answer(btn,choice){
+  if(answered)return;
+  answered=true;
+  const it=QUIZ[qi];
+  [...qopts.children].forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===it.a)b.classList.add("right");
+  });
+  if(choice!==it.a)btn.classList.add("wrong");else score++;
+  qwhy.textContent=(choice===it.a?"Yes. ":"It's "+it.a+". ")+it.why;
+  qscore.textContent="Score so far: "+score;
+  qnext.hidden=false;
+  qnext.textContent=qi===QUIZ.length-1?"See my score":"Next question";
+}
+qnext.addEventListener("click",()=>{qi++;renderQ();});
+document.getElementById("qreset").addEventListener("click",()=>{qi=0;score=0;renderQ();});
+
+/* =============== world switch =============== */
+const wKid=document.getElementById("wKid"),wWork=document.getElementById("wWork"),
+      worldnote=document.getElementById("worldnote");
+function paintAll(){
+  const d=D();
+  document.querySelectorAll("[data-copy]").forEach(n=>{n.textContent=d.copy[n.dataset.copy]||"";});
+  worldnote.textContent=d.note;
+  paintRingLabels();ringReset();
+  paintSwitches();
+  srvIdx=0;paintServers();
+  drawNM();
+  wKid.setAttribute("aria-pressed",V==="kid");
+  wWork.setAttribute("aria-pressed",V==="work");
+}
+wKid.addEventListener("click",()=>{if(V!=="kid"){V="kid";paintAll();}});
+wWork.addEventListener("click",()=>{if(V!=="work"){V="work";paintAll();}});
+renderQ();
+paintAll();
+})();
+</script>
+</body>
+</html>

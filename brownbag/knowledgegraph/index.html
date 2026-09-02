@@ -9,20 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep:#07160E;
-  --forest:#0E2519;
-  --lift:#163524;
-  --edge:#255139;
-  --sage:#8FD6A8;
-  --mint:#C7EED4;
-  --gold:#E9B549;
-  --gold-soft:#F3D492;
-  --body:#BCCEBF;
-  --paper:#F0F6EF;
-  --dim:#7E9484;
-  --display:"Fraunces",Georgia,serif;
-  --read:"Newsreader",Georgia,serif;
-  --ui:"Space Grotesk",system-ui,sans-serif;
+  --deep:#07160E;--forest:#0E2519;--lift:#163524;--edge:#255139;
+  --sage:#8FD6A8;--mint:#C7EED4;--gold:#E9B549;--gold-soft:#F3D492;
+  --body:#BCCEBF;--paper:#F0F6EF;--dim:#7E9484;
+  --display:"Fraunces",Georgia,serif;--read:"Newsreader",Georgia,serif;--ui:"Space Grotesk",system-ui,sans-serif;
   --measure:34rem;
 }
 *{box-sizing:border-box}
@@ -33,68 +23,53 @@ body{
     radial-gradient(1100px 620px at 12% -8%, #12331f 0%, rgba(18,51,31,0) 62%),
     radial-gradient(900px 520px at 96% 4%, #17301f 0%, rgba(23,48,31,0) 58%),
     var(--deep);
-  color:var(--body);
-  font-family:var(--read);
-  font-size:1.075rem;
-  line-height:1.68;
-  font-optical-sizing:auto;
+  color:var(--body);font-family:var(--read);font-size:1.075rem;line-height:1.68;font-optical-sizing:auto;
 }
 .wrap{max-width:64rem;margin:0 auto;padding:0 1.5rem 6rem}
 p{max-width:var(--measure)}
 a{color:var(--sage)}
-
 h1,h2,h3{font-family:var(--display);color:var(--paper);font-weight:600;line-height:1.05;letter-spacing:-.015em;margin:0}
-h1{font-size:clamp(2.6rem,7vw,4.6rem);text-wrap:balance}
+h1{font-size:clamp(2.5rem,6.6vw,4.4rem);text-wrap:balance}
 h2{font-size:clamp(1.85rem,4vw,2.7rem);margin-bottom:.6rem;text-wrap:balance}
-h3{font-family:var(--ui);font-size:1.02rem;font-weight:700;letter-spacing:.01em;color:var(--mint)}
+h3{font-family:var(--ui);font-size:1.02rem;font-weight:700;color:var(--mint)}
 
-/* ---------- masthead ---------- */
-header.top{
-  display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;
-  padding:1.4rem 0 0;
+/* masthead + world switch */
+header.top{padding:1.4rem 0 0}
+.crumb{font-family:var(--ui);font-size:.78rem;color:var(--dim);letter-spacing:.06em;margin:0 0 1rem}
+.worldpick{
+  display:inline-flex;flex-wrap:wrap;gap:.4rem;padding:.4rem;border:1px solid var(--edge);
+  border-radius:99px;background:#0b1d13;
 }
-.crumb{font-family:var(--ui);font-size:.78rem;color:var(--dim);letter-spacing:.06em}
-.switch{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--ui);font-size:.82rem;color:var(--body)}
-.switch button{
-  position:relative;width:46px;height:24px;border-radius:99px;border:1px solid var(--edge);
-  background:var(--forest);cursor:pointer;padding:0;transition:background .2s,border-color .2s;
+.worldpick button{
+  font-family:var(--ui);font-size:.84rem;font-weight:500;color:var(--body);background:transparent;
+  border:0;border-radius:99px;padding:.5rem 1.1rem;cursor:pointer;transition:background .18s,color .18s;
 }
-.switch button::after{
-  content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
-  background:var(--dim);transition:transform .2s,background .2s;
-}
-.switch button[aria-pressed="true"]{background:var(--lift);border-color:var(--gold)}
-.switch button[aria-pressed="true"]::after{transform:translateX(22px);background:var(--gold)}
+.worldpick button:hover{color:var(--paper)}
+.worldpick button[aria-pressed="true"]{background:var(--gold);color:#0b1d13;font-weight:700}
+.worldnote{font-family:var(--ui);font-size:.8rem;color:var(--dim);margin:.7rem 0 0;max-width:38rem}
 
-/* ---------- hero ---------- */
-.hero{padding:3.5rem 0 1rem}
-.hero .lede{font-size:1.2rem;color:var(--mint);max-width:36rem;margin:1.4rem 0 0}
+/* hero */
+.hero{padding:2.6rem 0 1rem}
+.hero .lede{font-size:1.2rem;color:var(--mint);max-width:37rem;margin:1.4rem 0 0}
 .hero .lede em{font-style:italic;color:var(--gold-soft)}
-
 .viewer{margin:2.2rem 0 0}
 .modes{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:1rem}
 button.mode{
-  font-family:var(--ui);font-size:.86rem;font-weight:500;color:var(--body);
-  background:transparent;border:1px solid var(--edge);border-radius:99px;
-  padding:.5rem 1.05rem;cursor:pointer;transition:color .18s,border-color .18s,background .18s;
+  font-family:var(--ui);font-size:.86rem;font-weight:500;color:var(--body);background:transparent;
+  border:1px solid var(--edge);border-radius:99px;padding:.5rem 1.05rem;cursor:pointer;
+  transition:color .18s,border-color .18s,background .18s;
 }
 button.mode:hover{color:var(--paper);border-color:var(--sage)}
 button.mode[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#08170F;font-weight:700}
+.stage{border:1px solid var(--edge);border-radius:14px;background:linear-gradient(180deg,#0c2015,#091a11);overflow-x:auto;overflow-y:hidden}
+.stage svg{display:block;width:100%;min-width:760px;height:auto}
+.caption{font-family:var(--ui);font-size:.88rem;color:var(--sage);margin:.9rem 0 0;max-width:40rem;min-height:3.9em}
 
-.stage{
-  border:1px solid var(--edge);border-radius:14px;background:linear-gradient(180deg,#0c2015,#091a11);
-  overflow-x:auto;overflow-y:hidden;
-}
-.stage svg{display:block;width:100%;min-width:660px;height:auto}
-.caption{
-  font-family:var(--ui);font-size:.88rem;color:var(--sage);margin:.9rem 0 0;max-width:38rem;min-height:2.6em;
-}
-
-/* svg pieces */
-.n-body{transition:transform .85s cubic-bezier(.65,.02,.28,1)}
-.n-disc{fill:var(--lift);stroke:var(--edge);stroke-width:1.5;transition:stroke .2s,fill .2s}
+/* svg */
+.n-body{transition:transform .85s cubic-bezier(.65,.02,.28,1),opacity .3s}
+.n-disc{fill:var(--lift);stroke:var(--edge);stroke-width:1.5}
 .n-emoji{font-size:20px;text-anchor:middle;dominant-baseline:central}
-.n-label{font-family:var(--ui);font-size:11.5px;fill:var(--body);text-anchor:middle;transition:fill .2s}
+.n-label{font-family:var(--ui);font-size:11.5px;fill:var(--body);text-anchor:middle}
 .n-person .n-disc{fill:#1c4229;stroke:var(--sage)}
 .n-pet .n-disc{stroke:var(--gold)}
 .n-place .n-disc{stroke:#5f8f74}
@@ -111,29 +86,26 @@ svg.focusing .link{opacity:.08}
 svg.focusing .link.hot{opacity:1;stroke:var(--gold);stroke-width:2.4}
 svg.focusing .link-txt{opacity:.08}
 svg.focusing .link-txt.hot{opacity:1;fill:var(--gold-soft)}
-.n-body{cursor:default}
 
-/* ---------- sections ---------- */
+/* sections */
 section{padding:4.5rem 0 0}
 .rule{height:1px;background:linear-gradient(90deg,var(--edge),rgba(37,81,57,0));margin:0}
-.kicker{font-family:var(--ui);font-size:.8rem;color:var(--gold);margin:0 0 .7rem}
-
+.kicker{font-family:var(--ui);font-size:.8rem;color:var(--gold);margin:2rem 0 .7rem}
 .pair{display:grid;gap:1.4rem;grid-template-columns:1fr 1fr;margin-top:2rem}
 @media (max-width:760px){.pair{grid-template-columns:1fr}}
 .card{border:1px solid var(--edge);border-radius:12px;padding:1.4rem 1.5rem;background:#0b1d13}
 .card.map{border-color:#3c5f2d;background:#0c2013}
-.card h3{margin-bottom:.15rem}
 .card .what{font-family:var(--ui);font-size:.78rem;color:var(--dim);margin:.1rem 0 .9rem}
 .card p{margin:.7rem 0;max-width:none;font-size:1rem}
 .card dl{margin:1.1rem 0 0;font-size:.95rem}
 .card dt{font-family:var(--ui);font-size:.76rem;color:var(--gold);margin-top:.9rem}
 .card dd{margin:.15rem 0 0}
 
-/* ---------- q&a demo ---------- */
+/* q & a */
 .qbar{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.8rem 0 1.3rem}
 button.q{
-  font-family:var(--ui);font-size:.85rem;text-align:left;color:var(--mint);
-  background:#0c2014;border:1px solid var(--edge);border-radius:9px;padding:.6rem .9rem;cursor:pointer;
+  font-family:var(--ui);font-size:.85rem;text-align:left;color:var(--mint);background:#0c2014;
+  border:1px solid var(--edge);border-radius:9px;padding:.6rem .9rem;cursor:pointer;
   transition:border-color .18s,color .18s,background .18s;
 }
 button.q:hover{border-color:var(--sage);color:var(--paper)}
@@ -152,46 +124,43 @@ button.q[aria-pressed="true"]{background:var(--lift);border-color:var(--gold);co
 .ans[data-good="part"] .verdict{color:var(--gold-soft)}
 .takeaway{font-family:var(--ui);font-size:.92rem;color:var(--mint);margin:1.2rem 0 0;padding-left:1rem;border-left:2px solid var(--gold)}
 
-/* ---------- builder ---------- */
+/* builder */
 .builder{margin-top:2rem;display:grid;gap:1.4rem;grid-template-columns:1.05fr .95fr}
 @media (max-width:860px){.builder{grid-template-columns:1fr}}
 .bpanel{border:1px solid var(--edge);border-radius:12px;padding:1.3rem 1.4rem;background:#0b1d13}
 .progress{font-family:var(--ui);font-size:.78rem;color:var(--dim);margin:0 0 .8rem}
-.sentence{font-family:var(--display);font-size:1.35rem;color:var(--paper);margin:0 0 1.1rem;line-height:1.3}
-.slots{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1.1rem}
+.sentence{font-family:var(--display);font-size:1.3rem;color:var(--paper);margin:0 0 1.1rem;line-height:1.3;min-height:2.6em}
+.slots{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.4rem}
 .slot{
-  font-family:var(--ui);font-size:.85rem;min-width:6.6rem;padding:.5rem .7rem;border-radius:8px;text-align:center;
+  font-family:var(--ui);font-size:.85rem;min-width:7.4rem;padding:.5rem .7rem;border-radius:8px;text-align:center;
   border:1px dashed var(--edge);color:var(--dim);background:#08190f;cursor:default;
 }
 .slot.filled{border-style:solid;border-color:var(--sage);color:var(--paper);background:var(--lift);cursor:pointer}
-.slot.mid{min-width:7.4rem;border-color:#8a7a3f}
+.slot.mid{border-color:#8a7a3f}
 .slot.mid.filled{border-color:var(--gold);color:var(--gold-soft)}
-.slotlabels{display:flex;flex-wrap:wrap;gap:.5rem;margin:-.7rem 0 1.1rem}
-.slotlabels span{font-family:var(--ui);font-size:.68rem;color:var(--dim);min-width:6.6rem;text-align:center}
-.slotlabels span.mid{min-width:7.4rem}
-.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.slotlabels{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.1rem}
+.slotlabels span{font-family:var(--ui);font-size:.68rem;color:var(--dim);min-width:7.4rem;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;min-height:2.2rem}
 button.chip{
   font-family:var(--ui);font-size:.86rem;color:var(--mint);background:#0d2416;border:1px solid var(--edge);
   border-radius:99px;padding:.42rem .95rem;cursor:pointer;transition:border-color .15s,transform .15s,color .15s;
 }
 button.chip:hover:not(:disabled){border-color:var(--sage);color:var(--paper);transform:translateY(-1px)}
 button.chip:disabled{opacity:.3;cursor:default}
-.feedback{font-family:var(--ui);font-size:.85rem;margin:1rem 0 0;min-height:1.4em}
+.feedback{font-family:var(--ui);font-size:.85rem;margin:1rem 0 0;min-height:3em}
 .feedback.ok{color:var(--sage)}
 .feedback.no{color:#e09468}
-.bactions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem}
+.bactions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.4rem}
 button.ghost{
   font-family:var(--ui);font-size:.82rem;color:var(--body);background:transparent;border:1px solid var(--edge);
   border-radius:8px;padding:.45rem .9rem;cursor:pointer;transition:border-color .15s,color .15s;
 }
 button.ghost:hover{border-color:var(--sage);color:var(--paper)}
 .minigraph{border:1px solid var(--edge);border-radius:12px;background:#091a11;overflow-x:auto}
-.minigraph svg{display:block;width:100%;min-width:420px;height:auto}
+.minigraph svg{display:block;width:100%;min-width:480px;height:auto}
 .mini .n-body{opacity:0;transition:opacity .5s}
 .mini .n-body.shown{opacity:1}
-.mini .link,.mini .link-txt{opacity:0}
-.mini .link.shown{opacity:1}
-.mini .link-txt.shown{opacity:1}
+.mini .link.shown,.mini .link-txt.shown{opacity:1}
 .mini .link.path{stroke:var(--gold);stroke-width:2.6}
 .mini .link-txt.path{fill:var(--gold-soft)}
 .mini .n-body.path .n-disc{stroke:var(--gold);stroke-width:2.4}
@@ -200,9 +169,8 @@ button.ghost:hover{border-color:var(--sage);color:var(--paper)}
 ol.recipe{list-style:none;counter-reset:r;padding:0;margin:2rem 0 0;max-width:44rem}
 ol.recipe li{counter-increment:r;position:relative;padding:0 0 0 3rem;margin:0 0 1.5rem}
 ol.recipe li::before{
-  content:counter(r);position:absolute;left:0;top:.05rem;
-  font-family:var(--ui);font-size:.8rem;font-weight:700;color:var(--gold);
-  width:1.9rem;height:1.9rem;border:1px solid var(--edge);border-radius:50%;
+  content:counter(r);position:absolute;left:0;top:.05rem;font-family:var(--ui);font-size:.8rem;font-weight:700;
+  color:var(--gold);width:1.9rem;height:1.9rem;border:1px solid var(--edge);border-radius:50%;
   display:grid;place-items:center;background:#0b1d13;
 }
 ol.recipe b{font-family:var(--ui);font-size:.94rem;color:var(--paper);font-weight:500;display:block;margin-bottom:.15rem}
@@ -215,8 +183,8 @@ button.st{
   border-bottom-width:2px;border-radius:8px;padding:.45rem .85rem;cursor:pointer;transition:color .15s,border-color .15s;
 }
 button.st:hover{color:var(--paper)}
-button.st[aria-pressed="true"]{color:var(--gold-soft);border-color:var(--edge);border-bottom-color:var(--gold)}
-.stepbox{border:1px solid var(--edge);border-radius:12px;padding:1.5rem 1.6rem;background:#0b1d13;min-height:15rem}
+button.st[aria-pressed="true"]{color:var(--gold-soft);border-bottom-color:var(--gold)}
+.stepbox{border:1px solid var(--edge);border-radius:12px;padding:1.5rem 1.6rem;background:#0b1d13;min-height:16rem}
 .stepbox h3{margin-bottom:.5rem;color:var(--paper);font-family:var(--display);font-size:1.5rem;font-weight:600}
 .stepbox p{max-width:44rem}
 .pathline{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin:1.1rem 0;font-family:var(--ui);font-size:.85rem}
@@ -243,9 +211,9 @@ button.st[aria-pressed="true"]{color:var(--gold-soft);border-color:var(--edge);b
 .said .mark{font-family:var(--ui);font-size:.8rem;margin:.65rem 0 0}
 .hidden{display:none}
 
-/* table-ish */
+/* picker */
 .picker{margin-top:2rem;border:1px solid var(--edge);border-radius:12px;overflow:hidden}
-.prow{display:grid;grid-template-columns:11rem 1fr;gap:0;border-top:1px solid var(--edge)}
+.prow{display:grid;grid-template-columns:11rem 1fr;border-top:1px solid var(--edge)}
 .prow:first-child{border-top:0}
 .prow>div{padding:1rem 1.2rem}
 .prow>div:first-child{font-family:var(--ui);font-size:.86rem;color:var(--gold-soft);background:#0b1d13;border-right:1px solid var(--edge)}
@@ -257,7 +225,7 @@ ul.powers li{position:relative;padding-left:1.6rem;margin-bottom:.85rem}
 ul.powers li::before{content:"";position:absolute;left:0;top:.72em;width:.55rem;height:.55rem;border:1px solid var(--sage);border-radius:50%}
 ul.powers b{font-family:var(--ui);font-size:.95rem;font-weight:500;color:var(--paper)}
 
-/* work notes */
+/* work-only asides */
 .worknote{
   display:none;margin:1.4rem 0 0;border-left:2px solid var(--gold);padding:.8rem 0 .8rem 1.1rem;
   background:linear-gradient(90deg,rgba(233,181,73,.07),rgba(233,181,73,0));
@@ -267,8 +235,7 @@ body.workmode .worknote{display:block}
 .worknote p{margin:0;font-size:1rem;color:var(--mint)}
 
 footer{padding:4.5rem 0 0;font-family:var(--ui);font-size:.84rem;color:var(--dim)}
-footer p{max-width:38rem}
-
+footer p{max-width:40rem}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -278,15 +245,16 @@ footer p{max-width:38rem}
 
 <header class="top">
   <p class="crumb">A brown bag on how machines keep what they know</p>
-  <span class="switch">
-    <label for="wm" id="wmlabel">Show the grown-up version</label>
-    <button id="wm" role="switch" aria-pressed="false" aria-labelledby="wmlabel"></button>
-  </span>
+  <div class="worldpick" role="group" aria-label="Choose which example world to explain with">
+    <button id="wKid" type="button" aria-pressed="true">Explain it with Ted's neighbourhood</button>
+    <button id="wWork" type="button" aria-pressed="false">Explain it with a wealth desk</button>
+  </div>
+  <p class="worldnote" id="worldnote"></p>
 </header>
 
 <div class="hero">
   <h1>One world, two ways to remember it.</h1>
-  <p class="lede">Here are twelve things from Maya's neighbourhood. A <em>vector database</em> keeps them in a pile, with similar things sitting close together. A <em>knowledge graph</em> keeps them on a map, with a line drawn between anything that is actually connected. Same twelve things. Press a button and watch them rearrange.</p>
+  <p class="lede" data-copy="lede"></p>
 
   <div class="viewer">
     <div class="modes" role="group" aria-label="Choose how to arrange the twelve things">
@@ -294,7 +262,7 @@ footer p{max-width:38rem}
       <button class="mode" id="btnGraph" aria-pressed="false">Show me the map</button>
     </div>
     <div class="stage">
-      <svg id="hero" viewBox="0 0 900 470" data-mode="cloud" role="img" aria-label="Twelve people, pets, places and activities from Maya's neighbourhood, shown either grouped by meaning or joined by lines showing how they are related."></svg>
+      <svg id="hero" viewBox="0 0 900 470" data-mode="cloud" role="img" aria-label="Twelve things shown either grouped by meaning or joined by lines showing how they relate."></svg>
     </div>
     <p class="caption" id="cap"></p>
   </div>
@@ -302,7 +270,7 @@ footer p{max-width:38rem}
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">What each one actually holds</p>
+  <p class="kicker">What each one actually holds</p>
   <h2>The pile knows what things are like. The map knows what things did to each other.</h2>
   <p>That one sentence is the whole difference. Everything below is just detail.</p>
 
@@ -310,38 +278,32 @@ footer p{max-width:38rem}
     <div class="card">
       <h3>The pile</h3>
       <p class="what">a vector database, sometimes called a knowledge base</p>
-      <p>Imagine a room where you throw in a note for everything you know. As each note lands, it drifts towards other notes that <em>mean</em> something similar. Notes about dogs end up near notes about cats. Nobody sorted them — they sorted themselves by meaning.</p>
+      <p data-copy="pile1"></p>
       <p>To use it, you say what you're looking for and it hands you the twenty nearest notes. It never really understood them. It just knows what sits close to what.</p>
       <dl>
-        <dt>Good at</dt>
-        <dd>Find me something like this. Even if I used different words. Even if I spelled it wrong.</dd>
-        <dt>Bad at</dt>
-        <dd>Anything that needs following a chain. It can hand you two notes that connect, but it can't join them up for you.</dd>
-        <dt>Cost to build</dt>
-        <dd>Low. Point it at your documents and it mostly builds itself.</dd>
+        <dt>Good at</dt><dd data-copy="pileGood"></dd>
+        <dt>Bad at</dt><dd>Anything that needs following a chain. It can hand you two notes that connect, but it can't join them up for you.</dd>
+        <dt>Cost to build</dt><dd>Low. Point it at your documents and it mostly builds itself.</dd>
       </dl>
       <div class="worknote">
-        <p class="tag">At work</p>
-        <p>This is your policy documents, fund factsheets, product wikis and past advisory notes, chunked and embedded. It gets you a decent search assistant in weeks, and it will always be part of the answer — just rarely all of it.</p>
+        <p class="tag">Where this already exists in your estate</p>
+        <p>Policy documents, fund factsheets, product wikis, past advisory notes and call reports — chunked and embedded. This gets you a credible search assistant in weeks, and it will always be part of the answer. It's just rarely all of it.</p>
       </div>
     </div>
 
     <div class="card map">
       <h3>The map</h3>
       <p class="what">a knowledge graph</p>
-      <p>Now imagine a giant pinboard. Every thing you know gets one pin with its name on it: Maya, Coco, Chess Club, Mr. Tan. Then you run a string between two pins whenever something is true about both, and you write on the string what it is: <em>owns</em>, <em>best friend</em>, <em>runs</em>.</p>
+      <p data-copy="map1"></p>
       <p>Nothing is fuzzy here. Either the string is there or it isn't. And because the strings join up, you can start at one pin and walk to a pin three strings away — which is where the interesting answers live.</p>
       <dl>
-        <dt>Good at</dt>
-        <dd>How is this connected to that? Who else? What changes if this one moves?</dd>
-        <dt>Bad at</dt>
-        <dd>Vague questions. If you don't know which pin to start from, the map can't help you find it.</dd>
-        <dt>Cost to build</dt>
-        <dd>Real. Somebody has to decide what counts as a pin, and keep the strings honest.</dd>
+        <dt>Good at</dt><dd>How is this connected to that? Who else? What changes if this one moves?</dd>
+        <dt>Bad at</dt><dd>Vague questions. If you don't know which pin to start from, the map can't help you find it.</dd>
+        <dt>Cost to build</dt><dd>Real. Somebody has to decide what counts as a pin, and keep the strings honest.</dd>
       </dl>
       <div class="worknote">
-        <p class="tag">At work</p>
-        <p>Clients, households, RMs, holdings, products, issuers, sectors, mandates, suitability rules — and the relationships between them. Most of this already exists in your systems as foreign keys. A graph is mainly a decision to treat those joins as first-class, queryable things.</p>
+        <p class="tag">Where this already exists in your estate</p>
+        <p>Most of these relationships are already sitting in your systems as foreign keys — client to household, holding to issuer, mandate to model. A graph is largely a decision to treat those joins as first-class queryable objects rather than plumbing.</p>
       </div>
     </div>
   </div>
@@ -349,22 +311,21 @@ footer p{max-width:38rem}
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">Same question, two memories</p>
+  <p class="kicker">Same question, two memories</p>
   <h2>Pick a question and see who copes.</h2>
   <p>The pile and the map are not rivals with the same job. They fail at different things, and you can feel it in three questions.</p>
-
   <div class="qbar" role="group" aria-label="Choose a question"></div>
   <div class="answers" id="answers"></div>
   <p class="takeaway" id="take"></p>
   <div class="worknote">
-    <p class="tag">At work</p>
-    <p>Question two is the one that shows up in every steering meeting: <em>which of my clients is exposed to this issuer, through anything they hold?</em> That is a three-hop question, and no amount of better chunking will make retrieval-by-similarity answer it reliably.</p>
+    <p class="tag">Why this matters</p>
+    <p>The middle question is the one that shows up in every steering meeting. It is a three-hop question, and no amount of better chunking or a bigger context window will make retrieval-by-similarity answer it reliably. That is a structural limit, not a tuning problem.</p>
   </div>
 </section>
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">Build one</p>
+  <p class="kicker">Build one</p>
   <h2>Five sentences make a knowledge graph.</h2>
   <p>A graph is built one small fact at a time, and every fact has exactly three parts: a thing, a link, and another thing. That's called a <em>triple</em>. Read each sentence, tap the three parts, and watch the map grow.</p>
 
@@ -377,81 +338,71 @@ footer p{max-width:38rem}
         <div class="slot mid" data-i="1">link</div>
         <div class="slot" data-i="2">thing</div>
       </div>
-      <div class="slotlabels" aria-hidden="true">
-        <span>who or what</span><span class="mid">how they connect</span><span>who or what</span>
-      </div>
+      <div class="slotlabels" aria-hidden="true"><span>who or what</span><span>how they connect</span><span>who or what</span></div>
       <div class="chips" id="chips"></div>
       <p class="feedback" id="fb" role="status" aria-live="polite"></p>
-      <div class="bactions">
-        <button class="ghost" id="reset">Start over</button>
-      </div>
+      <div class="bactions"><button class="ghost" id="reset" type="button">Start over</button></div>
     </div>
     <div class="minigraph">
-      <svg id="mini" class="mini" viewBox="0 0 660 320" role="img" aria-label="A small knowledge graph that grows as you build each triple."></svg>
+      <svg id="mini" class="mini" viewBox="0 0 680 330" role="img" aria-label="A small knowledge graph that grows as you build each triple."></svg>
     </div>
   </div>
 </section>
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">Doing it for real</p>
+  <p class="kicker">Doing it for real</p>
   <h2>How you'd actually build one.</h2>
   <p>The game above skipped the hard parts. Here they are, in the order they bite.</p>
-
   <ol class="recipe">
     <li><b>Decide what counts as a pin</b><p>Pick five to ten kinds of thing and the handful of links between them. Write it down as a schema. The urge to model everything is the single most common way these projects die before they ship anything.</p></li>
-    <li><b>Pull the triples out</b><p>Two sources, two methods. Tables, CRM and core systems already have the relationships as joins, so you map them with rules. Documents don't, so you run a language model over them with your schema in the prompt and ask for triples back. Sample the output and have a human check it, because extraction quality sets the ceiling on everything downstream.</p></li>
-    <li><b>Squash the duplicates</b><p>"M. Loh", "Maya Loh" and "Maya L." have to become one pin, or your graph quietly lies to you. This step is called entity resolution and it will take longer than you budgeted. Give it a real owner.</p></li>
+    <li><b>Pull the triples out</b><p>Two sources, two methods. Tables, CRM and core systems already hold the relationships as joins, so you map them with rules. Documents don't, so you run a language model over them with your schema in the prompt and ask for triples back. Sample the output and have a human check it — extraction quality sets the ceiling on everything downstream.</p></li>
+    <li><b>Squash the duplicates</b><p>Three spellings of the same name have to become one pin, or your graph quietly lies to you. This step is called entity resolution and it will take longer than you budgeted. Give it a real owner.</p></li>
     <li><b>Put it somewhere that can walk</b><p>A graph database (Neo4j, Neptune, TigerGraph) or a triple store. You can also fake it with node and edge tables in the warehouse you already have — worth doing first if you want to prove the value before buying anything.</p></li>
-    <li><b>Add embeddings to the pins</b><p>This is the bit people forget. Give every pin a vector of its name and description, so a messy human question can find the right starting pin. Your graph needs a doorway, and the pile is the doorway.</p></li>
+    <li><b>Add embeddings to the pins</b><p>The bit people forget. Give every pin a vector of its name and description so a messy human question can find the right starting point. Your graph needs a doorway, and the pile is the doorway.</p></li>
     <li><b>Keep the receipts</b><p>Every string remembers which document or table it came from, and when. Without provenance you can show an answer but you can't defend it, and an answer you can't defend is not usable in a regulated process.</p></li>
     <li><b>Put permissions on the graph, not on the answer</b><p>Filter at retrieval, so a walk simply cannot reach a pin this user isn't entitled to see. Trying to censor the model's output afterwards is a losing game.</p></li>
   </ol>
-
   <div class="worknote">
-    <p class="tag">At work</p>
-    <p>A sensible first slice: one segment, one product family, six node types, provenance from day one. Ship a graph that answers five questions properly rather than one that half-answers fifty. And run it beside your existing vector search, not instead of it.</p>
+    <p class="tag">A sensible first slice</p>
+    <p>One segment, one product family, six node types, provenance from day one. Ship a graph that answers five questions properly rather than one that half-answers fifty — and run it beside your existing vector search, not instead of it.</p>
   </div>
 </section>
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">Putting it to work</p>
+  <p class="kicker">Putting it to work</p>
   <h2>How a map answers a question.</h2>
-  <p>Here's the whole trip, one step at a time. The question is: <em>who runs the club that Maya's best friend joined?</em></p>
-
+  <p data-copy="pipeIntro"></p>
   <div class="steptabs" id="steptabs" role="group" aria-label="Steps"></div>
   <div class="stepbox" id="stepbox" aria-live="polite"></div>
 </section>
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">What's next</p>
+  <p class="kicker">The answer to your last question</p>
   <h2>So what is Graph RAG?</h2>
   <p>RAG means <em>retrieval-augmented generation</em>: before the model answers, go and fetch the relevant facts and hand them over. Graph RAG is RAG where the fetching walks a knowledge graph instead of only grabbing lookalike notes.</p>
-  <p>So yes — it's related to both of the things - Vector DBs and Knowledge Graphs. It doesn't replace them. It <em>uses</em> them. The pile finds the door. The map walks the corridors. The model does the talking.</p>
+  <p>So yes — it's related to both of the things you asked about. It doesn't replace them. It <em>uses</em> them. The pile finds the door. The map walks the corridors. The model does the talking.</p>
   <p>Watch the same question go three ways.</p>
-
   <div class="lanes" id="lanes"></div>
-
   <div class="worknote">
-    <p class="tag">At work</p>
-    <p>The middle lane is where most enterprise assistants are stuck today, and it's why they demo well and disappoint in production. Nothing is broken — the joining fact just wasn't in the chunks that came back. Graph RAG makes the join deterministic instead of hoping it fits in the context window.</p>
+    <p class="tag">Why demos pass and pilots disappoint</p>
+    <p>The middle lane is where most enterprise assistants sit today. Nothing is broken — the joining fact just wasn't in the chunks that came back that time. Graph RAG makes the join deterministic instead of hoping it lands in the context window.</p>
   </div>
 </section>
 
 <section>
   <div class="rule"></div>
-  <p class="kicker" style="margin-top:2rem">What it's for</p>
+  <p class="kicker">What it's for</p>
   <h2>What Graph RAG actually powers.</h2>
-
   <ul class="powers">
     <li><b>Questions whose answer lives in five places at once.</b> The fact is never in one document. Retrieval by similarity gets you four of the five pieces and a confident guess about the fifth.</li>
-    <li><b>Answers with receipts.</b> The path is the citation. You can hand someone the chain of facts the answer stands on, which is the difference between a demo and something an advisor is allowed to use.</li>
-    <li><b>"How are these connected?"</b> Related parties, shared exposures, rings, referral chains, who-touched-what. Fraud and compliance teams have wanted this for years and it was always a query problem, not an AI problem.</li>
-    <li><b>Big-picture summaries.</b> Group the graph into clusters, summarise each cluster once, and you can answer <em>what are the themes across these 4,000 documents</em> — a question ordinary retrieval cannot even begin, because there is no single chunk that contains the answer.</li>
+    <li><b>Answers with receipts.</b> The path is the citation. You can hand someone the chain of facts the answer stands on — the difference between a demo and something an advisor is allowed to act on.</li>
+    <li><b>"How are these connected?"</b> Related parties, shared exposures, referral chains, who-touched-what. Compliance and surveillance teams have wanted this for years, and it was always a query problem rather than an AI one.</li>
+    <li><b>Big-picture summaries.</b> Cluster the graph, summarise each cluster once, and you can answer <em>what are the themes across these 4,000 documents</em> — a question ordinary retrieval cannot even begin, because no single chunk contains the answer.</li>
     <li><b>Next best action.</b> A nudge is an argument: this client, this holding, this event, therefore this suggestion. Those are edges. A graph lets the reasoning be inspected instead of inferred.</li>
-    <li><b>Agents that don't wander.</b> Give an agent a graph and its moves are constrained to real relationships, which is a much cheaper way to keep it honest than more prompt instructions.</li>
+    <li><b>Agents that don't wander.</b> Give an agent a graph and its moves are constrained to real relationships — a much cheaper way to keep it honest than another paragraph of prompt instructions.</li>
   </ul>
 
   <h2 style="margin-top:3rem;font-size:clamp(1.4rem,3vw,1.9rem)">Which should I use?</h2>
@@ -464,7 +415,7 @@ footer p{max-width:38rem}
 
 <footer>
   <div class="rule" style="margin-bottom:2rem"></div>
-  <p>Maya's neighbourhood is made up. Everything it demonstrates isn't. If you remember one thing: the pile tells you what looks alike, the map tells you what's connected, and Graph RAG is what you get when you stop treating that as a choice.</p>
+  <p data-copy="foot"></p>
 </footer>
 
 </div>
@@ -472,180 +423,317 @@ footer p{max-width:38rem}
 <script>
 (function(){
 "use strict";
-const SVGNS="http://www.w3.org/2000/svg";
-function el(n,a){const e=document.createElementNS(SVGNS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+const NS="http://www.w3.org/2000/svg";
+function el(n,a){const e=document.createElementNS(NS,n);if(a)for(const k in a)e.setAttribute(k,a[k]);return e;}
 
-/* ============ hero ============ */
-const NODES=[
- {id:"maya",  label:"Maya",           emoji:"\u{1F467}",     kind:"person", cloud:[150,112], graph:[180,272]},
- {id:"ben",   label:"Ben",            emoji:"\u{1F466}",     kind:"person", cloud:[245,80],  graph:[400,242]},
- {id:"ada",   label:"Ada",            emoji:"\u{1F9D2}",     kind:"person", cloud:[208,172], graph:[622,318]},
- {id:"tan",   label:"Mr. Tan",        emoji:"\u{1F9D1}\u200D\u{1F3EB}", kind:"person", cloud:[112,196], graph:[420,82]},
- {id:"coco",  label:"Coco",           emoji:"\u{1F415}",     kind:"pet",    cloud:[700,112], graph:[112,382]},
- {id:"luna",  label:"Luna",           emoji:"\u{1F408}",     kind:"pet",    cloud:[776,176], graph:[400,392]},
- {id:"school",label:"Riverside School",emoji:"\u{1F3EB}",    kind:"place",  cloud:[150,348], graph:[172,112]},
- {id:"pizza", label:"Pizza Palace",   emoji:"\u{1F355}",     kind:"place",  cloud:[254,402], graph:[72,192]},
- {id:"lib",   label:"Library",        emoji:"\u{1F4DA}",     kind:"place",  cloud:[108,412], graph:[788,398]},
- {id:"chess", label:"Chess Club",     emoji:"\u265F\uFE0F",  kind:"thing",  cloud:[692,336], graph:[602,172]},
- {id:"swim",  label:"Swimming",       emoji:"\u{1F3CA}",     kind:"thing",  cloud:[786,402], graph:[252,392]},
- {id:"bike",  label:"Bicycle",        emoji:"\u{1F6B4}",     kind:"thing",  cloud:[646,412], graph:[532,402]}
+/* ---------- shared shape of the world: positions and topology never change ---------- */
+const POS={
+ a:{cloud:[150,112],graph:[180,272]}, b:{cloud:[245,80], graph:[400,242]},
+ c:{cloud:[208,172],graph:[622,318]}, d:{cloud:[112,196],graph:[420,82]},
+ e:{cloud:[700,112],graph:[112,382]}, f:{cloud:[776,176],graph:[400,392]},
+ g:{cloud:[150,348],graph:[172,112]}, h:{cloud:[254,402],graph:[72,192]},
+ i:{cloud:[108,412],graph:[788,398]}, j:{cloud:[692,336],graph:[602,172]},
+ k:{cloud:[786,402],graph:[252,392]}, l:{cloud:[646,412],graph:[532,402]}
+};
+const TOPO=[["a","e"],["a","g"],["a","b"],["a","k"],["a","h"],["b","f"],["b","j"],["b","l"],["c","j"],["c","i"],["d","g"],["d","j"]];
+const HULLPOS=[
+ {cx:178,cy:140,rx:122,ry:108,lx:178,ly:22},
+ {cx:738,cy:146,rx:108,ry:92, lx:738,ly:36},
+ {cx:172,cy:388,rx:138,ry:78, lx:172,ly:296},
+ {cx:708,cy:386,rx:132,ry:80, lx:708,ly:290}
 ];
-const EDGES=[
- ["maya","coco","owns"],["maya","school","goes to"],["maya","ben","best friend"],
- ["maya","swim","does"],["maya","pizza","eats at"],
- ["ben","luna","owns"],["ben","chess","joined"],["ben","bike","rides"],
- ["ada","chess","joined"],["ada","lib","borrows from"],
- ["tan","school","teaches at"],["tan","chess","runs"]
-];
-const HULLS=[
- {cx:178,cy:140,rx:122,ry:108,label:"words about people",   lx:178,ly:22},
- {cx:738,cy:146,rx:108,ry:92, label:"words about pets",     lx:738,ly:36},
- {cx:172,cy:388,rx:138,ry:78, label:"words about places",   lx:172,ly:296},
- {cx:708,cy:386,rx:132,ry:80, label:"words about doing things",lx:708,ly:290}
-];
-const byId={};NODES.forEach(n=>byId[n.id]=n);
+const MPOS={a:[120,158],e:[62,62],b:[302,124],j:[456,196],d:[498,60],c:[576,278]};
+const MTOPO=[["a","e"],["a","b"],["b","j"],["d","j"],["c","j"]];
+const PATH_E=["a|b","b|j","d|j"],PATH_N=["a","b","j","d"];
+
+/* ---------- the two worlds ---------- */
+const W={};
+
+W.kid={
+ note:"Everything on this page is explained with the same made-up neighbourhood. Switch worlds at any point and every diagram, question and answer changes with you.",
+ nodes:{
+  a:{l:"Ted",e:"\u{1F466}",k:"person"}, b:{l:"Thaddeus",e:"\u{1F9D2}",k:"person"},
+  c:{l:"Megan",e:"\u{1F467}",k:"person"},  d:{l:"Mr. Loh",e:"\u{1F9D1}\u200D\u{1F3EB}",k:"person"},
+  e:{l:"Loki",e:"\u{1F431}",k:"pet"},    f:{l:"Luna",e:"\u{1F408}",k:"pet"},
+  g:{l:"Forest Junior College",e:"\u{1F3EB}",k:"place"}, h:{l:"Pizza Palace",e:"\u{1F355}",k:"place"},
+  i:{l:"Library",e:"\u{1F4DA}",k:"place"}, j:{l:"Chess Club",e:"\u265F\uFE0F",k:"thing"},
+  k:{l:"Swimming",e:"\u{1F3CA}",k:"thing"}, l:{l:"Bicycle",e:"\u{1F6B4}",k:"thing"}
+ },
+ rels:["owns","goes to","best friend","does","eats at","owns","joined","rides","joined","borrows from","teaches at","runs"],
+ hulls:["words about people","words about pets","words about places","words about doing things"],
+ caps:{
+  cloud:"Sorted by meaning, not by fact. The pile has worked out that Loki and Luna belong together \u2014 but it has no idea that Loki is Ted's cat.",
+  graph:"Now every line is a fact somebody wrote down. Hover or tab through a dot to see what it's joined to."
+ },
+ copy:{
+  lede:"Here are twelve things from Ted's neighbourhood. A <em>vector database</em> keeps them in a pile, with similar things sitting close together. A <em>knowledge graph</em> keeps them on a map, with a line drawn between anything that is actually connected. Same twelve things. Press a button and watch them rearrange.",
+  pile1:"Imagine a room where you throw in a note for everything you know. As each note lands, it drifts towards other notes that <em>mean</em> something similar. Notes about dogs end up near notes about cats. Nobody sorted them \u2014 they sorted themselves by meaning.",
+  pileGood:"Find me something like this. Even if I used different words. Even if I spelled it wrong.",
+  map1:"Now imagine a giant pinboard. Every thing you know gets one pin with its name on it: Ted, Loki, Chess Club, Mr. Loh. Then you run a string between two pins whenever something is true about both, and you write on the string what it is: <em>owns</em>, <em>best friend</em>, <em>runs</em>.",
+  pipeIntro:"Here's the whole trip, one step at a time. The question is: <em>who runs the club that Ted's best friend joined?</em>",
+  foot:"Ted's neighbourhood is made up. Everything it demonstrates isn't. If you remember one thing: the pile tells you what looks alike, the map tells you what's connected, and Graph RAG is what you get when you stop treating that as a choice."
+ },
+ qs:[
+  {q:"Show me things like \u201Ckitten\u201D",
+   pile:{good:"yes",text:"Hands back both cats straight away. Nobody ever typed the word \u201Ckitten\u201D anywhere \u2014 the pile just knows those notes sit close to it.",v:"Nails it."},
+   map:{good:"no",text:"Stuck. There is no pin called \u201Ckitten\u201D and no string labelled \u201Cis a bit like\u201D. The map only holds facts, and \u201Ckind of similar\u201D is not a fact.",v:"Wrong tool."},
+   take:"Fuzzy, vague, human-sounding questions are the pile's home turf. Don't build a graph for these."},
+  {q:"Who runs the club that Ted's best friend joined?",
+   pile:{good:"no",text:"Grabs the notes that look most like the question: something about Ted swimming, a list of Chess Club members, Mr. Loh's timetable. All true, none joined. The model then guesses \u2014 confidently.",v:"Plausible, and possibly wrong."},
+   map:{good:"yes",text:"Walks it. Ted \u2192 best friend \u2192 Thaddeus. Thaddeus \u2192 joined \u2192 Chess Club. Chess Club \u2190 runs \u2190 Mr. Loh. Three hops, one answer, and the route is visible.",v:"Exactly right."},
+   take:"This is the whole argument for graphs. Every hop you add makes similarity search less reliable and a graph walk no harder."},
+  {q:"Which two kids would probably get along?",
+   pile:{good:"part",text:"Finds children described in similar language, which is a real signal \u2014 but it can't tell you whether they've ever been in the same room.",v:"Half an answer."},
+   map:{good:"part",text:"Proves Thaddeus and Megan are both in the Chess Club, so they've actually met. But it can't tell that their write-ups sound alike, because that isn't written on any string.",v:"The other half."},
+   take:"Some questions need both halves. That's not a compromise \u2014 that's Graph RAG, and it's the next section."}
+ ],
+ mini:{a:"Ted",e:"Loki",b:"Thaddeus",j:"Chess Club",d:"Mr. Loh",c:"Megan"},
+ steps:[
+  {text:"Ted owns a cat named Loki.",chips:["Ted","owns","a cat","named","Loki"],ans:["Ted","owns","Loki"],edge:"a|e",rel:"owns"},
+  {text:"Ted's best friend is Thaddeus.",chips:["Ted","is","best friend","Thaddeus"],ans:["Ted","best friend","Thaddeus"],edge:"a|b",rel:"best friend"},
+  {text:"Thaddeus joined the Chess Club.",chips:["the","Thaddeus","joined","Chess Club"],ans:["Thaddeus","joined","Chess Club"],edge:"b|j",rel:"joined"},
+  {text:"Mr. Loh runs the Chess Club.",chips:["Chess Club","Mr. Loh","the","runs"],ans:["Mr. Loh","runs","Chess Club"],edge:"d|j",rel:"runs"},
+  {text:"Megan joined the Chess Club too.",chips:["too","Megan","Chess Club","joined"],ans:["Megan","joined","Chess Club"],edge:"c|j",rel:"joined"}
+ ],
+ finishQ:"Who runs the club that Ted\u2019s best friend joined?",
+ finishA:"Follow the gold: Ted \u2192 Thaddeus \u2192 Chess Club \u2190 Mr. Loh. <strong style=\"color:var(--gold-soft)\">Mr. Loh.</strong> Nothing in your five sentences said so directly \u2014 the answer only exists in the joins.",
+ pipe:[
+  {tab:"Find the door",title:"Find the door",
+   html:'<p>The question arrives as messy human words. Before anything can be walked, those words have to be matched to real pins on the map. \u201CTed\u201D in the question becomes the Ted pin.</p><p>This is the one job the pile does inside Graph RAG, and it earns its keep: it can match \u201CTed\u201D, \u201CTed L.\u201D and \u201Cthe kid with the cat\u201D to the same pin, which exact-match lookup never could.</p>'},
+  {tab:"Walk the lines",title:"Walk the lines",
+   html:'<p>From the Ted pin we follow strings outwards. Every hop is a fact somebody wrote down, so there is nothing to guess.</p><div class="pathline"><span class="node">Ted</span><span class="rel">\u2014 best friend \u2192</span><span class="node">Thaddeus</span><span class="rel">\u2014 joined \u2192</span><span class="node">Chess Club</span><span class="rel">\u2190 runs \u2014</span><span class="node">Mr. Loh</span></div><p>Three hops. Notice the last string is walked backwards \u2014 a map doesn\u2019t care which direction you came from, which is exactly why it can answer questions nobody thought to index for.</p>'},
+  {tab:"Pack the lunchbox",title:"Pack the lunchbox",
+   html:'<p>Models read sentences, not pinboards. So the path gets flattened into plain text \u2014 usually a handful of lines, not a wall of documents.</p><div class="pre">Ted\u2019s best friend is Thaddeus.\nThaddeus joined the Chess Club.\nMr. Loh runs the Chess Club.</div><p>Three short sentences instead of twenty retrieved paragraphs. Smaller, cheaper, and far less room for the model to get distracted.</p>'},
+  {tab:"Let the model talk",title:"Let the model talk",
+   html:'<p>Now the language model gets the question and those three lines, with an instruction to answer from them only.</p><p>Its job has shrunk to writing. It isn\u2019t remembering, reasoning across documents, or filling gaps from training data \u2014 which is where the confident nonsense normally comes from. Give a model less to do and it does it better.</p>'},
+  {tab:"Show the working",title:"Show the working",
+   html:'<p><strong style="color:var(--gold-soft)">Mr. Loh.</strong> Because Ted\u2019s best friend is Thaddeus, Thaddeus joined the Chess Club, and Mr. Loh runs the Chess Club.</p><p>The path came back with the answer, so anyone can check every hop and see which record each one came from. An answer you can trace is a different kind of object from an answer you have to trust.</p><div class="worknote"><p class="tag">The step that gets it approved</p><p>In a regulated process this is usually the clincher \u2014 not the accuracy, the auditability.</p></div>'}
+ ],
+ lanes:[
+  {t:"Model on its own",s:"no retrieval",win:false,
+   body:"It has read an enormous amount of the internet and none of it mentions Ted. But it would rather help than admit that, so it produces something that sounds like an answer.",
+   said:"Probably her teacher \u2014 clubs are usually run by teachers!",mark:"Fluent, friendly, unchecked.",markc:"#e09468"},
+  {t:"Pile only",s:"ordinary RAG",win:false,
+   body:"It fetches the ten notes that look most like the question. Real facts arrive \u2014 Ted\u2019s swimming, a Chess Club member list, Mr. Loh\u2019s timetable \u2014 but the note saying Thaddeus is Ted\u2019s best friend didn\u2019t make the cut.",
+   said:"Ted may be in the Chess Club, which Mr. Loh runs.",mark:"Close, and wrong in a way nobody would notice.",markc:"#e09468"},
+  {t:"Pile and map",s:"Graph RAG",win:true,
+   body:"The pile finds the Ted pin. The map walks best friend, then joined, then runs. Those three facts \u2014 and only those \u2014 go to the model.",
+   said:"Mr. Loh. Ted\u2019s best friend is Thaddeus, Thaddeus joined the Chess Club, and Mr. Loh runs the Chess Club.",mark:"Right, and it shows you why.",markc:"#8FD6A8"}
+ ]
+};
+
+W.work={
+ note:"Same page, same twelve dots, same three questions \u2014 now populated with a wealth desk instead of a neighbourhood. The names are invented; the shapes are not.",
+ nodes:{
+  a:{l:"Thaddeus",e:"\u{1F464}",k:"person"}, b:{l:"Teddy",e:"\u{1F464}",k:"person"},
+  c:{l:"Loki",e:"\u{1F464}",k:"person"}, d:{l:"Megan Loh (RM)",e:"\u{1F9D1}\u200D\u{1F4BC}",k:"person"},
+  e:{l:"Global Bond Fund",e:"\u{1F4C4}",k:"pet"}, f:{l:"Asia Equity Fund",e:"\u{1F4C4}",k:"pet"},
+  g:{l:"Priority segment",e:"\u{1F3E6}",k:"place"}, h:{l:"SG booking centre",e:"\u{1F3E2}",k:"place"},
+  i:{l:"Research portal",e:"\u{1F4CA}",k:"place"}, j:{l:"Balanced Model",e:"\u{1F4C8}",k:"thing"},
+  k:{l:"Discretionary mandate",e:"\u{1F4DD}",k:"thing"}, l:{l:"SRS account",e:"\u{1F4B3}",k:"thing"}
+ },
+ rels:["holds","sits in","referred","has","booked at","holds","subscribed to","has","subscribed to","reads","covers","manages"],
+ hulls:["text about clients","text about funds","text about places","text about products"],
+ caps:{
+  cloud:"Sorted by meaning, not by fact. The pile has worked out that the two funds belong together \u2014 but it has no idea which client holds either of them.",
+  graph:"Now every line is a real relationship from a real system. Hover or tab through a dot to see what it's joined to."
+ },
+ copy:{
+  lede:"Here are twelve things from one wealth desk. A <em>vector database</em> keeps them in a pile, with similar things sitting close together. A <em>knowledge graph</em> keeps them on a map, with a line drawn between anything that is actually connected. Same twelve things. Press a button and watch them rearrange.",
+  pile1:"Imagine a room where you throw in a note for every paragraph you own \u2014 factsheets, call reports, policy clauses. As each note lands it drifts towards notes that <em>mean</em> something similar. Fixed income commentary ends up near fixed income commentary. Nobody sorted them; they sorted themselves by meaning.",
+  pileGood:"Find me something like this. Even if the client used different words. Even if the advisor abbreviated it.",
+  map1:"Now imagine a pinboard. Every entity gets one pin: Thaddeus, the Global Bond Fund, the Balanced Model, Megan Loh. Then you run a string between two pins whenever a relationship exists, and you write on the string what it is: <em>holds</em>, <em>referred</em>, <em>manages</em>.",
+  pipeIntro:"Here's the whole trip, one step at a time. The question is: <em>who manages the model portfolio that Thaddeus's referral subscribed to?</em>",
+  foot:"The names here are invented. The failure modes aren't. If you remember one thing: the pile tells you what looks alike, the map tells you what's connected, and Graph RAG is what you get when you stop treating that as a choice."
+ },
+ qs:[
+  {q:"Find anything about income-focused fixed income",
+   pile:{good:"yes",text:"Returns the Global Bond Fund factsheet and four commentaries that never use that exact phrase. Nobody tagged them \u2014 the pile just knows those notes sit close to it.",v:"Nails it."},
+   map:{good:"no",text:"Stuck. There is no node called \u201Cincome-focused\u201D and no edge labelled \u201Cis thematically similar to\u201D. The map holds relationships, and resemblance is not a relationship.",v:"Wrong tool."},
+   take:"Fuzzy, vague, human-sounding questions are the pile's home turf. Don't build a graph for these."},
+  {q:"Who manages the model portfolio that Thaddeus's referral subscribed to?",
+   pile:{good:"no",text:"Grabs the chunks that look most like the question: Thaddeus's KYC summary, the Balanced Model factsheet, an RM coverage list. All true, none joined \u2014 the referral line never surfaced. The model then guesses, confidently.",v:"Plausible, and possibly wrong."},
+   map:{good:"yes",text:"Walks it. Thaddeus \u2192 referred \u2192 Teddy. Teddy \u2192 subscribed to \u2192 Balanced Model. Balanced Model \u2190 manages \u2190 Megan Loh. Three hops, one answer, route visible.",v:"Exactly right."},
+   take:"This is the whole argument for graphs. Every hop you add makes similarity search less reliable and a graph walk no harder."},
+  {q:"Which two clients belong in the same campaign?",
+   pile:{good:"part",text:"Finds clients whose profiles and call notes read alike, which is a genuine signal \u2014 but it can't tell you whether anything actually links them.",v:"Half an answer."},
+   map:{good:"part",text:"Proves Teddy and Loki both subscribe to the Balanced Model, so they share real exposure. But it can't see that their advisor notes describe the same concern, because that isn't on any edge.",v:"The other half."},
+   take:"Some questions need both halves. That's not a compromise \u2014 that's Graph RAG, and it's the next section."}
+ ],
+ mini:{a:"Thaddeus",e:"Global Bond",b:"Teddy",j:"Balanced Model",d:"Megan Loh",c:"Loki"},
+ steps:[
+  {text:"Thaddeus holds the Global Bond Fund.",chips:["Thaddeus","holds","the","Global Bond Fund"],ans:["Thaddeus","holds","Global Bond Fund"],edge:"a|e",rel:"holds"},
+  {text:"Thaddeus referred Teddy to the bank.",chips:["to the bank","Thaddeus","referred","Teddy"],ans:["Thaddeus","referred","Teddy"],edge:"a|b",rel:"referred"},
+  {text:"Teddy subscribed to the Balanced Model.",chips:["the","Teddy","subscribed to","Balanced Model"],ans:["Teddy","subscribed to","Balanced Model"],edge:"b|j",rel:"subscribed to"},
+  {text:"Megan Loh manages the Balanced Model.",chips:["Balanced Model","Megan Loh","the","manages"],ans:["Megan Loh","manages","Balanced Model"],edge:"d|j",rel:"manages"},
+  {text:"Loki subscribed to the Balanced Model too.",chips:["too","Loki","Balanced Model","subscribed to"],ans:["Loki","subscribed to","Balanced Model"],edge:"c|j",rel:"subscribed to"}
+ ],
+ finishQ:"Who manages the model portfolio that Thaddeus\u2019s referral subscribed to?",
+ finishA:"Follow the gold: Thaddeus \u2192 Teddy \u2192 Balanced Model \u2190 Megan Loh. <strong style=\"color:var(--gold-soft)\">Megan Loh.</strong> No single record says so \u2014 the answer only exists in the joins, which is precisely why it never appears in a retrieved chunk.",
+ pipe:[
+  {tab:"Find the door",title:"Find the door",
+   html:'<p>The question arrives as messy human words. Before anything can be walked, those words have to be resolved to real nodes. \u201CThaddeus\u201D in the question becomes one specific client node.</p><p>This is the one job the pile does inside Graph RAG, and it earns its keep: it matches \u201CThaddeus\u201D, \u201CLOH, T.\u201D and \u201Cthe client from the Q3 review\u201D to the same node, which exact-match lookup never could.</p>'},
+  {tab:"Walk the lines",title:"Walk the lines",
+   html:'<p>From that node we traverse outwards. Every hop is a relationship that exists in a system of record, so there is nothing to infer.</p><div class="pathline"><span class="node">Thaddeus</span><span class="rel">\u2014 referred \u2192</span><span class="node">Teddy</span><span class="rel">\u2014 subscribed to \u2192</span><span class="node">Balanced Model</span><span class="rel">\u2190 manages \u2014</span><span class="node">Megan Loh</span></div><p>Three hops. Notice the last edge is traversed backwards \u2014 direction is a modelling choice, not a constraint, which is why a graph answers questions nobody thought to index for.</p>'},
+  {tab:"Pack the context",title:"Pack the context",
+   html:'<p>Models read sentences, not adjacency lists. The path gets flattened into plain text \u2014 a handful of lines, not a wall of retrieved documents.</p><div class="pre">Thaddeus referred Teddy.\nTeddy subscribed to the Balanced Model.\nMegan Loh manages the Balanced Model.</div><p>Three lines instead of twenty chunks. Cheaper per call, and far less room for the model to be distracted by near-miss content.</p>'},
+  {tab:"Let the model talk",title:"Let the model talk",
+   html:'<p>The model gets the question and those three lines, with an instruction to answer from them only.</p><p>Its job has shrunk to composition. It isn\u2019t recalling, joining across documents, or filling gaps from training data \u2014 which is where confident nonsense comes from. Narrow the job and the failure rate drops with it.</p>'},
+  {tab:"Show the working",title:"Show the working",
+   html:'<p><strong style="color:var(--gold-soft)">Megan Loh.</strong> Because Thaddeus referred Teddy, Teddy subscribed to the Balanced Model, and Megan Loh manages that model.</p><p>The path returns with the answer, so every hop can be checked against the record it came from. An answer you can trace is a different kind of object from an answer you have to trust.</p><div class="worknote"><p class="tag">The step that gets it approved</p><p>In a regulated process this is usually the clincher \u2014 not the accuracy, the auditability. Second line will ask how the system arrived at the answer, and \u201Csemantic similarity\u201D is not an acceptable reply.</p></div>'}
+ ],
+ lanes:[
+  {t:"Model on its own",s:"no retrieval",win:false,
+   body:"It has read an enormous amount of public text and none of it mentions your book. But it would rather help than say so, and it produces something that sounds like an answer.",
+   said:"That would typically be handled by the client\u2019s relationship manager.",mark:"Fluent, plausible, unchecked.",markc:"#e09468"},
+  {t:"Pile only",s:"ordinary RAG",win:false,
+   body:"It retrieves the ten chunks most similar to the question. Real content arrives \u2014 a KYC summary, the model factsheet, an RM coverage sheet \u2014 but the referral relationship lives in a CRM field that never became a chunk.",
+   said:"Thaddeus appears linked to the Balanced Model, which Megan Loh manages.",mark:"Close, and wrong in a way nobody would catch.",markc:"#e09468"},
+  {t:"Pile and map",s:"Graph RAG",win:true,
+   body:"The pile resolves the client node. The map traverses referred, then subscribed to, then manages. Those three facts \u2014 and only those \u2014 go to the model.",
+   said:"Megan Loh. Thaddeus referred Teddy, Teddy subscribed to the Balanced Model, and Megan Loh manages it.",mark:"Right, and it shows you why.",markc:"#8FD6A8"}
+ ]
+};
+
+let V="kid";
+const D=()=>W[V];
+
+/* ---------- hero ---------- */
 const hero=document.getElementById("hero");
-const gH=el("g"),gE=el("g"),gN=el("g");
-hero.append(gH,gE,gN);
-
-HULLS.forEach(h=>{
+const gH=el("g"),gE=el("g"),gN=el("g");hero.append(gH,gE,gN);
+const nodeEls={},edgeEls=[],hullTxts=[];
+HULLPOS.forEach(h=>{
   gH.appendChild(el("ellipse",{class:"hull",cx:h.cx,cy:h.cy,rx:h.rx,ry:h.ry}));
-  const t=el("text",{class:"hull-txt",x:h.lx,y:h.ly});t.textContent=h.label;gH.appendChild(t);
+  const t=el("text",{class:"hull-txt",x:h.lx,y:h.ly});gH.appendChild(t);hullTxts.push(t);
 });
-const edgeEls=EDGES.map(([a,b,rel])=>{
-  const line=el("line",{class:"link","data-a":a,"data-b":b});
-  const txt=el("text",{class:"link-txt","data-a":a,"data-b":b});
-  txt.textContent=rel;gE.append(line,txt);return{a,b,line,txt};
+TOPO.forEach(([a,b])=>{
+  const A=POS[a].graph,B=POS[b].graph;
+  const line=el("line",{class:"link",x1:A[0],y1:A[1],x2:B[0],y2:B[1]});
+  const txt=el("text",{class:"link-txt",x:(A[0]+B[0])/2,y:(A[1]+B[1])/2-4});
+  gE.append(line,txt);edgeEls.push({a,b,line,txt});
 });
-NODES.forEach(n=>{
-  const g=el("g",{class:"n-body n-"+n.kind,"data-id":n.id,tabindex:"0"});
+Object.keys(POS).forEach(id=>{
+  const g=el("g",{class:"n-body",tabindex:"0"});
   g.appendChild(el("circle",{class:"n-disc",r:23}));
-  const e=el("text",{class:"n-emoji",y:1});e.textContent=n.emoji;g.appendChild(e);
-  const l=el("text",{class:"n-label",y:42});l.textContent=n.label;g.appendChild(l);
-  g.addEventListener("mouseenter",()=>focusNode(n.id));
-  g.addEventListener("focus",()=>focusNode(n.id));
+  const em=el("text",{class:"n-emoji",y:1}),lb=el("text",{class:"n-label",y:42});
+  g.append(em,lb);gN.appendChild(g);
+  g.addEventListener("mouseenter",()=>focusNode(id));
+  g.addEventListener("focus",()=>focusNode(id));
   g.addEventListener("mouseleave",clearFocus);
   g.addEventListener("blur",clearFocus);
-  gN.appendChild(g);n.el=g;
+  nodeEls[id]={g,em,lb};
 });
+function paintHero(){
+  const d=D();
+  Object.keys(POS).forEach(id=>{
+    const n=d.nodes[id],o=nodeEls[id];
+    o.g.setAttribute("class","n-body n-"+n.k);
+    o.em.textContent=n.e;o.lb.textContent=n.l;
+  });
+  edgeEls.forEach((e,i)=>e.txt.textContent=d.rels[i]);
+  hullTxts.forEach((t,i)=>t.textContent=d.hulls[i]);
+}
 function place(mode){
-  NODES.forEach(n=>{const p=n[mode];n.el.setAttribute("transform","translate("+p[0]+","+p[1]+")");});
-  edgeEls.forEach(e=>{
-    const a=byId[e.a].graph,b=byId[e.b].graph;
-    e.line.setAttribute("x1",a[0]);e.line.setAttribute("y1",a[1]);
-    e.line.setAttribute("x2",b[0]);e.line.setAttribute("y2",b[1]);
-    e.txt.setAttribute("x",(a[0]+b[0])/2);e.txt.setAttribute("y",(a[1]+b[1])/2-4);
+  Object.keys(POS).forEach(id=>{
+    const p=POS[id][mode];
+    nodeEls[id].g.setAttribute("transform","translate("+p[0]+","+p[1]+")");
   });
   hero.dataset.mode=mode;
 }
 function focusNode(id){
   if(hero.dataset.mode!=="graph")return;
   hero.classList.add("focusing");
-  NODES.forEach(n=>n.el.classList.remove("hot"));
-  byId[id].el.classList.add("hot");
+  Object.values(nodeEls).forEach(o=>o.g.classList.remove("hot"));
+  nodeEls[id].g.classList.add("hot");
   edgeEls.forEach(e=>{
     const on=e.a===id||e.b===id;
     e.line.classList.toggle("hot",on);e.txt.classList.toggle("hot",on);
-    if(on){byId[e.a].el.classList.add("hot");byId[e.b].el.classList.add("hot");}
+    if(on){nodeEls[e.a].g.classList.add("hot");nodeEls[e.b].g.classList.add("hot");}
   });
 }
 function clearFocus(){
   hero.classList.remove("focusing");
-  NODES.forEach(n=>n.el.classList.remove("hot"));
+  Object.values(nodeEls).forEach(o=>o.g.classList.remove("hot"));
   edgeEls.forEach(e=>{e.line.classList.remove("hot");e.txt.classList.remove("hot");});
 }
-const CAPS={
-  cloud:"Sorted by meaning, not by fact. The pile has worked out that Coco and Luna belong together \u2014 but it has no idea that Coco is Maya's dog.",
-  graph:"Now every line is a fact somebody wrote down. Hover or tab through a dot to see what it's joined to."
-};
 const bC=document.getElementById("btnCloud"),bG=document.getElementById("btnGraph"),cap=document.getElementById("cap");
 function setMode(m){
-  clearFocus();place(m);cap.textContent=CAPS[m];
+  clearFocus();place(m);cap.textContent=D().caps[m];
   bC.setAttribute("aria-pressed",m==="cloud");bG.setAttribute("aria-pressed",m==="graph");
 }
 bC.addEventListener("click",()=>setMode("cloud"));
 bG.addEventListener("click",()=>setMode("graph"));
-setMode("cloud");
 
-/* ============ question demo ============ */
-const QS=[
- {q:"Show me things like \u201Cpuppy\u201D",
-  pile:{good:"yes",text:"Hands back Coco the dog and Luna the cat straight away. Nobody ever typed the word \u201Cpuppy\u201D anywhere \u2014 the pile just knows those notes sit close to it.",v:"Nails it."},
-  map:{good:"no",text:"Stuck. There is no pin called \u201Cpuppy\u201D and no string labelled \u201Cis a bit like\u201D. The map only holds facts, and \u201Ckind of similar\u201D is not a fact.",v:"Wrong tool."},
-  take:"Fuzzy, vague, human-sounding questions are the pile's home turf. Don't build a graph for these."},
- {q:"Who runs the club that Maya's best friend joined?",
-  pile:{good:"no",text:"Grabs the notes that look most like the question: something about Maya swimming, a list of Chess Club members, Mr. Tan's timetable. All true, none joined. The model then guesses \u2014 confidently.",v:"Plausible, and possibly wrong."},
-  map:{good:"yes",text:"Walks it. Maya \u2192 best friend \u2192 Ben. Ben \u2192 joined \u2192 Chess Club. Chess Club \u2190 runs \u2190 Mr. Tan. Three hops, one answer, and the route is visible.",v:"Exactly right."},
-  take:"This is the whole argument for graphs. Every hop you add makes similarity search less reliable and a graph walk no harder."},
- {q:"Which two kids would probably get along?",
-  pile:{good:"part",text:"Finds children described in similar language, which is a real signal \u2014 but it can't tell you whether they've ever been in the same room.",v:"Half an answer."},
-  map:{good:"part",text:"Proves Ben and Ada are both in the Chess Club, so they've actually met. But it can't tell that their write-ups sound alike, because that isn't written on any string.",v:"The other half."},
-  take:"Some questions need both halves. That's not a compromise \u2014 that's Graph RAG, and it's the next section."}
-];
+/* ---------- questions ---------- */
 const qbar=document.querySelector(".qbar"),ansBox=document.getElementById("answers"),take=document.getElementById("take");
-QS.forEach((item,i)=>{
-  const b=document.createElement("button");
-  b.className="q";b.type="button";b.textContent=item.q;b.setAttribute("aria-pressed",i===0);
-  b.addEventListener("click",()=>showQ(i));qbar.appendChild(b);
-});
-function showQ(i){
-  const it=QS[i];
-  [...qbar.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
+let qIdx=0;
+function paintQuestions(){
+  qbar.innerHTML="";
+  D().qs.forEach((item,i)=>{
+    const b=document.createElement("button");
+    b.className="q";b.type="button";b.textContent=item.q;
+    b.addEventListener("click",()=>{qIdx=i;showQ();});
+    qbar.appendChild(b);
+  });
+  showQ();
+}
+function showQ(){
+  const it=D().qs[qIdx];
+  [...qbar.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===qIdx));
   ansBox.innerHTML="";
   [["The pile says",it.pile],["The map says",it.map]].forEach(([who,d])=>{
     const div=document.createElement("div");
     div.className="ans";div.dataset.good=d.good;
-    div.innerHTML='<p class="who">'+who+'</p><p></p><p class="verdict"></p>';
-    div.querySelectorAll("p")[1].textContent=d.text;
+    div.innerHTML='<p class="who"></p><p class="bd"></p><p class="verdict"></p>';
+    div.querySelector(".who").textContent=who;
+    div.querySelector(".bd").textContent=d.text;
     div.querySelector(".verdict").textContent=d.v;
     ansBox.appendChild(div);
   });
   take.textContent=it.take;
 }
-showQ(0);
 
-/* ============ builder ============ */
-const MN=[
- {id:"maya", label:"Maya",       emoji:"\u{1F467}", kind:"person", x:120,y:150},
- {id:"coco", label:"Coco",       emoji:"\u{1F415}", kind:"pet",    x:62, y:56},
- {id:"ben",  label:"Ben",        emoji:"\u{1F466}", kind:"person", x:300,y:118},
- {id:"chess",label:"Chess Club", emoji:"\u265F\uFE0F",kind:"thing",x:452,y:186},
- {id:"tan",  label:"Mr. Tan",    emoji:"\u{1F9D1}\u200D\u{1F3EB}",kind:"person",x:492,y:56},
- {id:"ada",  label:"Ada",        emoji:"\u{1F9D2}", kind:"person", x:566,y:268}
-];
-const STEPS=[
- {text:"Maya owns a dog named Coco.",chips:["Maya","owns","a dog","named","Coco"],ans:["Maya","owns","Coco"],edge:["maya","coco","owns"]},
- {text:"Maya's best friend is Ben.",chips:["Maya","is","best friend","Ben"],ans:["Maya","best friend","Ben"],edge:["maya","ben","best friend"]},
- {text:"Ben joined the Chess Club.",chips:["the","Ben","joined","Chess Club"],ans:["Ben","joined","Chess Club"],edge:["ben","chess","joined"]},
- {text:"Mr. Tan runs the Chess Club.",chips:["Chess Club","Mr. Tan","the","runs"],ans:["Mr. Tan","runs","Chess Club"],edge:["tan","chess","runs"]},
- {text:"Ada joined the Chess Club too.",chips:["too","Ada","Chess Club","joined"],ans:["Ada","joined","Chess Club"],edge:["ada","chess","joined"]}
-];
-const PATH_E=["maya|ben","ben|chess","tan|chess"],PATH_N=["maya","ben","chess","tan"];
+/* ---------- builder ---------- */
 const mini=document.getElementById("mini");
 const mE=el("g"),mN=el("g");mini.append(mE,mN);
 const mNodes={},mEdges={};
-MN.forEach(n=>{
-  const g=el("g",{class:"n-body n-"+n.kind,transform:"translate("+n.x+","+n.y+")"});
+Object.keys(MPOS).forEach(id=>{
+  const p=MPOS[id];
+  const g=el("g",{class:"n-body",transform:"translate("+p[0]+","+p[1]+")"});
   g.appendChild(el("circle",{class:"n-disc",r:22}));
-  const e=el("text",{class:"n-emoji",y:1});e.textContent=n.emoji;g.appendChild(e);
-  const l=el("text",{class:"n-label",y:40});l.textContent=n.label;g.appendChild(l);
-  mN.appendChild(g);mNodes[n.id]=g;
+  const em=el("text",{class:"n-emoji",y:1}),lb=el("text",{class:"n-label",y:40});
+  g.append(em,lb);mN.appendChild(g);mNodes[id]={g,em,lb};
 });
-STEPS.forEach(s=>{
-  const [a,b,rel]=s.edge,A=MN.find(n=>n.id===a),B=MN.find(n=>n.id===b);
-  const line=el("line",{class:"link",x1:A.x,y1:A.y,x2:B.x,y2:B.y});
-  const txt=el("text",{class:"link-txt",x:(A.x+B.x)/2,y:(A.y+B.y)/2-5});
-  txt.textContent=rel;mE.append(line,txt);
-  mEdges[a+"|"+b]={line,txt};
+MTOPO.forEach(([a,b])=>{
+  const A=MPOS[a],B=MPOS[b];
+  const line=el("line",{class:"link",x1:A[0],y1:A[1],x2:B[0],y2:B[1]});
+  const txt=el("text",{class:"link-txt",x:(A[0]+B[0])/2,y:(A[1]+B[1])/2-5});
+  mE.append(line,txt);mEdges[a+"|"+b]={line,txt};
 });
 const sentEl=document.getElementById("sent"),chipsEl=document.getElementById("chips"),
       slotEls=[...document.querySelectorAll("#slots .slot")],fb=document.getElementById("fb"),
       prog=document.getElementById("prog");
-let step=0,slots=[null,null,null];
+let step=0,slots=[null,null,null],locked=false;
+function paintMiniLabels(){
+  const d=D();
+  Object.keys(MPOS).forEach(id=>{
+    mNodes[id].em.textContent=d.nodes[id].e;
+    mNodes[id].lb.textContent=d.mini[id];
+    mNodes[id].g.setAttribute("class",mNodes[id].g.getAttribute("class").replace(/n-(person|pet|place|thing)/g,"")+" n-"+d.nodes[id].k);
+  });
+  d.steps.forEach(s=>{mEdges[s.edge].txt.textContent=s.rel;});
+}
+function resetBuilder(){
+  step=0;locked=false;
+  Object.values(mNodes).forEach(o=>o.g.classList.remove("shown","path"));
+  Object.values(mEdges).forEach(e=>{e.line.classList.remove("shown","path");e.txt.classList.remove("shown","path");});
+  renderStep();
+}
 function renderStep(){
-  if(step>=STEPS.length){finish();return;}
-  const s=STEPS[step];
-  prog.textContent="Fact "+(step+1)+" of "+STEPS.length;
+  const d=D();
+  if(step>=d.steps.length){finish();return;}
+  const s=d.steps[step];
+  prog.textContent="Fact "+(step+1)+" of "+d.steps.length;
   sentEl.textContent=s.text;
   slots=[null,null,null];paintSlots();
   chipsEl.innerHTML="";
@@ -658,125 +746,115 @@ function renderStep(){
 }
 function paintSlots(){
   const ph=["thing","link","thing"];
-  slotEls.forEach((el2,i)=>{
-    if(slots[i]){el2.textContent=slots[i];el2.classList.add("filled");el2.setAttribute("title","Tap to clear");}
-    else{el2.textContent=ph[i];el2.classList.remove("filled");el2.removeAttribute("title");}
+  slotEls.forEach((s,i)=>{
+    if(slots[i]){s.textContent=slots[i];s.classList.add("filled");s.title="Tap to clear";}
+    else{s.textContent=ph[i];s.classList.remove("filled");s.removeAttribute("title");}
   });
 }
-slotEls.forEach(el2=>el2.addEventListener("click",()=>{
-  const i=+el2.dataset.i;
+slotEls.forEach(s=>s.addEventListener("click",()=>{
+  if(locked)return;
+  const i=+s.dataset.i;
   if(!slots[i])return;
   slots[i]=null;paintSlots();
   [...chipsEl.children].forEach(c=>{if(!slots.includes(c.textContent))c.disabled=false;});
   fb.textContent="";fb.className="feedback";
 }));
 function pick(w,btn){
+  if(locked)return;
   const i=slots.indexOf(null);
   if(i<0)return;
   slots[i]=w;btn.disabled=true;paintSlots();
   if(slots.every(Boolean))check();
 }
 function check(){
-  const s=STEPS[step];
+  const s=D().steps[step];
   if(slots.every((v,i)=>v===s.ans[i])){
-    const [a,b]=s.edge;
-    mNodes[a].classList.add("shown");mNodes[b].classList.add("shown");
-    const e=mEdges[a+"|"+b];e.line.classList.add("shown");e.txt.classList.add("shown");
+    const [a,b]=s.edge.split("|");
+    mNodes[a].g.classList.add("shown");mNodes[b].g.classList.add("shown");
+    const e=mEdges[s.edge];e.line.classList.add("shown");e.txt.classList.add("shown");
     fb.textContent="That's a triple. Two pins and a string.";fb.className="feedback ok";
-    step++;setTimeout(renderStep,900);
+    locked=true;step++;
+    setTimeout(()=>{locked=false;renderStep();},900);
   }else{
+    locked=true;
     fb.textContent="Not quite. The middle slot is the doing word \u2014 the bit that says how the two things are joined.";
     fb.className="feedback no";
     setTimeout(()=>{
-      slots=[null,null,null];paintSlots();
+      locked=false;slots=[null,null,null];paintSlots();
       [...chipsEl.children].forEach(c=>c.disabled=false);
       fb.textContent="";fb.className="feedback";
     },1900);
   }
 }
 function finish(){
+  const d=D();
   prog.textContent="Done \u2014 six pins, five strings";
-  sentEl.textContent="Who runs the club that Maya\u2019s best friend joined?";
-  chipsEl.innerHTML="";
-  slots=[null,null,null];paintSlots();
-  fb.innerHTML="Follow the gold: Maya \u2192 Ben \u2192 Chess Club \u2190 Mr. Tan. <strong style=\"color:var(--gold-soft)\">Mr. Tan.</strong> Nothing in your five sentences said so directly \u2014 the answer only exists in the joins.";
-  fb.className="feedback ok";
+  sentEl.textContent=d.finishQ;
+  chipsEl.innerHTML="";slots=[null,null,null];paintSlots();
+  fb.innerHTML=d.finishA;fb.className="feedback ok";
   PATH_E.forEach(k=>{mEdges[k].line.classList.add("path");mEdges[k].txt.classList.add("path");});
-  PATH_N.forEach(k=>mNodes[k].classList.add("path"));
+  PATH_N.forEach(k=>mNodes[k].g.classList.add("path"));
 }
-document.getElementById("reset").addEventListener("click",()=>{
-  step=0;
-  Object.values(mNodes).forEach(g=>g.classList.remove("shown","path"));
-  Object.values(mEdges).forEach(e=>{e.line.classList.remove("shown","path");e.txt.classList.remove("shown","path");});
-  renderStep();
-});
-renderStep();
+document.getElementById("reset").addEventListener("click",resetBuilder);
 
-/* ============ stepper ============ */
-const PIPE=[
- {tab:"Find the door",title:"Find the door",
-  html:'<p>The question arrives as messy human words. Before anything can be walked, we have to match those words to real pins on the map. \u201CMaya\u201D in the question becomes the Maya pin.</p><p>This is the one job the pile does inside Graph RAG, and it earns its keep: it can match \u201CMaya\u201D, \u201CMaya L.\u201D and \u201Cthe girl with the dog\u201D to the same pin, which exact-match lookup never could.</p>'},
- {tab:"Walk the lines",title:"Walk the lines",
-  html:'<p>From the Maya pin we follow strings outwards. Every hop is a fact somebody wrote down, so there is nothing to guess.</p><div class="pathline"><span class="node">Maya</span><span class="rel">\u2014 best friend \u2192</span><span class="node">Ben</span><span class="rel">\u2014 joined \u2192</span><span class="node">Chess Club</span><span class="rel">\u2190 runs \u2014</span><span class="node">Mr. Tan</span></div><p>Three hops. Notice the last string is walked backwards \u2014 a map doesn\u2019t care which direction you came from, which is exactly why it can answer questions nobody thought to index for.</p>'},
- {tab:"Pack the lunchbox",title:"Pack the lunchbox",
-  html:'<p>Models read sentences, not pinboards. So the path gets flattened into plain text \u2014 usually a handful of lines, not a wall of documents.</p><div class="pre">Maya\u2019s best friend is Ben.\nBen joined the Chess Club.\nMr. Tan runs the Chess Club.</div><p>Three short sentences instead of twenty retrieved paragraphs. Smaller, cheaper, and far less room for the model to get distracted.</p>'},
- {tab:"Let the model talk",title:"Let the model talk",
-  html:'<p>Now the language model gets the question and those three lines, with an instruction to answer from them only.</p><p>Its job has shrunk to writing. It isn\u2019t remembering, reasoning across documents, or filling gaps from training data \u2014 which is where the confident nonsense normally comes from. Give a model less to do and it does it better.</p>'},
- {tab:"Show the working",title:"Show the working",
-  html:'<p><strong style="color:var(--gold-soft)">Mr. Tan.</strong> Because Maya\u2019s best friend is Ben, Ben joined the Chess Club, and Mr. Tan runs the Chess Club.</p><p>The path came back with the answer, so anyone can check every hop and see which record each one came from. An answer you can trace is a different kind of object from an answer you have to trust.</p><div class="worknote"><p class="tag">At work</p><p>This is usually the step that gets the project approved. Not the accuracy \u2014 the auditability.</p></div>'}
-];
+/* ---------- stepper ---------- */
 const tabs=document.getElementById("steptabs"),box=document.getElementById("stepbox");
-PIPE.forEach((p,i)=>{
-  const b=document.createElement("button");
-  b.className="st";b.type="button";b.textContent=(i+1)+". "+p.tab;b.setAttribute("aria-pressed",i===0);
-  b.addEventListener("click",()=>showStep(i));tabs.appendChild(b);
-});
-function showStep(i){
-  [...tabs.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
-  box.innerHTML="<h3>"+PIPE[i].title+"</h3>"+PIPE[i].html;
+let sIdx=0;
+function paintSteps(){
+  tabs.innerHTML="";
+  D().pipe.forEach((p,i)=>{
+    const b=document.createElement("button");
+    b.className="st";b.type="button";b.textContent=(i+1)+". "+p.tab;
+    b.addEventListener("click",()=>{sIdx=i;showStep();});
+    tabs.appendChild(b);
+  });
+  showStep();
 }
-showStep(0);
+function showStep(){
+  [...tabs.children].forEach((b,j)=>b.setAttribute("aria-pressed",j===sIdx));
+  const p=D().pipe[sIdx];
+  box.innerHTML="<h3>"+p.title+"</h3>"+p.html;
+}
 
-/* ============ lanes ============ */
-const LANES=[
- {t:"Model on its own",s:"no retrieval",win:false,
-  body:"It has read an enormous amount of the internet and none of it mentions Maya. But it would rather help than admit that, so it produces something that sounds like an answer.",
-  said:"Probably her teacher \u2014 clubs are usually run by teachers!",
-  mark:"Fluent, friendly, unchecked.",markc:"#e09468"},
- {t:"Pile only",s:"ordinary RAG",win:false,
-  body:"It fetches the ten notes that look most like the question and hands them over. Real facts arrive \u2014 Maya\u2019s swimming, a Chess Club member list, Mr. Tan\u2019s timetable \u2014 but the note that says Ben is Maya\u2019s best friend didn\u2019t make the cut.",
-  said:"Maya may be in the Chess Club, which Mr. Tan runs.",
-  mark:"Close, and wrong in a way nobody would notice.",markc:"#e09468"},
- {t:"Pile and map",s:"Graph RAG",win:true,
-  body:"The pile finds the Maya pin. The map walks best friend, then joined, then runs. Those three facts \u2014 and only those \u2014 go to the model.",
-  said:"Mr. Tan. Maya\u2019s best friend is Ben, Ben joined the Chess Club, and Mr. Tan runs the Chess Club.",
-  mark:"Right, and it shows you why.",markc:"#8FD6A8"}
-];
+/* ---------- lanes ---------- */
 const lanesEl=document.getElementById("lanes");
-LANES.forEach((l,i)=>{
-  const d=document.createElement("div");
-  d.className="lane"+(l.win?" win":"");
-  d.innerHTML='<h3></h3><p class="sub"></p><p class="bd"></p>'+
-    '<div class="reveal"><button class="ghost" type="button">See what it answers</button></div>'+
-    '<div class="said hidden"><p class="lbl">It answers</p><q></q><p class="mark"></p></div>';
-  d.querySelector("h3").textContent=l.t;
-  d.querySelector(".sub").textContent=l.s;
-  d.querySelector(".bd").textContent=l.body;
-  d.querySelector("q").textContent=l.said;
-  const m=d.querySelector(".mark");m.textContent=l.mark;m.style.color=l.markc;
-  const btn=d.querySelector("button"),said=d.querySelector(".said");
-  btn.addEventListener("click",()=>{said.classList.remove("hidden");btn.parentElement.remove();});
-  lanesEl.appendChild(d);
-});
+function paintLanes(){
+  lanesEl.innerHTML="";
+  D().lanes.forEach(l=>{
+    const d=document.createElement("div");
+    d.className="lane"+(l.win?" win":"");
+    d.innerHTML='<h3></h3><p class="sub"></p><p class="bd"></p>'+
+      '<div class="reveal"><button class="ghost" type="button">See what it answers</button></div>'+
+      '<div class="said hidden"><p class="lbl">It answers</p><q></q><p class="mark"></p></div>';
+    d.querySelector("h3").textContent=l.t;
+    d.querySelector(".sub").textContent=l.s;
+    d.querySelector(".bd").textContent=l.body;
+    d.querySelector("q").textContent=l.said;
+    const m=d.querySelector(".mark");m.textContent=l.mark;m.style.color=l.markc;
+    const btn=d.querySelector("button"),said=d.querySelector(".said");
+    btn.addEventListener("click",()=>{said.classList.remove("hidden");btn.parentElement.remove();});
+    lanesEl.appendChild(d);
+  });
+}
 
-/* ============ work mode ============ */
-const wm=document.getElementById("wm"),lbl=document.getElementById("wmlabel");
-wm.addEventListener("click",()=>{
-  const on=wm.getAttribute("aria-pressed")!=="true";
-  wm.setAttribute("aria-pressed",on);
-  document.body.classList.toggle("workmode",on);
-  lbl.textContent=on?"Grown-up version is on":"Show the grown-up version";
-});
+/* ---------- world switch ---------- */
+const wKid=document.getElementById("wKid"),wWork=document.getElementById("wWork"),
+      worldnote=document.getElementById("worldnote");
+function paintAll(){
+  const d=D();
+  document.querySelectorAll("[data-copy]").forEach(n=>{n.innerHTML=d.copy[n.dataset.copy]||"";});
+  worldnote.textContent=d.note;
+  paintHero();setMode(hero.dataset.mode||"cloud");
+  paintQuestions();
+  paintMiniLabels();resetBuilder();
+  paintSteps();paintLanes();
+  document.body.classList.toggle("workmode",V==="work");
+  wKid.setAttribute("aria-pressed",V==="kid");
+  wWork.setAttribute("aria-pressed",V==="work");
+}
+wKid.addEventListener("click",()=>{if(V!=="kid"){V="kid";qIdx=0;sIdx=0;paintAll();}});
+wWork.addEventListener("click",()=>{if(V!=="work"){V="work";qIdx=0;sIdx=0;paintAll();}});
+paintAll();
 })();
 </script>
 </body>
