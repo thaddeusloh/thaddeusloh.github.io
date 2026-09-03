@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rare Trees — Oldfield &amp; Rivers | Review and chapter breakdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Karla:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#E9EAE1;
+  --paper:#F6F7F1;
+  --ink:#13241B;
+  --ink-soft:#26382D;
+  --moss:#3C5445;
+  --quiet:#4A5A4E;
+  --on-dark:#DDE3D8;
+  --on-dark-quiet:#AFBBAE;
+  --signal:#A82718;
+  --rule:rgba(19,36,27,.22);
+  --rule-dark:rgba(221,227,216,.28);
+  --measure:34rem;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Karla","Helvetica Neue",Arial,sans-serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;margin:0}
+p{margin:0 0 1.05em}
+
+.wrap{max-width:74rem;margin:0 auto;padding:0 clamp(1.25rem,4vw,3.5rem)}
+.measure{max-width:var(--measure)}
+
+/* ---------- hero ---------- */
+.hero{background:var(--ink);color:var(--on-dark);padding:clamp(2.5rem,6vw,5rem) 0 clamp(2.5rem,5vw,4rem)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.accession{
+  font-size:.82rem;letter-spacing:.05em;color:var(--on-dark-quiet);
+  border-bottom:1px solid var(--rule-dark);
+  padding-bottom:.55rem;margin-bottom:1.7rem;display:flex;gap:1.3rem;flex-wrap:wrap
+}
+h1{
+  font-size:clamp(2.9rem,8vw,5.6rem);
+  line-height:.92;letter-spacing:-.025em;
+  font-variation-settings:"opsz" 120,"SOFT" 20;
+  margin-bottom:.55rem;color:#fff;
+}
+.subtitle{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(1.05rem,2.4vw,1.4rem);color:var(--on-dark);line-height:1.35;margin-bottom:1.6rem;max-width:26rem}
+.byline{font-size:1rem;color:#fff;margin-bottom:1.5rem}
+.byline em{font-style:normal;color:var(--on-dark-quiet)}
+.hook{color:var(--on-dark);max-width:30rem;margin:0}
+.hook strong{color:#fff;font-weight:500}
+
+/* census panel */
+.census{border:1px solid var(--rule-dark);padding:1.5rem 1.6rem 1.4rem}
+.census h2{font-family:"Fraunces",serif;font-size:1.6rem;line-height:1.15;color:#fff;margin-bottom:.5rem}
+.census .census-sub{font-size:.95rem;color:var(--on-dark);margin-bottom:1.3rem}
+.census svg{width:100%;height:auto;display:block}
+.census-key{display:flex;gap:1.4rem;flex-wrap:wrap;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--rule-dark);font-size:.85rem;color:var(--on-dark)}
+.census-key span{display:flex;align-items:center;gap:.45rem}
+.swatch{width:11px;height:11px;flex:none}
+.sw-threat{background:#C4482F}
+.sw-other{background:#33473B;box-shadow:inset 0 0 0 1px #55705C}
+.census-src{font-size:.78rem;color:var(--on-dark-quiet);margin:.9rem 0 0;line-height:1.45}
+
+/* ---------- data strip ---------- */
+.data{background:var(--paper);border-bottom:1px solid var(--rule)}
+.data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:0;margin:0}
+.datum{padding:1.15rem 1.1rem 1.2rem;border-right:1px solid var(--rule)}
+.datum:last-child{border-right:none}
+.datum dt{font-size:.75rem;letter-spacing:.04em;color:var(--moss);margin-bottom:.3rem}
+.datum dd{margin:0;font-family:"Fraunces",serif;font-size:1.15rem;line-height:1.25;color:var(--ink)}
+
+/* ---------- sections ---------- */
+section{padding:clamp(3rem,7vw,5.5rem) 0}
+.section-head{margin-bottom:2.2rem;max-width:var(--measure)}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.1;letter-spacing:-.015em;margin-bottom:.6rem}
+.lede{font-size:1.1rem;color:var(--ink-soft)}
+
+.verdict{background:var(--paper);border-top:3px solid var(--ink);padding:1.7rem 1.6rem;margin:2.5rem 0}
+.verdict h3{font-size:1.15rem;margin-bottom:.95rem}
+.verdict dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.6rem 1.3rem;align-items:baseline}
+.verdict dt{font-size:.85rem;color:var(--moss);white-space:nowrap;padding-top:.1rem;font-weight:700}
+.verdict dd{margin:0;color:var(--ink)}
+
+/* red list scale */
+.redlist{margin:2.5rem 0}
+.redlist h3{font-size:1.15rem;margin-bottom:.4rem}
+.redlist p{font-size:.98rem;color:var(--ink-soft);max-width:var(--measure)}
+.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:1.1rem;max-width:46rem}
+.tick{padding:.6rem .55rem .65rem;color:#fff}
+.tick b{display:block;font-family:"Fraunces",serif;font-size:1.05rem;font-weight:600}
+.tick span{font-size:.72rem;line-height:1.25;display:block}
+.t1{background:#4A6B41}.t2{background:#6B7A2E}.t3{background:#96741A}
+.t4{background:#B15A18}.t5{background:#A82718}.t6{background:#68170F}.t7{background:#2A0F0A}
+
+/* ---------- chapters ---------- */
+.chapter{border-top:2px solid var(--ink);padding-top:1.8rem;margin-top:3.5rem}
+.chapter:first-of-type{margin-top:0}
+.chapter-head{display:grid;grid-template-columns:6rem 1fr;gap:1.2rem;align-items:start;margin-bottom:2rem}
+.chapter-num{font-family:"Fraunces",serif;font-style:italic;font-size:1rem;color:var(--moss);padding-top:.5rem}
+.chapter-head h3{font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.12;letter-spacing:-.01em;margin-bottom:.5rem}
+.chapter-head p{color:var(--ink-soft);margin:0;max-width:var(--measure)}
+
+.entry{display:grid;grid-template-columns:6rem 1fr;gap:1.2rem;padding:1.6rem 0;border-top:1px solid var(--rule)}
+.entry-key{font-size:.82rem;color:var(--quiet);padding-top:.35rem;line-height:1.35;font-weight:500}
+.entry h4{font-size:1.25rem;margin-bottom:.45rem;letter-spacing:-.005em}
+.entry > div > p{max-width:var(--measure);color:var(--ink)}
+.entry > div > p:last-of-type{margin-bottom:0}
+
+.flag{border-left:3px solid var(--moss);background:var(--ground);padding:.9rem 1.15rem;margin-top:1.1rem;max-width:var(--measure)}
+.flag p{margin:0;font-size:1rem;color:var(--ink)}
+.flag .flag-label{font-family:"Fraunces",serif;font-style:italic;color:var(--moss);font-size:.95rem;display:block;margin-bottom:.3rem}
+.flag.hot{border-left-color:var(--signal)}
+.flag.hot .flag-label{color:var(--signal)}
+
+.species{margin:1rem 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.45rem}
+.species li{font-size:.85rem;border:1px solid var(--rule);padding:.25rem .6rem;background:var(--ground);color:var(--ink-soft)}
+.species li i{font-family:"Fraunces",serif;font-style:italic;color:var(--moss)}
+
+/* ---------- closing ---------- */
+.closing{background:var(--ink);color:var(--on-dark)}
+.closing h2{color:#fff}
+.closing .lede{color:var(--on-dark)}
+.closing p{color:var(--on-dark);max-width:var(--measure)}
+.reader-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1.6rem;margin-top:2rem}
+.reader{border-top:1px solid var(--rule-dark);padding-top:1rem}
+.reader h4{font-size:1.1rem;color:#fff;margin-bottom:.4rem}
+.reader p{font-size:.97rem;margin:0}
+
+footer{background:var(--paper);padding:2.3rem 0 3rem;font-size:.9rem;color:var(--ink-soft)}
+footer p{max-width:46rem}
+footer strong{color:var(--ink)}
+
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .datum{border-right:none;border-bottom:1px solid var(--rule)}
+  .chapter-head,.entry{grid-template-columns:1fr;gap:.4rem}
+  .entry-key{padding-top:0}
+  .scale{grid-template-columns:repeat(4,1fr)}
+}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="accession">
+        <span>Timber Press, 2023</span>
+        <span>400 pages</span>
+        <span>ISBN 9781604699524</span>
+      </div>
+      <h1>Rare Trees</h1>
+      <p class="subtitle">The fascinating stories of the world&rsquo;s most threatened species</p>
+      <p class="byline">Sara Oldfield and Malin Rivers<br><em>with Adrian Newton and Peter Wilkie</em></p>
+      <p class="hook">A large-format survey of 60 threatened tree species, written by two people who run the assessments that decide which trees count as threatened in the first place. <strong>It is a beautiful book with a spreadsheet behind it</strong> &mdash; and that combination is what makes it worth more than its coffee-table shelf position suggests.</p>
+    </div>
+
+    <aside class="census">
+      <h2>Three in ten</h2>
+      <p class="census-sub">Share of the world&rsquo;s known tree species currently assessed as threatened with extinction. Each square is one percent.</p>
+      <svg viewBox="0 0 292 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grid of 100 squares in which 30 are marked, representing the share of tree species assessed as threatened with extinction">
+      <rect x="0.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60" y="0" width="22" height="22" fill="#C4482F"/>
+      <rect x="90.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150" y="0" width="22" height="22" fill="#C4482F"/>
+      <rect x="180.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210" y="0" width="22" height="22" fill="#C4482F"/>
+      <rect x="240.5" y="0.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270" y="0" width="22" height="22" fill="#C4482F"/>
+      <rect x="0.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90" y="30" width="22" height="22" fill="#C4482F"/>
+      <rect x="120.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210" y="30" width="22" height="22" fill="#C4482F"/>
+      <rect x="240.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270.5" y="30.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30" y="60" width="22" height="22" fill="#C4482F"/>
+      <rect x="60.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120" y="60" width="22" height="22" fill="#C4482F"/>
+      <rect x="150.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240" y="60" width="22" height="22" fill="#C4482F"/>
+      <rect x="270.5" y="60.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30" y="90" width="22" height="22" fill="#C4482F"/>
+      <rect x="60.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120" y="90" width="22" height="22" fill="#C4482F"/>
+      <rect x="150.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240" y="90" width="22" height="22" fill="#C4482F"/>
+      <rect x="270.5" y="90.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30" y="120" width="22" height="22" fill="#C4482F"/>
+      <rect x="60.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120" y="120" width="22" height="22" fill="#C4482F"/>
+      <rect x="150" y="120" width="22" height="22" fill="#C4482F"/>
+      <rect x="180.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240" y="120" width="22" height="22" fill="#C4482F"/>
+      <rect x="270.5" y="120.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60" y="150" width="22" height="22" fill="#C4482F"/>
+      <rect x="90.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150" y="150" width="22" height="22" fill="#C4482F"/>
+      <rect x="180.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240.5" y="150.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270" y="150" width="22" height="22" fill="#C4482F"/>
+      <rect x="0.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60" y="180" width="22" height="22" fill="#C4482F"/>
+      <rect x="90.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180" y="180" width="22" height="22" fill="#C4482F"/>
+      <rect x="210.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240.5" y="180.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270" y="180" width="22" height="22" fill="#C4482F"/>
+      <rect x="0.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="30.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90" y="210" width="22" height="22" fill="#C4482F"/>
+      <rect x="120.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180" y="210" width="22" height="22" fill="#C4482F"/>
+      <rect x="210.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="240.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270.5" y="210.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0" y="240" width="22" height="22" fill="#C4482F"/>
+      <rect x="30.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90" y="240" width="22" height="22" fill="#C4482F"/>
+      <rect x="120.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="150.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210" y="240" width="22" height="22" fill="#C4482F"/>
+      <rect x="240.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270.5" y="240.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="0" y="270" width="22" height="22" fill="#C4482F"/>
+      <rect x="30.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="60.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="90.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="120" y="270" width="22" height="22" fill="#C4482F"/>
+      <rect x="150.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="180.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="210" y="270" width="22" height="22" fill="#C4482F"/>
+      <rect x="240.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      <rect x="270.5" y="270.5" width="21" height="21" fill="#33473B" stroke="#55705C" stroke-width="1"/>
+      </svg>
+      <div class="census-key">
+        <span><i class="swatch sw-threat"></i>Threatened</span>
+        <span><i class="swatch sw-other"></i>Not currently threatened</span>
+      </div>
+      <p class="census-src">Global Tree Assessment / State of the World&rsquo;s Trees, Botanic Gardens Conservation International &mdash; the programme Malin Rivers manages, and the dataset this book is drawn from.</p>
+    </aside>
+  </div>
+</header>
+
+<div class="data">
+  <div class="wrap">
+    <dl class="data-grid">
+      <div class="datum"><dt>Species profiled</dt><dd>60</dd></div>
+      <div class="datum"><dt>Photographs</dt><dd>300+</dd></div>
+      <div class="datum"><dt>Main chapters</dt><dd>3</dd></div>
+      <div class="datum"><dt>Published with</dt><dd>BGCI &middot; Fauna &amp; Flora</dd></div>
+      <div class="datum"><dt>Format</dt><dd>Hardback, colour</dd></div>
+    </dl>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The review</h2>
+      <p class="lede">A picture book that happens to be written by the people holding the red pen on the global tree assessment.</p>
+    </div>
+
+    <div class="measure">
+      <p>Most books about trees are written from affection. This one is written from an inventory. Sara Oldfield chairs the IUCN Species Survival Commission&rsquo;s Global Tree Specialist Group and previously ran Botanic Gardens Conservation International; Malin Rivers heads conservation prioritisation at BGCI and manages the programme that has been working through the world&rsquo;s tree species one by one, deciding how close each is to disappearing. The scale of the answer is the quiet premise underneath every page.</p>
+
+      <p>That provenance shows in the way the species entries are built. Each gets a sidebar carrying its Red List category, native range, habitat and threats, then a longer piece of prose about what the tree is, what people have done with it, and what is now being done to keep it. It is the structure of a Red List account rewritten so a non-botanist can read it in three minutes, laid over photography good enough to justify the format. There is no glossary of jargon to wade through and no assumed Latin.</p>
+
+      <p>The choice that gives the book its shape is the decision to organise the same 60 species three different ways. The first chapter arranges them by the ecosystem they hold up. The second arranges them by what humans extract from them. The third arranges them taxonomically, by family and genus. Read straight through, the effect is triangulation: you meet a tree as a piece of forest architecture, then as a commodity, then as a branch on a family tree that is losing several of its other branches at once. Very few conservation books hold those three framings in one volume without letting one swallow the others.</p>
+
+      <p>The weakness is the flip side of the same choice. This is an anthology, not an argument. It accumulates cases rather than building toward a thesis about why the losses are happening or what would actually reverse them, and the closing gestures toward what a reader can do are thinner than the diagnosis that precedes them. Individual accounts are short enough that a species you become invested in ends before you are satisfied. And because the organising principle changes between chapters, the same tree can plausibly belong in two places at once, which occasionally makes the book feel like a well-curated card index rather than a narrative.</p>
+
+      <p>None of that undercuts what it does well. It is the rare conservation title that is honest about numbers while still being a genuinely pleasurable object to sit with, and it is far better as a reference than its proportions imply. If you want one book that tells you which trees are in trouble, why, and who is trying to stop it, this is a defensible single choice.</p>
+    </div>
+
+    <div class="verdict">
+      <h3>Verdict</h3>
+      <dl>
+        <dt>In one line</dt><dd>An IUCN Red List with a photographer attached &mdash; authoritative, beautiful, and slightly reluctant to argue.</dd>
+        <dt>Strongest</dt><dd>Species accounts, threat descriptions, and the three-way structure that keeps recontextualising the same trees.</dd>
+        <dt>Weakest</dt><dd>Short entries, little synthesis, and an ending that diagnoses more convincingly than it prescribes.</dd>
+        <dt>Read it</dt><dd>By dipping. It rewards a species at a time better than a cover-to-cover run.</dd>
+      </dl>
+    </div>
+
+    <div class="redlist">
+      <h3>The scale the book keeps referring to</h3>
+      <p>Every species entry carries an IUCN Red List category. Worth knowing before you start, because the gap between two adjacent labels is often the gap between a tree that is inconvenienced and one with a countable number of individuals left.</p>
+      <div class="scale">
+        <div class="tick t1"><b>LC</b><span>Least concern</span></div>
+        <div class="tick t2"><b>NT</b><span>Near threatened</span></div>
+        <div class="tick t3"><b>VU</b><span>Vulnerable</span></div>
+        <div class="tick t4"><b>EN</b><span>Endangered</span></div>
+        <div class="tick t5"><b>CR</b><span>Critically endangered</span></div>
+        <div class="tick t6"><b>EW</b><span>Extinct in the wild</span></div>
+        <div class="tick t7"><b>EX</b><span>Extinct</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper);border-top:1px solid var(--rule)">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What&rsquo;s in it, chapter by chapter</h2>
+      <p class="lede">An introduction, then three main chapters, each subdivided into sections. Below: what each section covers and the point in it most worth carrying away.</p>
+    </div>
+
+    <div class="chapter">
+      <div class="chapter-head">
+        <div class="chapter-num">Chapter one</div>
+        <div>
+          <h3>Trees and their ecosystems</h3>
+          <p>Trees organised by the habitat they build. Each section describes where the ecosystem occurs, what depends on it, how it is being dismantled, and which species carry the structure.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 1.1</div>
+        <div>
+          <h4>Tropical rainforests</h4>
+          <p>The highest-diversity forests and the ones with the most familiar threat profile: selective logging first, then conversion to plantation and agriculture. This is where the book introduces the idea that a rainforest is not a generic green mass but a structure held up by a small number of canopy-dominant species.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Bornean ironwood is dense enough to sink in water, which made it the standard timber for houses, bridges and boat keels across Borneo. That density comes from growing extremely slowly &mdash; which is exactly why a felled stand cannot be replaced on any commercially interesting timescale.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 1.2</div>
+        <div>
+          <h4>Tropical cloud forests</h4>
+          <p>Forests that live inside a narrow altitudinal band of persistent cloud, drawing much of their water directly out of the air. Extremely high endemism: a single mountain range can hold species found on one slope and nowhere else on the planet.</p>
+          <div class="flag hot">
+            <span class="flag-label">The uncomfortable bit</span>
+            <p>A warming climate raises the altitude at which cloud forms. The habitat therefore migrates uphill and species have to migrate with it &mdash; until they reach the summit and run out of mountain. No protected-area boundary fixes this, which makes it the clearest case in the book of a tree endangered by something nobody is doing on the site itself.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 1.3</div>
+        <div>
+          <h4>Tropical dry forests</h4>
+          <p>Seasonally dry woodland and savannah &mdash; less photogenic than rainforest, far more converted, and much less protected. Covers the trees that survive months without rain, and pressure from grazing, charcoal production and clearance for cropland.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Dry forest is proportionally among the most transformed forest types on earth, precisely because it is easier to clear and farm than wet forest. Attention and protection have followed rainforest imagery rather than the actual conversion figures.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 1.4</div>
+        <div>
+          <h4>Temperate and boreal forests</h4>
+          <p>The forests of the northern latitudes and the southern temperate zone, written partly to puncture the assumption that trees in wealthy, well-governed countries are therefore safe.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>The Bikin River valley in the Russian Far East &mdash; part of the Central Sikhote-Alin World Heritage site and Amur tiger habitat &mdash; holds Manchurian ash and Mongolian oak that have been hit hard by illegal logging. World Heritage designation and a charismatic predator on the same ground did not stop the trees being taken.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 1.5</div>
+        <div>
+          <h4>Islands</h4>
+          <p>The chapter&rsquo;s emotional peak and its statistical extreme. Islands generate endemics through isolation and then lose them fast: small ranges, tiny populations, introduced goats and rats, and no upslope refuge.</p>
+          <div class="flag hot">
+            <span class="flag-label">The uncomfortable bit</span>
+            <p>Island species routinely reach the point where the entire remaining wild population could be counted by one person in an afternoon. Socotra&rsquo;s dragon tree is the emblem: a population dominated by old individuals, with grazing removing seedlings faster than they establish, so the forest is ageing without replacing itself. A stand can look healthy and be functionally finished.</p>
+          </div>
+          <ul class="species">
+            <li><i>Dracaena cinnabari</i> &mdash; Socotra</li>
+            <li>Saint Helena endemics</li>
+            <li>Hawaiian and Mascarene trees</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter">
+      <div class="chapter-head">
+        <div class="chapter-num">Chapter two</div>
+        <div>
+          <h3>Trees and their uses</h3>
+          <p>The same subject re-sorted by human demand. This is the chapter that explains most of the threat categories in chapter one: for a large share of these species, the reason they are rare is that they are useful.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 2.1</div>
+        <div>
+          <h4>Medicines, poisons and perfumes</h4>
+          <p>Trees harvested for what their tissues contain rather than what their wood can be made into: resins, barks, aromatic heartwood, alkaloids. Covers both traditional pharmacopoeia and modern drug development.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Dragon&rsquo;s blood &mdash; the red resin that bleeds from a cut dragon tree &mdash; was valuable enough to be traded into the Roman Empire as a medicine, and has been in continuous commerce for two thousand years. The general point: a resin or bark trade is only sustainable if the harvest doesn&rsquo;t require killing the tree, and for aromatic heartwoods it usually does.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 2.2</div>
+        <div>
+          <h4>Precious timbers, including instrument woods</h4>
+          <p>The high-value timber trade: rosewoods, ebonies, and the specific dense tonewoods that clarinets, oboes and guitar backs have been made from for a century and a half. Includes the regulatory response &mdash; CITES listings and the enforcement problem behind them.</p>
+          <div class="flag hot">
+            <span class="flag-label">The uncomfortable bit</span>
+            <p>Rosewood has been, by volume, among the most trafficked wild products in the world &mdash; ahead of ivory and pangolin. The demand is furniture. This is the section that most clearly reframes tree conservation as a wildlife-crime and supply-chain problem rather than a land-management one.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 2.3</div>
+        <div>
+          <h4>Fruit and nut trees</h4>
+          <p>Wild fruit and nut species, including the wild relatives of domesticated crops. Covers both the direct harvest and the genetic value of populations that were never bred.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>The wild ancestors and relatives of orchard crops are themselves threatened &mdash; the wild apple forests of Central Asia being the standing example. Those populations are the genetic reservoir plant breeders will need for disease and climate resistance. Losing them narrows the options for the domesticated crop decades before anyone notices they are gone.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Section 2.4</div>
+        <div>
+          <h4>Ornamental trees</h4>
+          <p>Trees grown for beauty, and horticulture&rsquo;s genuinely double-edged role: nurseries and botanic gardens as both a driver of wild collection and, for some species, the only reason they still exist.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Several species in the book have no wild population at all and survive purely in cultivation &mdash; Franklinia being the classic case, unseen in the wild since the early 1800s and alive today only because gardeners kept propagating it. Ex-situ collections are not a consolation prize; for some species they are the entire remaining conservation strategy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter">
+      <div class="chapter-head">
+        <div class="chapter-num">Chapter three</div>
+        <div>
+          <h3>Special tree groups</h3>
+          <p>The taxonomic pass. Seven groups, each with a group-level portrait followed by individual species. This is the chapter that makes the scale of the problem legible, because it shows entire lineages under pressure rather than isolated unlucky species.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 1</div>
+        <div>
+          <h4>Conifers</h4>
+          <p>An ancient lineage, now proportionally one of the most threatened major plant groups. Includes relict species with tiny wild ranges and the fire, pathogen and logging pressures on them.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Conifers are the counterexample to the assumption that rarity means obscurity. Several are globally famous, widely planted, and still down to a handful of wild stands &mdash; a species can be in every arboretum in the temperate world and still be one bad fire season from losing its entire natural population.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 2</div>
+        <div>
+          <h4>Magnolias</h4>
+          <p>One of the most-planted ornamental genera on earth, and one of the most threatened in the wild. Wild magnolia diversity sits mostly in Asian and Neotropical montane forest, not in the handful of hybrids that dominate gardens.</p>
+          <div class="flag hot">
+            <span class="flag-label">The uncomfortable bit</span>
+            <p>Around half of all magnolia species carry a threatened Red List status. The genus is the sharpest illustration of a theme running through the whole book: familiarity in cultivation tells you nothing about security in the wild, and can actively mask it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 3</div>
+        <div>
+          <h4>Ashes</h4>
+          <p>A genus of ordinary, abundant, unglamorous trees being taken apart by an introduced beetle and an introduced fungus rather than by logging or clearance.</p>
+          <div class="flag hot">
+            <span class="flag-label">The uncomfortable bit</span>
+            <p>Emerald ash borer and ash dieback have pushed several North American ash species onto the Red List as critically endangered &mdash; species that were, within living memory, common street and forest trees. Pests and pathogens move through protected areas as freely as through anywhere else, which makes this the threat class least amenable to conventional protection.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 4</div>
+        <div>
+          <h4>Oaks</h4>
+          <p>A large genus, culturally central in Europe and North America, but with its real diversity centred on Mexico and East Asia. Roughly a third of oak species carry a threatened status.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Acorns are recalcitrant &mdash; they cannot be dried and frozen, so oaks cannot be conserved in a seed bank. Every oak conservation collection has to be a living collection of growing trees, maintained in perpetuity by an institution. That single seed-physiology fact dictates the entire conservation approach for the genus.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 5</div>
+        <div>
+          <h4>Dipterocarps</h4>
+          <p>The family that structures Southeast Asian lowland rainforest and supplied the region&rsquo;s timber boom. Large, canopy-dominant, slow to mature, and heavily depleted across their range.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Dipterocarps mast: whole forests synchronise fruiting at multi-year intervals rather than seeding annually. It is an elegant strategy for swamping seed predators, and a serious problem for restoration &mdash; seed is unavailable for years at a stretch, seedlings cannot be stockpiled, and a logged forest has a narrow and unpredictable window to regenerate at all.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 6</div>
+        <div>
+          <h4>Palms</h4>
+          <p>A group with an unusually high proportion of species known from a single population or a single valley, concentrated in Madagascar, Southeast Asia and the Neotropics.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Many palms cannot resprout from a cut stem &mdash; harvesting the growing point kills the individual outright. For species with a few hundred wild plants, that turns a minor local harvest into a direct extinction driver.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-key">Group 7</div>
+        <div>
+          <h4>Sapotaceae</h4>
+          <p>The least famous group in the chapter and the argument for why it&rsquo;s there. A tropical family of enormous economic importance &mdash; the source of shea, chicle and a long list of regional fruits &mdash; contributed by a specialist in the family.</p>
+          <div class="flag">
+            <span class="flag-label">Worth carrying away</span>
+            <p>Much of the family remains under-collected and under-assessed, with species still being described. That is a general point about tree conservation: for a substantial number of tropical trees we do not yet know enough to say whether they are threatened, and &ldquo;unassessed&rdquo; is not the same as &ldquo;fine&rdquo;.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Who it&rsquo;s for</h2>
+      <p class="lede">It is priced and shaped as a gift book, which undersells who will actually get the most out of it.</p>
+    </div>
+    <div class="reader-grid">
+      <div class="reader">
+        <h4>Buy it</h4>
+        <p>If you want one reference that connects a named tree to its ecosystem, its trade and its conservation status &mdash; or a conservation book you can leave out and have people actually pick up.</p>
+      </div>
+      <div class="reader">
+        <h4>Borrow it</h4>
+        <p>If you already read Red List accounts and want the photographs more than the text. The species entries will feel brief.</p>
+      </div>
+      <div class="reader">
+        <h4>Skip it</h4>
+        <p>If you want policy, economics, or an argument about how forest loss actually gets reversed. That book exists; this is not it.</p>
+      </div>
+      <div class="reader">
+        <h4>Pair it with</h4>
+        <p>The Global Tree Assessment and BGCI&rsquo;s State of the World&rsquo;s Trees reporting, which supply the numbers this book sits on top of.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>A note on this page.</strong> The book&rsquo;s three-chapter structure and its section headings are as published. The review and the &ldquo;worth carrying away&rdquo; points are my own reading and commentary rather than quotations, and the species used to illustrate each section are representative of the material it covers &mdash; check the book itself for its exact species list and Red List categories, which are periodically reassessed.</p>
+    <p style="margin-top:1rem">Rare Trees: The Fascinating Stories of the World&rsquo;s Most Threatened Species &middot; Sara Oldfield and Malin Rivers &middot; Timber Press, 2023 &middot; 400pp &middot; ISBN 9781604699524</p>
+  </div>
+</footer>
+
+</body>
+</html>

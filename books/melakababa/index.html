@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Baba of Melaka — a reader's review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,300..600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --jade-deep:#0B1C1A;
+    --jade:#0E7A6E;
+    --jade-pale:#DCE8E3;
+    --rose:#BE4468;
+    --rose-pale:#F2DDE3;
+    --gold:#C08A2E;
+    --ink:#10201E;
+    --muted:#55665F;
+    --paper:#FCFCFA;
+    --wash:#ECF1EE;
+    --rule:#C9D6D0;
+    --maxw:720px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--wash);
+    color:var(--ink);
+    font-family:"Karla",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    font-variant-ligatures:common-ligatures;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---------- hero ---------- */
+  header{
+    position:relative;
+    background:var(--jade-deep);
+    color:#F1F5F2;
+    overflow:hidden;
+    padding:88px 0 72px;
+  }
+  .tiles{
+    position:absolute;inset:0;
+    opacity:0;
+    animation:settle 1400ms 200ms ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes settle{to{opacity:.5}}
+  @media (prefers-reduced-motion:reduce){
+    .tiles{animation:none;opacity:.5}
+  }
+  header .wrap{position:relative}
+  .kicker{
+    font-family:"Fraunces",Georgia,serif;
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--gold);
+    margin:0 0 22px;
+    letter-spacing:.01em;
+  }
+  h1{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 20,"WONK" 1;
+    font-weight:500;
+    font-size:clamp(2.3rem,7.2vw,3.7rem);
+    line-height:1.06;
+    letter-spacing:-.02em;
+    margin:0 0 26px;
+    max-width:14ch;
+  }
+  .standfirst{
+    font-size:1.12rem;
+    line-height:1.6;
+    color:#C6D6CF;
+    max-width:52ch;
+    margin:0 0 40px;
+  }
+  .meta{
+    display:grid;
+    gap:2px 28px;
+    grid-template-columns:auto 1fr;
+    border-top:1px solid rgba(192,138,46,.45);
+    padding-top:22px;
+    font-size:.92rem;
+    max-width:44ch;
+  }
+  .meta dt{color:var(--gold);font-weight:600}
+  .meta dd{margin:0;color:#BCCCC5}
+
+  /* ---------- body sections ---------- */
+  main{background:var(--wash)}
+  section{padding:64px 0 8px}
+  section:first-of-type{padding-top:60px}
+  h2{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 20,"WONK" 1;
+    font-weight:600;
+    font-size:clamp(1.55rem,4.2vw,2.05rem);
+    line-height:1.15;
+    letter-spacing:-.015em;
+    margin:0 0 20px;
+  }
+  h3{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:600;
+    font-size:1.32rem;
+    line-height:1.25;
+    margin:0 0 12px;
+    letter-spacing:-.01em;
+  }
+  p{margin:0 0 18px;max-width:68ch}
+  a{color:var(--jade);text-decoration-thickness:1px;text-underline-offset:2px}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+  .lede{font-size:1.06rem}
+  .divider{
+    border:0;height:1px;background:var(--rule);
+    margin:56px 0 0;
+  }
+
+  /* ---------- chapter list ---------- */
+  .chapters{counter-reset:none}
+  .chapter{
+    display:grid;
+    grid-template-columns:66px 1fr;
+    gap:0 22px;
+    padding:34px 0;
+    border-top:1px solid var(--rule);
+  }
+  .chapter:first-of-type{border-top:2px solid var(--jade)}
+  .num{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:400;
+    font-size:2.4rem;
+    line-height:1;
+    color:var(--gold);
+    padding-top:2px;
+  }
+  .num small{
+    display:block;
+    font-family:"Karla",sans-serif;
+    font-size:.68rem;
+    font-weight:600;
+    letter-spacing:.06em;
+    color:var(--muted);
+    margin-top:6px;
+  }
+  .topic{
+    font-size:.9rem;
+    color:var(--jade);
+    font-weight:600;
+    margin:0 0 8px;
+  }
+  .chapter p{margin-bottom:14px}
+  .flag{
+    margin:16px 0 0;
+    padding:14px 18px;
+    background:var(--paper);
+    border-left:3px solid var(--rose);
+  }
+  .flag p{margin:0;font-size:.97rem}
+  .flag p + p{margin-top:10px}
+  .flag b{font-family:"Fraunces",Georgia,serif;font-weight:600}
+
+  /* ---------- pull quote ---------- */
+  .pull{
+    margin:12px 0 30px;
+    padding:26px 0 26px 26px;
+    border-left:4px solid var(--jade);
+    font-family:"Fraunces",Georgia,serif;
+    font-size:1.3rem;
+    line-height:1.4;
+    color:var(--jade-deep);
+  }
+  .pull span{
+    display:block;
+    font-family:"Karla",sans-serif;
+    font-size:.85rem;
+    color:var(--muted);
+    margin-top:12px;
+  }
+
+  /* ---------- verdict ---------- */
+  .verdict{
+    background:var(--jade-deep);
+    color:#E6EEEA;
+    padding:52px 0 56px;
+    margin-top:56px;
+  }
+  .verdict h2{color:#fff}
+  .verdict p{color:#C6D6CF}
+  .split{display:grid;gap:30px;grid-template-columns:1fr 1fr;margin-top:8px}
+  .split h3{color:var(--gold);font-size:1.08rem;margin-bottom:10px}
+  .split ul{margin:0;padding-left:18px}
+  .split li{margin-bottom:9px;color:#C6D6CF;font-size:.98rem}
+
+  /* ---------- pairing ---------- */
+  /* vertical padding only as longhand — a shorthand here would override
+     the horizontal padding .wrap sets on the same element */
+  .pair{padding-top:56px;padding-bottom:24px}
+  .pair dl{margin:0}
+  .pair dt{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:600;
+    font-size:1.05rem;
+    line-height:1.35;
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px solid var(--rule);
+  }
+  .pair dt:first-of-type{margin-top:4px}
+  .pair dd{margin:6px 0 0;color:var(--muted);font-size:.98rem;max-width:64ch}
+
+  footer{
+    padding:44px 0 64px;
+    color:var(--muted);
+    font-size:.88rem;
+    border-top:1px solid var(--rule);
+    margin-top:44px;
+  }
+  footer p{max-width:62ch;margin-bottom:10px}
+
+  @media (max-width:620px){
+    body{font-size:16px}
+    header{padding:64px 0 52px}
+    .chapter{grid-template-columns:1fr;gap:0}
+    .num{font-size:1.5rem;display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+    .num small{margin-top:0}
+    .split{grid-template-columns:1fr;gap:22px}
+    .meta{grid-template-columns:1fr;gap:0}
+    .meta dd{margin-bottom:10px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="tiles" aria-hidden="true" width="100%" height="100%">
+    <defs>
+      <pattern id="nyonya" width="72" height="72" patternUnits="userSpaceOnUse">
+        <rect width="72" height="72" fill="none"/>
+        <g fill="none" stroke="#C08A2E" stroke-width="1">
+          <circle cx="36" cy="36" r="15"/>
+          <path d="M36 6 L52 22 L36 38 L20 22 Z"/>
+          <path d="M36 34 L52 50 L36 66 L20 50 Z"/>
+          <path d="M0 36 H14 M58 36 H72"/>
+        </g>
+        <circle cx="36" cy="36" r="3.5" fill="#BE4468"/>
+        <circle cx="0" cy="0" r="3" fill="#0E7A6E"/>
+        <circle cx="72" cy="0" r="3" fill="#0E7A6E"/>
+        <circle cx="0" cy="72" r="3" fill="#0E7A6E"/>
+        <circle cx="72" cy="72" r="3" fill="#0E7A6E"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#nyonya)" opacity="0.35"/>
+  </svg>
+
+  <div class="wrap">
+    <p class="kicker">A reading of an ethnographic classic</p>
+    <h1>A community that lost the language and kept the ancestors</h1>
+    <p class="standfirst">
+      Tan Chee Beng spent the late 1970s among the Baba of Melaka asking a
+      question that sounds simple and isn't: if you no longer speak Chinese,
+      dress Malay, eat something in between, and everyone around you says
+      you've lost the plot — in what sense are you still Chinese? His answer
+      reshaped how Southeast Asian hybridity gets talked about.
+    </p>
+    <dl class="meta">
+      <dt>Book</dt><dd>The Baba of Melaka: Culture and Identity of a Chinese Peranakan Community in Malaysia</dd>
+      <dt>Author</dt><dd>Tan Chee Beng</dd>
+      <dt>First published</dt><dd>Pelanduk Publications, 1988 — from his 1979 Cornell doctorate</dd>
+      <dt>In print</dt><dd>New edition, SIRD, 2020/21, around 303 pages</dd>
+      <dt>Shape</dt><dd>Introduction plus eight chapters, appendices, plates</dd>
+    </dl>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section>
+    <h2>Before you open it</h2>
+    <p class="lede">
+      This is a doctoral thesis that grew up into the standard reference. It is
+      careful, granular, and occasionally dry — Tan counts households, tabulates
+      loanwords, and reconstructs funeral sequences step by step. What redeems
+      the density is that every descriptive chapter is quietly doing argumentative
+      work, and the argument is genuinely good.
+    </p>
+    <p>
+      Two things to hold in mind. First, Tan is an insider-ish outsider: a Chinese
+      Malaysian anthropologist who speaks Baba Malay, working on a community that
+      other Chinese Malaysians tended to treat as a curiosity or a joke. That
+      position gives the book unusual access and an unmistakable protectiveness.
+      Second, the fieldwork is from roughly 1977 to the early 1980s. That predates
+      the Melaka UNESCO listing, the Peranakan museum boom, the television dramas,
+      and the whole heritage economy that now shapes what "Peranakan" means. The
+      book is not a description of the Peranakan world you can visit today. It is
+      the baseline you measure that world against, which is arguably more useful.
+    </p>
+    <p>
+      One structural note worth knowing before you start: chapters 1 and 2 set up
+      terms, history and demography. Chapters 3 through 8 are the actual argument,
+      and they build. Chapter 3 states the thesis; 4 through 7 test it across four
+      domains; 8 asks what happens next. If you read the introduction and then jump
+      to chapter 3, you lose very little.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="chapters">
+    <h2>Going through it chapter by chapter</h2>
+    <p>
+      What each part is doing, and the thing in it most likely to stay with you.
+    </p>
+
+    <article class="chapter">
+      <div class="num">—<small>INTRO</small></div>
+      <div>
+        <p class="topic">Ethnicity, acculturation, and why they aren't the same thing</p>
+        <p>
+          The theoretical setup, and the hinge the whole book swings on: Tan
+          separates <em>acculturation</em> (adopting another group's cultural
+          traits) from <em>assimilation</em> (ceasing to be a distinct group).
+          Everyone in 1979 assumed the first led inevitably to the second. Tan
+          says no, and spends 250 pages proving it with funerals and kinship
+          charts.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> He is working in the tradition of Fredrik
+          Barth — ethnic groups are defined by the boundaries they maintain,
+          not by the cultural contents inside them. Once you see this frame,
+          the whole book unlocks, and so do a lot of arguments you've probably
+          had about what makes someone "properly" Chinese.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">1<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">What the word "Baba" actually means</p>
+        <p>
+          A whole chapter on a label, which sounds pedantic until you realise
+          how much confusion it clears. Baba, Peranakan, Straits Chinese and
+          Nyonya are not synonyms and never were. Peranakan is the broad term
+          for locally-born descendants of immigrants — there are Chitty Indian
+          and Jawi Peranakan communities too. Straits Chinese was largely a
+          colonial-legal status: Chinese born as British subjects in the Straits
+          Settlements. Baba is the cultural category: Chinese descendants who
+          stopped using Chinese languages and speak Baba Malay.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> Because the category is cultural rather than
+          ancestral, it has a leaky edge Tan is honest about: descendants of much
+          later immigrants who lost Chinese by the third generation also get
+          called Baba. The community is not a sealed bloodline, which undercuts
+          most of the romantic origin stories told about it.</p>
+          <p>Also note the word's double life — respectful address in one mouth,
+          a mild sneer in another. That ambivalence is data, not noise.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">2<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">How the community formed, and where it lives</p>
+        <p>
+          History and demography: settlement patterns in Melaka, household
+          counts, distribution across town and kampung. Tan is deflationary
+          about origins. The community's own favourite story reaches back to a
+          fifteenth-century Ming princess and her retinue arriving at the
+          Malacca Sultanate; the documentary evidence points instead to a
+          long, unglamorous process of Chinese men marrying local women and
+          raising locally-rooted families, mostly under Dutch and then British
+          Melaka.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> The status reversal is the striking part. In
+          the colonial period the Baba were among the most prosperous and
+          politically connected Chinese in Malaya — English-educated, brokered
+          between colonisers and locals. After independence the exact traits
+          that made them useful became liabilities: too Malay for the Chinese,
+          not Malay enough to count as Bumiputera. Very few communities get to
+          be an elite and a punchline within one lifetime.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">3<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Ethnic identity — the central claim</p>
+        <p>
+          The load-bearing chapter. Tan argues the Baba hold a double identity:
+          they are, in his formulation, both "Baba" and "Chinese" — the second
+          is not diluted by the first. He works through the overt markers people
+          use to recognise each other and be recognised: sarong kebaya, the
+          food, dondang sayang, the speech, and the dense web of who knows whose
+          family.
+        </p>
+        <p>
+          He borrows the idea of situational ethnicity to explain what looks
+          like inconsistency. Which identity a person foregrounds depends on who
+          is in the room — Baba among Chinese, Chinese among Malays, Malaysian
+          abroad. This isn't fence-sitting; it's how multi-layered identity
+          normally operates, and most people reading this will recognise the
+          manoeuvre from their own lives.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> There's real pain documented here. The Baba
+          were mocked by immigrant Chinese for exactly what had once made them
+          powerful. Tan records the sting without turning the community into
+          victims, which is a hard tonal line to walk.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">4<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Baba Malay</p>
+        <p>
+          The linguistic chapter, and the most quoted one outside anthropology.
+          Baba Malay has a Malay-based vocabulary sitting on a Hokkien
+          substrate, with the borrowing heavily concentrated in specific
+          domains. Tan documents which ones, and the pattern is the argument.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> The Hokkien survives precisely where
+          Chineseness is being transmitted — kinship terms, ritual, festivals,
+          household and food vocabulary. A community can switch language wholesale
+          and still keep Chinese words for who your father's elder brother is and
+          what you burn for him. That single distribution fact does more
+          argumentative work than any amount of assertion about identity.</p>
+          <p>Note that Tan treats Baba Malay as a Malay dialect; later linguists
+          have argued forcefully for creole. If you care about that debate, read
+          him for the data and go elsewhere for the classification.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">5<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Customs and religion</p>
+        <p>
+          Ancestor worship, deities, temples, the festival calendar. The
+          expectation going in is that this is where you'd find the most
+          hybridity. The finding is the opposite: in religion the Baba are
+          substantially continuous with other Chinese in Malaysia, sharing the
+          same folk religious world.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> Tan's reading is that ritual absorbs the load
+          that language used to carry. Chinese religious practice becomes the
+          working substitute for Chinese speech as the guarantor of Chinese
+          identity — which is why it gets maintained with such care rather than
+          drifting. If you only read two chapters of this book, make it this one
+          and the next.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">6<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Death rituals</p>
+        <p>
+          Funerary practice in close detail — the most conservative domain in
+          the whole culture, organised around filial piety. Tan finds the Baba
+          are often <em>more</em> punctilious about traditional rites than
+          immigrant Chinese families, not less. Malay influence has touched the
+          surface of some practices; the underlying cosmology and ethos are
+          largely intact.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> This is where the ethnic boundary becomes
+          visible and hard. Islam and Chinese religion function as the mutually
+          exclusive markers — conversion effectively means leaving the community,
+          and Tan shows how families understand that. Language was negotiable.
+          Dress was negotiable. What you do at a graveside was not. That asymmetry
+          explains a great deal about ethnic politics in the region.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">7<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Kinship, marriage, and social organisation</p>
+        <p>
+          Households, descent, matchmaking, associations, and the famous old
+          Baba wedding with its long sequence of rites — the hairdo ritual, the
+          ritual specialist who guides the couple, the days of ceremony. Tan
+          also traces intermarriage patterns and how they shifted across
+          generations.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> The wedding is the one place where the
+          hybridity is unmistakable and celebrated rather than defensive — Chinese
+          ritual structure carried out in Malay-influenced dress, language and
+          idiom. It's also the practice that has been most thoroughly turned into
+          heritage spectacle since Tan wrote, so his account is a useful record of
+          it as lived family obligation rather than performance.</p>
+          <p>Watch the position of nyonyas in this chapter. Tan gives more
+          material on women's roles than his contemporaries did, though a reader
+          today will want more than he provides.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="chapter">
+      <div class="num">8<small>CHAPTER</small></div>
+      <div>
+        <p class="topic">Ethnic change, and what comes next</p>
+        <p>
+          The closing chapter looks forward from around 1980: education in
+          English, Malay and increasingly Mandarin; younger Baba re-acquiring
+          Chinese their grandparents lost; the pull of a broader Chinese
+          Malaysian identity on one side and a national Malaysian one on the
+          other; the community shrinking as a distinct group even as interest in
+          it grows.
+        </p>
+        <div class="flag">
+          <p><b>Worth knowing.</b> There's a political charge under the surface
+          here that reviewers picked up at the time. By showing a community that
+          genuinely fused Malay and Chinese culture and still ended up
+          disadvantaged by a racialised policy framework, Tan makes an implicit
+          case against the logic of the Bumiputera system without ever writing a
+          polemic. Reading it in 2026, the chapter's real interest is how much it
+          got right and where it under-predicted — he could not have foreseen the
+          heritage revival that made Peranakan identity commercially valuable and
+          therefore, complicatedly, viable again.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2>The one idea to take away</h2>
+    <div class="pull">
+      Cultural change and identity loss are separate processes. A group can shed
+      language, dress and cuisine and still hold a boundary — as long as
+      <em>something</em> keeps doing the work the lost markers used to do.
+      <span>For the Baba, that something was ritual.</span>
+    </div>
+    <p>
+      That's portable well beyond Melaka. It applies to diaspora communities
+      everywhere, to religious minorities, and — if you're inclined to stretch it
+      — to any institution that changes its practices and worries it's losing
+      itself. The question is never "how much has changed?" It's "what is
+      carrying the boundary now?"
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <section>
+    <h2>Where it shows its age</h2>
+    <p>
+      Being fair to a forty-year-old monograph means naming the gaps. The
+      demographic tables are historical documents at this point, not current
+      data. The prose still carries its dissertation origins — signposting,
+      literature-positioning, and a good deal of detail that serves the thesis
+      committee more than the reader. Class and economics get thinner treatment
+      than kinship and ritual, which is odd for a community defined partly by its
+      commercial position. And while Tan is better on women than most of his
+      contemporaries, a nyonya-centred account of this culture still had to wait
+      for other writers.
+    </p>
+    <p>
+      The most consequential absence is simply chronological. Everything that has
+      shaped Peranakan identity since — heritage listing, tourism, museums,
+      popular drama, the Singapore and Malaysian revivals running on different
+      tracks — happens after the last page. Read it as the control group.
+    </p>
+  </section>
+
+</div>
+
+<div class="verdict">
+  <div class="wrap">
+    <h2>So should you read it</h2>
+    <div class="split">
+      <div>
+        <h3>Yes, if</h3>
+        <ul>
+          <li>You want the primary scholarly source rather than another heritage-brochure summary</li>
+          <li>You're interested in how identity survives cultural change, in any context</li>
+          <li>You're working on Southeast Asian Chinese communities and need the baseline everyone cites</li>
+          <li>You like ethnography where the detail is the argument</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Probably not, if</h3>
+        <ul>
+          <li>You want a narrative history or a story-driven read — this is a monograph, and it reads like one</li>
+          <li>You're after current Peranakan life, food culture or the heritage scene</li>
+          <li>You want the Singapore Peranakan trajectory specifically; that diverged under different state policy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap pair">
+  <h2>What to read alongside it</h2>
+  <dl>
+    <dt>John Clammer, <em>Straits Chinese Society</em></dt>
+    <dd>The other foundational sociological treatment from roughly the same era. Useful for triangulating Tan's Melaka picture.</dd>
+
+    <dt>Jürgen Rudolph, <em>Reconstructing Identities</em></dt>
+    <dd>A social history of the Babas in Singapore. The obvious comparison case if you want to see how the same community diverged across a border.</dd>
+
+    <dt>Felix Chia, <em>The Babas</em></dt>
+    <dd>Written from inside the community rather than from the discipline. Warmer, looser, and a good counterweight to Tan's analytical distance.</dd>
+
+    <dt>Nala H. Lee's work on Baba Malay grammar</dt>
+    <dd>Where to go if chapter 4 leaves you wanting the proper linguistic treatment, including the creole classification Tan doesn't accept.</dd>
+  </dl>
+</div>
+
+<div class="wrap">
+  <footer>
+    <p>
+      Review written from the published scholarly record on the book, including
+      its academic reception. Chapter attributions follow the structure described
+      in contemporary reviews of the 1988 Pelanduk edition; the SIRD reissue keeps
+      the original text.
+    </p>
+    <p>
+      Reading note: the short phrase describing Baba as both "Baba" and "Chinese"
+      is Tan's own, from chapter 3.
+    </p>
+  </footer>
+</div>
+
+</main>
+</body>
+</html>
