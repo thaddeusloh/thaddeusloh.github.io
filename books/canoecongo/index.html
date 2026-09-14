@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canoeing the Congo — Phil Harwood — reading notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --water:#0A1F18;
+  --water-2:#103024;
+  --reed:#1B4536;
+  --sage:#9CC4A6;
+  --gold:#C9A227;
+  --silt:#B0874A;
+  --paper:#F3EFE4;
+  --paper-dim:#CFD8CE;
+  --rule:rgba(156,196,166,.22);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--water);
+  color:var(--paper);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:19px;
+  line-height:1.62;
+  font-weight:300;
+}
+.wrap{max-width:44rem;margin:0 auto;padding:0 1.35rem}
+a{color:var(--sage);text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
+a:hover{color:var(--gold)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+/* ---------- masthead ---------- */
+header.top{padding:4.5rem 0 1.2rem}
+.kicker{
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:.78rem;letter-spacing:.02em;color:var(--sage);opacity:.8;margin:0 0 1.4rem
+}
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-optical-sizing:auto;
+  font-weight:500;
+  font-size:clamp(2.7rem,9vw,4.6rem);
+  line-height:.97;
+  letter-spacing:-.02em;
+  margin:0 0 .5rem;
+  color:var(--paper);
+}
+h1 em{font-style:normal;display:block;color:var(--sage);font-weight:300;font-size:.42em;line-height:1.2;letter-spacing:0;margin-top:.9rem}
+.byline{font-size:1.05rem;color:var(--paper-dim);margin:0 0 2rem}
+
+.facts{
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:.82rem;line-height:1.5;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:.9rem 0;margin:0 0 3rem;
+  display:grid;grid-template-columns:8.5rem 1fr;gap:.35rem 1.2rem;
+}
+.facts dt{color:var(--sage);opacity:.75}
+.facts dd{margin:0;color:var(--paper-dim)}
+
+/* ---------- hero profile ---------- */
+.profile{margin:0 0 1rem}
+.profile svg{width:100%;height:auto;display:block;overflow:visible}
+.cap{
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:.76rem;line-height:1.55;color:var(--paper-dim);opacity:.75;
+  max-width:34rem;margin:0 0 4rem;
+}
+.pt-label{font-family:"Space Grotesk",sans-serif;font-size:12px;fill:var(--paper-dim)}
+.pt-elev{font-family:"Space Grotesk",sans-serif;font-size:11px;fill:var(--gold)}
+.axis{font-family:"Space Grotesk",sans-serif;font-size:11px;fill:var(--sage);opacity:.55}
+@media(max-width:620px){.hide-narrow{display:none}}
+
+/* ---------- sections ---------- */
+section{margin:0 0 4.2rem}
+h2{
+  font-family:"Fraunces",Georgia,serif;font-weight:500;
+  font-size:clamp(1.65rem,4.6vw,2.15rem);line-height:1.12;letter-spacing:-.015em;
+  margin:0 0 .35rem;color:var(--paper);
+}
+.sub{color:var(--sage);font-size:.97rem;margin:0 0 1.8rem;opacity:.85}
+p{margin:0 0 1.1rem;max-width:38rem}
+h3{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:1.18rem;margin:2rem 0 .4rem}
+
+.verdict{
+  border-left:2px solid var(--gold);
+  padding:.2rem 0 .2rem 1.4rem;
+  margin:0 0 2rem;
+  font-size:1.16rem;line-height:1.55;
+}
+.verdict strong{font-weight:600;color:var(--gold)}
+
+/* ---------- leg-by-leg river thread ---------- */
+ol.legs{list-style:none;margin:0;padding:0;position:relative}
+ol.legs::before{
+  content:"";position:absolute;left:7px;top:.9rem;bottom:2.5rem;
+  width:2px;background:linear-gradient(var(--sage),var(--gold));opacity:.4;
+}
+ol.legs>li{position:relative;padding:0 0 2.4rem 2.6rem}
+ol.legs>li::before{
+  content:"";position:absolute;left:0;top:.62rem;width:16px;height:16px;border-radius:50%;
+  background:var(--water);border:2px solid var(--sage);
+}
+ol.legs>li:last-child::before{background:var(--gold);border-color:var(--gold)}
+.leg-where{
+  font-family:"Space Grotesk",sans-serif;font-size:.74rem;color:var(--gold);
+  margin:0 0 .15rem;
+}
+.leg-title{
+  font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:1.3rem;line-height:1.2;
+  margin:0 0 .5rem;color:var(--paper);
+}
+ol.legs p{font-size:.97rem;margin:0 0 .7rem}
+.leg-note{
+  font-size:.88rem;color:var(--sage);border-top:1px dashed var(--rule);padding-top:.55rem;margin:0;
+  max-width:36rem;
+}
+.leg-note b{font-weight:600;font-family:"Space Grotesk",sans-serif;font-size:.76rem;color:var(--gold);display:block;margin-bottom:.15rem}
+
+/* ---------- facts about the congo ---------- */
+.congo{display:grid;gap:0}
+.congo article{
+  border-top:1px solid var(--rule);padding:1.35rem 0;
+  display:grid;grid-template-columns:7.5rem 1fr;gap:0 1.4rem;align-items:start;
+}
+.congo article:last-child{border-bottom:1px solid var(--rule)}
+.num{
+  font-family:"Space Grotesk",sans-serif;font-weight:700;
+  font-size:1.45rem;line-height:1.1;color:var(--gold);
+  letter-spacing:-.02em;
+}
+.num span{display:block;font-size:.7rem;font-weight:400;color:var(--sage);letter-spacing:0;margin-top:.25rem;line-height:1.35}
+.congo h3{margin:0 0 .3rem;font-size:1.08rem}
+.congo p{margin:0;font-size:.95rem;max-width:30rem}
+@media(max-width:560px){
+  .congo article{grid-template-columns:1fr;gap:.5rem}
+  .num{font-size:1.25rem}
+  .num span{display:inline;margin-left:.5rem}
+}
+
+/* ---------- caveat panel ---------- */
+.caveat{
+  background:var(--water-2);border:1px solid var(--rule);border-radius:3px;
+  padding:1.6rem 1.5rem;
+}
+.caveat h2{font-size:1.35rem}
+.caveat table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0 .8rem}
+.caveat th{
+  text-align:left;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:.74rem;
+  color:var(--sage);padding:0 .8rem .5rem 0;vertical-align:bottom;border-bottom:1px solid var(--rule);
+}
+.caveat td{padding:.6rem .8rem .6rem 0;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--paper-dim)}
+.caveat td:first-child{color:var(--paper)}
+.caveat p{font-size:.9rem;margin:0}
+
+/* ---------- closing ---------- */
+.next{list-style:none;padding:0;margin:1rem 0 0}
+.next li{border-top:1px solid var(--rule);padding:.85rem 0;font-size:.95rem}
+.next li:last-child{border-bottom:1px solid var(--rule)}
+.next b{font-weight:600;color:var(--paper)}
+.next span{color:var(--paper-dim)}
+
+footer{
+  border-top:1px solid var(--rule);margin-top:1rem;padding:2rem 0 5rem;
+  font-family:"Space Grotesk",sans-serif;font-size:.78rem;line-height:1.65;color:var(--paper-dim);opacity:.75;
+}
+footer p{max-width:38rem;margin:0 0 .6rem}
+
+@media(prefers-reduced-motion:no-preference){
+  .draw{stroke-dasharray:2200;stroke-dashoffset:2200;animation:draw 2.4s ease-out .25s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">Reading log — adventure &amp; travel</p>
+  <h1>Canoeing the Congo<em>Phil Harwood takes an open canoe from a spring in Zambia to the Atlantic, and finds the river is the easy part</em></h1>
+  <p class="byline">A review, a leg-by-leg breakdown of the journey, and what the Congo actually is.</p>
+
+  <dl class="facts">
+    <dt>Author</dt><dd>Phil Harwood, former Royal Marine Commando, expedition leader and canoe coach</dd>
+    <dt>Published</dt><dd>2012 (Troubador); reissued 2013–14 by Summersdale as <i>Canoeing the Congo: The First Source-to-Sea Descent of the Congo River</i></dd>
+    <dt>The journey</dt><dd>2008. Roughly 4,700 km in about five months, solo, in a 15-foot canoe</dd>
+    <dt>Recognition</dt><dd>Mike Jones Canoeing Award</dd>
+    <dt>Verdict</dt><dd>Worth your evening. A logbook, not a meditation</dd>
+  </dl>
+</header>
+
+<div class="profile">
+<svg viewBox="0 0 1080 400" role="img" aria-label="Elevation profile of the Congo River from its source in Zambia at 1,760 metres down to the Atlantic Ocean, showing a steep fall through the Zambian headwaters, a long flat middle course, and a final plunge below Kinshasa through the Livingstone Falls.">
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9CC4A6" stop-opacity=".20"/>
+      <stop offset="100%" stop-color="#9CC4A6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- baseline / sea -->
+  <line x1="70" y1="340" x2="1050" y2="340" stroke="#9CC4A6" stroke-opacity=".28" stroke-width="1"/>
+  <text class="axis" x="70" y="358">source, Zambia</text>
+  <text class="axis" x="1050" y="358" text-anchor="end">Atlantic Ocean</text>
+
+  <!-- elevation gridlines -->
+  <line x1="70" y1="40" x2="1050" y2="40" stroke="#9CC4A6" stroke-opacity=".12"/>
+  <text class="axis" x="60" y="44" text-anchor="end">1,760 m</text>
+  <line x1="70" y1="190" x2="1050" y2="190" stroke="#9CC4A6" stroke-opacity=".12"/>
+  <text class="axis" x="60" y="194" text-anchor="end">880 m</text>
+  <text class="axis" x="60" y="344" text-anchor="end">0 m</text>
+
+  <!-- water fill -->
+  <path fill="url(#wash)" d="M70,40 L128,101 186,146 264,168 313,184 361,187 439,221 487,245 536,249 613,264 691,272 730,275 807,282 885,288 962,294 1001,314 1025,327 1040,340 L1040,340 L70,340 Z"/>
+
+  <!-- the river line -->
+  <polyline class="draw" fill="none" stroke="#C9A227" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"
+    points="70,40 128,101 186,146 264,168 313,184 361,187 439,221 487,245 536,249 613,264 691,272 730,275 807,282 885,288 962,294 1001,314 1025,327 1040,340"/>
+
+  <!-- waypoints -->
+  <g>
+    <circle cx="70" cy="40" r="4" fill="#C9A227"/>
+    <text class="pt-label" x="80" y="32">Chambeshi spring</text>
+    <text class="pt-elev" x="80" y="47">1,760 m</text>
+
+    <circle cx="186" cy="146" r="3.5" fill="#9CC4A6"/>
+    <text class="pt-label hide-narrow" x="196" y="140">Bangweulu swamps</text>
+
+    <circle cx="313" cy="184" r="3.5" fill="#9CC4A6"/>
+    <text class="pt-label hide-narrow" x="323" y="178">Lake Mweru</text>
+
+    <circle cx="613" cy="264" r="3.5" fill="#9CC4A6"/>
+    <text class="pt-label hide-narrow" x="560" y="255" text-anchor="middle">Kindu</text>
+
+    <circle cx="691" cy="272" r="4" fill="#C9A227"/>
+    <text class="pt-label" x="701" y="252">Boyoma Falls</text>
+    <text class="pt-elev" x="701" y="266">7 cataracts, 100 km</text>
+
+    <circle cx="885" cy="288" r="3.5" fill="#9CC4A6"/>
+    <text class="pt-label hide-narrow" x="855" y="280" text-anchor="middle">Mbandaka</text>
+
+    <circle cx="962" cy="294" r="4" fill="#C9A227"/>
+    <text class="pt-label" x="952" y="286" text-anchor="end">Kinshasa</text>
+
+    <circle cx="1040" cy="340" r="5" fill="#C9A227"/>
+    <text class="pt-label" x="1032" y="322" text-anchor="end">Livingstone Falls</text>
+    <text class="pt-elev" x="1032" y="336" text-anchor="end">269 m in 350 km</text>
+  </g>
+</svg>
+</div>
+<p class="cap">The shape of the problem. Elevations are real; horizontal spacing is schematic. Almost all of the river's fall happens in the first fifth and the last fifteenth — in between sit roughly 3,000 km of water so flat it barely drops a metre every ten kilometres. Harwood paddles the whole line.</p>
+
+<section>
+  <h2>The short version</h2>
+  <p class="verdict">In 2008 Phil Harwood put a canoe in at the Chambeshi spring in northern Zambia and got out at the Atlantic five months later, the first person recorded to have run the Congo end to end. <strong>The book is his logbook, and it is gripping in the way a logbook is gripping</strong> — immediate, unsentimental, and almost entirely uninterested in explaining itself.</p>
+
+  <p>What makes it work is the honesty of the reporting. Harwood is good on the texture of days: the weight of the boat, the arithmetic of food, the physical grind of dragging a loaded canoe through reed channels before the river is even a river. He is better still on people. Riverside fishermen feed him, tow him, warn him and put him up, and the book's real warmth comes from them. The recurring antagonist is not the water or the wildlife — it is officialdom. Immigration officers, police, army posts and self-appointed chiefs, each wanting papers and a payment, each able to end the expedition with a signature.</p>
+
+  <p>The famous stretch is the one the publisher leads with: a run of river locals call the Abattoir, where Harwood hired four brothers with a shotgun to travel with him for five days and nights. The cover copy reports bystanders asking them <q>why haven't you cut his throat yet?</q> It is the most quoted passage in the book and, tellingly, one of the few where the threat is stated plainly rather than absorbed and paddled past.</p>
+
+  <h3>Where it falls short</h3>
+  <p>Reviewers who know the genre make two fair criticisms, and both hold up. The first is interiority: for five months of near-constant danger, we get remarkably little about fear, doubt or motive. Harwood tells you what happened and moves downstream. If you want the inner weather of a solo expedition, this is not that book. The second is context: the history of the places he passes arrives in snippets — Livingstone, Stanley, Conrad — and the modern politics of the Democratic Republic of the Congo is mostly felt through roadblocks rather than explained. He condenses five months into a short book, and the wild early Zambian stages get noticeably more room than the long middle river.</p>
+
+  <p>Read it for the expedition and the encounters. Pair it with something else for the country.</p>
+</section>
+
+<section>
+  <h2>The journey, leg by leg</h2>
+  <p class="sub">The book runs as one continuous chronological narrative rather than titled chapters, so this breakdown follows the legs of the river — which is how the story is actually organised. Elevations and distances below are the river's, not the book's.</p>
+
+  <ol class="legs">
+    <li>
+      <p class="leg-where">Leg 1 — Chambeshi source, northern Zambia — 1,760 m</p>
+      <p class="leg-title">A spring, and a boat that is too big for it</p>
+      <p>The opening sets up the whole premise: the accepted source of the Congo is not in the Congo at all. By the convention used for the Nile — follow the longest tributary — the river begins as the Chambeshi in the Zambian highlands, nearly 1,800 m above the sea it is heading for. The early days are less canoeing than hauling, through shallow, reed-choked water with crocodiles and hippos in it and a heavily loaded 15-foot boat that wants deeper channels than the river can offer.</p>
+      <p class="leg-note"><b>Worth knowing</b>Zambia is the friendliest country in the book. Harwood's tone here is closest to enjoyment, which is exactly why the later chapters land harder.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 2 — Bangweulu swamps — ~1,140 m</p>
+      <p class="leg-title">The river disappears</p>
+      <p>The Chambeshi does not flow into Lake Bangweulu so much as dissolve into it: an inland delta of floating vegetation, papyrus and shifting channels where the current gives no useful steer and the horizon is reeds. Navigation becomes a matter of asking fishermen which gap in the wall of green leads onward. This is the stretch that most clearly separates the expedition from a river trip.</p>
+      <p class="leg-note"><b>Worth knowing</b>David Livingstone died at Chitambo, on the southern edge of these swamps, in 1873 — still convinced the waters around him fed the Nile. He was wrong by a continent's width; they feed the Congo.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 3 — Luapula and Lake Mweru — ~917 m</p>
+      <p class="leg-title">Onto open water, and up to the border</p>
+      <p>Out of the swamps the river reforms as the Luapula and becomes an international boundary, Zambia on one bank and the DRC on the other. It empties into Lake Mweru, which means crossing genuine open water — wind, fetch and standing waves — in a boat designed for rivers. At the far end lies the border, and the book's mood changes with the stamp in the passport.</p>
+      <p class="leg-note"><b>Worth knowing</b>The river has four names before it has the name on the cover: Chambeshi, Luapula, Luvua, Lualaba. It only becomes "the Congo" at Boyoma Falls, about halfway through the trip.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 4 — Luvua into the Lualaba, Katanga — ~556 m</p>
+      <p class="leg-title">Into the DRC, and into the paperwork</p>
+      <p>The Luvua drops steeply north-west to join the Lualaba, and Harwood enters the country the book is named after. From here the central conflict is established and never really resolves: every settlement with an official in it is a negotiation, and a lone European in a canoe is an event that has to be explained, registered, doubted and taxed. He learns fast that the safe play is to be conspicuously ordinary and endlessly patient.</p>
+      <p class="leg-note"><b>Worth knowing</b>This is mining country. Katanga's copper and cobalt are the reason the region has been fought over since independence, and the reason central authority has so often been contested here.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 5 — Upper Lualaba, Kongolo to Kindu — ~448 m</p>
+      <p class="leg-title">Gorges, rapids and a malarial collapse</p>
+      <p>The Lualaba pushes through constricted gorge country before opening out towards Kindu. The towns along this reach carry the visible scars of the wars of 1996–2003, and the river traffic thins to dugouts. Somewhere in this middle passage Harwood goes down with malaria — an episode the book reports with disconcerting brevity, given that collapsing alone in a canoe on this stretch is about as serious as the trip gets.</p>
+      <p class="leg-note"><b>Worth knowing</b>The Second Congo War drew in nine countries and is estimated to have caused millions of deaths, most from disease and hunger rather than combat. Harwood is paddling through its aftermath five years on.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 6 — Kindu towards Ubundu — "The Abattoir"</p>
+      <p class="leg-title">Five days with four brothers and a shotgun</p>
+      <p>The set piece. Warned about a reach with a reputation for robbery and murder — and, further back, for cannibalism — Harwood does the sensible and slightly absurd thing: he hires four local brothers, one shotgun between them, and they paddle and drift together for five days and nights without properly stopping. The tension in these pages comes from the fact that the threat is ambient rather than acute. Nothing happens, repeatedly, for a very long time.</p>
+      <p class="leg-note"><b>Worth knowing</b>Nyangwe, on this stretch, was a 19th-century slaving outpost. It is where Livingstone witnessed a massacre in 1871 that broke him, and where Stanley later hired protection from the slaver Tippu Tip before heading downstream.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 7 — Boyoma Falls and Kisangani — 400 m to 380 m</p>
+      <p class="leg-title">Seven cataracts, and the river changes its name</p>
+      <p>Boyoma is not a waterfall but a hundred-kilometre staircase of seven cataracts, and it cannot be run. Everything comes out of the water and goes overland. Below the last drop the Lualaba is called the Congo — which is exactly the discovery Stanley made here in 1877, settling the question of whether this water belonged to the Nile or the Atlantic. Kisangani is the biggest place Harwood has seen in months, and it is also Conrad's Inner Station.</p>
+      <p class="leg-note"><b>Worth knowing</b>The Wagenia fishermen at Kisangani still work the cataracts from wooden scaffolds anchored into the rock, lowering conical basket traps into the white water — a technique older than any of the names on the map.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 8 — Kisangani to Mbandaka — 380 m to 303 m</p>
+      <p class="leg-title">Seventeen hundred kilometres of flat brown water</p>
+      <p>The longest and, on the page, the quietest leg. The Congo here is enormous, island-choked, and loses less than a metre of height per ten kilometres. It swings north-west across the equator, curves round and crosses it again heading south-west. Life happens on the water: dugouts, lashed-together barge convoys carrying entire floating markets, and Lingala as the shared language of the river. For Harwood the challenge shifts from danger to monotony and supply.</p>
+      <p class="leg-note"><b>Worth knowing</b>Beneath the swamp forest on either side of this reach lies the Cuvette Centrale — the largest tropical peatland complex on Earth, mapped only in 2017. Harwood paddles across the top of it without anyone yet knowing it is there.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 9 — Mbandaka to Kinshasa — 303 m to 269 m</p>
+      <p class="leg-title">The great tributaries, and two capitals</p>
+      <p>The Ubangi comes in from the right and the Kasai from the left, and the river roughly doubles. It widens into Pool Malebo, where Kinshasa and Brazzaville face each other across the water — the closest pair of capital cities in the world. After months of villages, Harwood arrives in a city of millions, and the expedition briefly becomes a matter of permits, officials and being talked out of continuing.</p>
+      <p class="leg-note"><b>Worth knowing</b>Below the Pool, the river stops being a highway. Everything the DRC ships to the sea has to come out of the water at Kinshasa and go by rail to Matadi — a bottleneck the Belgians built the colony around.</p>
+    </li>
+
+    <li>
+      <p class="leg-where">Leg 10 — Livingstone Falls to the Atlantic — 269 m to 0 m</p>
+      <p class="leg-title">The last 350 kilometres are the worst ones</p>
+      <p>Thirty-two cataracts, a 269-metre drop, and the most powerful whitewater on the planet by sheer volume — the entire Congo forced into narrow canyons. This is where Stanley's descent took five months and cost lives, and it is where any sane source-to-sea attempt becomes a mix of portaging, hitching and picking your moments. Past Inga, past Matadi and Boma, the water finally goes brackish, and Harwood reaches the sea near Banana.</p>
+      <p class="leg-note"><b>Worth knowing</b>The ending is deliberately undramatic. That restraint is the book in miniature: five months of extremity, delivered in the tone of a man filling in a logbook.</p>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <h2>Twelve things about the Congo worth knowing first</h2>
+  <p class="sub">The book assumes some of this and skips the rest. It reads much better with it.</p>
+
+  <div class="congo">
+    <article>
+      <p class="num">4,700 km<span>ninth-longest river</span></p>
+      <div>
+        <h3>It only counts as ninth-longest if you start in Zambia</h3>
+        <p>Measured along the Congo–Lualaba alone it is about 4,370 km. Following the longest tributary all the way back to the Chambeshi gives 4,700 km. Harwood's whole claim to a first depends on taking the longer definition seriously.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">220 m<span>deepest river on Earth</span></p>
+      <div>
+        <h3>In places it is deeper than the English Channel</h3>
+        <p>Soundings in the lower Congo have found depths of around 220 metres, the greatest recorded for any river anywhere. The canyons below Kinshasa are so deep and so turbulent that fish brought to the surface show the effects of decompression.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">41,000<span>cubic metres per second</span></p>
+      <div>
+        <h3>Second only to the Amazon among single rivers</h3>
+        <p>Average discharge at the mouth is about 41,000 m³/s, rising past 70,000 in flood. Only the Amazon beats it outright; some rankings place the combined Ganges–Brahmaputra ahead of it too, which is why sources disagree on whether it is second or third.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">×2<span>equator crossings</span></p>
+      <div>
+        <h3>The only major river that crosses the equator twice</h3>
+        <p>Its basin sits in both hemispheres, so some part of it is always in a rainy season. The consequence matters to anyone on the water: the Congo has no dry season to speak of and no dramatic annual flood pulse. It is simply always huge.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">4.0 m km²<span>drainage basin</span></p>
+      <div>
+        <h3>A catchment roughly the size of the European Union</h3>
+        <p>Around 13% of the African landmass drains into it, across ten countries. The DRC alone holds about 62% of the basin.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">32<span>cataracts below Kinshasa</span></p>
+      <div>
+        <h3>The reason the Congo was mapped from the inside out</h3>
+        <p>The Livingstone Falls block the river from the sea, so Europeans knew the estuary from 1482 but not the interior until Stanley came down it in 1877. Nearly four centuries of the continent's largest river system sitting a hundred miles from the Atlantic, unreachable.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">40 GW<span>proposed at Grand Inga</span></p>
+      <div>
+        <h3>The largest unbuilt power station in the world</h3>
+        <p>The Congo Basin holds roughly 13% of global hydropower potential. Inga I and II, just downstream of Kinshasa, generate under 2 GW between them; the proposed Grand Inga scheme would push the site past 40 GW — bigger than any dam on Earth, and a genuine threat to the endemic fish of the rapids.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">~800<span>fish species recorded</span></p>
+      <div>
+        <h3>By far the richest river system in Africa</h3>
+        <p>For comparison, the Niger has around 240 and the Nile around 130. Large sections have never been surveyed. The Livingstone Falls cataracts alone hold more than 300 species, roughly 80 of them found nowhere else — including a blind, unpigmented cichlid that lives in the dark at depth.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">30 Gt<span>carbon in the peat</span></p>
+      <div>
+        <h3>A carbon store nobody knew existed until 2017</h3>
+        <p>The Cuvette Centrale peatlands cover about 145,500 km² — larger than England — and hold roughly 30 billion tonnes of carbon. That is 4% of the basin's area storing as much carbon underground as all the trees on the other 96% store above it.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">1 of 2<span>great apes, split by water</span></p>
+      <div>
+        <h3>The river itself made the bonobo</h3>
+        <p>Bonobos live only south of the Congo, chimpanzees only north of it. The river's formation, one to two million years ago, cut one ancestral population in two and they diverged into separate species. Few rivers have an evolutionary event named after them.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">nzere<span>"river swallowing rivers"</span></p>
+      <div>
+        <h3>Congo, Zaire and Kongo are all the same word twice over</h3>
+        <p>"Congo" comes from the Kingdom of Kongo at the river's mouth. "Zaire" is a Portuguese rendering of the Kikongo <i>nzere</i> — a shortening of a phrase meaning the river that swallows rivers. Mobutu made Zaire the official name of both river and country from 1971 to 1997.</p>
+      </div>
+    </article>
+
+    <article>
+      <p class="num">the road<span>where there are none</span></p>
+      <div>
+        <h3>In much of the DRC, the river is the only infrastructure</h3>
+        <p>A country the size of Western Europe has very little usable paved road outside the cities. Goods, news and people move by barge, dugout and pirogue. This is why Harwood is never truly alone on the water, and why every official he meets along it holds real power.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="caveat">
+  <h2>One thing to check as you read</h2>
+  <p class="sub">The cover copy is doing some work.</p>
+  <table>
+    <thead>
+      <tr><th>Claim on the jacket</th><th>What standard references say</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Eighth-longest river in the world</td><td>Usually ranked ninth at 4,700 km. Rankings shift with how tributaries and deltas are measured</td></tr>
+      <tr><td>Deepest river in the world</td><td>Holds up — around 220 m in the lower Congo</td></tr>
+      <tr><td>Flow rate second only to the Amazon</td><td>Second among single rivers; third if the combined Ganges–Brahmaputra–Meghna system is counted</td></tr>
+      <tr><td>2,922 miles / just short of 3,000</td><td>Consistent with 4,700 km. Note this is the Chambeshi-inclusive figure, not the 4,370 km Congo–Lualaba one</td></tr>
+    </tbody>
+  </table>
+  <p>None of this is dishonest — river superlatives genuinely depend on where you start measuring. But it is a useful reminder that the "first source-to-sea descent" claim rests on a definitional choice about where the Congo begins, and that choice is what sent Harwood to a spring in Zambia rather than a riverbank in the DRC.</p>
+</section>
+
+<section>
+  <h2>If you liked it</h2>
+  <ul class="next">
+    <li><b>Blood River</b> — Tim Butcher. <span>Retraces Stanley's route through the DRC in 2004. Much heavier on history and politics; the book to read alongside this one.</span></li>
+    <li><b>Heart of Darkness</b> — Joseph Conrad. <span>Conrad captained a steamer up this river in 1890. Short, and unavoidable once you have seen Kisangani on a map.</span></li>
+    <li><b>King Leopold's Ghost</b> — Adam Hochschild. <span>The Congo Free State and what was done in it. Explains most of what Harwood paddles past without comment.</span></li>
+    <li><b>Crossing the Congo</b> — Baker, Hatch-Barnwell and Martin. <span>Kinshasa to Juba by Land Rover in 2013. The overland counterpart, and just as much a book about bureaucracy.</span></li>
+  </ul>
+</section>
+
+<footer>
+  <p>Journey details from the book and publisher material. River figures — length, depth, discharge, basin area, cataract counts, species counts and the Inga schemes — from standard hydrological and geographic references. Peatland figures from Dargie and Lewis et al., <i>Nature</i>, 2017.</p>
+  <p>Reading notes, not a substitute for the book. Buy it; it is short and it is cheap.</p>
+</footer>
+
+</div>
+</body>
+</html>
