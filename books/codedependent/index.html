@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Dependent — book overview &amp; summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --chalk:#E8E9E4;
+  --chalk-2:#DEE0D9;
+  --ink:#20231F;
+  --ink-soft:#585E55;
+  --rule:#C4C8BE;
+  --signal:#A0302A;
+  --slate:#2F5570;
+  --card:#F3F4F0;
+  --measure:38rem;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --chalk:#181A17;
+    --chalk-2:#121411;
+    --ink:#E4E7E0;
+    --ink-soft:#A0A79B;
+    --rule:#343830;
+    --signal:#E0736A;
+    --slate:#8FB6D2;
+    --card:#1F221E;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--chalk);color:var(--ink);
+  font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;font-size:16.5px;line-height:1.62;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:Newsreader,Georgia,"Times New Roman",serif}
+a{color:inherit;text-decoration-color:var(--signal);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--slate);outline-offset:3px;border-radius:2px}
+
+.hero{border-bottom:3px solid var(--ink);background:var(--chalk-2);
+  padding:clamp(2.4rem,6vw,5rem) 1.25rem clamp(2rem,4vw,3rem)}
+.hero-inner{max-width:52rem;margin:0 auto}
+.kicker{font-size:.8rem;font-weight:600;color:var(--signal);margin:0 0 1rem;letter-spacing:.01em}
+h1{font-weight:700;font-size:clamp(2.7rem,9.5vw,5.3rem);line-height:.95;letter-spacing:-.025em;margin:0}
+h1 .sub{display:block;font-family:"IBM Plex Sans";font-weight:400;font-size:clamp(1rem,3vw,1.4rem);
+  color:var(--ink-soft);margin-top:.8rem;line-height:1.3;letter-spacing:0}
+.premise{margin:2.3rem 0 0;max-width:34rem;border-top:1px solid var(--rule);padding-top:1.3rem}
+.premise p{margin:0 0 .85rem;font-family:Newsreader;font-size:1.25rem;line-height:1.45}
+.premise .ans{margin:0;font-family:"IBM Plex Sans";font-weight:600;font-size:.98rem;color:var(--signal);line-height:1.5}
+.meta-row{display:flex;flex-wrap:wrap;gap:.45rem 2rem;margin-top:2.2rem;font-size:.82rem;color:var(--ink-soft)}
+.meta-row b{color:var(--ink);font-weight:600}
+
+nav.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--chalk) 93%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.toc ul{display:flex;gap:1.3rem;overflow-x:auto;list-style:none;margin:0 auto;padding:.7rem 1.25rem;max-width:64rem}
+.toc a{font-size:.81rem;font-weight:500;white-space:nowrap;text-decoration:none;color:var(--ink-soft);
+  padding-bottom:2px;border-bottom:2px solid transparent}
+.toc a.on{color:var(--ink);border-bottom-color:var(--signal)}
+
+main{max-width:52rem;margin:0 auto;padding:0 1.25rem 5rem}
+section{padding:3.3rem 0 .5rem;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+h2{font-weight:700;font-size:clamp(1.55rem,4.5vw,2.15rem);letter-spacing:-.02em;line-height:1.1;margin:0 0 1.3rem;max-width:25ch}
+h3{font-weight:600;font-size:1.05rem;margin:1.9rem 0 .5rem}
+p{max-width:var(--measure)}
+.lede{font-size:1.06rem;color:var(--ink-soft)}
+ul.plain{max-width:var(--measure);padding-left:1.1rem;margin:.6rem 0 1.2rem}
+ul.plain li{margin:.5rem 0}
+.note{font-size:.89rem;color:var(--ink-soft);max-width:var(--measure)}
+
+/* index of dispatches */
+.index{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin:1.6rem 0 0;max-width:var(--measure)}
+.index a{display:grid;grid-template-columns:1.6rem 9.5rem 1fr;gap:.8rem;align-items:baseline;
+  padding:.55rem 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.index a:last-child{border-bottom:none}
+.index .n{font-family:Newsreader;font-weight:700;color:var(--signal);font-size:.9rem}
+.index .pl{font-size:.82rem;font-weight:500;color:var(--slate)}
+.index .ti{font-family:Newsreader;font-weight:600;font-size:1.02rem}
+.index a:hover .ti{text-decoration:underline;text-decoration-color:var(--signal)}
+@media(max-width:560px){.index a{grid-template-columns:1.4rem 1fr;gap:.5rem}.index .pl{grid-column:2;order:2;margin-top:-.1rem}.index .ti{grid-column:2;order:1}}
+
+/* chapters */
+.ch{padding:2.1rem 0;border-top:1px solid var(--rule)}
+.ch:first-of-type{border-top:none}
+.dateline{font-size:.79rem;font-weight:600;color:var(--slate);margin:0 0 .3rem}
+.dateline em{font-style:normal;color:var(--signal)}
+.chtitle{font-family:Newsreader;font-weight:700;font-size:1.55rem;letter-spacing:-.02em;line-height:1.1;margin:0 0 .7rem}
+.ch p,.ch ul{max-width:34.5rem}
+.moves{list-style:none;padding:0;margin:.9rem 0 0;border-left:2px solid var(--rule)}
+.moves li{padding:.1rem 0 .1rem .85rem;margin:.4rem 0;font-size:.96rem}
+.moves b{font-weight:600}
+.carry{margin-top:1rem;font-size:.91rem;line-height:1.5;border-top:1px dotted var(--rule);padding-top:.65rem;max-width:34.5rem}
+.carry span{color:var(--signal);font-weight:600}
+
+/* facts */
+.facts{list-style:none;padding:0;margin:1rem 0 0;max-width:var(--measure)}
+.facts li{padding:.85rem 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:6.5rem 1fr;gap:1rem}
+.facts li:last-child{border-bottom:1px solid var(--rule)}
+.facts .tag{font-weight:600;font-size:.81rem;color:var(--slate);line-height:1.45}
+.facts p{margin:0;font-size:.96rem}
+@media(max-width:560px){.facts li{grid-template-columns:1fr;gap:.1rem}}
+
+blockquote.pull{margin:2rem 0;padding:0 0 0 1.2rem;border-left:3px solid var(--signal);max-width:34rem;
+  font-family:Newsreader;font-size:1.14rem;line-height:1.45}
+footer{max-width:52rem;margin:0 auto;padding:2.4rem 1.25rem 4rem;border-top:3px solid var(--ink);font-size:.85rem;color:var(--ink-soft)}
+footer p{max-width:var(--measure)}
+.totop{font-weight:600;font-size:.81rem;text-decoration:none;color:var(--signal)}
+@media print{nav.toc{display:none}body{background:#fff;color:#000;font-size:11pt}.ch{page-break-inside:avoid}}
+</style>
+</head>
+<body id="top">
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Book overview &amp; summary</p>
+    <h1>Code Dependent
+      <span class="sub">Living in the Shadow of AI — Madhumita Murgia (2024)</span>
+    </h1>
+    <div class="premise">
+      <p>A poet in Sheffield, a data labeller in Nairobi, a doctor in rural Maharashtra, a courier in Pittsburgh, a mother in the Argentine Andes. None of them build AI. All of them are living inside decisions it makes.</p>
+      <p class="ans">Murgia's method: report the technology from where it lands, not from where it is made.</p>
+    </div>
+    <div class="meta-row">
+      <span><b>Published</b> 21 March 2024, Picador</span>
+      <span><b>Length</b> ~320 pages</span>
+      <span><b>Form</b> Ten chapters, ten "Your ___"</span>
+      <span><b>Author</b> FT's first AI editor</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#chapters">Chapter by chapter</a></li>
+    <li><a href="#patterns">The patterns</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curios">Interesting facts</a></li>
+    <li><a href="#critics">The pushback</a></li>
+    <li><a href="#practice">Where it bites</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#discuss">Discussion</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<section id="argument">
+  <h2>The whole book in one page</h2>
+  <p class="lede">Most books about AI are written from inside the industry: the labs, the founders, the models. Murgia, the Financial Times' first AI editor, went the other way. She reported from the places where automated systems actually touch people, and built the book out of ten of those encounters.</p>
+
+  <p>The organising claim is about <b>agency</b> — the capacity to act, choose and be answerable for your own life. Her argument is that AI systems quietly redistribute it. A person becomes a score, a risk band, a flag on a list. Decisions that used to be made by someone you could argue with are now made by a system that cannot explain itself and has no appeals desk. Whether the prediction is accurate almost stops mattering; what matters is that you have been converted from a person who makes choices into a probability that others act on.</p>
+
+  <p>The second claim is about <b>who pays</b>. The people most affected are rarely the ones featured in AI coverage. They are the global precariat: gig workers, welfare claimants, migrants, minorities, the residents of poor neighbourhoods. Two reasons, both structural. Poorer people have more contact with state services, so the state holds more data on them, so they are the ones who get modelled. And the cheap human labour that makes AI work — labelling images, moderating violence, cleaning datasets — is bought where labour is cheapest, then rendered invisible in the story the industry tells about itself.</p>
+
+  <p>The third, quieter finding is about <b>who is now running public services</b>. Almost no government can build or train these systems itself. So the welfare algorithm in Argentina, the health project in Mexico, the cloud under an Indian deployment all come with a hyperscaler attached. Big Tech has drifted into the machinery of the state largely without anyone deciding that it should.</p>
+
+  <p>It is not a uniformly bleak book. Health is where Murgia sees genuine promise, and her strongest chapter follows a doctor using an AI tool as a second opinion rather than a replacement. She also tracks resistance: workers reverse-engineering the apps that underpay them, researchers pulling apart surveillance code, communities refusing to hand over their data. The closing argument is not that AI should be stopped but that agency has to be actively reclaimed — through contestability, collective action and rules written before deployment rather than after harm.</p>
+</section>
+
+<section id="chapters">
+  <h2>Chapter by chapter</h2>
+  <p class="lede">Every chapter title is a possessive: your livelihood, your body, your health. The grammar is the argument — this is not happening to an abstract society, it is happening to you, and it has already happened to someone.</p>
+
+  <nav class="index" aria-label="Index of chapters">
+    <a href="#c1"><span class="n">1</span><span class="pl">Nairobi</span><span class="ti">Your Livelihood</span></a>
+    <a href="#c2"><span class="n">2</span><span class="pl">Britain</span><span class="ti">Your Body</span></a>
+    <a href="#c3"><span class="n">3</span><span class="pl">On the street</span><span class="ti">Your Identity</span></a>
+    <a href="#c4"><span class="n">4</span><span class="pl">Maharashtra</span><span class="ti">Your Health</span></a>
+    <a href="#c5"><span class="n">5</span><span class="pl">Xinjiang</span><span class="ti">Your Freedom</span></a>
+    <a href="#c6"><span class="n">6</span><span class="pl">Salta</span><span class="ti">Your Safety Net</span></a>
+    <a href="#c7"><span class="n">7</span><span class="pl">Pittsburgh</span><span class="ti">Your Boss</span></a>
+    <a href="#c8"><span class="n">8</span><span class="pl">Amsterdam</span><span class="ti">Your Rights</span></a>
+    <a href="#c9"><span class="n">9</span><span class="pl">Everywhere</span><span class="ti">Your Future</span></a>
+    <a href="#c10"><span class="n">10</span><span class="pl">Everywhere</span><span class="ti">Your Society</span></a>
+  </nav>
+
+  <div class="ch" id="c1">
+    <p class="dateline"><em>01</em> &nbsp;Nairobi, Kenya — and the annotation industry beyond it</p>
+    <h3 class="chtitle">Your Livelihood</h3>
+    <p>The book opens where AI actually comes from: a room full of people tagging images. Murgia follows Ian Koli, a data worker in Nairobi drawing boxes around objects so that self-driving systems can learn to see, and the content moderators paid to watch the worst material on the internet so that the rest of us do not have to. The work is skilled, gruelling and psychologically corrosive, and it is priced as if it were neither skilled nor gruelling.</p>
+    <ul class="moves">
+      <li><b>The self-learning machine is a marketing claim.</b> Behind it sits an enormous, deliberately invisible human supply chain.</li>
+      <li><b>Gratitude as a management technique.</b> Workers are positioned as beneficiaries of opportunity, which makes asking questions feel ungrateful — and makes those who ask easy to replace.</li>
+      <li><b>Digital colonialism.</b> The value travels one way: raw human effort out of the global South, finished products and profits into the North. Murgia's parallel is to earlier industrial revolutions built on labour nobody wanted to look at.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> every claim about autonomous intelligence has an outsourcing contract underneath it.</div>
+  </div>
+
+  <div class="ch" id="c2">
+    <p class="dateline"><em>02</em> &nbsp;Britain — deepfakes and "nudes-for-hire"</p>
+    <h3 class="chtitle">Your Body</h3>
+    <p>A British poet discovers that sexualised deepfakes of herself have been made and circulated by someone who knew her — built from ordinary photographs, posted to sites where strangers take requests. She has committed no act, consented to nothing, and can prove no conventional harm. The images are of her body and are not her body.</p>
+    <ul class="moves">
+      <li><b>The harm precedes the law.</b> Existing categories — defamation, harassment, revenge porn — fit awkwardly, so recourse is slow, patchy and often absent.</li>
+      <li><b>Generative tools industrialised it.</b> What once needed skill and time now needs an upload and a prompt, which changes the scale rather than the nature of the abuse.</li>
+      <li><b>The target is overwhelmingly women.</b> A technology sold as creative becomes, in practice, a mechanism for taking away control of one's own likeness.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the first thing AI took from many people was not their job but their image.</div>
+  </div>
+
+  <div class="ch" id="c3">
+    <p class="dateline"><em>03</em> &nbsp;Facial recognition, and one of its builders</p>
+    <h3 class="chtitle">Your Identity</h3>
+    <p>What happens when your face becomes a key that other people hold. Murgia looks at facial recognition as it is deployed on streets, at protests and in policing, and at the experience of being identified — or misidentified — by a system you never agreed to be enrolled in. She also spends time with an engineer who helped build this technology and has come to doubt what he made, which gives the chapter its uneasy double vision.</p>
+    <ul class="moves">
+      <li><b>Accuracy is not the whole problem.</b> A system that works perfectly still ends anonymity in public space; one that works imperfectly does that <i>and</i> misidentifies, disproportionately at the margins.</li>
+      <li><b>Consent has no purchase here.</b> You cannot opt out of having a face, and enrolment usually happens without notice.</li>
+      <li><b>Builders' remorse is not a governance mechanism.</b> Individual conscience arrives after deployment, which is precisely too late.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> identity becomes something inferred about you rather than something you assert.</div>
+  </div>
+
+  <div class="ch" id="c4">
+    <p class="dateline"><em>04</em> &nbsp;Chinchpada Christian Hospital, rural Maharashtra, India</p>
+    <h3 class="chtitle">Your Health</h3>
+    <p>The most hopeful chapter, and Murgia says so. Dr Ashita Singh works in a rural mission hospital serving a tribal community, where tuberculosis is common and radiologists are not. She uses a machine-learning tool to read chest X-rays for signs of TB — as a second opinion that extends her judgement rather than a system that replaces it. In a place with no specialist for miles, a good-enough automated read is not a downgrade; it is the difference between diagnosis and none.</p>
+    <ul class="moves">
+      <li><b>Augmentation, not substitution.</b> The model works because a clinician stays accountable for the decision.</li>
+      <li><b>Scarcity changes the calculus.</b> The right comparison is not AI versus an expert, it is AI versus nothing at all.</li>
+      <li><b>Medicine is already regulated.</b> Murgia notes this is one of the few domains with rules on safety, data and conflicts of interest already in place — which may be exactly why it goes better here.</li>
+      <li><b>The unresolved question is the data.</b> Patients' scans train commercial products; the benefit flows outward, and nobody asked them.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the technology is not the variable. Accountability, scarcity and regulation are.</div>
+  </div>
+
+  <div class="ch" id="c5">
+    <p class="dateline"><em>05</em> &nbsp;Xinjiang, China — via the researchers who exposed it</p>
+    <h3 class="chtitle">Your Freedom</h3>
+    <p>The book's hardest chapter. Researcher Maya Wang and her colleagues obtain and reverse-engineer the Integrated Joint Operations Platform, the system underpinning policing of Uyghurs in Xinjiang. It ingests vehicle movements, biometrics, DNA, voice and gait profiles and phone records, and flags people against dozens of "person types" — including categories as elastic as behaving suspiciously or holding unstable thoughts. A flag can mean travel restrictions, interrogation or detention.</p>
+    <ul class="moves">
+      <li><b>Suspicion becomes computable.</b> Vague human prejudice is converted into a rule that runs continuously over a whole population.</li>
+      <li><b>Scale is the novelty.</b> Surveillance is old; surveillance of this depth, applied to millions at once, is not.</li>
+      <li><b>Exposure as resistance.</b> The chapter is also about the painstaking work of getting hold of the code and making an invisible system legible.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the extreme case is instructive because every component of it exists elsewhere in milder form.</div>
+  </div>
+
+  <div class="ch" id="c6">
+    <p class="dateline"><em>06</em> &nbsp;Salta province, north-west Argentina</p>
+    <h3 class="chtitle">Your Safety Net</h3>
+    <p>A programme launched in 2018, built with a major technology company, set out to predict which teenage girls would become pregnant, so that help could be targeted. Murgia walks the barrio with Norma Gutiérrez, one of the women it touched. In some neighbourhoods close to three-quarters of families were flagged. The scheme was never properly explained to the people in it, delivered almost no practical benefit before being shut down, and — in a project about pregnancy — collected no data about men.</p>
+    <ul class="moves">
+      <li><b>Prediction substituting for provision.</b> What these families needed was visible to any visitor: sanitation, clinics, jobs, schools. The model told the state what it could already see and funded nothing.</li>
+      <li><b>Consent and explanation were skipped.</b> People became subjects of a system nobody described to them.</li>
+      <li><b>Surveillance dressed as care.</b> Targeting the vulnerable more precisely is only help if help is actually attached.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> a welfare algorithm without a welfare budget is just a register of the poor.</div>
+  </div>
+
+  <div class="ch" id="c7">
+    <p class="dateline"><em>07</em> &nbsp;Pittsburgh, USA — and roughly a billion app-managed workers</p>
+    <h3 class="chtitle">Your Boss</h3>
+    <p>Algorithmic management, told through delivery and ride-hailing work. Pay, routing, ratings, deactivation: all set by software, none of it explicable, with no one to appeal to. The chapter's hero is Armin Samii, who noticed a delivery paid as if he had taken a route far shorter than the one he rode, and built a tool called UberCheats to check. Of his roughly six thousand trips, about 17 per cent had been underpaid. He released it so other couriers could audit their own histories.</p>
+    <ul class="moves">
+      <li><b>Asymmetry is the business model.</b> The platform sees everything; the worker sees a number and is told it is correct.</li>
+      <li><b>Being fired by software.</b> Deactivation without explanation, with no colleague, manager or process to contest.</li>
+      <li><b>Data turned back on the platform.</b> Samii's jujitsu move — using the company's own records as evidence — is the book's clearest template for resistance.</li>
+      <li><b>Collective action follows.</b> Unions and worker data-rights groups making transparency a demand rather than a favour.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the right to see and challenge the calculation is worth more than any single ruling about pay.</div>
+  </div>
+
+  <div class="ch" id="c8">
+    <p class="dateline"><em>08</em> &nbsp;Amsterdam, the Netherlands</p>
+    <h3 class="chtitle">Your Rights</h3>
+    <p>The city built a list called the Top400: young people identified as most likely to commit serious crime, so that support could reach them early. In practice, inclusion worked less like an offer of help than like a mark. Those on the list drew police attention, found themselves treated as suspects by default, and in some cases became attractive recruits to the gangs the programme was meant to steer them away from. Murgia's formulation is that the lists stopped being predictions and became curses.</p>
+    <ul class="moves">
+      <li><b>Self-fulfilling prophecy as a design flaw.</b> Prediction changes the thing predicted, and rarely in the intended direction.</li>
+      <li><b>Punishment before an act.</b> Consequences attach to a statistical future rather than to anything the person has done.</li>
+      <li><b>No exit, no appeal.</b> Families often did not know how someone got on the list, what would remove them, or whom to ask.</li>
+      <li><b>Good intentions are not a defence.</b> This was a welfare-minded city trying to help, which is what makes the case damning.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> due process — notice, reasons, a route of appeal — is the thing that keeps going missing.</div>
+  </div>
+
+  <div class="ch" id="c9">
+    <p class="dateline"><em>09</em> &nbsp;Rules, regulators and the tech state</p>
+    <h3 class="chtitle">Your Future</h3>
+    <p>Murgia pulls back from individual cases to the question of governance: who writes the rules, who audits the systems, and what recourse looks like when the decision-maker is procurement software. Running underneath is what may be the book's most consequential observation — that because almost no public body can build these systems itself, the state's capacity to govern is now entangled with the companies it is meant to regulate.</p>
+    <ul class="moves">
+      <li><b>Big Tech inside the public sector.</b> The same handful of firms appear behind welfare, policing and health projects across continents, usually without public debate about the dependency.</li>
+      <li><b>Regulation arriving after deployment.</b> Rules are being written while systems are already running on real populations.</li>
+      <li><b>Capacity, not just law.</b> Without in-house technical capability, oversight bodies cannot check the thing they are supposed to check.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the governance gap is a skills and dependency problem as much as a legal one.</div>
+  </div>
+
+  <div class="ch" id="c10">
+    <p class="dateline"><em>10</em> &nbsp;What is left to us</p>
+    <h3 class="chtitle">Your Society</h3>
+    <p>The closing chapter widens to the collective: what it means to live inside systems that shape what we see, believe and expect of each other, arriving now at consumer scale through chatbots and feeds. Murgia's worry is not machine consciousness but moral outsourcing — that by failing to decide which values these systems should encode, we hand the decision to whoever is shipping fastest. Her answer is the path of resistance the book has been quietly tracing: collective organisation, community control of data, and the insistence that people affected by a system get a say in it.</p>
+    <blockquote class="pull">The through-line of all ten chapters: none of us is free of these systems until the people at their sharp end are.</blockquote>
+    <div class="carry"><span>Carry forward:</span> reclaiming agency is a political project, not a product feature.</div>
+  </div>
+
+  <p class="note">A note on precision: chapters one to eight are built around named people and places, which is where the book's reporting is strongest and where this summary is most specific. The final two step back to legal and societal frameworks, and several reviewers found them broader-brush than what precedes them.</p>
+</section>
+
+<section id="patterns">
+  <h2>The patterns that repeat</h2>
+  <p class="lede">Read the ten stories side by side and the same structure keeps surfacing, in rich countries and poor ones alike.</p>
+  <ul class="plain">
+    <li><b>The data trail follows disadvantage.</b> The more you depend on public services, the more the state knows about you, and the more likely you are to be modelled, scored and intervened upon.</li>
+    <li><b>Prediction displaces provision.</b> It is cheaper to identify who will suffer than to fix why. So the model gets funded and the sanitation does not.</li>
+    <li><b>The flag becomes the fate.</b> Being marked as high-risk changes how institutions treat you, which changes your outcomes, which appears to validate the model.</li>
+    <li><b>Recourse is the missing component.</b> Almost every harm in the book would be smaller if the person could see the decision, understand its basis and contest it.</li>
+    <li><b>The human labour is hidden on purpose.</b> Invisibility is not an accident of the supply chain; it is what makes the automation story sellable.</li>
+    <li><b>Where it works, a human stays accountable.</b> The one clearly positive case has a named professional who owns the decision and a regulator watching.</li>
+  </ul>
+</section>
+
+<section id="facts">
+  <h2>Key facts and figures</h2>
+  <ul class="facts">
+    <li><span class="tag">2024</span><p>Published 21 March by Picador in the UK and Henry Holt in the US; around 320 pages, ten chapters.</p></li>
+    <li><span class="tag">The author</span><p>Madhumita Murgia became the Financial Times' first AI editor in February 2023. Raised in Mumbai, she read biology at Oxford and worked on AIDS vaccine research before moving into journalism via Wired UK and the Telegraph.</p></li>
+    <li><span class="tag">Shortlisted</span><p>For the inaugural Women's Prize for Non-Fiction in 2024, and named a book of the year by Esquire, The Spectator and Publishers Weekly.</p></li>
+    <li><span class="tag">~1 billion</span><p>Her order-of-magnitude figure for the number of people worldwide whose working lives are now directed by an app.</p></li>
+    <li><span class="tag">17%</span><p>The share of roughly 6,000 deliveries found to have been underpaid when one Pittsburgh courier built a tool to audit his own trip history.</p></li>
+    <li><span class="tag">~75%</span><p>The proportion of families flagged by the predictive welfare system in some neighbourhoods of Salta, Argentina — a rate that tells you the model was describing poverty, not risk.</p></li>
+    <li><span class="tag">Top400</span><p>Amsterdam's list of young people judged most likely to commit serious crime, intended as early intervention and experienced as a target on the back.</p></li>
+    <li><span class="tag">36</span><p>The number of suspicious "person types" encoded in the Xinjiang policing platform, alongside behavioural flags as loose as acting suspiciously.</p></li>
+    <li><span class="tag">Zero men</span><p>The teen-pregnancy prediction project in Argentina collected no data about men at all.</p></li>
+    <li><span class="tag">The hyperscalers</span><p>Big Tech firms surface repeatedly inside state projects across Latin America, Asia and Europe — the practical consequence of governments having almost no capacity to build AI themselves.</p></li>
+    <li><span class="tag">One bright spot</span><p>Health. AI-assisted tuberculosis screening in a rural Indian hospital is the book's clearest case of a system that helps — used as a second opinion, with a clinician accountable.</p></li>
+  </ul>
+</section>
+
+<section id="curios">
+  <h2>Interesting things about the book</h2>
+  <ul class="plain">
+    <li><b>The grammar is the thesis.</b> Ten chapters, ten second-person possessives. It is a deliberate refusal of the abstraction — "society", "the economy" — that usually insulates readers from this material.</li>
+    <li><b>She was a scientist first.</b> Murgia worked on AIDS vaccine research before journalism, which shows in the health chapter: it is the most technically confident and the least willing to settle for a simple verdict.</li>
+    <li><b>The Times called it the No Logo of the 2020s.</b> An apt comparison — like Naomi Klein's book, it works by following the supply chain to the places the brand would rather you did not look.</li>
+    <li><b>The victims and the builders sometimes share a chapter.</b> The facial recognition section includes an engineer with second thoughts about his own creation, which complicates the usual villain-and-victim structure.</li>
+    <li><b>The best story in it is a bug report.</b> A courier noticing his pay did not match his route, writing a script, and finding a systematic shortfall is a more useful model of resistance than any manifesto.</li>
+    <li><b>Shoshana Zuboff blurbed it.</b> The author of <i>The Age of Surveillance Capitalism</i> called it the intimate investigation of AI we had been waiting for — a fair description of how it differs from her own.</li>
+    <li><b>It lost to Naomi Klein.</b> <i>Doppelganger</i> took the inaugural Women's Prize for Non-Fiction that <i>Code Dependent</i> was shortlisted for.</li>
+    <li><b>Almost no founders appear.</b> For a book about AI published in 2024, the near-total absence of the industry's famous names is a striking editorial choice.</li>
+  </ul>
+</section>
+
+<section id="critics">
+  <h2>The pushback</h2>
+  <ul class="plain">
+    <li><b>Familiar territory for close followers.</b> Readers who track tech reporting will have met the deepfakes, the Nairobi annotators and the Xinjiang surveillance before. The reporting deepens those stories rather than breaking them.</li>
+    <li><b>Breadth over depth.</b> Ten domains in 320 pages means each gets a sketch. The book is strong on what happened and lighter on the mechanics of why these systems fail in the specific ways they do.</li>
+    <li><b>The last chapters thin out.</b> Several reviewers found the sections on legal and societal frameworks broad-brush compared with the reported chapters.</li>
+    <li><b>Light on solutions.</b> Contestability, collective action and data sovereignty are named as directions, not worked through as policy. Readers wanting an agenda will find gestures.</li>
+    <li><b>Selection cuts one way.</b> The case studies are chosen for harm, which is the point — but it means the book cannot settle the question of whether the aggregate effect of these systems is negative, only that the costs fall unevenly.</li>
+    <li><b>It sidesteps the frontier debate.</b> Existential risk, model capability and the economics of the labs are largely absent. A deliberate choice, but it leaves the book answering a different question from the one much of the field is arguing about.</li>
+  </ul>
+</section>
+
+<section id="practice">
+  <h2>Where the argument bites in practice</h2>
+  <p>If you deploy automated decisions inside an institution, four things in this book are directly operational:</p>
+  <ul class="plain">
+    <li><b>Harm lives at the intervention layer, not the model layer.</b> Every failure here comes from what the organisation did with a score, not from the maths. Evaluate the action the system triggers, not just its accuracy.</li>
+    <li><b>Contestability is a feature, and it has to be built.</b> Notice, an explanation a person can understand, and a route of appeal that reaches a human with the authority to overturn. If it does not exist at launch, it will not be retrofitted.</li>
+    <li><b>Check for base-rate absurdity.</b> When a risk model flags most of a population, it has learned a demographic, not a risk. That test would have caught the Salta programme before it ran.</li>
+    <li><b>Know your dependencies and your data supply chain.</b> Who built it, who hosts it, whose labour labelled it, and what happens to the data your users generate. Those questions are increasingly the substance of governance, not the paperwork around it.</li>
+  </ul>
+</section>
+
+<section id="takeaway">
+  <h2>The takeaway</h2>
+  <p>Murgia's central move is to relocate the AI debate. The question is not whether these systems are intelligent, or whether they will one day be dangerous. It is what happens right now when a decision about a person is made by something that cannot be questioned. Across ten chapters and five continents, the shape of the harm is remarkably consistent: a human being is converted into a prediction, the prediction is acted on, and there is nobody to appeal to. The accuracy of the model turns out to be nearly beside the point.</p>
+
+  <p>The second takeaway is that this is a distribution story. AI's costs and benefits are landing on different people. The benefits accrue to those who commission the systems; the costs land on those who are processed by them, who tend to be the people with the least power to object and the most data already held about them. Meanwhile the work that makes the whole thing function is bought cheaply in places the industry's own narrative never mentions.</p>
+
+  <p>The third — and the most useful if you work anywhere near this technology — is that the difference between the book's disasters and its one success is not technical. The tuberculosis tool works because a named clinician remains responsible for the decision, the alternative was no diagnosis at all, and medicine already had rules about safety and data. The failures share the opposite profile: no accountable human, no explanation, no appeal, and rules written after deployment.</p>
+
+  <p>What Murgia asks for, finally, is not that we stop building. It is that agency be treated as something to design for and defend rather than something to quietly spend. Her closing position is a plain one: a system that cannot be seen, questioned or contested by the people it acts on is not a tool they are using. It is a tool being used on them.</p>
+</section>
+
+<section id="discuss">
+  <h2>Questions worth arguing about</h2>
+  <ul class="plain">
+    <li>If a predictive system is accurate but offers no recourse, is it better or worse than an inaccurate one that does? What does your answer say about what you actually value?</li>
+    <li>Where is the line between targeting help and surveilling the people who need it — and who should get to draw it?</li>
+    <li>The Amsterdam list was built by people trying to do good. What would have had to be different for it to work?</li>
+    <li>Is data annotation exploitative work or scarce employment? Both answers are defensible; which obligations follow from each?</li>
+    <li>Should governments be building AI capability in-house, given that the alternative is dependence on the companies they regulate?</li>
+    <li>Murgia mostly leaves out the frontier-risk debate. Does focusing on present harms clarify the picture or narrow it?</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>A reader's overview of <i>Code Dependent: Living in the Shadow of AI</i> by Madhumita Murgia (Picador / Henry Holt, 2024). Summarised and paraphrased throughout — no passages are reproduced from the book. Written to accompany the book, not to replace it.</p>
+  <p style="margin-top:1.2rem"><a class="totop" href="#top">Back to top</a></p>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function sync(){
+    var y = window.scrollY + 130, current = 0;
+    sections.forEach(function(s,i){ if(s && s.offsetTop <= y) current = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i === current); });
+  }
+  window.addEventListener('scroll', sync, {passive:true});
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+</body>
+</html>
