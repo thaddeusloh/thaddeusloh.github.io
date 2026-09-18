@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supremacy — Parmy Olson — reader's guide</title>
+<meta name="description" content="Chapter-by-chapter breakdown, key facts and takeaways from Parmy Olson's Supremacy: AI, ChatGPT and the Race That Will Change the World (2024).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEDEA;
+    --paper-2:#E3E3DF;
+    --ink:#221C26;
+    --ink-soft:#5B5261;
+    --rule:rgba(34,28,38,.16);
+    --rule-2:rgba(34,28,38,.08);
+    --dm:#0E6E6B;          /* DeepMind / Hassabis */
+    --dm-soft:rgba(14,110,107,.10);
+    --oa:#9B2D6F;          /* OpenAI / Altman */
+    --oa-soft:rgba(155,45,111,.10);
+    --big:#6E6A74;         /* Big Tech */
+    --big-soft:rgba(110,106,116,.14);
+    --measure:70ch;
+    --display:"Fraunces",Georgia,"Times New Roman",serif;
+    --body:"Work Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.68;font-weight:400}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  p{max-width:var(--measure)}
+  strong{font-weight:600}
+  a{color:var(--oa);text-decoration:none;border-bottom:1px solid rgba(155,45,111,.3)}
+  a:hover{border-bottom-color:var(--oa)}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--oa);outline-offset:3px}
+
+  nav.bar{position:sticky;top:0;z-index:20;background:rgba(237,237,234,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+  nav.bar ul{display:flex;gap:20px;flex-wrap:wrap;list-style:none;margin:0 auto;padding:12px 24px;max-width:1040px;font-size:13.5px}
+  nav.bar a{color:var(--ink-soft);border:0}
+  nav.bar a:hover{color:var(--ink)}
+
+  /* hero */
+  header.hero{padding:70px 0 56px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-size:13px;color:var(--ink-soft);margin:0 0 20px;letter-spacing:.02em}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(48px,10vw,110px);line-height:.92;letter-spacing:-.035em;margin:0 0 10px}
+  .sub{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(18px,2.6vw,26px);color:var(--ink-soft);margin:0 0 28px;max-width:26ch;line-height:1.28}
+  .stake{font-size:clamp(18px,2.2vw,23px);line-height:1.5;max-width:42ch;margin:0 0 34px}
+  .stake b{font-weight:600}
+
+  .specs{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);margin-bottom:46px}
+  .specs div{padding:14px 26px 14px 0;margin-right:26px;border-right:1px solid var(--rule);font-size:13px;color:var(--ink-soft)}
+  .specs div:last-child{border-right:0}
+  .specs b{display:block;color:var(--ink);font-weight:600;font-size:16.5px;font-family:var(--display);letter-spacing:-.01em}
+
+  /* dual rail */
+  .rails{margin:0;border:1px solid var(--rule);background:#F4F4F1;padding:26px 20px 22px}
+  .rail-head{display:grid;grid-template-columns:1fr 72px 1fr;gap:10px;align-items:end;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+  .rail-head .h-dm{text-align:right;color:var(--dm)}
+  .rail-head .h-oa{text-align:left;color:var(--oa)}
+  .rail-head .h-dm,.rail-head .h-oa{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:-.01em;line-height:1.2}
+  .rail-head .h-dm span,.rail-head .h-oa span{display:block;font-family:var(--body);font-weight:400;font-size:12.5px;color:var(--ink-soft)}
+  .rail-head .h-yr{text-align:center;font-size:11.5px;color:var(--ink-soft)}
+
+  .rail-row{display:grid;grid-template-columns:1fr 72px 1fr;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule-2)}
+  .rail-row:last-child{border-bottom:0}
+  .rail-row .yr{text-align:center;font-family:var(--display);font-weight:600;font-size:14px;color:var(--ink-soft);letter-spacing:-.01em}
+  .rail-row .ev{font-size:14px;line-height:1.4}
+  .rail-row .l{text-align:right;color:var(--dm)}
+  .rail-row .r{text-align:left;color:var(--oa)}
+  .rail-row .cap{background:var(--big-soft);color:var(--ink);font-weight:600;border-radius:3px;padding:5px 10px;display:inline-block}
+  .rail-row.joint{background:var(--big-soft);margin:6px -20px 0;padding:12px 20px}
+  .rail-row.joint .ev{color:var(--ink);font-weight:500}
+  .rails figcaption{font-size:14px;color:var(--ink-soft);margin-top:18px;line-height:1.55;max-width:60ch}
+  @media(max-width:720px){
+    .rail-head{grid-template-columns:54px 1fr}
+    .rail-head .h-dm{grid-column:2;text-align:left;margin-bottom:6px}
+    .rail-head .h-oa{grid-column:2;text-align:left}
+    .rail-head .h-yr{grid-column:1;grid-row:1}
+    .rail-row{grid-template-columns:54px 1fr}
+    .rail-row .yr{grid-column:1;text-align:left}
+    .rail-row .ev{grid-column:2;text-align:left}
+    .rail-row .l,.rail-row .r{text-align:left}
+    .rail-row .ev:empty{display:none}
+    .rail-row.joint{margin:6px -20px 0}
+  }
+
+  /* sections */
+  section{padding:66px 0;border-bottom:1px solid var(--rule)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.4vw,44px);line-height:1.06;letter-spacing:-.035em;margin:0 0 10px;max-width:20ch}
+  .lede{font-size:18.5px;color:var(--ink-soft);margin:0 0 34px;max-width:62ch;line-height:1.55}
+  h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:40px 0 12px}
+
+  /* protagonists */
+  .duo{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:14px}
+  @media(min-width:800px){.duo{grid-template-columns:1fr 1fr}}
+  .duo > div{background:var(--paper);padding:26px 28px}
+  .duo .who{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.02em;margin:0 0 2px}
+  .duo .role{font-size:13.5px;margin:0 0 18px}
+  .duo.a .who,.duo.a .role{color:var(--dm)}
+  .duo.b .who,.duo.b .role{color:var(--oa)}
+  .duo dl{margin:0}
+  .duo dt{font-size:12.5px;color:var(--ink-soft);margin-top:14px;letter-spacing:.02em}
+  .duo dt:first-child{margin-top:0}
+  .duo dd{margin:2px 0 0;font-size:16px;line-height:1.5}
+  .d-dm{border-top:3px solid var(--dm)}
+  .d-oa{border-top:3px solid var(--oa)}
+
+  /* chapters */
+  .part{margin-top:48px}
+  .part-bar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:4px}
+  .part-bar h3{margin:0;font-size:25px;font-weight:700}
+  .part-bar span{font-size:12.5px;color:var(--ink-soft)}
+  .part-note{font-size:14.5px;color:var(--ink-soft);margin:0 0 6px;max-width:64ch;line-height:1.55}
+
+  .ch{display:grid;gap:4px 20px;padding:22px 0;border-bottom:1px solid var(--rule-2)}
+  @media(min-width:780px){.ch{grid-template-columns:52px 1fr}}
+  .ch-n{font-family:var(--display);font-size:25px;font-weight:700;color:var(--rule);letter-spacing:-.04em;line-height:1.2}
+  .ch-head{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:8px}
+  .ch h4{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0;line-height:1.2}
+  .ch p{margin:0 0 10px;font-size:16.5px;color:#3E3644;max-width:66ch}
+  .pill{font-size:11.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-soft);white-space:nowrap}
+  .ch.dm .ch-n{color:var(--dm)} .ch.dm .pill{color:var(--dm);border-color:rgba(14,110,107,.4);background:var(--dm-soft)}
+  .ch.oa .ch-n{color:var(--oa)} .ch.oa .pill{color:var(--oa);border-color:rgba(155,45,111,.4);background:var(--oa-soft)}
+  .ch.bt .ch-n{color:var(--big)} .ch.bt .pill{color:var(--big);border-color:rgba(110,106,116,.4);background:var(--big-soft)}
+  .why{font-size:14.5px;color:var(--ink-soft);margin:0;max-width:62ch;padding-left:13px;border-left:2px solid var(--rule)}
+  .why em{font-style:normal;color:var(--ink);font-weight:500}
+  .ch.key{background:var(--big-soft);margin:0 -16px;padding:22px 16px}
+  @media(min-width:780px){.ch.key{grid-template-columns:52px 1fr}}
+
+  .legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-soft);margin-top:24px}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+
+  /* facts */
+  .facts{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2)}
+  @media(min-width:640px){.facts{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:960px){.facts{grid-template-columns:repeat(4,1fr)}}
+  .fact{background:var(--paper);padding:20px 22px}
+  .fact b{display:block;font-family:var(--display);font-weight:700;font-size:25px;letter-spacing:-.03em;color:var(--oa);margin-bottom:5px;line-height:1.1}
+  .fact span{display:block;font-size:14.5px;line-height:1.5;color:#3E3644}
+
+  ul.list{padding-left:22px;max-width:var(--measure)}
+  ul.list li{margin-bottom:15px}
+
+  .takeaway{border:1px solid var(--rule);padding:32px 34px;background:var(--paper-2);margin-top:6px}
+  .takeaway ol{padding-left:22px;margin:0;max-width:64ch}
+  .takeaway li{margin-bottom:20px;font-size:17.5px}
+  .takeaway li:last-child{margin-bottom:0}
+  .takeaway li b{font-family:var(--display);font-weight:600;font-size:18px;display:block;letter-spacing:-.02em;margin-bottom:2px}
+
+  .pull{font-family:var(--display);font-weight:600;font-size:clamp(21px,3vw,29px);line-height:1.3;letter-spacing:-.03em;
+    max-width:26ch;margin:46px 0 0;padding-left:22px;border-left:3px solid var(--dm)}
+
+  details{border-top:1px solid var(--rule-2);padding:15px 0}
+  details summary{cursor:pointer;font-size:16.5px;font-weight:500;list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+  ";color:var(--oa)}
+  details[open] summary::before{content:"–  "}
+  details p{margin:11px 0 0;font-size:16.5px;color:#3E3644}
+
+  .shelf{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:14px}
+  @media(min-width:760px){.shelf{grid-template-columns:repeat(3,1fr)}}
+  .shelf div{background:var(--paper);padding:22px 24px}
+  .shelf h4{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;margin:0 0 3px}
+  .shelf .by{font-size:13px;color:var(--ink-soft);margin:0 0 10px}
+  .shelf p{margin:0;font-size:15.5px;line-height:1.55;color:#3E3644}
+
+  footer{padding:50px 0 74px;font-size:15px;color:var(--ink-soft)}
+  footer p{max-width:72ch;line-height:1.6}
+  footer a{color:var(--ink-soft);border-bottom-color:var(--rule-2)}
+
+  @media print{
+    body{background:#fff;font-size:10.5pt}
+    nav.bar{display:none}
+    section{padding:22px 0}
+    .ch,.fact,.duo > div{page-break-inside:avoid}
+    .takeaway,.rails{background:#fff}
+    a{color:var(--ink);border:0}
+  }
+</style>
+</head>
+<body>
+
+<nav class="bar" aria-label="Sections">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#two">The two men</a></li>
+    <li><a href="#structure">Structure</a></li>
+    <li><a href="#chapters">Chapter by chapter</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curious">Worth knowing</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#criticism">Criticism</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Reader's guide — Parmy Olson — St. Martin's Press / Pan Macmillan, September 2024</p>
+    <h1>Supremacy</h1>
+    <p class="sub">AI, ChatGPT and the Race That Will Change the World</p>
+    <p class="stake">Two founders set out to build artificial general intelligence for the benefit of humanity. Both needed more compute than any independent organisation could buy. <b>Both ended up working for a trillion-dollar company, and the race between them is now a proxy war between Google and Microsoft.</b></p>
+
+    <div class="specs">
+      <div><b>16 chapters</b>Four parts, ~320 pages</div>
+      <div><b>FT Book of the Year</b>Business Book Award, 2024</div>
+      <div><b>Dual biography</b>Hassabis and Altman, in parallel</div>
+      <div><b>Bloomberg</b>Olson covers AI and tech regulation</div>
+    </div>
+
+    <figure class="rails">
+      <div class="rail-head">
+        <div class="h-dm">DeepMind<span>Demis Hassabis</span></div>
+        <div class="h-yr">year</div>
+        <div class="h-oa">OpenAI<span>Sam Altman</span></div>
+      </div>
+
+      <div class="rail-row"><div class="ev l">Founded in London by Hassabis, Legg and Suleyman</div><div class="yr">2010</div><div class="ev r"></div></div>
+      <div class="rail-row"><div class="ev l"><span class="cap">Acquired by Google</span> — with an ethics board attached as a condition</div><div class="yr">2014</div><div class="ev r"></div></div>
+      <div class="rail-row"><div class="ev l"></div><div class="yr">2015</div><div class="ev r">Founded as a nonprofit, $1bn in pledges, partly as a counterweight to Google</div></div>
+      <div class="rail-row"><div class="ev l">AlphaGo beats Lee Sedol — the field's first global moment</div><div class="yr">2016</div><div class="ev r"></div></div>
+      <div class="rail-row"><div class="ev l"></div><div class="yr">2019</div><div class="ev r"><span class="cap">Microsoft invests $1bn</span> — capped-profit restructure follows</div></div>
+      <div class="rail-row"><div class="ev l">Secret attempt to spin out from Google fails</div><div class="yr">2021</div><div class="ev r"></div></div>
+      <div class="rail-row"><div class="ev l"></div><div class="yr">2022</div><div class="ev r">ChatGPT ships. Google declares an internal emergency</div></div>
+      <div class="rail-row"><div class="ev l">Folded together with Google Brain into Google DeepMind</div><div class="yr">2023</div><div class="ev r">Altman fired, then restored in five days</div></div>
+
+      <div class="rail-row joint"><div class="ev" style="text-align:right">Google</div><div class="yr">now</div><div class="ev">Microsoft</div></div>
+
+      <figcaption>The book's shape. Two independent missions, founded five years and one ocean apart, each absorbed by a giant that needed them — and then pointed at each other. Olson's argument is that the capture was not a betrayal of the mission. It was the price of the mission.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="argument">
+  <div class="wrap">
+    <h2>The argument</h2>
+    <p class="lede">What the book is trying to establish, and why it is structured as a double portrait rather than a single story.</p>
+
+    <p>Parmy Olson is a Bloomberg Opinion columnist who has covered AI and technology regulation for years, previously at the Wall Street Journal and Forbes. At the Journal she was the first reporter to reveal that Google's leading AI lab had secretly tried to break away from its parent company in order to control what it built. That story is the seed of this book.</p>
+
+    <p>Her thesis has three parts. First, that the modern AI race is best explained through two men with genuinely idealistic motives: Demis Hassabis, who wanted to solve intelligence so that intelligence could solve science, and Sam Altman, who wanted to generate so much abundance that scarcity would stop mattering. Neither set out to build a product business.</p>
+
+    <p>Second, that both were defeated by arithmetic. Training frontier models costs more than any independent lab can raise, and the only organisations with that much money and that much compute are a handful of technology giants. So Hassabis sold DeepMind to Google and Altman bound OpenAI to Microsoft — in both cases believing the mission could be insulated from the money. Olson's reporting shows, repeatedly, that it could not. The ethics board attached to the Google acquisition never became a meaningful check. Hassabis's attempt to win back independence failed. OpenAI's nonprofit governance collapsed in five days when it tried to exercise its authority.</p>
+
+    <p>Third, and this is where she parts company with most AI books, she argues that <strong>the loud debate about whether AI will one day destroy humanity is itself part of the problem.</strong> Existential risk is a flattering story for the people telling it — it implies their technology is world-shaping — and it is cheap to regulate against. Meanwhile the actual damage being done now is mundane and commercial: biased systems sold into hiring, lending, education and healthcare; a flood of synthetic content; work quietly deskilled; and two companies acquiring a degree of influence over knowledge itself that no democratic body authorised.</p>
+
+    <p class="pull">The danger isn't that the machines get out of control. It's that two companies won't.</p>
+  </div>
+</section>
+
+<section id="two">
+  <div class="wrap">
+    <h2>The two men</h2>
+    <p class="lede">The book only works because the protagonists are genuinely different. Same destination, opposite reasons for wanting to get there — and opposite ways of losing control of it.</p>
+
+    <div class="duo">
+      <div class="d-dm a">
+        <p class="who">Demis Hassabis</p>
+        <p class="role">DeepMind, founded 2010 — the scientist</p>
+        <dl>
+          <dt>Background</dt>
+          <dd>Chess prodigy, then a teenage games designer, then a cognitive neuroscience PhD on memory and imagination. Came to AI through wanting to understand how minds work.</dd>
+          <dt>The utopia</dt>
+          <dd>Solve intelligence, then use it to solve everything else — protein folding, disease, fusion, the structure of the universe. AI as the ultimate scientific instrument.</dd>
+          <dt>The bargain</dt>
+          <dd>Sold to Google in 2014 for the server farms, negotiating an ethics board and, reportedly, restrictions on military use as conditions.</dd>
+          <dt>How it went wrong</dt>
+          <dd>Slow absorption. The safeguards were never load-bearing, an attempt to regain independence failed, and in 2023 the lab was merged into Google's broader AI effort and pointed at a product race it had not chosen.</dd>
+        </dl>
+      </div>
+      <div class="d-oa b">
+        <p class="who">Sam Altman</p>
+        <p class="role">OpenAI, founded 2015 — the operator</p>
+        <dl>
+          <dt>Background</dt>
+          <dd>Founded a location-sharing startup that failed, then ran Y Combinator. Not a researcher. A capital allocator, recruiter and extraordinarily effective teller of stories about the future.</dd>
+          <dt>The utopia</dt>
+          <dd>Build something so productive that abundance replaces scarcity and the returns can be distributed. AI as an economic engine rather than a telescope.</dd>
+          <dt>The bargain</dt>
+          <dd>Created a capped-profit arm under the nonprofit and took a billion dollars from Microsoft in 2019, keeping the mission language and the governance structure intact on paper.</dd>
+          <dt>How it went wrong</dt>
+          <dd>Rapid and public. The structure designed to keep the mission above profit was tested in November 2023, when the board removed him. It lost within a week, and the board was replaced.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <p style="margin-top:32px">Olson's point in running them side by side is that <strong>the outcome was the same despite the differences.</strong> One founder was a scientist who wanted to go slowly, one was an operator who wanted to ship. One was absorbed quietly over nine years, one was checked publicly over five days. Both ended up inside a Big Tech company, racing the other. If two very different people with two very different philosophies arrive at the same place, the explanation is probably structural rather than personal — which is the case she is making.</p>
+  </div>
+</section>
+
+<section id="structure">
+  <div class="wrap">
+    <h2>How the book is built</h2>
+    <p class="lede">Four parts, sixteen short chapters, moving roughly chronologically and alternating between the two labs. The part titles carry the argument on their own.</p>
+
+    <ul class="list">
+      <li><strong>Part One — The Dream (chapters 1–6).</strong> Origins. Who these two men were before any of this, what they actually wanted, and how a mission statement became the most valuable asset either organisation had.</li>
+      <li><strong>Part Two — The Leviathans (chapters 7–9).</strong> Capture. Google buys DeepMind, the honeymoon, and then the slow realisation that the safeguards negotiated on the way in were decorative.</li>
+      <li><strong>Part Three — The Bills (chapters 10–12).</strong> The cost. Why scale made independence impossible, how both labs ended up bound to a giant, and how the researchers warning about present-day harm got sidelined.</li>
+      <li><strong>Part Four — The Race (chapters 13–16).</strong> The collision. ChatGPT, the doom discourse, the boardroom crisis, and what it means to live downstream of two companies that control the technology.</li>
+    </ul>
+
+    <p>It is a business and power book, not a technical one. There is very little explanation of how transformers or training actually work, and that is deliberate — Olson is writing about the people, the money and the governance. If you want the technology explained, this is the wrong book and that is not a flaw.</p>
+  </div>
+</section>
+
+<section id="chapters">
+  <div class="wrap">
+    <h2>Chapter by chapter</h2>
+    <p class="lede">Chapter titles are Olson's. The summaries are thematic — what each chapter covers and what it contributes — written from the book's reporting rather than its text.</p>
+
+    <div class="legend">
+      <span><span class="sw" style="background:var(--dm)"></span>DeepMind and Hassabis</span>
+      <span><span class="sw" style="background:var(--oa)"></span>OpenAI and Altman</span>
+      <span><span class="sw" style="background:var(--big)"></span>Big Tech and the wider industry</span>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part One — The Dream</h3><span>Chapters 1–6 · who they were and what they wanted</span></div>
+      <p class="part-note">The most human stretch of the book, and the part that makes the later capture land.</p>
+
+      <div class="ch oa">
+        <div class="ch-n">1</div>
+        <div>
+          <div class="ch-head"><h4>High School Hero</h4><span class="pill">Altman</span></div>
+          <p>Altman's upbringing in St. Louis and the formative moment when he stood up in front of his school over its treatment of gay students. Olson uses it to establish the thing that recurs throughout his career: an unusual willingness to put himself at the centre of a moral argument, combined with a talent for getting a room to follow him. It is a sympathetic opening, and it is doing real work — the rest of the book depends on you believing the idealism was once sincere.</p>
+          <p class="why"><em>Contributes:</em> Altman as a persuader before he was ever a technologist.</p>
+        </div>
+      </div>
+
+      <div class="ch dm">
+        <div class="ch-n">2</div>
+        <div>
+          <div class="ch-head"><h4>Winning, Winning, Winning</h4><span class="pill">Hassabis</span></div>
+          <p>Hassabis's childhood as a chess prodigy in north London, his years designing video games as a teenager, and his record at multi-discipline games competitions. Games are not incidental colour here. They are how he learned to think about intelligence as something general — a capacity that transfers across domains rather than a set of tricks — and they become the proving ground for DeepMind's earliest results.</p>
+          <p class="why"><em>Contributes:</em> the intellectual origin of "solve intelligence, then solve everything else."</p>
+        </div>
+      </div>
+
+      <div class="ch bt">
+        <div class="ch-n">3</div>
+        <div>
+          <div class="ch-head"><h4>Save the Humans</h4><span class="pill">Ideology</span></div>
+          <p>How the save-the-world framing took hold. The existential-risk community, Elon Musk's alarm about what would happen if the wrong people built AGI first, and the peculiar logic it produces: if the technology is dangerous, the responsible thing is to build it yourself, quickly, before someone worse does. Olson treats this as sincerely held and self-serving at the same time, which is the tone she keeps for the rest of the book.</p>
+          <p class="why"><em>Contributes:</em> the belief system that justified racing.</p>
+        </div>
+      </div>
+
+      <div class="ch dm">
+        <div class="ch-n">4</div>
+        <div>
+          <div class="ch-head"><h4>A Better Brain</h4><span class="pill">DeepMind</span></div>
+          <p>Hassabis's turn to cognitive neuroscience and the founding of DeepMind in 2010 with Shane Legg and Mustafa Suleyman. The bet was that studying how biological memory and imagination work would show how to build general intelligence in software. Early on almost nobody took it seriously — a London startup claiming it would solve intelligence — and the chapter covers the years of persuading anyone to fund it.</p>
+          <p class="why"><em>Contributes:</em> DeepMind as a research institute that happened to be a company.</p>
+        </div>
+      </div>
+
+      <div class="ch bt">
+        <div class="ch-n">5</div>
+        <div>
+          <div class="ch-head"><h4>For Utopia, For Money</h4><span class="pill">Capital</span></div>
+          <p>The money arrives, and with it the contradiction in the title. Peter Thiel, Founders Fund and Musk among the early backers. Investors who want returns are asked to fund an organisation that says it is building something for all humanity. Both sides tell themselves the tension is manageable. Olson's argument is that this is the moment the ending becomes predictable — not the acquisition years later.</p>
+          <p class="why"><em>Contributes:</em> the original compromise, made long before anyone sold anything.</p>
+        </div>
+      </div>
+
+      <div class="ch oa">
+        <div class="ch-n">6</div>
+        <div>
+          <div class="ch-head"><h4>The Mission</h4><span class="pill">OpenAI</span></div>
+          <p>OpenAI is founded in December 2015 with a billion dollars in pledges, explicitly as a counterweight to Google's dominance and to DeepMind in particular. Olson is interested in what the mission statement actually does as an object: it recruits researchers who would never join a normal company, it attracts capital, it deflects criticism, and because it is unfalsifiable it can accommodate almost any subsequent decision.</p>
+          <p class="why"><em>Contributes:</em> mission as infrastructure, not as sentiment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part Two — The Leviathans</h3><span>Chapters 7–9 · absorbed by the giants</span></div>
+      <p class="part-note">The strongest reporting in the book, and the section that drew the most attention when it was published.</p>
+
+      <div class="ch dm">
+        <div class="ch-n">7</div>
+        <div>
+          <div class="ch-head"><h4>Playing Games</h4><span class="pill">DeepMind · Google</span></div>
+          <p>Two games at once. DeepMind's systems learn to play Atari titles from raw pixels and then, in March 2016, AlphaGo beats Lee Sedol — the moment AI became globally visible for the first time. And the corporate game: Google acquires DeepMind in January 2014, reportedly for around $650 million, after competing interest from Facebook and pressure from Musk. Hassabis negotiates conditions, including an ethics board and reported limits on military and surveillance use.</p>
+          <p class="why"><em>Contributes:</em> the triumph and the sale, side by side, because they were the same event.</p>
+        </div>
+      </div>
+
+      <div class="ch dm">
+        <div class="ch-n">8</div>
+        <div>
+          <div class="ch-head"><h4>Everything Is Awesome</h4><span class="pill">Inside Google</span></div>
+          <p>The honeymoon, and the gap between the corporate cheerfulness and what was actually happening. DeepMind pushes into healthcare and runs into a serious controversy over patient data obtained from an NHS trust. AlphaFold delivers genuine scientific value. Meanwhile the lab is expensive, its independence is eroding by increments, and the ethics board that was a condition of the sale is doing nothing in particular.</p>
+          <p class="why"><em>Contributes:</em> capture happens through a hundred small decisions, none of which feels like the decisive one.</p>
+        </div>
+      </div>
+
+      <div class="ch key dm">
+        <div class="ch-n">9</div>
+        <div>
+          <div class="ch-head"><h4>The Goliath Paradox</h4><span class="pill">The core chapter</span></div>
+          <p>The book's central idea, stated plainly. To build AI at the scale required to do any of the good things you promised, you need resources only a monopoly possesses. Accepting them means the monopoly decides what you build. Olson lays out Hassabis's secret, years-long effort to restructure DeepMind out from under Google's control — reporting she broke at the Wall Street Journal — and its failure. A company that has spent hundreds of millions on an asset does not hand it back.</p>
+          <p class="why"><em>Contributes:</em> names the trap. If you read one chapter, this is it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part Three — The Bills</h3><span>Chapters 10–12 · what it cost and who paid</span></div>
+      <p class="part-note">Where the book shifts from narrative to argument.</p>
+
+      <div class="ch bt">
+        <div class="ch-n">10</div>
+        <div>
+          <div class="ch-head"><h4>Size Matters</h4><span class="pill">Scale</span></div>
+          <p>The scaling era. Bigger models trained on more data with more compute keep getting better, which converts AI research from a question of ideas into a question of budget. Olson traces what this does to the field: it concentrates capability in whoever can afford the bill, it makes independent verification impossible because nobody outside can reproduce the runs, and it forces every serious lab to find a corporate patron.</p>
+          <p class="why"><em>Contributes:</em> the economic mechanism behind everything else.</p>
+        </div>
+      </div>
+
+      <div class="ch key oa">
+        <div class="ch-n">11</div>
+        <div>
+          <div class="ch-head"><h4>Bound to Big Tech</h4><span class="pill">The bargains</span></div>
+          <p>Both bargains fully consummated. Microsoft's billion-dollar investment in 2019 and the capped-profit restructure that made it possible, with Microsoft as exclusive cloud provider. On the other side, DeepMind folded together with Google Brain in 2023 into a single unit under commercial pressure. Two labs founded to be independent of corporate interests are now the AI divisions of the two companies they were founded to counterbalance.</p>
+          <p class="why"><em>Contributes:</em> the symmetry that gives the book its structure.</p>
+        </div>
+      </div>
+
+      <div class="ch bt">
+        <div class="ch-n">12</div>
+        <div>
+          <div class="ch-head"><h4>Myth Busters</h4><span class="pill">Ethics</span></div>
+          <p>The researchers who tried to raise present-tense problems — bias, opacity, environmental cost, the limits of what these systems actually do — and what happened to them. Timnit Gebru's dismissal from Google is the central case. Olson also goes after inflated commercial claims: companies that described ordinary software as AI, and results that did not survive scrutiny. Her point is that the field polices criticism of its methods more effectively than it polices its products.</p>
+          <p class="why"><em>Contributes:</em> the harms that were visible all along and got argued out of the room.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part Four — The Race</h3><span>Chapters 13–16 · the collision and the aftermath</span></div>
+      <p class="part-note">The events most readers already know, retold with the governance context the earlier parts built.</p>
+
+      <div class="ch oa">
+        <div class="ch-n">13</div>
+        <div>
+          <div class="ch-head"><h4>Hello, ChatGPT</h4><span class="pill">November 2022</span></div>
+          <p>The launch, the fastest consumer adoption on record, and the institutional panic that followed. Google declares an internal emergency over a technology built on a paper its own researchers published. Bard is rushed out and fumbles its first public demonstration. Microsoft puts the model into Bing with results that get strange fast. Olson's framing is that the product decision, not the model, was the event.</p>
+          <p class="why"><em>Contributes:</em> the moment the rivalry stopped being private.</p>
+        </div>
+      </div>
+
+      <div class="ch bt">
+        <div class="ch-n">14</div>
+        <div>
+          <div class="ch-head"><h4>A Vague Sense of Doom</h4><span class="pill">The argument chapter</span></div>
+          <p>2023's wave of existential warnings — the open letter calling for a pause, the one-sentence extinction statement, Geoffrey Hinton leaving Google to speak freely, Altman's Senate testimony and world tour. Olson's reading is sceptical and it is the most contestable thing in the book: she argues that apocalyptic framing was commercially useful, since it implied enormous capability, attracted talent and capital, and pointed regulators at a hypothetical future rather than at current products. Doom, in her account, was partly a marketing position.</p>
+          <p class="why"><em>Contributes:</em> the claim that will most divide readers, and the one worth arguing with.</p>
+        </div>
+      </div>
+
+      <div class="ch key oa">
+        <div class="ch-n">15</div>
+        <div>
+          <div class="ch-head"><h4>Checkmate</h4><span class="pill">November 2023</span></div>
+          <p>The board crisis. Altman is removed by a board with formal authority to do exactly that, nearly every employee threatens to leave for Microsoft, and he is back within days with a new board. Olson reads it as the decisive demonstration of where power actually sits: not with the governance structure, but with the capital, the compute and the staff. The chess title is not accidental, given who the other protagonist is.</p>
+          <p class="why"><em>Contributes:</em> the proof that the safeguards were never going to hold.</p>
+        </div>
+      </div>
+
+      <div class="ch bt">
+        <div class="ch-n">16</div>
+        <div>
+          <div class="ch-head"><h4>In the Shadow of Monopolies</h4><span class="pill">Conclusion</span></div>
+          <p>The closing argument. Two companies now sit astride the technology, with no obligation to disclose what their systems are trained on or how they behave, and independent researchers cannot audit either. Olson catalogues the consequences already arriving — synthetic content at scale, automated decisions in hiring and lending, the deskilling of creative and knowledge work — and argues for the unglamorous remedies: transparency requirements on training data, competition enforcement, and treating this as a market-structure problem rather than a science-fiction one.</p>
+          <p class="why"><em>Contributes:</em> converts the narrative into a policy position.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="facts">
+  <div class="wrap">
+    <h2>Key facts</h2>
+    <p class="lede">The numbers and events the book is built around. Figures are as reported by Olson and in contemporary coverage; some acquisition amounts were never officially confirmed and vary between accounts.</p>
+
+    <div class="facts">
+      <div class="fact"><b>2010</b><span>DeepMind founded in London by Demis Hassabis, Shane Legg and Mustafa Suleyman.</span></div>
+      <div class="fact"><b>Jan 2014</b><span>Google acquires DeepMind, reportedly for around $650 million, with an ethics board as a negotiated condition.</span></div>
+      <div class="fact"><b>Dec 2015</b><span>OpenAI founded as a nonprofit with $1 billion in pledges, explicitly as a counterweight to Google.</span></div>
+      <div class="fact"><b>Mar 2016</b><span>AlphaGo beats Lee Sedol — the first time AI capability frightened a global audience.</span></div>
+      <div class="fact"><b>2019</b><span>Microsoft invests $1 billion in OpenAI; the capped-profit structure is created to accept it.</span></div>
+      <div class="fact"><b>2023</b><span>DeepMind and Google Brain merged into a single unit under commercial pressure after ChatGPT.</span></div>
+      <div class="fact"><b>5 days</b><span>From Altman's removal to his reinstatement with a reconstituted board in November 2023.</span></div>
+      <div class="fact"><b>2024</b><span>Winner of the Financial Times and Schroders Business Book of the Year Award.</span></div>
+    </div>
+
+    <h3>The events the book turns on</h3>
+    <ul class="list">
+      <li><strong>The ethics board that never worked.</strong> The most-cited detail in the book. Hassabis negotiated an ethics board as a condition of selling to Google, and it never became a functioning constraint. Olson treats it as the template for every governance promise that followed.</li>
+      <li><strong>The failed spin-out.</strong> Olson's own scoop, first reported at the Wall Street Journal: DeepMind spent years quietly trying to restructure itself out from under Google's control so it could govern what it built. Google declined. This is the single best illustration of the Goliath paradox.</li>
+      <li><strong>Musk's interventions.</strong> Musk's attempts to influence where DeepMind ended up, his role in funding and founding OpenAI, and his departure in 2018 after failing to take control — which removed his funding and made the Microsoft deal necessary.</li>
+      <li><strong>The NHS data controversy.</strong> DeepMind's health work obtained patient records from a UK hospital trust in an arrangement later found to have fallen short on data protection. An early, concrete example of good intentions colliding with a real institution.</li>
+      <li><strong>Timnit Gebru's firing.</strong> Google dismisses a leading AI ethics researcher after a paper on the risks and costs of large language models. Olson's exhibit for how narrowly the industry tolerates internal criticism of its methods.</li>
+      <li><strong>The code red.</strong> Google's emergency response to ChatGPT, and the fumbled launch of Bard — a company with better technology losing the market because it had more to lose by shipping.</li>
+      <li><strong>The Blip.</strong> The five-day crisis at OpenAI, which Olson reads not as a drama about one man but as a live test of whether nonprofit control over a commercial AI lab means anything. It did not.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="curious">
+  <div class="wrap">
+    <h2>Worth knowing</h2>
+    <p class="lede">The details that stick, and the ones that change how you read the rest.</p>
+
+    <ul class="list">
+      <li><strong>The title has two meanings and you are meant to notice.</strong> "Supremacy" is what the technology promises — systems that surpass us. It is also what the two companies have achieved over the market. Olson's book is far more interested in the second.</li>
+      <li><strong>Hassabis is the more sympathetic figure and the book knows it.</strong> He is a working scientist with real results behind him, and his capture reads as a tragedy. Altman is drawn as a brilliant operator whose relationship to the mission is harder to pin down. Several reviewers have noted the asymmetry; whether it is fair reporting or an authorial preference is a reasonable thing to debate.</li>
+      <li><strong>The two utopias are genuinely different and rarely distinguished.</strong> Hassabis wants AGI as an instrument for understanding the universe. Altman wants it as an engine for ending scarcity. One is epistemic, one is economic. They imply completely different priorities, and the fact that both got absorbed into the same product race is the point.</li>
+      <li><strong>Neither founder ran out of idealism. They ran out of money.</strong> Olson is careful about this. The mission did not get abandoned in a moment of cynicism; it got outbid by the cost of a training run. That is a more uncomfortable conclusion than a story about greedy founders.</li>
+      <li><strong>OpenAI was founded to stop Google, and ended up making Google unstoppable in a different way.</strong> The counterweight to one monopoly turned out to require another. Any theory of AI governance that relies on competition between giants has to reckon with that.</li>
+      <li><strong>Olson broke the spin-out story before anyone knew there would be a book.</strong> The reporting predates ChatGPT, which is part of why the book does not read like it was reverse-engineered from the 2023 news cycle.</li>
+      <li><strong>Her scepticism about doom-talk puts her in a minority among AI authors.</strong> Most books in this space either take existential risk seriously or ignore it. Olson takes it on as a commercial phenomenon to be explained, which is unusual and is the argument most likely to start a fight at a book club.</li>
+      <li><strong>It won the FT prize the same season several rival AI books appeared.</strong> A useful signal about how the business establishment, rather than the technology press, chose to understand this moment.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="takeaway">
+  <div class="wrap">
+    <h2>The takeaway</h2>
+    <p class="lede">What the book wants you to leave holding.</p>
+
+    <div class="takeaway">
+      <ol>
+        <li><b>Compute costs decided everything.</b> The single fact that explains the shape of the industry is that frontier AI is too expensive for anyone but a monopoly to fund. Every governance structure, mission statement and ethics board in the story was eventually overruled by that arithmetic. If you want a different outcome, you have to change the economics, not the promises.</li>
+        <li><b>Governance safeguards fail exactly when they are needed.</b> An ethics board attached to an acquisition, a nonprofit board with the power to remove a chief executive — both existed, both were tested, both lost. A safeguard that only works while nobody objects to it is not a safeguard. Worth carrying into any discussion of AI oversight inside your own organisation.</li>
+        <li><b>The people in charge were sincere, and it did not help.</b> Olson's most useful move is refusing the villain story. Hassabis and Altman both meant it. That makes the outcome more alarming rather than less, because it means good intentions at the top are not a control.</li>
+        <li><b>Doom talk and accountability are in tension.</b> Arguing about whether AI might end humanity is emotionally compelling, flattering to the industry, and cheap to legislate against. Arguing about training data provenance, model auditing and market concentration is boring and expensive. The second list is where the leverage is.</li>
+        <li><b>This is a market-structure problem wearing a science-fiction costume.</b> The question that matters is not whether the systems become uncontrollable but who controls them, on what terms, with what disclosure, and answerable to whom. Right now the answer is: two companies, on their own terms, with almost no disclosure, answerable to shareholders.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="criticism">
+  <div class="wrap">
+    <h2>Criticism, and how it reads now</h2>
+    <p class="lede">Published September 2024. Two years is a long time in this industry, so some of the frame has moved — and some of it has been vindicated.</p>
+
+    <details open>
+      <summary>The two-horse race frame has aged the fastest</summary>
+      <p>The book is structured as OpenAI versus DeepMind, Microsoft versus Google. That was defensible in 2024 and is harder to sustain now. Anthropic has become a frontier competitor of comparable standing, Meta's open-weight releases changed the market's shape, xAI exists, and Chinese labs have repeatedly shown that the capability frontier is not a two-company preserve. The concentration argument survives; the specific duopoly framing has loosened.</p>
+    </details>
+
+    <details>
+      <summary>Altman gets a thinner portrait than Hassabis</summary>
+      <p>A common reviewer complaint. Hassabis is rendered with real depth as a scientist; Altman appears more as a strategist and communicator, with less interiority. Related: OpenAI's technical contributors — Ilya Sutskever, Alec Radford, Greg Brockman and others — are comparatively underweighted, which slightly distorts the picture of where OpenAI's results actually came from. Karen Hao's <em>Empire of AI</em> is much stronger on Altman specifically.</p>
+    </details>
+
+    <details>
+      <summary>Light on the technology</summary>
+      <p>If you want to understand what a transformer does, why scaling worked, or how training actually proceeds, this book will not tell you. That is a deliberate scope choice rather than an error, but it means <em>Supremacy</em> is a poor standalone introduction and a good second or third book on the subject.</p>
+    </details>
+
+    <details>
+      <summary>The doom scepticism cuts both ways</summary>
+      <p>Olson argues that apocalyptic framing served commercial interests. Critics respond that plenty of people warning about catastrophic risk have no commercial stake, that the argument does not become wrong because someone benefits from it, and that dismissing the concern as marketing is itself a rhetorical move. A fair reading is that she has identified a real incentive without settling the underlying question — and she mostly does not claim to.</p>
+    </details>
+
+    <details>
+      <summary>The great-man frame</summary>
+      <p>The book explains the industry through two individuals, which makes it readable and can overstate personal agency. Olson partly defends against this herself — her conclusion is that structure beat both men — but the narrative machinery still keeps two founders at the centre of forces much larger than either. Hao's book makes the opposite choice and reaches a similar destination, which is instructive about how much the framing actually matters.</p>
+    </details>
+
+    <details>
+      <summary>What has been vindicated</summary>
+      <p>Quite a lot. Independent labs have continued to consolidate around a handful of compute providers. The capital requirements have increased by an order of magnitude rather than easing. Governance structures have continued to give way under commercial pressure, including OpenAI's own further restructuring. And the present-harm agenda Olson argued was being crowded out — training data provenance, auditing, market concentration — is now the substance of most actual regulation and litigation, rather than the existential framing that dominated the 2023 discourse.</p>
+    </details>
+
+    <h3>Where it sits on the shelf</h3>
+    <div class="shelf">
+      <div>
+        <h4>Empire of AI</h4>
+        <p class="by">Karen Hao, 2025</p>
+        <p>The complement. Olson stays in the boardroom and explains the power structure; Hao goes to Nairobi and Santiago and shows what the structure extracts. Read together they cover the centre and the periphery of the same system.</p>
+      </div>
+      <div>
+        <h4>Superintelligence</h4>
+        <p class="by">Nick Bostrom, 2014</p>
+        <p>The worldview Olson is sceptical of, argued at full strength by its most rigorous proponent. Useful as the steelman for the position chapter 14 attacks — and it was circulating among the people who founded OpenAI.</p>
+      </div>
+      <div>
+        <h4>Genius Makers</h4>
+        <p class="by">Cade Metz, 2021</p>
+        <p>The prequel. Covers the deep learning researchers and the talent auctions of 2012–2019 in more technical detail, and explains how the people in Olson's book acquired their leverage in the first place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Supremacy: AI, ChatGPT and the Race That Will Change the World</strong> — Parmy Olson. St. Martin's Press (US) and Pan Macmillan (UK), September 2024. Approximately 320 pages. ISBN 978-1250337740. A later edition adds a new preface. Winner of the Financial Times and Schroders Business Book of the Year Award, 2024.</p>
+    <p>This guide paraphrases and analyses the book. It contains no text from it and is not a substitute for reading it. Chapter and part titles are taken from the published table of contents; the summaries are written from the book's reporting as described in reviews, interviews and the secondary literature, and may differ in emphasis or detail from the text itself. Acquisition figures and the precise terms of the DeepMind ethics arrangement were never fully confirmed publicly and vary between sources — check against the book before citing anything here.</p>
+    <p>Prepared 18 September 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>

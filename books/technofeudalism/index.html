@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technofeudalism — book overview &amp; summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#E7EAE8;
+  --ground-2:#DCE1DE;
+  --ink:#19232A;
+  --ink-soft:#4E5C63;
+  --rule:#C2CAC6;
+  --verdigris:#1E6A5B;
+  --brass:#8E7124;
+  --ember:#8C3A1E;
+  --card:#F2F4F2;
+  --measure:38rem;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ground:#121A1D;
+    --ground-2:#0D1417;
+    --ink:#E2E8E6;
+    --ink-soft:#9BABB0;
+    --rule:#2C3A3E;
+    --verdigris:#5FB7A2;
+    --brass:#CBA857;
+    --ember:#D97A57;
+    --card:#182226;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:Spectral,"Iowan Old Style",Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.68;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.sans{font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;}
+a{color:inherit;text-decoration-color:var(--verdigris);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--verdigris);outline-offset:3px;border-radius:2px}
+
+/* ---------- hero ---------- */
+.hero{
+  padding:clamp(2.5rem,7vw,6rem) 1.25rem clamp(2rem,4vw,3.5rem);
+  border-bottom:1px solid var(--rule);
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(30,106,91,.10), transparent 60%),
+    radial-gradient(90% 70% at 92% 8%, rgba(142,113,36,.12), transparent 62%),
+    var(--ground-2);
+}
+.hero-inner{max-width:52rem;margin:0 auto}
+.byline{font-family:Archivo;font-weight:600;font-size:.82rem;letter-spacing:.02em;color:var(--ink-soft);margin:0 0 1.1rem}
+h1{
+  font-weight:800;
+  font-size:clamp(2.6rem,9vw,5.2rem);
+  line-height:.94;
+  letter-spacing:-.035em;
+  margin:0 0 .35rem;
+}
+h1 .sub{display:block;font-weight:500;font-size:clamp(1rem,3vw,1.5rem);letter-spacing:-.01em;color:var(--ink-soft);margin-top:.75rem;line-height:1.2}
+.qbox{
+  margin:2.6rem 0 0;
+  padding:1.4rem 0 0;
+  border-top:3px solid var(--verdigris);
+  max-width:34rem;
+}
+.qbox p{margin:0 0 .9rem;font-size:1.22rem;line-height:1.5}
+.qbox .ans{font-family:Archivo;font-weight:600;font-size:1rem;line-height:1.5;color:var(--verdigris);margin:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:.5rem 2rem;margin-top:2.4rem;font-family:Archivo;font-size:.83rem;color:var(--ink-soft)}
+.meta-row b{font-weight:600;color:var(--ink);font-weight:600}
+
+/* ---------- nav ---------- */
+nav.toc{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);
+}
+.toc ul{display:flex;gap:1.35rem;overflow-x:auto;list-style:none;margin:0;padding:.75rem 1.25rem;max-width:64rem;margin:0 auto;scrollbar-width:thin}
+.toc a{font-family:Archivo;font-weight:500;font-size:.82rem;white-space:nowrap;text-decoration:none;color:var(--ink-soft);padding-bottom:2px;border-bottom:2px solid transparent}
+.toc a.on{color:var(--ink);border-bottom-color:var(--brass)}
+
+/* ---------- layout ---------- */
+main{max-width:52rem;margin:0 auto;padding:0 1.25rem 5rem}
+section{padding:3.4rem 0 .5rem;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+h2{font-weight:800;font-size:clamp(1.5rem,4.4vw,2.1rem);letter-spacing:-.025em;line-height:1.1;margin:0 0 1.4rem;max-width:26ch}
+h3{font-weight:600;font-size:1.06rem;letter-spacing:-.01em;margin:2rem 0 .5rem}
+p{max-width:var(--measure)}
+.lede{font-size:1.1rem;color:var(--ink-soft)}
+ul.plain{max-width:var(--measure);padding-left:1.1rem;margin:.6rem 0 1.2rem}
+ul.plain li{margin:.45rem 0}
+
+/* ---------- pillars ---------- */
+.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin:1.8rem 0 2rem;max-width:var(--measure)}
+.swap .cell{background:var(--card);border:1px solid var(--rule);padding:1rem}
+.swap .cell h4{margin:0 0 .3rem;font-size:.78rem;font-weight:600;color:var(--ink-soft)}
+.swap .cell p{margin:0;font-size:1.05rem;font-family:Archivo;font-weight:600;letter-spacing:-.01em}
+.swap .arrow{font-family:Archivo;color:var(--ember);font-weight:600}
+.swap .was p{color:var(--ink-soft)}
+.swap .now p{color:var(--verdigris)}
+@media(max-width:560px){.swap{grid-template-columns:1fr;gap:.5rem}.swap .arrow{transform:rotate(90deg);justify-self:start;padding-left:1rem}}
+
+/* ---------- glossary ---------- */
+dl.gloss{max-width:var(--measure);margin:1.2rem 0 0}
+dl.gloss dt{font-family:Archivo;font-weight:600;font-size:.95rem;margin-top:1.15rem;color:var(--verdigris)}
+dl.gloss dd{margin:.2rem 0 0}
+
+/* ---------- chapters ---------- */
+.chapter{display:grid;grid-template-columns:3.2rem 1fr;gap:1rem;padding:2rem 0;border-top:1px solid var(--rule)}
+.chapter:first-of-type{border-top:none}
+.chapter .num{font-family:Archivo;font-weight:800;font-size:1.6rem;letter-spacing:-.04em;color:var(--brass);line-height:1.1;padding-top:.15rem}
+.chapter .num.pre{font-size:.8rem;font-weight:600;letter-spacing:0;line-height:1.9}
+.chapter h3{margin:0 0 .6rem;font-size:1.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.chapter .pages{font-family:Archivo;font-size:.76rem;color:var(--ink-soft);font-weight:500;display:block;margin-top:.25rem}
+.chapter p, .chapter ul{max-width:34rem}
+.moves{list-style:none;padding:0;margin:.9rem 0 0;border-left:2px solid var(--rule)}
+.moves li{padding:.15rem 0 .15rem .85rem;margin:.35rem 0;font-size:.97rem}
+.moves li b{font-family:Archivo;font-weight:600;font-size:.88rem}
+.carry{margin-top:1rem;font-family:Archivo;font-size:.9rem;font-weight:500;line-height:1.5;color:var(--ink);border-top:1px dotted var(--rule);padding-top:.7rem}
+.carry span{color:var(--verdigris);font-weight:600}
+
+/* ---------- facts ---------- */
+.facts{list-style:none;padding:0;margin:1rem 0 0;max-width:var(--measure)}
+.facts li{padding:.85rem 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:5.5rem 1fr;gap:1rem}
+.facts li:last-child{border-bottom:1px solid var(--rule)}
+.facts .tag{font-family:Archivo;font-weight:600;font-size:.82rem;color:var(--brass);line-height:1.4}
+.facts p{margin:0;font-size:.98rem}
+@media(max-width:560px){.facts li{grid-template-columns:1fr;gap:.15rem}}
+
+blockquote.pull{
+  margin:2rem 0;padding:0 0 0 1.2rem;border-left:3px solid var(--brass);
+  max-width:34rem;font-size:1.12rem;line-height:1.5;font-style:italic;
+}
+.note{font-size:.9rem;color:var(--ink-soft);max-width:var(--measure)}
+footer{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 4rem;border-top:1px solid var(--rule);font-size:.86rem;color:var(--ink-soft)}
+footer p{max-width:var(--measure)}
+.totop{font-family:Archivo;font-size:.82rem;text-decoration:none;color:var(--verdigris);font-weight:600}
+@media print{
+  nav.toc{display:none}
+  body{background:#fff;color:#000;font-size:11pt}
+  section{page-break-inside:auto;border-color:#bbb}
+  .chapter{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="byline">Book overview &amp; summary</p>
+    <h1>Technofeudalism
+      <span class="sub">What Killed Capitalism — Yanis Varoufakis (2023)</span>
+    </h1>
+
+    <div class="qbox">
+      <p>In 1993 Varoufakis helped his father get online for the first time. His father — a chemical engineer and former political prisoner — asked him whether a world of computers talking to each other would put capitalism beyond overthrow, or finally expose its weak point.</p>
+      <p class="ans">This book is the answer, written thirty years later as a letter to him: the weak point was real, but what came through it was not liberation.</p>
+    </div>
+
+    <div class="meta-row">
+      <span><b>Published</b> 28 Sept 2023, Bodley Head</span>
+      <span><b>Length</b> ~304 pages</span>
+      <span><b>Form</b> 7 chapters, 2 appendices</span>
+      <span><b>Read as</b> political economy, not tech forecasting</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#terms">Key terms</a></li>
+    <li><a href="#chapters">Chapter by chapter</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curios">Interesting facts</a></li>
+    <li><a href="#critics">The pushback</a></li>
+    <li><a href="#practice">Where it bites</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#discuss">Discussion</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<section id="argument">
+  <h2>The whole book in one page</h2>
+  <p class="lede">Varoufakis's claim is deliberately extreme: capitalism is not in crisis, not mutating, not late — it is dead as the governing logic of the economy. Something else now sets the rules, and he calls it technofeudalism.</p>
+
+  <p>His definition of capitalism is narrow and load-bearing. A system is capitalist when two things run the show: <b>markets</b> as the medium through which goods and labour are allocated, and <b>profit</b> as the engine that disciplines investment. Both still exist today, he concedes — but so did markets and profit under feudalism. What matters is which force sits at the centre and which has been pushed to the edge.</p>
+
+  <div class="swap">
+    <div class="cell was"><h4>Capitalism's medium</h4><p>Markets</p></div>
+    <div class="arrow">becomes</div>
+    <div class="cell now"><h4>Technofeudalism's medium</h4><p>Cloud fiefs</p></div>
+    <div class="cell was"><h4>Capitalism's engine</h4><p>Profit</p></div>
+    <div class="arrow">becomes</div>
+    <div class="cell now"><h4>Technofeudalism's engine</h4><p>Cloud rent</p></div>
+  </div>
+
+  <p>The killer, he argues, is capital itself — but a mutated strain. Ordinary capital is a produced means of <i>production</i>: a loom, a blast furnace, a robot arm. Cloud capital is a produced means of <i>behaviour modification</i>: recommendation engines, voice assistants, feeds, logistics algorithms. It does not make things. It trains us, then sells to us directly, bypassing any marketplace where buyers and sellers could see each other and haggle. And it is partly built by us, free of charge, every time we rate, review, post or scroll.</p>
+
+  <p>Two developments produced it. First, the privatisation of an internet that began as a publicly funded commons — the "new enclosures", carried out by American and, in parallel, Chinese Big Tech. Second, the way Western governments and central banks answered the 2008 crash: bailouts and a decade of near-free money that inflated asset prices without reviving investment, and that flowed disproportionately to the only firms building cloud capital.</p>
+
+  <p>The result is a class structure that looks more medieval than modern. At the top sit the <b>cloudalists</b>, who own the cloud fiefs. Beneath them, traditional capitalists become <b>vassals</b>, still extracting profit from workers but surrendering a large cut of every sale for the right to trade on someone else's platform. Below them, <b>cloud proles</b> — warehouse pickers, drivers, gig workers — labour under algorithmic supervision. And all of us, whatever else we do, serve as <b>cloud serfs</b>, producing the stock of cloud capital for nothing.</p>
+
+  <p>Because rent is subtracted from purchasing power rather than reinvested in production, technofeudalism is, on his account, more crisis-prone and more stagnant than the system it replaced: chronically weak demand, permanent monetary life support, inflation when the props are kicked away, and a geopolitics organised around two rival cloud empires rather than one world market.</p>
+</section>
+
+<section id="terms">
+  <h2>The vocabulary you need</h2>
+  <p class="lede">Most of the book's work is done by a handful of coined terms. Get these and the argument unfolds by itself.</p>
+  <dl class="gloss">
+    <dt>Cloud capital</dt>
+    <dd>Networked algorithmic infrastructure understood as a produced means of behaviour modification rather than of production. It trains us to train it, then uses what it learns to direct our attention and our purchases.</dd>
+
+    <dt>Cloud rent</dt>
+    <dd>The payment extracted for access to a platform — a cut of a seller's revenue, not a return on producing anything. Rent is feudal income: it flows from ownership of the estate, not from making goods.</dd>
+
+    <dt>Cloud fief</dt>
+    <dd>A digital trading space that looks like a market but isn't one. Buyers cannot see other buyers, sellers cannot compete on a level floor, and the owner sets every rule, price display and search rank.</dd>
+
+    <dt>Cloudalists</dt>
+    <dd>The new ruling class: owners of cloud capital. They do not need to beat competitors in a market; they own the space in which competition happens.</dd>
+
+    <dt>Vassal capitalists</dt>
+    <dd>Conventional firms — manufacturers, retailers, app developers — that remain profitable but must hand over a share of revenue to reach customers at all.</dd>
+
+    <dt>Cloud proles</dt>
+    <dd>Waged workers whose pace, route and breaks are set by the same algorithms that modify consumer behaviour.</dd>
+
+    <dt>Cloud serfs</dt>
+    <dd>Everyone who augments cloud capital through unpaid activity: reviews, ratings, photos, posts, watch time. Historically novel — serfs who volunteer.</dd>
+
+    <dt>Technostructure</dt>
+    <dd>Borrowed from J. K. Galbraith: the managerial layer inside large corporations that plans demand rather than responding to it. Varoufakis treats it as the ancestor of cloud capital.</dd>
+
+    <dt>The Global Minotaur</dt>
+    <dd>His term (from an earlier book) for the post-1971 arrangement in which the United States ran vast deficits, absorbed the world's surplus goods, and recycled the world's profits into Wall Street.</dd>
+
+    <dt>Poisoned money &amp; gilded stagnation</dt>
+    <dd>Post-2008 central bank money that inflated asset prices and corporate balance sheets while real investment, wages and productivity stalled.</dd>
+  </dl>
+</section>
+
+<section id="chapters">
+  <h2>Chapter by chapter</h2>
+  <p class="lede">The book does not reach its own subject until chapter three. Varoufakis warns readers of this himself: the first two chapters exist so the third makes sense.</p>
+
+  <div class="chapter">
+    <div class="num pre">Preface</div>
+    <div>
+      <h3>Why a letter, and why now<span class="pages">page xi</span></h3>
+      <p>He explains the lineage. An earlier book, <i>Talking to My Daughter</i>, told the story of capitalism as a letter to his twelve-year-old. Finishing it, he felt he had written a history of something already ending. Here he states the thesis flatly — capitalism is dead, killed by a mutation of capital itself — and names the two causes: the privatisation of the internet, and the post-2008 conduct of governments and central banks.</p>
+      <p>He is careful about what the book is not. It is not about chatbots taking jobs, killer robots or the metaverse. It is about what ordinary laptops and phones, combined with a decade of extraordinary monetary policy, have <i>already</i> done.</p>
+      <div class="carry"><span>Carry forward:</span> markets and profit have not vanished; they have been evicted from the centre.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">1</div>
+    <div>
+      <h3>Hesiod's Lament<span class="pages">page 1</span></h3>
+      <p>Autobiography as method. His father introduces the six-year-old Yanis to metals — tin softening in the fire, iron and the making of steel — and with them to a materialist reading of history: epochs turn on who controls the means of transforming matter. Alongside the metal comes Hesiod, whose poetry frames technology as a gift from the gods that arrives bundled with suffering. That double edge is the lament of the title, and the book's moral spine.</p>
+      <ul class="moves">
+        <li><b>Experiential vs exchange value.</b> The things that matter most often have no price; commodification converts one into the other, and something is lost in the conversion.</li>
+        <li><b>An odd introduction to money and to freedom.</b> The market's freedom to choose is also the compulsion to sell your labour to someone who owns the tools.</li>
+        <li><b>The 1993 question.</b> Now that computers speak to one another, is capitalism unassailable — or newly vulnerable?</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> every technology both liberates and subjugates; the question is only who owns it.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">2</div>
+    <div>
+      <h3>Capitalism's Metamorphoses<span class="pages">page 24</span></h3>
+      <p>A compressed history of how capitalism repeatedly changed shape without dying — which is what makes his claim that it has now died worth arguing. He moves from the rise of the giant corporation and Galbraith's technostructure, through the era in which advertising began to plan demand rather than discover it (his wry point: Western corporations achieved the central planning of desire that Soviet planners never managed), to the monetary architecture of the twentieth century.</p>
+      <ul class="moves">
+        <li><b>The Global Plan.</b> Bretton Woods, 1944–71: a dollar-anchored order that recycled American surpluses into Europe and Japan.</li>
+        <li><b>The Global Minotaur.</b> After 1971 the flow reverses — America consumes the world's exports and Wall Street absorbs the world's profits.</li>
+        <li><b>Controlled disintegration.</b> The interest-rate shock of 1979–82 breaks labour's power and makes finance sovereign.</li>
+        <li><b>Neoliberalism and the computer</b> as the twin instruments that made all of it operable — and that seeded what came next.</li>
+        <li><b>2008.</b> The Minotaur is wounded; the recycling mechanism breaks and is replaced by central bank money creation.</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> the cloudalists did not appear from nowhere; 2008 handed them the capital.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">3</div>
+    <div>
+      <h3>Cloud Capital<span class="pages">page 58</span></h3>
+      <p>The conceptual heart. He contrasts two kinds of command: the advertising executive who persuades a market, and the voice assistant that skips the market entirely. Ask a device for a product and it does four things at once — it learns you, it shapes what you want, it sells it to you outside any marketplace, and it books your feedback as free labour that improves it for the next person.</p>
+      <ul class="moves">
+        <li><b>The internet commons.</b> Built with public money, originally non-commercial, briefly a genuine commons.</li>
+        <li><b>The new enclosures.</b> Its privatisation in the 1990s as a rerun of the enclosure of common land — with the same consequence: dispossession dressed as efficiency.</li>
+        <li><b>Cloud proles.</b> Warehouse and delivery work directed by algorithm; the supervisor is the software.</li>
+        <li><b>Cloud serfs.</b> For the first time in history, an entire population reproduces the ruling class's capital voluntarily and unpaid.</li>
+        <li><b>Farewell markets.</b> On a platform there is no price discovery among peers — only matching, ranking and extraction under a single owner.</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> cloud capital produces nothing; it produces <i>us</i>, as buyers.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">4</div>
+    <div>
+      <h3>The Rise of the Cloudalists and the Demise of Profit<span class="pages">page 92</span></h3>
+      <p>How a new ruling class was financed. The bailouts and asset purchases after 2008 produced money that did not reach the real economy: it lifted asset prices, funded buybacks, and made capital free for whoever could raise it. Big Tech was the exception that invested — not in factories but in servers, networks and models. Meanwhile profit itself became optional for them: valuations, not earnings, set the discipline, so firms could run at a loss for years while accumulating the infrastructure everyone else would later have to rent.</p>
+      <ul class="moves">
+        <li><b>The secret of the new ruling class.</b> They do not win the competition; they own the arena in which it is held.</li>
+        <li><b>Poisoned money, gilded stagnation.</b> Record asset prices alongside flat investment, flat wages and weak demand.</li>
+        <li><b>Rent as the dominant income.</b> A platform's cut is deducted before any capitalist sees a profit.</li>
+        <li><b>Private inequities.</b> Private equity asset-strips the terrestrial economy while the cloud strips the attention economy.</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> when rent is levied on profit rather than generated by production, the system stops being capitalist.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">5</div>
+    <div>
+      <h3>What's in a Word?<span class="pages">page 116</span></h3>
+      <p>The self-defence chapter, answering the obvious objection: isn't this just rentier capitalism, platform capitalism, monopoly capitalism — capitalism on steroids? His reply is that systems are named after what governs them. Feudalism had markets and profits too; it was still feudalism, because rent and lordship set the terms. Once cloud rent dominates profit and fiefs replace markets, the same test names our system differently.</p>
+      <ul class="moves">
+        <li><b>What it would take for capitalism to die</b> — a criterion stated openly, so the thesis can be falsified.</li>
+        <li><b>Musk and Twitter.</b> Irrational as a company purchase, rational as the acquisition of a fief and its stream of attention.</li>
+        <li><b>The technofeudal roots of inflation.</b> Rent drains purchasing power, demand weakens, money is printed to fill the hole, prices follow.</li>
+        <li><b>German carmakers and the green transition.</b> Why proud industrial champions end up as vassals, and why rent-seeking silos make coordinated decarbonisation harder.</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> the label matters because it determines which remedies could possibly work.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">6</div>
+    <div>
+      <h3>Technofeudalism's Global Impact: the New Cold War<span class="pages">page 145</span></h3>
+      <p>Geopolitics rewritten as a conflict between two cloud empires. China built its own cloud capital early and fused it with payments, which is precisely why Beijing moved against its most powerful private platform owners: cloud capital in private hands is a rival sovereign. In the United States the same capital stayed private — and became an instrument of state power in its own way.</p>
+      <ul class="moves">
+        <li><b>Technofeudalism with Chinese characteristics.</b> Payment platforms as cloud capital; the state's decision to discipline rather than dismantle it.</li>
+        <li><b>Cloud finance vs the dollar.</b> If trade can be settled inside a Chinese payment layer, dollar dominance is challenged at the plumbing level, not the policy level.</li>
+        <li><b>Ukraine as a dividing line.</b> Sanctions after 2022 weaponised dollar infrastructure and pushed the world toward two incompatible super-fiefs.</li>
+        <li><b>Europe, the Global South, the planet.</b> Caught between the two: dependent, indebted, and renting the infrastructure of both.</li>
+      </ul>
+      <div class="carry"><span>Carry forward:</span> the new cold war is a fight over whose cloud rent the world pays, and in which currency.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num">7</div>
+    <div>
+      <h3>Escape from Technofeudalism<span class="pages">page 175</span></h3>
+      <p>First the demolition: three exits he considers closed. The liberal individual — the autonomous chooser at the centre of liberal political theory — cannot survive a system that manufactures the preferences it then satisfies. Social democracy cannot be revived, because its instruments (wage bargaining, antitrust, taxing profit) were designed for a world of prices, wages and profits rather than free services and behavioural extraction. And crypto, on his reading, reproduces concentration while leaving ownership of cloud capital untouched.</p>
+      <ul class="moves">
+        <li><b>Democratised companies.</b> One employee, one share, one vote; capital that cannot be bought and sold away from the people who use it.</li>
+        <li><b>Democratised money.</b> A free digital account for everyone at the central bank, so payments stop running through private fiefs.</li>
+        <li><b>Cloud and land as commons.</b> Data treated as an inalienable personal right; infrastructure governed collectively rather than owned.</li>
+        <li><b>A cloud rebellion.</b> Cloud proles withdrawing labour, cloud serfs withdrawing data and attention, and both organising across the line that usually divides them.</li>
+      </ul>
+      <blockquote class="pull">His formula for the whole programme: to own our minds individually, we have to own cloud capital collectively.</blockquote>
+      <div class="carry"><span>Carry forward:</span> the target is ownership, not regulation — which is why he thinks reform-minded politics keeps failing.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num pre">App. 1</div>
+    <div>
+      <h3>The Political Economy of Technofeudalism<span class="pages">page 215</span></h3>
+      <p>A more formal statement for readers who want the mechanics: how cloud rent is levied on capitalist profit, what that does to aggregate demand and investment, and why the result is stagnation propped up by money creation rather than a self-correcting cycle.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="num pre">App. 2</div>
+    <div>
+      <h3>The Madness of Derivatives<span class="pages">page 237</span></h3>
+      <p>A short account of how derivatives grew into a parallel financial universe, included because the 2008 failure it produced is the hinge on which the main argument turns.</p>
+    </div>
+  </div>
+</section>
+
+<section id="facts">
+  <h2>Key facts and figures</h2>
+  <ul class="facts">
+    <li><span class="tag">1993</span><p>The year his father, newly online, asked the question the book spends 300 pages answering. He died in 2021, in his mid-nineties, before the answer was written.</p></li>
+    <li><span class="tag">Two pillars</span><p>Varoufakis defines capitalism by exactly two features — markets and profit — and argues both have been displaced by fiefs and rent.</p></li>
+    <li><span class="tag">~35–40%</span><p>The share of a sale price he says Amazon takes from third-party sellers once all fees are counted: the clearest example of cloud rent in the book.</p></li>
+    <li><span class="tag">30%</span><p>The standard cut taken on app-store revenues — rent for access to a customer base the developer cannot otherwise reach.</p></li>
+    <li><span class="tag">1944–71</span><p>The Bretton Woods era he calls the Global Plan; its collapse in 1971 opens the age of the Global Minotaur.</p></li>
+    <li><span class="tag">1979</span><p>The interest-rate shock he describes as controlled disintegration: the deliberate break of labour's bargaining power.</p></li>
+    <li><span class="tag">2008</span><p>The hinge. Bailouts plus quantitative easing create money that lifts assets rather than investment — the Federal Reserve's balance sheet alone goes from under $1tn before the crisis to roughly $9tn by 2022.</p></li>
+    <li><span class="tag">Nov 2020</span><p>The suspension of Ant Group's record-breaking listing — for Varoufakis, proof that Beijing understood private cloud capital as a rival power centre.</p></li>
+    <li><span class="tag">2022</span><p>Two events that anchor chapters 5 and 6: Musk's $44bn purchase of Twitter, and the sanctions on Russia that turned dollar infrastructure into a weapon.</p></li>
+    <li><span class="tag">Zero pay</span><p>The wage received by cloud serfs — users — for the labour that trains and extends cloud capital. He treats this as historically unprecedented, not merely unfair.</p></li>
+    <li><span class="tag">Structure</span><p>Seven chapters, two appendices, roughly 304 pages; published by Bodley Head in the UK (28 September 2023) and Melville House in the US, with a Vintage paperback following.</p></li>
+  </ul>
+</section>
+
+<section id="curios">
+  <h2>Interesting things about the book</h2>
+  <ul class="plain">
+    <li><b>It is a letter to a dead man.</b> Chapters 2 to 7 are addressed directly to his father, Giorgios — a chemical engineer at a steel plant who was jailed for years as a leftist. Each chapter ends by returning to his question, which gives a work of political economy the cadence of a eulogy.</li>
+    <li><b>The title character is metal.</b> The book opens with tin melting in a fire, not with a platform. Varoufakis's argument about digital infrastructure is deliberately routed through the oldest technology of all.</li>
+    <li><b>He wrote the prequel by accident.</b> <i>Talking to My Daughter</i> was drafted as a letter to his twelve-year-old without asking her permission — a family grievance he cheerfully records in the preface.</li>
+    <li><b>The Soviet joke is serious.</b> His claim that corporate advertising accomplished the planning of desire that Soviet planners never could is a genuine argument about where cloud capital came from, not an aside.</li>
+    <li><b>It found readers on the right.</b> Varoufakis has noted with some discomfort that his framing was picked up by figures on the nationalist right, while much of the sharpest criticism came from fellow Marxists.</li>
+    <li><b>Musk's Twitter purchase is his stress test.</b> He treats a deal most analysts called irrational as evidence that the system's logic has changed — if the acquisition makes sense only as buying a fief, that tells you what kind of asset it was.</li>
+    <li><b>The remedies are unusually concrete.</b> One-worker-one-share companies and central bank accounts for all are drawn from his novel <i>Another Now</i>; the book is arguing for a programme, not just naming a condition.</li>
+    <li><b>Everything hinges on a definition.</b> Because he defines capitalism by markets plus profit, the entire thesis stands or falls on whether you accept that definition — which is exactly where his critics attack.</li>
+  </ul>
+</section>
+
+<section id="critics">
+  <h2>The pushback</h2>
+  <p class="lede">The book provoked a real argument. A fair summary should include the case against it.</p>
+  <ul class="plain">
+    <li><b>It's still capitalism.</b> Many Marxist economists argue that monopoly rent is a long-recognised feature of capitalism, not a departure from it. Platform firms still employ waged labour, still compete for capital, still answer to shareholders — so the system's underlying laws of motion are unchanged.</li>
+    <li><b>The feudal analogy is loose.</b> Feudalism involved legally bound serfs, landed estates, military obligation and hereditary status. None of those apply. Critics say the metaphor illuminates something real but names it badly.</li>
+    <li><b>Rent and profit aren't cleanly separable.</b> Where a platform genuinely provides logistics, payments and discovery, the cut it takes has a service component. Deciding how much is rent and how much is return on real investment is harder than the argument allows.</li>
+    <li><b>Competition hasn't disappeared.</b> Platform incumbents have been displaced before and are being challenged again; a fief that can be unseated by a rival looks more like a market position than a manor.</li>
+    <li><b>The programme is far from the politics.</b> Even sympathetic readers note the gap between diagnosing a global system and proposing collective ownership of the infrastructure that runs it.</li>
+  </ul>
+  <p class="note">Varoufakis's own answer to most of these is in chapter 5: he is not claiming rent is new, only that it has become dominant — and that dominance, not novelty, is what changes a system's name.</p>
+</section>
+
+<section id="practice">
+  <h2>Where the argument bites in practice</h2>
+  <p>Strip away the historical framing and three claims remain testable by anyone working near platforms, finance or AI:</p>
+  <ul class="plain">
+    <li><b>Check who takes the cut.</b> If a growing share of an industry's revenue is paid for access to infrastructure rather than earned from producing anything, the balance of power has already shifted, whatever the system is called.</li>
+    <li><b>Watch for markets that aren't markets.</b> Anywhere buyers can't see each other, prices aren't comparable, and ranking is set by the venue's owner, the usual reasoning about competition and price signals stops applying.</li>
+    <li><b>Take unpaid contribution seriously as an asset.</b> Behavioural data produced for free is capital formation. Any valuation or strategy that treats it as a by-product is mispricing the thing that actually compounds.</li>
+  </ul>
+</section>
+
+<section id="takeaway">
+  <h2>The takeaway</h2>
+  <p>Varoufakis wants to change what you think you are looking at. The complaints about Big Tech usually take the form of grievances within capitalism — monopoly, privacy, tax avoidance, addictive design — each with a matching remedy: break them up, regulate them, tax them, redesign them. His argument is that those remedies keep failing because the diagnosis is wrong. You cannot restore competition to something that was never a market, and you cannot tax a profit that has already been converted into rent.</p>
+
+  <p>The deeper move is about autonomy rather than economics. Capitalism, for all its coercions, took your preferences as given and competed for them. Cloud capital gets there first: it shapes what you want and then satisfies it, and it does so using a machine you helped build for free. That is why he thinks the liberal individual — the self-authoring chooser at the centre of both market economics and liberal democracy — is the real casualty, and why he thinks regulation aimed at outcomes will keep missing a system that operates on inputs.</p>
+
+  <p>His conclusion follows from that: the fight is over ownership of the infrastructure, not over its conduct. Collective ownership of cloud capital, democratised firms, public digital money, data as an inalienable right. Whether you find that persuasive or utopian, the useful residue of the book survives either way — a set of questions about who collects rent, who owns the venue, and who is working for free.</p>
+
+  <p>And the answer to his father, finally, is a bleak one. The network did reveal capitalism's weak point. It just didn't hand the opening to us.</p>
+</section>
+
+<section id="discuss">
+  <h2>Questions worth arguing about</h2>
+  <ul class="plain">
+    <li>Is "markets plus profit" the right definition of capitalism — and if you widen it, does the thesis collapse or just soften?</li>
+    <li>At what threshold does a rent-taking intermediary stop being a service provider and become a landlord? Is there a number?</li>
+    <li>If cloud serfdom is voluntary and mostly pleasant, does calling it serfdom clarify anything or just borrow the emotional weight of a worse thing?</li>
+    <li>Would a public digital payment account genuinely weaken platform power, or simply move the rent to a different layer?</li>
+    <li>Does generative AI fit his framework, or break it — a means of behaviour modification, or a genuine means of production?</li>
+    <li>If he is right about the diagnosis but wrong about the cure, what is the second-best policy response?</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>A reader's overview of <i>Technofeudalism: What Killed Capitalism</i> by Yanis Varoufakis (Bodley Head, 2023). Summarised and paraphrased throughout — no passages are reproduced from the book. Written to accompany the book, not to replace it.</p>
+  <p style="margin-top:1.2rem"><a class="totop" href="#top">Back to top</a></p>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function sync(){
+    var y = window.scrollY + 120, current = 0;
+    sections.forEach(function(s,i){ if(s && s.offsetTop <= y) current = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i === current); });
+  }
+  window.addEventListener('scroll', sync, {passive:true});
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+</body>
+</html>

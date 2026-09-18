@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chip War — Chris Miller — reader's guide</title>
+<meta name="description" content="Chapter-by-chapter breakdown, key facts and takeaways from Chris Miller's Chip War: The Fight for the World's Most Critical Technology (2022).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1519;
+    --panel:#161F24;
+    --panel-2:#1C272D;
+    --fg:#E4E9E9;
+    --dim:#8FA1A8;
+    --dimmer:#67797F;
+    --rule:rgba(228,233,233,.13);
+    --rule-2:rgba(228,233,233,.06);
+    --amber:#F2B134;
+    --amber-soft:rgba(242,177,52,.12);
+    --measure:70ch;
+    --display:"Syne",-apple-system,"Segoe UI",Helvetica,sans-serif;
+    --body:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.68;font-weight:400}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  p{max-width:var(--measure)}
+  strong{font-weight:600}
+  a{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(242,177,52,.3)}
+  a:hover{border-bottom-color:var(--amber)}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+  nav.bar{position:sticky;top:0;z-index:30;background:rgba(15,21,25,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+  nav.bar ul{display:flex;gap:19px;flex-wrap:wrap;list-style:none;margin:0 auto;padding:12px 24px;max-width:1060px;font-size:13.5px}
+  nav.bar a{color:var(--dim);border:0}
+  nav.bar a:hover{color:var(--amber)}
+
+  /* hero */
+  header.hero{padding:72px 0 58px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-size:13px;color:var(--dim);margin:0 0 22px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,10vw,108px);line-height:.9;letter-spacing:-.045em;margin:0 0 14px}
+  .sub{font-family:var(--display);font-weight:600;font-size:clamp(17px,2.4vw,24px);color:var(--dim);margin:0 0 30px;max-width:24ch;line-height:1.2;letter-spacing:-.02em}
+  .stake{font-size:clamp(18px,2.2vw,23px);line-height:1.5;max-width:42ch;margin:0 0 36px}
+  .stake b{color:var(--amber);font-weight:600}
+
+  .specs{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);margin-bottom:46px}
+  .specs div{padding:14px 26px 14px 0;margin-right:26px;border-right:1px solid var(--rule);font-size:12.5px;color:var(--dim)}
+  .specs div:last-child{border-right:0}
+  .specs b{display:block;color:var(--fg);font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em}
+
+  /* chokepoint chain */
+  .chain{margin:0;border:1px solid var(--rule);background:var(--panel);padding:26px 24px 22px}
+  .chain-title{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em;margin:0 0 4px}
+  .chain-sub{font-size:13.5px;color:var(--dim);margin:0 0 22px;max-width:60ch}
+  .steps{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2)}
+  @media(min-width:900px){.steps{grid-template-columns:repeat(6,1fr)}}
+  .step{background:var(--panel);padding:18px 16px;display:flex;flex-direction:column;gap:7px}
+  .step .n{font-size:11.5px;color:var(--dimmer);letter-spacing:.04em}
+  .step h5{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;margin:0;line-height:1.15}
+  .step .who{font-size:13px;color:var(--dim);margin:0;line-height:1.4}
+  .step .meter{display:flex;gap:3px;margin-top:auto;padding-top:8px}
+  .step .meter i{display:block;height:4px;flex:1;background:rgba(228,233,233,.14);border-radius:1px}
+  .step .meter i.on{background:var(--amber)}
+  .step .lvl{font-size:11.5px;color:var(--dimmer)}
+  .step.hot h5{color:var(--amber)}
+  .chain figcaption{font-size:14px;color:var(--dim);margin-top:18px;line-height:1.55;max-width:64ch}
+
+  /* sections */
+  section{padding:68px 0;border-bottom:1px solid var(--rule)}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,4.5vw,44px);line-height:1.04;letter-spacing:-.04em;margin:0 0 10px;max-width:20ch}
+  .lede{font-size:18.5px;color:var(--dim);margin:0 0 34px;max-width:62ch;line-height:1.55}
+  h3{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:-.025em;margin:40px 0 12px}
+
+  /* parts + chapters */
+  .part{margin-top:44px}
+  .part-bar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:2px solid var(--amber);padding-bottom:8px;margin-bottom:6px}
+  .part-bar h3{margin:0;font-size:23px;color:var(--amber)}
+  .part-bar span{font-size:12.5px;color:var(--dim)}
+  .part-note{font-size:14.5px;color:var(--dim);margin:0 0 12px;max-width:66ch;line-height:1.55}
+
+  .chs{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2)}
+  @media(min-width:880px){.chs{grid-template-columns:1fr 1fr}}
+  .c{background:var(--bg);padding:16px 18px;display:grid;grid-template-columns:34px 1fr;gap:12px}
+  .c .n{font-family:var(--display);font-weight:700;font-size:16px;color:var(--dimmer);letter-spacing:-.02em;padding-top:2px}
+  .c h4{font-family:var(--display);font-weight:700;font-size:15.5px;letter-spacing:-.02em;margin:0 0 5px;line-height:1.25}
+  .c p{margin:0;font-size:15px;line-height:1.5;color:#BCC8CB;max-width:none}
+  .c.key{background:var(--amber-soft)}
+  .c.key .n,.c.key h4{color:var(--amber)}
+
+  /* facts */
+  .facts{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2)}
+  @media(min-width:640px){.facts{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:960px){.facts{grid-template-columns:repeat(4,1fr)}}
+  .fact{background:var(--bg);padding:20px 22px}
+  .fact b{display:block;font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-.04em;color:var(--amber);margin-bottom:5px;line-height:1.1}
+  .fact span{display:block;font-size:14.5px;line-height:1.5;color:#BCC8CB}
+
+  ul.list{padding-left:22px;max-width:var(--measure)}
+  ul.list li{margin-bottom:15px}
+
+  .cols{display:grid;gap:32px}
+  @media(min-width:860px){.cols{grid-template-columns:1fr 1fr;gap:46px}}
+  .cols h3{margin-top:0}
+  .col-a{border-top:2px solid var(--amber);padding-top:18px}
+  .col-b{border-top:2px solid var(--dimmer);padding-top:18px}
+  .cols ul{padding-left:20px;margin:0}
+  .cols li{margin-bottom:14px;font-size:16px;color:#BCC8CB}
+
+  .takeaway{border:1px solid var(--rule);padding:32px 34px;background:var(--panel);margin-top:6px}
+  .takeaway ol{padding-left:22px;margin:0;max-width:64ch}
+  .takeaway li{margin-bottom:20px;font-size:17.5px}
+  .takeaway li:last-child{margin-bottom:0}
+  .takeaway li b{font-family:var(--display);font-weight:700;font-size:17.5px;display:block;letter-spacing:-.025em;margin-bottom:3px}
+
+  .pull{font-family:var(--display);font-weight:700;font-size:clamp(21px,3vw,30px);line-height:1.25;letter-spacing:-.035em;
+    max-width:24ch;margin:46px 0 0;padding-left:22px;border-left:3px solid var(--amber)}
+
+  details{border-top:1px solid var(--rule-2);padding:15px 0}
+  details summary{cursor:pointer;font-size:16.5px;font-weight:500;list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+  ";color:var(--amber)}
+  details[open] summary::before{content:"–  "}
+  details p{margin:11px 0 0;font-size:16.5px;color:#BCC8CB}
+
+  .shelf{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:14px}
+  @media(min-width:760px){.shelf{grid-template-columns:repeat(3,1fr)}}
+  .shelf div{background:var(--bg);padding:22px 24px}
+  .shelf h4{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.025em;margin:0 0 3px}
+  .shelf .by{font-size:12.5px;color:var(--dim);margin:0 0 10px}
+  .shelf p{margin:0;font-size:15.5px;line-height:1.55;color:#BCC8CB}
+
+  footer{padding:50px 0 76px;font-size:14.5px;color:var(--dim)}
+  footer p{max-width:72ch;line-height:1.6}
+  footer a{color:var(--dim);border-bottom-color:var(--rule-2)}
+
+  @media print{
+    :root{--bg:#fff;--panel:#fff;--panel-2:#fff;--fg:#0F1519;--dim:#4A5A60;--dimmer:#6C7C82;
+      --rule:rgba(15,21,25,.2);--rule-2:rgba(15,21,25,.1);--amber:#8A6210;--amber-soft:rgba(138,98,16,.07)}
+    body{background:#fff;font-size:10pt}
+    nav.bar{display:none}
+    section{padding:22px 0}
+    .c,.fact,.step{page-break-inside:avoid}
+    .chs{grid-template-columns:1fr 1fr}
+    a{color:var(--fg);border:0}
+  }
+</style>
+</head>
+<body>
+
+<nav class="bar" aria-label="Sections">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#structure">Structure</a></li>
+    <li><a href="#chapters">Chapter by chapter</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curious">Worth knowing</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#now">How it reads now</a></li>
+    <li><a href="#criticism">Criticism</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Reader's guide — Chris Miller — Scribner, October 2022</p>
+    <h1>Chip War</h1>
+    <p class="sub">The Fight for the World's Most Critical Technology</p>
+    <p class="stake">A history of the semiconductor told as geopolitics. Miller's claim is that the last eighty years of great-power competition were decided by who could harness computing — and that <b>the supply chain that produces computing is now the narrowest chokepoint in the world economy.</b></p>
+
+    <div class="specs">
+      <div><b>54 chapters</b>Eight parts, ~464 pages</div>
+      <div><b>FT Book of the Year</b>Business Book Award, 2022</div>
+      <div><b>Economic historian</b>Tufts Fletcher School</div>
+      <div><b>1947 to 2022</b>Transistor to the chip choke</div>
+    </div>
+
+    <figure class="chain">
+      <p class="chain-title">Why the book is called a war</p>
+      <p class="chain-sub">Making one advanced chip requires every step below to work. Miller's point is not that chips are scarce — it is that each stage has collapsed into a handful of firms in a handful of places, and any of them can be turned into a weapon.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="n">01</span>
+          <h5>Design software</h5>
+          <p class="who">Three US firms write the tools every chip in the world is designed with.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <h5>Core IP</h5>
+          <p class="who">Processor architectures licensed from a small number of holders, notably Arm in the UK.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+        </div>
+        <div class="step hot">
+          <span class="n">03</span>
+          <h5>Lithography</h5>
+          <p class="who">EUV machines come from ASML in the Netherlands. There is no second supplier.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+        </div>
+        <div class="step hot">
+          <span class="n">04</span>
+          <h5>Leading-edge fabs</h5>
+          <p class="who">TSMC in Taiwan, with Samsung a distant second. A single island, a handful of sites.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+        </div>
+        <div class="step">
+          <span class="n">05</span>
+          <h5>Memory</h5>
+          <p class="who">Three firms — Samsung, SK Hynix, Micron — supply effectively all of it.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+        </div>
+        <div class="step">
+          <span class="n">06</span>
+          <h5>Assembly and test</h5>
+          <p class="who">The last stage, heavily concentrated in China and Southeast Asia.</p>
+          <span class="lvl">Concentration</span>
+          <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+        </div>
+      </div>
+
+      <figcaption>Miller calls these choke points. The book's final third is about what happens when a government notices it is standing on one — and squeezes. Concentration ratings are the guide's reading of the picture the book describes, not figures from the text.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="argument">
+  <div class="wrap">
+    <h2>The argument</h2>
+    <p class="lede">Chris Miller is an economic historian at Tufts whose previous books were about the Soviet economy. That background shapes everything here: this is a book about how states rise and fall, which happens to be told through a component.</p>
+
+    <p>The thesis runs in four moves. <strong>First, computing power decided the Cold War.</strong> The United States did not out-produce the Soviet Union in tanks or warheads; it out-computed it. Precision-guided weapons, built on American microelectronics, made Soviet numerical superiority irrelevant, and the Soviet general staff understood this before most Americans did. Moscow's answer — steal and copy Western chips — was structurally doomed, because copying takes years and you cannot copy manufacturing know-how.</p>
+
+    <p><strong>Second, the globalised chip supply chain was deliberate American policy.</strong> Offshoring assembly to Hong Kong, Taiwan, Singapore, Korea and Malaysia was not only cost-cutting. It bound Asian economies to the United States, gave allies a stake in the American order, and was understood in Washington as statecraft. It worked extraordinarily well — and it is the direct cause of today's dependency.</p>
+
+    <p><strong>Third, the industry consolidated into chokepoints.</strong> As each new generation of chips became more expensive to design and build, fewer firms could afford the frontier. What began as dozens of companies became, at the leading edge, one lithography supplier, one dominant foundry, three memory makers and three design-software vendors. Concentration was the price of continuing Moore's Law.</p>
+
+    <p><strong>Fourth, those chokepoints have been weaponised.</strong> The book's last part documents the United States discovering that it could cut a company — or a country — off from advanced computing, and then doing it: to Fujian Jinhua in 2018, and decisively to Huawei in 2020. Miller's closing question is whether using that leverage protects American advantage or simply guarantees that China builds its way around it.</p>
+
+    <p class="pull">Whoever controls the chokepoints controls the technology. Right now, almost nobody is standing on more than one.</p>
+  </div>
+</section>
+
+<section id="structure">
+  <div class="wrap">
+    <h2>How the book is built</h2>
+    <p class="lede">Fifty-four chapters, most of them six to eight pages, across eight parts. The short-chapter structure is the book's defining formal choice: it moves fast, each chapter carries one story or one idea, and it almost never lingers.</p>
+
+    <ul class="list">
+      <li><strong>Parts I–II (chapters 1–14).</strong> Invention and diffusion. The transistor, the integrated circuit, the military as first customer, the Soviet attempt to copy, Japan's entry through consumer products, and the deliberate offshoring of assembly to Asia.</li>
+      <li><strong>Parts III–IV (chapters 15–28).</strong> Crisis and recovery. Japan nearly destroys the American chip industry in the 1980s; Micron, Intel and Korea claw it back; and the Pentagon's bet on microelectronics pays off spectacularly in the Gulf War.</li>
+      <li><strong>Parts V–VI (chapters 29–41).</strong> The modern structure forms. TSMC invents the foundry model, design splits from manufacturing, ASML wins lithography, Apple builds its own silicon, and Intel quietly loses its lead.</li>
+      <li><strong>Parts VII–VIII (chapters 42–54).</strong> The confrontation. China's push for self-sufficiency, Huawei's rise, and the United States turning the supply chain into a weapon — ending on Taiwan.</li>
+    </ul>
+
+    <p>It is written for the general reader and for policymakers, not for engineers. The technology is explained only as far as the geopolitics requires, which is a deliberate and mostly successful choice.</p>
+  </div>
+</section>
+
+<section id="chapters">
+  <div class="wrap">
+    <h2>Chapter by chapter</h2>
+    <p class="lede">All fifty-four, grouped by part. Chapter titles are Miller's; the summaries are thematic. Highlighted chapters are the ones that carry the argument — if you are skimming, read those.</p>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part I — Cold War Chips</h3><span>1–6 · invention</span></div>
+      <p class="part-note">How a laboratory curiosity became a manufacturable product, and why the customer was the US government.</p>
+      <div class="chs">
+        <div class="c"><span class="n">1</span><div><h4>From Steel to Silicon</h4><p>The opening frame: power used to be measured in steel and oil, and is now measured in computing. Sets up the world of vacuum tubes — hot, huge and unreliable — that the transistor replaced.</p></div></div>
+        <div class="c key"><span class="n">2</span><div><h4>The Switch</h4><p>Bell Labs, 1947. Bardeen, Brattain and Shockley build a switch with no moving parts. Everything in the book descends from this: a chip is just a very large number of very small switches.</p></div></div>
+        <div class="c key"><span class="n">3</span><div><h4>Noyce, Kilby, and the Integrated Circuit</h4><p>Jack Kilby at Texas Instruments and Robert Noyce at Fairchild independently work out how to put multiple components on one piece of semiconductor. The invention that makes miniaturisation compounding rather than incremental.</p></div></div>
+        <div class="c"><span class="n">4</span><div><h4>Liftoff</h4><p>Sputnik, the Apollo programme and the Minuteman missile. The US government bought a huge share of the first integrated circuits at prices no commercial buyer would pay — industrial policy before anyone called it that.</p></div></div>
+        <div class="c"><span class="n">5</span><div><h4>Mortars and Mass Production</h4><p>Jay Lathrop and photolithography: printing circuit patterns with light. The process that made chips manufacturable at scale, and the one the whole industry still runs on.</p></div></div>
+        <div class="c"><span class="n">6</span><div><h4>"I… Want… To… Get… Rich"</h4><p>Noyce cuts prices aggressively to create a civilian market rather than remain a defence contractor. Commercial volume, not military demand, becomes the engine of the cost curve.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part II — The Circuitry of the American World</h3><span>7–14 · diffusion and strategy</span></div>
+      <p class="part-note">The Soviets try to copy, Japan builds consumer products, and Washington starts offshoring on purpose.</p>
+      <div class="chs">
+        <div class="c"><span class="n">7</span><div><h4>Soviet Silicon Valley</h4><p>Zelenograd, a planned city built to be the USSR's chip hub. Good scientists, serious money, and a command system that could not replicate the churn of Californian startups.</p></div></div>
+        <div class="c key"><span class="n">8</span><div><h4>"Copy It"</h4><p>The Soviet decision to reverse-engineer American chips rather than innovate. Miller's verdict is that it guaranteed permanent inferiority: copying takes years, so you always ship a generation late, and the hardest part — manufacturing yield — cannot be copied at all.</p></div></div>
+        <div class="c"><span class="n">9</span><div><h4>The Transistor Salesman</h4><p>Akio Morita and Sony license transistor technology and build consumer products with it. Japan enters the industry through the radio, not the missile.</p></div></div>
+        <div class="c"><span class="n">10</span><div><h4>"Transistor Girls"</h4><p>Assembly work moves offshore. Fairchild opens in Hong Kong in 1963, and low-wage assembly labour — overwhelmingly young women — becomes a permanent structural feature of the industry.</p></div></div>
+        <div class="c"><span class="n">11</span><div><h4>Precision Strike</h4><p>Vietnam and the first guided munitions. Bombs that could hit a bridge instead of a region, and the military realisation that computing changes what a weapon is.</p></div></div>
+        <div class="c key"><span class="n">12</span><div><h4>Supply Chain Statecraft</h4><p>Offshoring reframed as foreign policy. Locating plants in Taiwan, Singapore, Korea and Malaysia gave allies prosperity and a stake in the American order. It succeeded completely, which is precisely why the dependency exists now.</p></div></div>
+        <div class="c"><span class="n">13</span><div><h4>Intel's Revolutionaries</h4><p>Noyce, Moore and Grove found Intel in 1968. Memory chips first, then the microprocessor — a general-purpose computer on a single piece of silicon.</p></div></div>
+        <div class="c key"><span class="n">14</span><div><h4>The Pentagon's Offset Strategy</h4><p>William Perry and others decide the US will not match Soviet tank numbers; it will offset them with microelectronics. Guided weapons, sensors and networks instead of mass. A doctrine that makes the chip industry a national-security asset.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part III — Leadership Lost?</h3><span>15–20 · the Japanese shock</span></div>
+      <p class="part-note">The 1980s, when American chipmakers genuinely thought they were finished. The closest historical parallel to today's anxieties.</p>
+      <div class="chs">
+        <div class="c"><span class="n">15</span><div><h4>"That Competition Is Tough"</h4><p>Japanese memory chips turn out to be cheaper and measurably more reliable than American ones. Quality data presented to the industry lands as a humiliation.</p></div></div>
+        <div class="c"><span class="n">16</span><div><h4>"At War with Japan"</h4><p>Trade conflict. Accusations of dumping, subsidised capital, and a closed home market. Silicon Valley, ideologically hostile to government, starts lobbying Washington hard.</p></div></div>
+        <div class="c"><span class="n">17</span><div><h4>"Shipping Junk"</h4><p>The collapse of GCA, America's leading lithography equipment maker, and the loss of that entire industry to Nikon and Canon. A quiet defeat with enormous long-run consequences.</p></div></div>
+        <div class="c"><span class="n">18</span><div><h4>The Crude Oil of the 1980s</h4><p>Chips reframed as a strategic commodity rather than an ordinary product. The argument that leads to Sematech and to the first serious American industrial policy for semiconductors.</p></div></div>
+        <div class="c"><span class="n">19</span><div><h4>Death Spiral</h4><p>American firms exit memory one after another. Genuine fear that the domestic industry will not survive the decade.</p></div></div>
+        <div class="c"><span class="n">20</span><div><h4>The Japan That Can Say No</h4><p>Japanese confidence turns nationalist, including the suggestion that Japan could choose who receives its chips. Washington confronts strategic dependence on a foreign supplier for the first time.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part IV — America Resurgent</h3><span>21–28 · the comeback and the Cold War endgame</span></div>
+      <p class="part-note">How the US recovered, and how microelectronics finished the Soviet Union off.</p>
+      <div class="chs">
+        <div class="c"><span class="n">21</span><div><h4>The Potato Chip King</h4><p>Micron, in Boise, Idaho, backed by potato magnate J.R. Simplot. An unglamorous operation that beats Japanese memory makers on cost through obsessive process efficiency.</p></div></div>
+        <div class="c key"><span class="n">22</span><div><h4>Disrupting Intel</h4><p>Andy Grove abandons memory in 1985 and bets Intel on microprocessors. Brutal, correct, and the foundation of two decades of dominance — plus the origin of the complacency that appears in chapter 41.</p></div></div>
+        <div class="c"><span class="n">23</span><div><h4>"My Enemy's Enemy": The Rise of Korea</h4><p>Samsung enters memory with American technology and encouragement, because a Korean competitor weakens Japan. Deliberate cultivation of a rival to a rival.</p></div></div>
+        <div class="c key"><span class="n">24</span><div><h4>"This Is the Future"</h4><p>Carver Mead and Lynn Conway establish design rules that let engineers design chips without understanding the factory. The intellectual precondition for separating design from manufacturing — which becomes the whole modern industry.</p></div></div>
+        <div class="c"><span class="n">25</span><div><h4>The KGB's Directorate T</h4><p>Soviet technology espionage, and the Farewell Dossier that exposed it. Theft on an industrial scale that still failed to close the gap.</p></div></div>
+        <div class="c"><span class="n">26</span><div><h4>"Weapons of Mass Destruction": The Impact of the Offset</h4><p>Soviet marshals conclude that precision conventional weapons have changed warfare as fundamentally as nuclear weapons did, and that the USSR cannot compete. Defeat recognised internally before it happened externally.</p></div></div>
+        <div class="c"><span class="n">27</span><div><h4>War Hero</h4><p>Desert Storm, 1991. Guided weapons work on television, and the offset strategy is vindicated in public. Every military on earth takes notes, including China's.</p></div></div>
+        <div class="c"><span class="n">28</span><div><h4>"The Cold War Is Over and You Have Won"</h4><p>Japan's bubble bursts and its chip industry declines. America regains the lead in design — but manufacturing keeps migrating, now to Korea and Taiwan.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part V — Integrated Circuits, Integrated World?</h3><span>29–34 · the modern map forms</span></div>
+      <p class="part-note">Taiwan arrives, China tries and fails, and the frontier starts getting unaffordable.</p>
+      <div class="chs">
+        <div class="c key"><span class="n">29</span><div><h4>"We Want a Semiconductor Industry in Taiwan"</h4><p>Morris Chang, passed over for the top job at Texas Instruments, is recruited by the Taiwanese government and founds TSMC in 1987. The pure-play foundry — a factory that builds other companies' designs and competes with none of them — is the single most consequential business model in the book.</p></div></div>
+        <div class="c"><span class="n">30</span><div><h4>"All People Must Make Semiconductors"</h4><p>China's earlier attempts, from Mao-era campaigns onward. Decades of effort producing very little, for reasons Miller traces to isolation from the global ecosystem rather than to any lack of ambition.</p></div></div>
+        <div class="c"><span class="n">31</span><div><h4>"Sharing God's Love with the Chinese"</h4><p>Richard Chang founds SMIC in Shanghai in 2000, bringing Taiwanese and American expertise with him. China finally gets a credible foundry, though years behind the leading edge.</p></div></div>
+        <div class="c"><span class="n">32</span><div><h4>Lithography Wars</h4><p>The contest to build the machines that print chips. ASML emerges from a Philips joint venture as an unlikely challenger to the Japanese incumbents.</p></div></div>
+        <div class="c"><span class="n">33</span><div><h4>The Innovator's Dilemma</h4><p>Why dominant chip firms keep missing transitions. Doing the rational thing for your existing customers is how you lose the next market.</p></div></div>
+        <div class="c key"><span class="n">34</span><div><h4>Running Faster?</h4><p>Moore's Law becomes an economic problem rather than a physical one. Each node costs more to develop and each fab costs more to build, so the number of companies that can afford the frontier falls with every generation. This is the mechanism that produces the chokepoints.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part VI — Offshoring Innovation?</h3><span>35–41 · the structure we live in</span></div>
+      <p class="part-note">The best-known stretch of the book, and the one most readers come for.</p>
+      <div class="chs">
+        <div class="c"><span class="n">35</span><div><h4>"Real Men Have Fabs"</h4><p>Jerry Sanders of AMD's famous line, capturing the industry's conviction that a serious chip company owns its factories. A view that aged badly, including for AMD.</p></div></div>
+        <div class="c key"><span class="n">36</span><div><h4>The Fabless Revolution</h4><p>Qualcomm, Nvidia and others build large businesses designing chips they never manufacture. Only possible because TSMC exists — and it moves all the capital intensity, and all the geographic risk, to Taiwan.</p></div></div>
+        <div class="c"><span class="n">37</span><div><h4>Morris Chang's Grand Alliance</h4><p>TSMC turns itself into a platform, coordinating design-software vendors, IP providers and customers around its process. A competitive moat built out of other people's dependence.</p></div></div>
+        <div class="c"><span class="n">38</span><div><h4>Apple Silicon</h4><p>Apple starts designing its own processors, manufactured by foundries. The deepest version of the fabless model, and the volume that funds TSMC's march to the leading edge.</p></div></div>
+        <div class="c key"><span class="n">39</span><div><h4>EUV</h4><p>Extreme ultraviolet lithography: decades of work and billions of dollars to produce light at 13.5 nanometres by vaporising tin droplets with a laser tens of thousands of times a second, then steering it with the flattest mirrors ever made. Arguably the most difficult engineering project in commercial history, and the book's best set piece.</p></div></div>
+        <div class="c key"><span class="n">40</span><div><h4>"There Is No Plan B"</h4><p>ASML in the Netherlands is the only company on earth that can build an EUV machine, and nobody else is close. The purest chokepoint in the modern economy, and the one that later gives Washington its most powerful lever.</p></div></div>
+        <div class="c"><span class="n">41</span><div><h4>How Intel Forgot Innovation</h4><p>The decline. Missing mobile — including declining to make the iPhone's processor — prioritising margins and buybacks, and stumbling badly on manufacturing transitions while TSMC pulled ahead.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part VII — China's Challenge</h3><span>42–48 · the challenger</span></div>
+      <p class="part-note">China's push for self-sufficiency, and why Washington read it as a threat.</p>
+      <div class="chs">
+        <div class="c"><span class="n">42</span><div><h4>Made in China</h4><p>Made in China 2025 and the state investment vehicles behind it. Enormous sums directed at domestic chips, driven by the recognition that China imports more chips by value than oil.</p></div></div>
+        <div class="c"><span class="n">43</span><div><h4>"Call Forth the Assault"</h4><p>Self-sufficiency in core technologies elevated to top-level political priority. Chips reframed in Beijing as a national vulnerability to be eliminated rather than a market to be served.</p></div></div>
+        <div class="c"><span class="n">44</span><div><h4>Technology Transfer</h4><p>Joint ventures, licensing deals and the pressure on foreign firms to share know-how as the price of market access. Legal, negotiated and highly effective.</p></div></div>
+        <div class="c"><span class="n">45</span><div><h4>"Mergers Are Bound to Happen"</h4><p>Chinese acquisition attempts on foreign chip firms, including an approach to Micron, and the American regulatory pushback that followed. Buying the technology turns out to be blocked too.</p></div></div>
+        <div class="c"><span class="n">46</span><div><h4>The Rise of Huawei</h4><p>From telecom equipment to HiSilicon designing genuinely world-class processors. The first Chinese company to compete at the frontier on merit rather than price.</p></div></div>
+        <div class="c"><span class="n">47</span><div><h4>The 5G Future</h4><p>Huawei's lead in next-generation network infrastructure, and why Washington treated control of global communications hardware as a strategic question rather than a commercial one.</p></div></div>
+        <div class="c"><span class="n">48</span><div><h4>The Next Offset</h4><p>The Pentagon's third offset: AI, autonomy and data as the next source of military advantage. Which means the next military advantage runs on chips the US no longer manufactures.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Part VIII — The Chip Choke</h3><span>49–54 · weaponisation</span></div>
+      <p class="part-note">The final part, and the one the book was written for.</p>
+      <div class="chs">
+        <div class="c"><span class="n">49</span><div><h4>"Everything We're Competing On"</h4><p>Washington wakes up. Industry executives raise the alarm about Chinese subsidies, officials begin treating semiconductors as national security, and export controls move from the margin to the centre of policy.</p></div></div>
+        <div class="c key"><span class="n">50</span><div><h4>Fujian Jinhua</h4><p>A Chinese memory venture accused of stealing Micron's technology is cut off from American equipment and software — and simply stops. The first live demonstration that the choke works, and the template for everything after.</p></div></div>
+        <div class="c key"><span class="n">51</span><div><h4>The Assault on Huawei</h4><p>The decisive act. Export controls extended so that any fab anywhere using American tools cannot manufacture Huawei's designs, severing it from TSMC. A company at the technological frontier is disabled without a shot, by leverage over a supply chain.</p></div></div>
+        <div class="c key"><span class="n">52</span><div><h4>China's Sputnik Moment?</h4><p>The question the book leaves open. Did the squeeze protect American advantage, or did it convert Chinese self-sufficiency from an aspiration into an existential national project with unlimited funding?</p></div></div>
+        <div class="c"><span class="n">53</span><div><h4>Shortages and Supply Chains</h4><p>The 2020–21 shortage that idled car factories worldwide. Demonstrated to every board and every government how little slack the system carries.</p></div></div>
+        <div class="c key"><span class="n">54</span><div><h4>The Taiwan Dilemma</h4><p>The closing chapter. The most advanced chips on earth are made on one island that China claims, in a handful of facilities that cannot be quickly replicated. Miller works through blockade and invasion scenarios and concludes that disruption would be economically catastrophic on a scale most people have not priced in.</p></div></div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-bar"><h3>Conclusion</h3><span>and, in later printings, an afterword</span></div>
+      <p class="part-note">Miller declines to make a confident prediction. He argues that the chip supply chain cannot be unwound quickly at any price, that the US advantage rests on leverage rather than self-sufficiency, and that both Washington and Beijing are now making decisions whose consequences neither can model. Later editions add an afterword covering the export controls that landed just after publication.</p>
+    </div>
+  </div>
+</section>
+
+<section id="facts">
+  <div class="wrap">
+    <h2>Key facts</h2>
+    <p class="lede">The numbers the book is quoted for. Figures are as stated by Miller at time of writing in 2022 and have moved since.</p>
+
+    <div class="facts">
+      <div class="fact"><b>1947</b><span>The transistor is demonstrated at Bell Labs. Everything in the book follows from it.</span></div>
+      <div class="fact"><b>1958–59</b><span>Kilby and Noyce independently invent the integrated circuit at TI and Fairchild.</span></div>
+      <div class="fact"><b>1987</b><span>Morris Chang founds TSMC in Taiwan after being passed over for the top job at Texas Instruments.</span></div>
+      <div class="fact"><b>~37%</b><span>Share of the world's new logic chip capacity fabricated in Taiwan, per the book. Around 11% of memory.</span></div>
+      <div class="fact"><b>One</b><span>Companies on earth capable of building an EUV lithography machine. ASML, in the Netherlands.</span></div>
+      <div class="fact"><b>450,000+</b><span>Parts in a single EUV machine, assembled from a supply chain spanning several countries.</span></div>
+      <div class="fact"><b>&gt; oil</b><span>China spends more each year importing semiconductors than importing crude oil.</span></div>
+      <div class="fact"><b>2020</b><span>The Foreign Direct Product Rule severs Huawei from TSMC — the chokepoint used at full strength.</span></div>
+    </div>
+
+    <h3>The episodes the book turns on</h3>
+    <ul class="list">
+      <li><strong>The Soviet "copy it" decision.</strong> Moscow chose systematic reverse-engineering over indigenous innovation. Miller treats it as the single clearest lesson in the book: you cannot catch up by copying, because the copying itself takes longer than the thing you are copying takes to become obsolete.</li>
+      <li><strong>Offshoring as statecraft.</strong> American companies were encouraged to build assembly plants across East Asia partly to tie those economies to the United States. A Cold War success that produced a twenty-first-century vulnerability.</li>
+      <li><strong>Grove's memory exit.</strong> Intel walked away from the business that defined it and bet everything on microprocessors. The book's best case study in surviving disruption — and, later, in forgetting how.</li>
+      <li><strong>Mead and Conway's design rules.</strong> The abstraction layer that let chip designers work without knowing the factory. Directly enabled the fabless model, and therefore the concentration of manufacturing in Taiwan.</li>
+      <li><strong>The foundry model.</strong> TSMC's decision to manufacture only for others, competing with no customer. It unlocked an entire generation of design companies and made a single island indispensable.</li>
+      <li><strong>The EUV programme.</strong> Twenty years, tens of billions of dollars, an international consortium, and a physics problem most people thought was unsolvable. The reason there is no plan B.</li>
+      <li><strong>Fujian Jinhua, then Huawei.</strong> Two demonstrations that access to American tools and software is a switch, and that Washington is willing to flip it.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="curious">
+  <div class="wrap">
+    <h2>Worth knowing</h2>
+    <p class="lede">The details that make the history stranger and more memorable than a supply-chain briefing.</p>
+
+    <ul class="list">
+      <li><strong>Micron exists because of potatoes.</strong> America's surviving memory champion was funded in Boise by J.R. Simplot, who made his fortune supplying frozen french fries. The firm that beat Japanese memory giants on cost was capitalised by a potato magnate.</li>
+      <li><strong>Samsung started out trading dried fish and vegetables.</strong> The company that now makes some of the world's most advanced memory began as a grocery exporter.</li>
+      <li><strong>Intel turned down the iPhone.</strong> Asked to make the processor, Intel's leadership could not see the volumes justifying the margin. It is difficult to name a more expensive product decision.</li>
+      <li><strong>EUV light is made by exploding tin.</strong> A laser strikes falling droplets of molten tin tens of thousands of times per second to create plasma that emits extreme ultraviolet light, which is then focused by mirrors among the smoothest objects ever manufactured. The book's account of this is worth the cover price on its own.</li>
+      <li><strong>"Real men have fabs" is the most quoted line in the industry.</strong> AMD's Jerry Sanders said it, and AMD later spun off its factories. The macho conviction that serious firms own their plants is exactly what TSMC monetised.</li>
+      <li><strong>Morris Chang built a national champion out of a personal snub.</strong> Passed over for chief executive at Texas Instruments, he took the call from Taiwan's government and founded the company that now sits at the centre of the world economy.</li>
+      <li><strong>The Soviets understood the offset before the Americans celebrated it.</strong> Soviet marshals concluded in the 1980s that precision conventional weapons were as transformative as nuclear ones — and that they were losing. The Gulf War in 1991 was the public confirmation of a conclusion Moscow had reached years earlier.</li>
+      <li><strong>The book was published just before its own climax.</strong> Chip War reached shops in October 2022, within weeks of the sweeping US export controls of 7 October 2022 and of ChatGPT's launch. Two events that transformed its subject arrived immediately after it went to press.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="takeaway">
+  <div class="wrap">
+    <h2>The takeaway</h2>
+    <p class="lede">Five things that survive the detail.</p>
+
+    <div class="takeaway">
+      <ol>
+        <li><b>Computing power is the base layer of national power.</b> Miller's core historical claim is that the Cold War was decided by microelectronics rather than by tanks or warheads, and that the same logic now governs US–China competition. If you accept that, semiconductor policy stops being industrial policy and becomes defence policy.</li>
+        <li><b>The risk is concentration, not scarcity.</b> There is no shortage of silicon. The problem is that each critical step — design tools, lithography, leading-edge fabrication, memory — has collapsed into a handful of firms, and several of them sit in politically exposed places. Fragility comes from how few can do it, not from how hard it is to get.</li>
+        <li><b>Globalisation here was a policy choice that worked too well.</b> Offshoring was pursued deliberately to bind allies to the American system, and it succeeded. Today's dependency is not a market failure or an accident of greed; it is the residue of a strategy that achieved its objective.</li>
+        <li><b>Chokepoints are powerful and self-undermining.</b> Cutting Huawei off worked. It also converted Chinese self-sufficiency from a five-year plan into a national mobilisation, and gave every other country a reason to reduce exposure to American tools. Miller poses this as an open question rather than answering it, which is the honest position.</li>
+        <li><b>Taiwan is the single largest concentrated risk in the world economy.</b> Not a geopolitical abstraction — a set of facilities that cannot be quickly replicated, producing an input that nearly every industry depends on. Any serious risk register that does not contain it is incomplete.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="now">
+  <div class="wrap">
+    <h2>How it reads now</h2>
+    <p class="lede">Published October 2022. Four years is a long time in this industry, and the book's subject changed within weeks of publication — twice.</p>
+
+    <div class="cols">
+      <div class="col-a">
+        <h3>What held up</h3>
+        <ul>
+          <li><strong>The chokepoint thesis became policy.</strong> Within weeks of publication, sweeping US export controls on advanced chips and chip-making equipment landed, followed by Dutch and Japanese alignment. Miller described the mechanism; governments then used it at a scale he had not seen yet.</li>
+          <li><strong>Taiwan concentration is now a mainstream risk.</strong> It has moved from a specialist concern to something discussed in boardrooms, insurance models and national resilience plans — and has driven fab construction in Arizona, Japan and Germany.</li>
+          <li><strong>Industrial policy came back.</strong> The CHIPS and Science Act and its equivalents in the EU, Japan, Korea and India vindicated the argument that semiconductors would not be left to the market.</li>
+          <li><strong>Intel's difficulties continued.</strong> Chapter 41 has aged into a fairly precise diagnosis rather than a provocation.</li>
+          <li><strong>Chips stayed the binding constraint.</strong> If anything more so, as compute became the limiting input on the most valuable projects in the economy.</li>
+        </ul>
+      </div>
+      <div class="col-b">
+        <h3>What it could not see</h3>
+        <ul>
+          <li><strong>The AI demand shock.</strong> Written before ChatGPT. The book treats chips as the substrate of everything; it could not anticipate that one application would reorder the entire industry, or that a GPU designer would become one of the most valuable companies on earth.</li>
+          <li><strong>New chokepoints.</strong> High-bandwidth memory and advanced packaging became bottlenecks nearly as tight as lithography, and neither features in the book's map.</li>
+          <li><strong>The limits of the choke.</strong> China has continued to produce more capable chips than the controls were intended to permit, and has poured state resources into tooling and materials. The controls slowed progress; they did not stop it. Miller's open question in chapter 52 now has a partial answer, and it is not entirely comfortable for the policy he describes.</li>
+          <li><strong>Power as the new constraint.</strong> The limiting factor at the frontier has shifted toward electricity supply and data centre capacity, a dimension the book barely touches.</li>
+          <li><strong>Export controls as an ongoing negotiation.</strong> Rules have been repeatedly revised, contested and traded against other objectives — a messier politics than the clean leverage the book's ending implies.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:32px">The fair summary: <strong>the framework held up better than almost any recent book about technology, and the specifics dated fast.</strong> Read it for the mechanism, not for the state of play. Later printings include an afterword covering the October 2022 controls.</p>
+  </div>
+</section>
+
+<section id="criticism">
+  <div class="wrap">
+    <h2>Criticism and counterpoints</h2>
+    <p class="lede">Where the book has been challenged, so you can weigh it rather than absorb it.</p>
+
+    <details open>
+      <summary>Thin on the technology itself</summary>
+      <p>Engineers and industry readers are consistently the most critical. The physics is explained only as far as the narrative requires, process nodes and device architectures get little attention, and some technical simplifications are loose. The counter-argument is that this is a geopolitical history and a technical treatment would have lost the audience it was written for — but if you work in or near hardware, expect to find it shallow in places.</p>
+    </details>
+
+    <details>
+      <summary>An American strategic frame, stated as neutral history</summary>
+      <p>Miller is an economic historian who also holds a fellowship at a conservative Washington think tank, and the book's organising question is essentially how the United States preserves its advantage. That frame is coherent and mostly explicit, but it shapes what counts as a problem. Chinese industrial policy is a challenge to be countered; American industrial policy is prudence. A reader from Singapore, Seoul or Berlin may notice the asymmetry more than an American one would.</p>
+    </details>
+
+    <details>
+      <summary>Fifty-four short chapters means breadth over depth</summary>
+      <p>The pacing is the book's great strength and its main limitation. Enormous subjects — the Japanese trade conflict, the rise of Korea, China's entire domestic effort — get a handful of pages each. It is an excellent map and a poor atlas.</p>
+    </details>
+
+    <details>
+      <summary>Little on labour, environment or the human cost</summary>
+      <p>Chip fabrication is water-intensive, energy-intensive and chemically hazardous, and the assembly workforce has its own long history. Chapter 10 gestures at the latter and the book largely moves on. If you want that side of the technology supply chain, Karen Hao's <em>Empire of AI</em> covers analogous ground for AI specifically.</p>
+    </details>
+
+    <details>
+      <summary>Relatively sanguine on Taiwan</summary>
+      <p>Miller concludes that a Chinese invasion would probably fail and that the fabs themselves would be worth little to an occupier, since they depend on continuous foreign supply and tacit expertise. Defensible, and also the most consequential judgement in the book — worth reading alongside analysts who weigh blockade and coercion scenarios more heavily than outright invasion.</p>
+    </details>
+
+    <details>
+      <summary>What almost no one disputes</summary>
+      <p>The reporting and the structure. Even critical reviewers describe the research as careful and the sweep as impressive, and it won the Financial Times Business Book of the Year in 2022. Its lasting contribution is giving a general audience a vocabulary — chokepoint, offset, foundry, the chip choke — that policy discussion now takes for granted.</p>
+    </details>
+
+    <h3>Where it sits on the shelf</h3>
+    <div class="shelf">
+      <div>
+        <h4>Chokepoints</h4>
+        <p class="by">Edward Fishman, 2025</p>
+        <p>The sequel Miller's last part implies. A direct account of how the United States built its economic-warfare apparatus and how export controls and sanctions actually get made and used.</p>
+      </div>
+      <div>
+        <h4>The Chip</h4>
+        <p class="by">T.R. Reid, 1985 / 2001</p>
+        <p>The invention story at length — Kilby, Noyce and the integrated circuit — which Miller compresses into a single chapter. The classic companion to Part I.</p>
+      </div>
+      <div>
+        <h4>Empire of AI</h4>
+        <p class="by">Karen Hao, 2025</p>
+        <p>What runs on the chips, and what it costs at the other end of the supply chain. Miller looks upward at states; Hao looks downward at labour, water and power. Together they cover both ends of the same machine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Chip War: The Fight for the World's Most Critical Technology</strong> — Chris Miller. Scribner, an imprint of Simon &amp; Schuster, October 2022. 464 pages. ISBN 978-1982172008. Winner of the Financial Times and Schroders Business Book of the Year Award, 2022. Later printings add an afterword.</p>
+    <p>This guide paraphrases and analyses the book. It contains no text from it and is not a substitute for reading it. Chapter and part titles are taken from the published table of contents; the summaries are written from the book's content as described in reviews, study guides and the secondary literature, and may differ in emphasis or detail from the text itself. Statistics attributed to Miller reflect the position as of 2022 and have since changed — check against the book, and against current data, before citing anything here.</p>
+    <p>Prepared 18 September 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>
