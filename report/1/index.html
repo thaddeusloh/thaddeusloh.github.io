@@ -3,160 +3,720 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Locked</title>
+<title>The History of GenAI — brown bag</title>
+<meta name="description" content="How generative AI built up, developed, and became mainstream so quickly — the eighty-year buildup, the five unlocks, and who actually deserves the credit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ground:#0B1610;--panel:#13271C;--panel2:#183021;--line:#25442F;
-  --gold:#D9A441;--mint:#8FBFA0;--rust:#C4703F;--parch:#E8EFE6;--muted:#8AA394;--dim:#63806F;
-  color-scheme:dark}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--ground);color:var(--parch);display:flex;align-items:center;
-  justify-content:center;padding:24px;font-family:'Space Grotesk',ui-monospace,monospace;
-  -webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;
-  background:radial-gradient(760px 520px at 78% -12%,rgba(217,164,65,.09),transparent 62%),
-             radial-gradient(620px 460px at 8% 100%,rgba(143,191,160,.06),transparent 62%)}
-.box{position:relative;width:100%;max-width:392px}
-.mark{width:52px;height:52px;margin-bottom:30px;opacity:.9}
-h1{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:1.72rem;letter-spacing:-.02em;
-  line-height:1.15;margin:0 0 12px;font-variation-settings:"SOFT" 0,"WONK" 1}
-p.sub{margin:0 0 30px;font-size:.84rem;line-height:1.7;color:var(--muted)}
-label{display:block;font-size:.72rem;letter-spacing:.09em;color:var(--dim);margin-bottom:9px}
-.row{display:flex;gap:9px}
-input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;
-  padding:13px 15px;color:var(--parch);font-family:inherit;font-size:.92rem;letter-spacing:.16em}
-input::placeholder{color:#3F5A49;letter-spacing:.16em}
-input:focus{outline:none;border-color:var(--gold)}
-button{flex:none;background:var(--gold);color:#14100a;border:0;border-radius:6px;padding:0 22px;
-  font-family:inherit;font-size:.84rem;font-weight:500;cursor:pointer;transition:.16s}
-button:hover:not(:disabled){background:#E8B65A}
-button:disabled{opacity:.45;cursor:default}
-button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.msg{margin-top:16px;font-size:.78rem;line-height:1.65;min-height:2.6em}
-.err{color:var(--rust)}
-.ok{color:var(--mint)}
-.bar{height:2px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:16px;
-  opacity:0;transition:opacity .2s}
-.bar.on{opacity:1}
-.bar i{display:block;height:100%;width:34%;background:var(--gold);border-radius:2px;
-  animation:sl 1.05s ease-in-out infinite}
-@keyframes sl{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}
-.foot{margin-top:34px;padding-top:20px;border-top:1px solid #16301F;font-size:.7rem;
-  line-height:1.85;color:#4E6B5A}
-@media(prefers-reduced-motion:reduce){.bar i{animation:none;width:100%}}
+  :root{
+    --bg:#17132A;
+    --bg-2:#1E1937;
+    --bg-3:#251F42;
+    --fg:#EDEAF5;
+    --dim:#9C93BC;
+    --dimmer:#736A92;
+    --rule:rgba(237,234,245,.14);
+    --rule-2:rgba(237,234,245,.07);
+    --mint:#8BE8CB;
+    --mint-dim:rgba(139,232,203,.16);
+    --display:"Bricolage Grotesque",-apple-system,"Segoe UI",Helvetica,sans-serif;
+    --text:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --measure:70ch;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-size:17px;line-height:1.68}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  p{max-width:var(--measure)}
+  strong{font-weight:600}
+  a{color:var(--mint);text-decoration:none;border-bottom:1px solid rgba(139,232,203,.3)}
+  a:hover{border-bottom-color:var(--mint)}
+  a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--mint);outline-offset:3px;border-radius:3px}
+
+  nav.bar{position:sticky;top:0;z-index:30;background:rgba(23,19,42,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+  nav.bar ul{display:flex;gap:20px;flex-wrap:wrap;list-style:none;margin:0 auto;padding:12px 24px;max-width:1060px;font-size:13.5px}
+  nav.bar a{color:var(--dim);border:0}
+  nav.bar a:hover{color:var(--mint)}
+
+  /* hero */
+  header.hero{padding:76px 0 60px;border-bottom:1px solid var(--rule)}
+  .tag{display:inline-block;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mint);
+    border:1px solid rgba(139,232,203,.35);border-radius:999px;padding:4px 13px;margin-bottom:24px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(42px,8.4vw,92px);line-height:.94;letter-spacing:-.035em;margin:0 0 16px;max-width:14ch}
+  .dek{font-size:clamp(18px,2.3vw,23px);line-height:1.45;color:var(--dim);max-width:44ch;margin:0 0 40px}
+  .dek em{font-style:normal;color:var(--fg)}
+
+  /* strata figure */
+  .strata{margin:0;border:1px solid var(--rule);background:var(--bg-2);padding:26px 26px 22px}
+  .strata-top{margin-bottom:6px}
+  .layer{display:grid;grid-template-columns:78px 1fr;gap:14px;align-items:center;padding:7px 0}
+  .layer .yr{font-family:var(--display);font-size:13.5px;font-weight:600;color:var(--dimmer);letter-spacing:-.01em;text-align:right}
+  .layer .bar{position:relative;border-radius:3px;padding:7px 14px;font-size:14.5px;line-height:1.4;color:#0E1520;font-weight:500}
+  .layer .bar b{font-weight:600}
+  .waterline{display:grid;grid-template-columns:78px 1fr;gap:14px;align-items:center;margin:14px 0 10px}
+  .waterline .wl{border-top:2px dashed var(--mint);position:relative;height:1px}
+  .waterline .lbl{font-size:12.5px;color:var(--mint);text-align:right;font-weight:600;letter-spacing:.01em}
+  .above{background:var(--mint);color:#0E1520}
+  .strata figcaption{font-size:14.5px;color:var(--dim);margin-top:20px;line-height:1.55;max-width:62ch}
+
+  /* sections */
+  section{padding:70px 0;border-bottom:1px solid var(--rule)}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.06;letter-spacing:-.035em;margin:0 0 10px;max-width:20ch}
+  .q{font-size:14px;color:var(--mint);margin:0 0 10px;font-weight:600;letter-spacing:.01em}
+  .lede{font-size:19px;color:var(--dim);margin:0 0 34px;max-width:62ch;line-height:1.55}
+  h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:40px 0 12px}
+
+  /* short answers */
+  .qa{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:10px}
+  .qa-row{background:var(--bg);padding:22px 24px;display:grid;gap:6px}
+  @media(min-width:820px){.qa-row{grid-template-columns:minmax(220px,1fr) 2fr;gap:26px;align-items:start}}
+  .qa-row .ask{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:-.015em;color:var(--fg)}
+  .qa-row .ans{margin:0;font-size:16.5px;color:#C6BFE0;max-width:62ch}
+  .qa-row .ans b{color:var(--mint);font-weight:600}
+
+  /* five unlocks */
+  .unlocks{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:32px}
+  @media(min-width:760px){.unlocks{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1000px){.unlocks{grid-template-columns:repeat(5,1fr)}}
+  .unlock{background:var(--bg);padding:24px 20px}
+  .unlock .qn{font-size:13px;color:var(--mint);font-weight:600;margin-bottom:10px;display:block}
+  .unlock h4{font-family:var(--display);font-weight:600;font-size:17.5px;letter-spacing:-.02em;margin:0 0 4px;line-height:1.2}
+  .unlock .when{font-size:12.5px;color:var(--dimmer);margin:0 0 10px}
+  .unlock p{margin:0;font-size:15px;line-height:1.55;color:#BDB5DA}
+
+  /* ranked milestones */
+  .rank{border-top:1px solid var(--rule);padding:24px 0;display:grid;gap:6px 22px}
+  @media(min-width:800px){.rank{grid-template-columns:46px 1fr 200px}}
+  .rank .pos{font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:-.04em;color:var(--rule);line-height:1}
+  .rank.top .pos{color:var(--mint)}
+  .rank h4{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.02em;margin:0 0 6px}
+  .rank p{margin:0;font-size:16px;color:#C6BFE0;max-width:58ch}
+  .rank .verdict{font-size:14px;color:var(--dim);line-height:1.5;padding-left:14px;border-left:2px solid var(--rule)}
+  .rank.top .verdict{border-left-color:var(--mint);color:var(--mint)}
+
+  /* timeline */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 30px}
+  .filters button{
+    font-family:var(--text);font-size:13.5px;font-weight:500;cursor:pointer;
+    background:transparent;color:var(--dim);border:1px solid var(--rule);
+    border-radius:999px;padding:6px 15px;transition:none;
+  }
+  .filters button:hover{color:var(--fg);border-color:var(--dim)}
+  .filters button[aria-pressed="true"]{background:var(--mint);color:#0E1520;border-color:var(--mint);font-weight:600}
+
+  .tl{border-left:1px solid var(--rule);margin:0;padding:0;list-style:none}
+  .tl li{position:relative;padding:0 0 26px 26px}
+  .tl li::before{content:"";position:absolute;left:-4px;top:11px;width:7px;height:7px;border-radius:50%;
+    background:var(--bg);border:1px solid var(--dim)}
+  .tl li.big::before{background:var(--mint);border-color:var(--mint);width:9px;height:9px;left:-5px}
+  .tl li[hidden]{display:none}
+  .tl .yr{font-family:var(--display);font-weight:600;font-size:14px;color:var(--mint);letter-spacing:-.01em}
+  .tl .track{font-size:11.5px;color:var(--dimmer);border:1px solid var(--rule-2);border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:1px}
+  .tl h4{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;margin:3px 0 5px}
+  .tl p{margin:0;font-size:16px;color:#BDB5DA;max-width:64ch}
+
+  /* two column */
+  .cols{display:grid;gap:34px}
+  @media(min-width:860px){.cols{grid-template-columns:1fr 1fr;gap:48px}}
+  .cols h3{margin-top:0}
+  .col-a{border-top:2px solid var(--mint);padding-top:18px}
+  .col-b{border-top:2px solid var(--dimmer);padding-top:18px}
+  .cols ul{padding-left:20px;margin:0}
+  .cols li{margin-bottom:14px;font-size:16px;color:#C6BFE0}
+
+  /* credit ledger */
+  .ledger{width:100%;border-collapse:collapse;margin-top:12px;font-size:15.5px}
+  .ledger th{text-align:left;font-family:var(--display);font-weight:600;font-size:13.5px;color:var(--dim);
+    padding:10px 14px 10px 0;border-bottom:1px solid var(--rule);letter-spacing:.01em;vertical-align:bottom}
+  .ledger td{padding:14px 14px 14px 0;border-bottom:1px solid var(--rule-2);vertical-align:top;color:#C6BFE0;line-height:1.5}
+  .ledger td:first-child{color:var(--fg);font-weight:500;width:27%}
+  .ledger tr.spot td{background:var(--mint-dim)}
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  ul.pts{padding-left:22px;max-width:var(--measure)}
+  ul.pts li{margin-bottom:16px}
+
+  .callout{border:1px solid var(--rule);background:var(--bg-2);padding:28px 30px;margin:36px 0 0}
+  .callout h3{margin-top:0}
+  .callout p:last-child{margin-bottom:0}
+
+  .pull{font-family:var(--display);font-weight:600;font-size:clamp(21px,3vw,30px);line-height:1.28;letter-spacing:-.03em;
+    max-width:24ch;margin:48px 0 0;padding-left:22px;border-left:3px solid var(--mint)}
+
+  .takeaways{counter-reset:tk;list-style:none;padding:0;margin:8px 0 0}
+  .takeaways li{counter-increment:tk;position:relative;padding:0 0 26px 56px;max-width:66ch}
+  .takeaways li::before{content:counter(tk);position:absolute;left:0;top:1px;width:32px;height:32px;
+    border:1px solid var(--mint);color:var(--mint);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+  .takeaways b{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;display:block;margin-bottom:3px}
+  .takeaways p{margin:0;font-size:16.5px;color:#C6BFE0}
+
+  footer{padding:52px 0 78px;color:var(--dim);font-size:14.5px}
+  footer p{max-width:72ch;line-height:1.6}
+  footer a{color:var(--dim);border-bottom-color:var(--rule-2)}
+  footer h3{color:var(--fg)}
+
+  @media print{
+    :root{--bg:#fff;--bg-2:#fff;--bg-3:#fff;--fg:#17132A;--dim:#4A4266;--dimmer:#6B6390;
+      --rule:rgba(23,19,42,.2);--rule-2:rgba(23,19,42,.1);--mint:#1F7A5E;--mint-dim:rgba(31,122,94,.08)}
+    body{background:#fff;font-size:10.5pt}
+    nav.bar,.filters{display:none}
+    section{padding:24px 0}
+    .tl li,.rank,.unlock{page-break-inside:avoid}
+    a{color:#17132A;border:0}
+    .layer .bar{border:1px solid rgba(23,19,42,.25)}
+  }
 </style>
 </head>
 <body>
-<main class="box">
-  <svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-    <circle cx="24" cy="12" r="4.4" fill="#D9A441"/>
-    <circle cx="10" cy="33" r="3.6" fill="#8FBFA0"/>
-    <circle cx="38" cy="33" r="3.6" fill="#8FBFA0"/>
-    <circle cx="24" cy="40" r="2.8" fill="#6FA3B8" opacity=".75"/>
-    <g stroke="#25442F" stroke-width="1.4">
-      <path d="M24 12 L10 33M24 12 L38 33M10 33 L38 33M10 33 L24 40M38 33 L24 40"/>
-    </g>
-    <path d="M18.6 21.4 h10.8 a2 2 0 0 1 2 2 v7 a2 2 0 0 1-2 2 H18.6 a2 2 0 0 1-2-2 v-7 a2 2 0 0 1 2-2z"
-      fill="#0B1610" stroke="#D9A441" stroke-width="1.5"/>
-    <path d="M20.4 21.4 v-2.6 a3.6 3.6 0 0 1 7.2 0 v2.6" stroke="#D9A441" stroke-width="1.5" fill="none"/>
-    <circle cx="24" cy="26.6" r="1.5" fill="#D9A441"/>
-  </svg>
 
-  <h1>This page is encrypted</h1>
-  <p class="sub">The contents are sealed with AES-256-GCM. Nothing readable is stored in this file
-  &mdash; the key is derived from your passphrase each time, and never written down anywhere.</p>
+<nav class="bar" aria-label="Sections">
+  <ul>
+    <li><a href="#short">Short answers</a></li>
+    <li><a href="#unlocks">The five unlocks</a></li>
+    <li><a href="#transformer">Was it the transformer?</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#sudden">Why it felt sudden</a></li>
+    <li><a href="#covid">The COVID question</a></li>
+    <li><a href="#credit">Who to thank</a></li>
+    <li><a href="#takeaways">Takeaways</a></li>
+  </ul>
+</nav>
 
-  <form id="f" autocomplete="off">
-    <label for="pw">PASSPHRASE</label>
-    <div class="row">
-      <input id="pw" type="password" placeholder="••••••••••••" autocomplete="current-password"
-        spellcheck="false" autocapitalize="off" autocorrect="off" required>
-      <button id="go" type="submit">Unlock</button>
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Brown bag</span>
+    <h1>The History of GenAI</h1>
+    <p class="dek">How it built up, developed, and became mainstream so quickly. Spoiler: <em>it didn't happen quickly.</em> It took about eighty years, and we only saw the last six months of it.</p>
+
+    <figure class="strata">
+      <div class="layer strata-top">
+        <span class="yr">Nov 2022</span>
+        <span class="bar above"><b>ChatGPT.</b> A free web page with a text box.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2021–22</span>
+        <span class="bar above"><b>DALL·E 2, Midjourney, Stable Diffusion.</b> The public's first taste.</span>
+      </div>
+
+      <div class="waterline" aria-hidden="true">
+        <span class="lbl">visible</span>
+        <span class="wl"></span>
+      </div>
+
+      <div class="layer">
+        <span class="yr">2022</span>
+        <span class="bar" style="background:rgba(139,232,203,.72)"><b>RLHF and instruction tuning.</b> Capability turned into usability.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2020</span>
+        <span class="bar" style="background:rgba(139,232,203,.63)"><b>Scaling laws and GPT-3.</b> Research became a capital allocation decision.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2018–19</span>
+        <span class="bar" style="background:rgba(139,232,203,.55)"><b>GPT-1, BERT, GPT-2.</b> Pretrain once, adapt to everything.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2017</span>
+        <span class="bar" style="background:rgba(139,232,203,.47)"><b>The Transformer.</b> Scale became parallelisable, and therefore affordable.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2013–16</span>
+        <span class="bar" style="background:rgba(139,232,203,.40)"><b>Word vectors, seq2seq, attention, GANs, TPUs.</b> The component parts.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2012</span>
+        <span class="bar" style="background:rgba(139,232,203,.33)"><b>AlexNet.</b> Proof that data plus GPUs beats hand-engineering.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">2006–09</span>
+        <span class="bar" style="background:rgba(139,232,203,.27)"><b>CUDA and ImageNet.</b> Cheap parallel compute meets a big labelled dataset.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">1986–97</span>
+        <span class="bar" style="background:rgba(139,232,203,.21)"><b>Backpropagation, CNNs, LSTM.</b> The maths of learning from examples.</span>
+      </div>
+      <div class="layer">
+        <span class="yr">1943–58</span>
+        <span class="bar" style="background:rgba(139,232,203,.15)"><b>Artificial neurons and the perceptron.</b> The original bet on learned weights.</span>
+      </div>
+
+      <figcaption>Everything below the dashed line happened in public — published papers, open code, conference talks — and almost nobody outside the field noticed. The "sudden" arrival of generative AI in late 2022 was not a capability jump. It was the moment the last layer became something you could use without permission, payment, or a PhD.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="short">
+  <div class="wrap">
+    <h2>The short answers</h2>
+    <p class="lede">If you only have five minutes before the sandwiches run out.</p>
+
+    <div class="qa">
+      <div class="qa-row">
+        <div class="ask">What was the buildup?</div>
+        <p class="ans">Eighty years of neural network research that failed twice, plus three separate infrastructure revolutions that had nothing to do with AI: video game GPUs, the crawlable web, and cloud computing. <b>GenAI is what happened when those three finished arriving at the same time.</b></p>
+      </div>
+      <div class="qa-row">
+        <div class="ask">Was it the Transformer?</div>
+        <p class="ans">It was necessary but not sufficient. The Transformer's real gift was not that it understood language better — it was that it removed the sequential bottleneck, so a training run could be spread across thousands of chips at once. <b>It made scale affordable rather than making models smart.</b> Five years passed between the paper and ChatGPT, which tells you the architecture alone was not the unlock.</p>
+      </div>
+      <div class="qa-row">
+        <div class="ask">Was something earlier bigger?</div>
+        <p class="ans">Yes, two things. <b>2012, when AlexNet proved that learning from data at scale beat decades of hand-engineered features</b> — that was the regime change, and everything since is a consequence. And self-supervised pretraining, which removed the need for labelled data and so made the entire internet a training set.</p>
+      </div>
+      <div class="qa-row">
+        <div class="ask">Why did it go mainstream during COVID?</div>
+        <p class="ans">It mostly didn't — ChatGPT launched in November 2022, after the acute phase had passed. <b>But the research-to-product pipeline ran entirely through the pandemic</b>, and the era's free money, cloud buildout and digital-first habits materially accelerated it. Correlation with a real mechanism attached, not coincidence and not cause.</p>
+      </div>
+      <div class="qa-row">
+        <div class="ask">Is OpenAI the pioneer?</div>
+        <p class="ans">No, and also yes. <b>Google invented most of the parts and chose not to ship.</b> OpenAI invented comparatively little but was right about one enormous thing — that scaling would keep working — and was willing to put it in front of the public for free. Invention and arrival are different achievements, and OpenAI owns the second one.</p>
+      </div>
     </div>
-    <div class="bar" id="bar"><i></i></div>
-    <div class="msg" id="msg" role="status" aria-live="polite"></div>
-  </form>
+  </div>
+</section>
 
-  <p class="foot">Unlocking takes a second or two on purpose. The passphrase is stretched through
-  600,000 rounds of PBKDF2 before it becomes a key, which makes guessing
-  expensive for anyone who has a copy of this file.</p>
-</main>
+<section id="unlocks">
+  <div class="wrap">
+    <h2>Five questions, five unlocks</h2>
+    <p class="lede">The cleanest way to hold the whole history in your head. Building a generative model required answering five separate questions, and each was answered by a different breakthrough in a different decade. None of them alone would have produced ChatGPT.</p>
 
-<script id="d" type="application/octet-stream">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</script>
+    <div class="unlocks">
+      <div class="unlock">
+        <span class="qn">Question 1</span>
+        <h4>With what?</h4>
+        <p class="when">CUDA, 2006 onward</p>
+        <p>NVIDIA opened up graphics chips for general computation. Hardware built to render video games turned out to be almost perfectly shaped for the matrix multiplication that neural networks are made of. Nobody designed it that way.</p>
+      </div>
+      <div class="unlock">
+        <span class="qn">Question 2</span>
+        <h4>On what?</h4>
+        <p class="when">ImageNet 2009, self-supervision 2013–18</p>
+        <p>First a large labelled dataset proved scale mattered. Then self-supervised pretraining removed the need for labels entirely — if the training signal is just "predict the next word," every document ever written becomes training data for free.</p>
+      </div>
+      <div class="unlock">
+        <span class="qn">Question 3</span>
+        <h4>How?</h4>
+        <p class="when">Transformer, 2017</p>
+        <p>Recurrent models processed text one word at a time, which no amount of hardware could speed up. Self-attention looks at every position simultaneously, so training parallelises across thousands of chips. This is what made a nine-figure training run physically possible.</p>
+      </div>
+      <div class="unlock">
+        <span class="qn">Question 4</span>
+        <h4>How much?</h4>
+        <p class="when">Scaling laws, 2020</p>
+        <p>OpenAI showed that loss falls predictably as compute, data and parameters increase. That converted an open research question into a budgeting exercise: spend <em>X</em> and you get <em>Y</em>. It is the single most consequential idea for why billions got spent.</p>
+      </div>
+      <div class="unlock">
+        <span class="qn">Question 5</span>
+        <h4>For whom?</h4>
+        <p class="when">RLHF and instruction tuning, 2017–22</p>
+        <p>A raw pretrained model predicts likely text, which is not the same as being helpful. Training on human preference rankings closed that gap. The most under-appreciated step, and the one that actually made the product work.</p>
+      </div>
+    </div>
+
+    <p class="pull">Architecture answered "how". Self-supervision answered "on what". Everything else was economics.</p>
+  </div>
+</section>
+
+<section id="transformer">
+  <div class="wrap">
+    <p class="q">Your question 2 and 3</p>
+    <h2>Was it the Transformer — or was something earlier bigger?</h2>
+    <p class="lede">The Transformer gets the credit because it is in the name. GPT literally stands for Generative Pre-trained Transformer. But ranking the milestones by how much of the outcome they explain gives a different order.</p>
+
+    <div class="rank top">
+      <div class="pos">1</div>
+      <div>
+        <h4>The 2012 convergence — AlexNet, ImageNet, CUDA</h4>
+        <p>On 30 September 2012, a neural network called AlexNet won the ImageNet competition by an enormous margin against systems built on decades of hand-crafted computer vision features. Nothing in it was conceptually new — convolutional networks dated to the late 1980s, GPUs had been used for training since around 2006. What was new was the combination: a big dataset, enough parallel compute, and a deep network trained end to end. It ended the argument about whether learned representations beat engineered ones, and every subsequent development is downstream of that answer.</p>
+      </div>
+      <div class="verdict">The regime change. Not a better model — a different theory of how to build software that works.</div>
+    </div>
+
+    <div class="rank top">
+      <div class="pos">2</div>
+      <div>
+        <h4>Self-supervised pretraining</h4>
+        <p>The quiet giant. Supervised learning needs labelled examples, and labels are expensive, so dataset size caps model quality. Self-supervision removes the cap: hide part of the input and make the model predict it. Word vectors in 2013 showed that useful structure could be learned this way; GPT-1 and BERT in 2018 showed that a single pretrained model could then be adapted to almost any task. This is what turned "the entire internet" into a training set, and it is why generative models exist at all — a model trained to predict the next token <em>is</em> a generator, for free, as a side effect.</p>
+      </div>
+      <div class="verdict">The bigger milestone most people skip. Without it the Transformer would have had nothing to eat.</div>
+    </div>
+
+    <div class="rank">
+      <div class="pos">3</div>
+      <div>
+        <h4>The Transformer, 2017</h4>
+        <p>Eight Google researchers published a paper arguing that the recurrence everyone was using could be thrown away and replaced entirely with attention. The headline benefit is usually described as better handling of long-range context, which is true. The more important benefit is structural: recurrent networks must process a sequence in order, so they cannot be parallelised across time, and throwing more GPUs at them does not help much. A Transformer processes every position at once. That single property is what made it economically rational to spend tens of millions of dollars on one training run — and it is why the same architecture later swallowed images, audio, video and protein folding too.</p>
+      </div>
+      <div class="verdict">Necessary, and the most load-bearing single architecture. But an enabler of scale, not the source of intelligence.</div>
+    </div>
+
+    <div class="rank">
+      <div class="pos">4</div>
+      <div>
+        <h4>Scaling laws, 2020</h4>
+        <p>A team at OpenAI published empirical curves showing model performance improving smoothly and predictably with more compute, data and parameters — no plateau in sight. DeepMind's Chinchilla work in 2022 corrected the recipe toward training smaller models on far more data, which mattered enormously for cost, because a smaller model is cheaper to run forever afterwards. Together these turned "will it get better if we spend more?" from a research gamble into a forecastable return.</p>
+      </div>
+      <div class="verdict">Why the money showed up. Investors cannot fund a hunch, but they can fund a curve.</div>
+    </div>
+
+    <div class="rank">
+      <div class="pos">5</div>
+      <div>
+        <h4>RLHF and instruction tuning, 2017–2022</h4>
+        <p>Reinforcement learning from human preferences was published in 2017, from a collaboration involving OpenAI and DeepMind. Applied to language models in InstructGPT in early 2022, the results were startling: a 1.3-billion-parameter model tuned this way was preferred by human raters over the 175-billion-parameter GPT-3 it came from. A model more than a hundred times smaller won, because it had been taught what people actually wanted rather than merely what text was likely. ChatGPT is GPT-3.5 plus this technique plus a chat box.</p>
+      </div>
+      <div class="verdict">The last mile, and the one that made the difference between a research demo and a billion users.</div>
+    </div>
+
+    <div class="callout">
+      <h3>The honest verdict</h3>
+      <p>If you want one answer for the room: <strong>the Transformer is the most important single invention, but 2012 is the more important date.</strong> 2012 decided the paradigm — learning beats engineering — and the Transformer decided how far that paradigm could be pushed before physics and budgets intervened. Asking which matters more is a bit like asking whether the internal combustion engine or the discovery of oil mattered more for cars.</p>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <h2>The timeline</h2>
+    <p class="lede">Filter by track to see how five separate threads — research, compute, data, product and capital — converged. Highlighted entries are the pivots.</p>
+
+    <div class="filters" role="group" aria-label="Filter timeline by track">
+      <button type="button" data-f="all" aria-pressed="true">Everything</button>
+      <button type="button" data-f="research" aria-pressed="false">Research</button>
+      <button type="button" data-f="compute" aria-pressed="false">Compute</button>
+      <button type="button" data-f="data" aria-pressed="false">Data</button>
+      <button type="button" data-f="product" aria-pressed="false">Product</button>
+      <button type="button" data-f="capital" aria-pressed="false">Capital</button>
+    </div>
+
+    <ol class="tl" id="tl">
+      <li data-track="research"><span class="yr">1943</span><span class="track">research</span>
+        <h4>The artificial neuron</h4>
+        <p>McCulloch and Pitts describe a mathematical model of a neuron. The idea that thinking might be computation over simple connected units predates the computer itself.</p></li>
+
+      <li data-track="research"><span class="yr">1958</span><span class="track">research</span>
+        <h4>The perceptron</h4>
+        <p>Rosenblatt builds a machine that learns its own weights from examples rather than being programmed. The press coverage is wildly overheated. A critique in 1969 helps trigger the first AI winter.</p></li>
+
+      <li data-track="product"><span class="yr">1966</span><span class="track">product</span>
+        <h4>ELIZA</h4>
+        <p>Weizenbaum's pattern-matching therapist. People formed emotional attachments to a few hundred lines of rules, which should have warned everyone about what a conversational interface does to human judgement.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">1986</span><span class="track">research</span>
+        <h4>Backpropagation goes mainstream</h4>
+        <p>Rumelhart, Hinton and Williams popularise an efficient way to assign blame across the layers of a deep network. This is the mathematical engine underneath every model discussed here, forty years later.</p></li>
+
+      <li data-track="research"><span class="yr">1989–98</span><span class="track">research</span>
+        <h4>Convolutional networks</h4>
+        <p>LeCun's networks read handwritten digits well enough to process a significant share of US bank cheques. Proof that neural networks could do real commercial work — on a narrow task, at small scale.</p></li>
+
+      <li data-track="research"><span class="yr">1997</span><span class="track">research</span>
+        <h4>LSTM</h4>
+        <p>Hochreiter and Schmidhuber solve the problem of networks forgetting across long sequences. LSTMs would dominate language modelling for the next twenty years, and power translation and speech products at Google and Apple.</p></li>
+
+      <li data-track="compute" class="big"><span class="yr">2006–07</span><span class="track">compute</span>
+        <h4>NVIDIA releases CUDA</h4>
+        <p>General-purpose programming for graphics cards. This is the accidental keystone of the whole story: a gaming company opens its hardware to scientific computing, and a decade later that decision underwrites a multi-trillion-dollar industry.</p></li>
+
+      <li data-track="data" class="big"><span class="yr">2009</span><span class="track">data</span>
+        <h4>ImageNet</h4>
+        <p>Fei-Fei Li's team assembles millions of labelled images, built partly through crowdsourced human labour. A dataset, not an algorithm — and the field's central bottleneck for the next decade turns out to be data, not ideas.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">Sep 2012</span><span class="track">research</span>
+        <h4>AlexNet wins ImageNet</h4>
+        <p>Krizhevsky, Sutskever and Hinton win by roughly ten percentage points using a deep network trained on two consumer GPUs. The field reorganises around deep learning within about eighteen months. Sutskever later co-founds OpenAI.</p></li>
+
+      <li data-track="research"><span class="yr">2013</span><span class="track">research</span>
+        <h4>Word2vec</h4>
+        <p>Mikolov's team at Google learns vector representations of words from raw text with no labels. Early, concrete proof that self-supervision on abundant text yields genuinely useful structure.</p></li>
+
+      <li data-track="research"><span class="yr">2014</span><span class="track">research</span>
+        <h4>Sequence-to-sequence, attention, and GANs</h4>
+        <p>Three at once. Google's seq2seq maps one sequence to another, enabling neural translation. Bahdanau, Cho and Bengio add attention so the model can look back at relevant input. And Goodfellow's GANs make machines generate convincing images for the first time — the beginning of generative AI as a visible thing.</p></li>
+
+      <li data-track="capital"><span class="yr">Dec 2015</span><span class="track">capital</span>
+        <h4>OpenAI is founded</h4>
+        <p>A nonprofit created partly in response to fears about Google's dominance in AI and about existential risk — a worry articulated by Bostrom's <em>Superintelligence</em>, published the previous year. Its founding bet is that scale is the path.</p></li>
+
+      <li data-track="research"><span class="yr">2015</span><span class="track">research</span>
+        <h4>Diffusion models proposed</h4>
+        <p>Sohl-Dickstein's group describes generating images by learning to reverse a noising process. Ignored for five years until improvements in 2020 make it work — and then it displaces GANs entirely.</p></li>
+
+      <li data-track="product"><span class="yr">2016</span><span class="track">product</span>
+        <h4>AlphaGo beats Lee Sedol</h4>
+        <p>DeepMind's system wins a game considered a decade away from solution. The first time deep learning genuinely frightened the general public — and it convinced a lot of executives to fund AI groups.</p></li>
+
+      <li data-track="compute"><span class="yr">2016</span><span class="track">compute</span>
+        <h4>Google's TPU</h4>
+        <p>Google builds custom silicon specifically for neural networks. The start of an arms race in purpose-built AI hardware that is now the binding constraint on the entire industry.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">Jun 2017</span><span class="track">research</span>
+        <h4>"Attention Is All You Need"</h4>
+        <p>Eight researchers at Google publish the Transformer. Recurrence is discarded; everything is attention. Crucially, training now parallelises across chips. Every one of the eight authors would eventually leave Google, most to found or join AI startups.</p></li>
+
+      <li data-track="research"><span class="yr">2017</span><span class="track">research</span>
+        <h4>Deep RL from human preferences</h4>
+        <p>Christiano and colleagues, in work spanning OpenAI and DeepMind, show that a model can be trained from human comparisons of its outputs rather than from a hand-written reward. Five years later this becomes the technique that makes ChatGPT pleasant to talk to.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">2018</span><span class="track">research</span>
+        <h4>GPT-1 and BERT</h4>
+        <p>OpenAI's Alec Radford shows that pretraining a Transformer on unlabelled text, then fine-tuning, beats task-specific models. Google's BERT does the same with a different objective and dominates the benchmarks. The pretrain-then-adapt era begins. Notably, BERT was the bigger deal at the time.</p></li>
+
+      <li data-track="product"><span class="yr">Feb 2019</span><span class="track">product</span>
+        <h4>GPT-2 and the staged release</h4>
+        <p>OpenAI declines to release the full model immediately, citing misuse risk. Widely mocked as a publicity stunt, but it establishes the template of AI capability as newsworthy — and teaches OpenAI how much attention a language model could attract.</p></li>
+
+      <li data-track="capital" class="big"><span class="yr">Jul 2019</span><span class="track">capital</span>
+        <h4>Microsoft invests $1bn in OpenAI</h4>
+        <p>OpenAI restructures to a capped-profit model to raise it. The money buys compute, and Microsoft becomes the exclusive cloud provider. Without this, the scaling bet is unaffordable and the story ends here.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">Jan 2020</span><span class="track">research</span>
+        <h4>Scaling laws for neural language models</h4>
+        <p>Kaplan and colleagues at OpenAI publish smooth, predictable relationships between compute, data, model size and performance. This is the document that turns AI research into an investment thesis.</p></li>
+
+      <li data-track="product" class="big"><span class="yr">Jun 2020</span><span class="track">product</span>
+        <h4>GPT-3 and the API</h4>
+        <p>175 billion parameters, and the surprise that it could perform new tasks from a few examples in the prompt with no retraining. Released as a commercial API rather than a paper. Developers were amazed; the public barely registered it. This is the moment the capability existed and nobody noticed.</p></li>
+
+      <li data-track="research"><span class="yr">2020</span><span class="track">research</span>
+        <h4>Diffusion models start working</h4>
+        <p>Ho and colleagues make denoising diffusion produce high-quality images. Within two years this underpins DALL·E 2, Midjourney and Stable Diffusion, and the image side of generative AI reaches the public before the text side does.</p></li>
+
+      <li data-track="product"><span class="yr">Jan 2021</span><span class="track">product</span>
+        <h4>DALL·E and CLIP</h4>
+        <p>OpenAI connects language and images. CLIP — which learns from image-caption pairs scraped at scale — becomes the steering mechanism for nearly every text-to-image system that follows, including open-source ones.</p></li>
+
+      <li data-track="product"><span class="yr">Jun 2021</span><span class="track">product</span>
+        <h4>GitHub Copilot</h4>
+        <p>The first genuinely mainstream generative AI product, and it went to developers. Quietly proved that people would pay monthly for a model that completes their work, eighteen months before the world noticed.</p></li>
+
+      <li data-track="product"><span class="yr">2020–21</span><span class="track">product</span>
+        <h4>Google builds Meena, then LaMDA, then shelves both</h4>
+        <p>Google Brain's chatbot is demonstrated internally and impresses. Leadership repeatedly declines to release it publicly, citing safety and fairness standards and, implicitly, the risk to search. Its two lead researchers leave the company in frustration. This decision is the hinge of the whole story.</p></li>
+
+      <li data-track="research" class="big"><span class="yr">Early 2022</span><span class="track">research</span>
+        <h4>InstructGPT</h4>
+        <p>OpenAI applies human-feedback training to GPT-3. A 1.3B-parameter version is preferred by human raters to the 175B original. Alignment turns out to be more cost-effective than a hundredfold increase in size. The product becomes possible.</p></li>
+
+      <li data-track="research"><span class="yr">Mar 2022</span><span class="track">research</span>
+        <h4>Chinchilla</h4>
+        <p>DeepMind shows that the field had been building models too large and training them on too little data. The corrected recipe yields smaller, cheaper, better models — which is exactly what you need if you intend to serve one free to the entire internet.</p></li>
+
+      <li data-track="product"><span class="yr">Apr–Aug 2022</span><span class="track">product</span>
+        <h4>DALL·E 2, Midjourney, Stable Diffusion</h4>
+        <p>Image generation goes viral across three products in five months. Stability AI releases Stable Diffusion's weights openly in August, which anyone can run on a home GPU. The public learns the phrase "generative AI" here — months before ChatGPT.</p></li>
+
+      <li data-track="product" class="big"><span class="yr">30 Nov 2022</span><span class="track">product</span>
+        <h4>ChatGPT</h4>
+        <p>Released as a low-key "research preview" of a model that already existed. Free, no waitlist, no API key, no prompt engineering required. One million users in five days; one hundred million in two months, the fastest consumer adoption on record. The technology was eighteen months old. The interface was new.</p></li>
+
+      <li data-track="capital"><span class="yr">Dec 2022 – 2023</span><span class="track">capital</span>
+        <h4>Code red, and the race</h4>
+        <p>Google declares an internal emergency and rushes Bard out. Microsoft puts GPT-4 into Bing. Meta releases LLaMA, and its leak seeds the open-weights ecosystem. Every large company on earth acquires an AI strategy within about six months.</p></li>
+
+      <li data-track="capital"><span class="yr">2024–26</span><span class="track">capital</span>
+        <h4>The infrastructure supercycle</h4>
+        <p>Attention shifts from models to the physical plant: chips, data centres, power. Hyperscaler capital expenditure runs into the hundreds of billions annually, and electricity supply becomes the binding constraint. Meanwhile reasoning models and agents shift the frontier from knowing things to doing things.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="sudden">
+  <div class="wrap">
+    <p class="q">Your core question</p>
+    <h2>Why it felt sudden when it wasn't</h2>
+    <p class="lede">The capability curve was smooth. The access curve was a cliff. Four things happened between GPT-3 in June 2020 and ChatGPT in November 2022, and none of them was a breakthrough in intelligence.</p>
+
+    <ul class="pts">
+      <li><strong>The model learned to take instructions.</strong> GPT-3 was a text completer. Ask it a question and it might continue with more questions, because that is what a page of questions looks like on the internet. Getting useful output required knowing how to construct prompts. Human-feedback training closed that gap, and the difference between "powerful if you know how to hold it" and "works when you type a sentence" is the entire difference between a research artefact and a product.</li>
+      <li><strong>Inference got cheap enough to give away.</strong> Serving a model to millions of people for free is a per-query cost, forever. The Chinchilla correction, quantisation, better serving infrastructure and falling compute prices moved free consumer access from insane to merely very expensive. This is an underrated part of the timing.</li>
+      <li><strong>The interface removed every barrier at once.</strong> No waitlist, no credit card, no API key, no documentation, no installation. A text box on a web page. Compare with GPT-3, which had the same underlying capability but sat behind a developer signup — and reached a tiny fraction of the audience. The conversational frame also did something subtler: it told people what the thing was for, which a completion API never did.</li>
+      <li><strong>The incumbent held back and the challenger did not.</strong> Google had equivalent technology and repeatedly declined to release it, because a chatbot that says something wrong is a brand crisis for a company whose product is answers, and because answering questions directly cannibalises the search business it funds everything with. OpenAI had no search revenue to protect and no brand to damage. This is a textbook innovator's dilemma, and it is why the company that invented the Transformer was second to market with it.</li>
+    </ul>
+
+    <div class="callout">
+      <h3>The pattern worth naming: capability overhang</h3>
+      <p>For roughly two years, a capability existed that almost nobody was using, because the last mile of usability had not been built. When it was built, adoption did not grow — it detonated, because all the latent demand released at once.</p>
+      <p>This is not unique to AI. It is the same shape as the graphical interface versus the command line, or SMS versus WhatsApp. But it is worth internalising, because it means <strong>the useful question about any AI capability is rarely "does it exist?" — it is "what is still between it and a person who could use it?"</strong> That gap is usually interface, trust and cost, not intelligence. And it can close very fast.</p>
+    </div>
+  </div>
+</section>
+
+<section id="covid">
+  <div class="wrap">
+    <p class="q">Your question 4</p>
+    <h2>The COVID question</h2>
+    <p class="lede">Worth separating the timing from the causation, because the popular version of this story is slightly wrong in a way that matters.</p>
+
+    <p><strong>First, the correction.</strong> Generative AI did not go mainstream during the pandemic. ChatGPT launched on 30 November 2022, by which point most of the world had returned to something like normal life. What is true is that the entire pipeline from research result to shipped product ran inside the pandemic window: scaling laws in January 2020, GPT-3 that June, DALL·E in January 2021, Copilot that June, then the image-generation wave through 2022. The work was done in lockdown. The unveiling came after.</p>
+
+    <p><strong>Second, the real mechanisms.</strong> COVID was not the cause, but it was a genuine accelerant, through four channels that are easy to miss.</p>
+
+    <div class="cols" style="margin-top:34px">
+      <div class="col-a">
+        <h3>What COVID actually contributed</h3>
+        <ul>
+          <li><strong>Extremely cheap money.</strong> The 2020–21 monetary response produced one of the largest risk-capital surges in history. Stability AI, Midjourney, Anthropic, Cohere, Hugging Face and others were funded in that window. AI research is unusually capital-hungry and this was the cheapest capital anyone had ever seen.</li>
+          <li><strong>A forced cloud buildout.</strong> Overnight, every organisation on earth needed remote infrastructure. Hyperscalers expanded aggressively, and the GPU capacity that expansion created was available when model training demand arrived.</li>
+          <li><strong>Digital-first became the default behaviour.</strong> Two years of doing everything through a browser tab lowered the psychological barrier to a new tool that also lived in a browser tab. A conversational assistant landed on a population newly habituated to talking to software.</li>
+          <li><strong>The 2022 crypto collapse.</strong> Often forgotten. It freed up GPU supply and, more importantly, left a large pool of technology capital and attention looking for the next narrative. Generative AI arrived almost exactly on cue.</li>
+        </ul>
+      </div>
+      <div class="col-b">
+        <h3>What it didn't contribute</h3>
+        <ul>
+          <li><strong>Any of the science.</strong> The Transformer, self-supervised pretraining, scaling laws, diffusion and RLHF were all either published or well underway before March 2020. None of the intellectual work was pandemic-driven.</li>
+          <li><strong>The timing of the launch.</strong> ChatGPT shipped when it did because InstructGPT worked, because serving costs had fallen, and — by several accounts — because OpenAI was worried about being beaten to market. Not because of anything epidemiological.</li>
+          <li><strong>The adoption spike.</strong> The explosion happened in early 2023, in a world that was back in offices. If lockdown boredom were the driver, the curve would have peaked eighteen months earlier.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:34px">The fair summary for a brown bag: <strong>COVID did not create generative AI, but it did fund it, build the data centres for it, and train the public to live inside a browser tab.</strong> It compressed the timeline by perhaps a year or two. It did not cause the thing.</p>
+  </div>
+</section>
+
+<section id="credit">
+  <div class="wrap">
+    <p class="q">Your question 5</p>
+    <h2>Is OpenAI really who we have to thank?</h2>
+    <p class="lede">The most contested question in the set, and the one where the popular answer is furthest from the record. Here is the ledger.</p>
+
+    <div class="scroller">
+      <table class="ledger">
+        <thead>
+          <tr><th>Who</th><th>What they contributed</th><th>Where the credit actually sits</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hinton, LeCun, Bengio</td>
+            <td>Backpropagation in practice, convolutional networks, and the stubbornness to keep working on neural networks through two decades in which the field considered them a dead end.</td>
+            <td>Foundational. Turing Award in 2018, before most people had heard of any of this.</td>
+          </tr>
+          <tr>
+            <td>Hochreiter &amp; Schmidhuber</td>
+            <td>LSTM, which made sequence modelling work at all and powered translation and speech for two decades before Transformers.</td>
+            <td>Essential predecessor, chronically under-credited.</td>
+          </tr>
+          <tr>
+            <td>Fei-Fei Li and the ImageNet team</td>
+            <td>The dataset that made the 2012 breakthrough measurable, plus the insight that data — not algorithms — was the binding constraint.</td>
+            <td>Made the paradigm shift legible. Often left out entirely.</td>
+          </tr>
+          <tr>
+            <td>NVIDIA</td>
+            <td>CUDA, and a decade of investment in making graphics hardware programmable for science before there was any AI market to justify it.</td>
+            <td>The accidental keystone. None of this runs without it.</td>
+          </tr>
+          <tr class="spot">
+            <td>Google</td>
+            <td>Word2vec, sequence-to-sequence, the Transformer, BERT, TPUs, T5, foundational diffusion work, and a working conversational assistant in Meena and LaMDA years before ChatGPT.</td>
+            <td><strong>Invented more of generative AI than anyone else, and shipped almost none of it.</strong> Declined to release its chatbot on safety, fairness and business-risk grounds.</td>
+          </tr>
+          <tr>
+            <td>Montreal / Bahdanau, Cho, Bengio</td>
+            <td>The attention mechanism itself, in 2014, three years before the Transformer generalised it.</td>
+            <td>The idea in "Attention Is All You Need" is partly theirs.</td>
+          </tr>
+          <tr>
+            <td>Goodfellow; Sohl-Dickstein and Ho</td>
+            <td>GANs, then diffusion — the two families that made image generation work. Diffusion sat ignored for five years before anyone got it to produce good pictures.</td>
+            <td>The entire visual half of generative AI.</td>
+          </tr>
+          <tr class="spot">
+            <td>OpenAI</td>
+            <td>Comparatively few new architectures. What it did contribute: conviction that scaling would keep working when most of the field doubted it; the empirical scaling laws; CLIP; productionised RLHF; and the decision to put a free chat interface in front of the entire public.</td>
+            <td><strong>Not the inventor. The one that was right about scale, and the one that shipped.</strong></td>
+          </tr>
+          <tr>
+            <td>Microsoft</td>
+            <td>The capital and compute that made the scaling bet affordable, starting with a billion dollars in 2019.</td>
+            <td>Without this, OpenAI's conviction stays theoretical.</td>
+          </tr>
+          <tr>
+            <td>Stability AI, Meta, the open-source community</td>
+            <td>Open weights for Stable Diffusion and LLaMA, which broke the assumption that frontier capability had to live behind an API and seeded an entire independent ecosystem.</td>
+            <td>Why there is a market rather than a monopoly.</td>
+          </tr>
+          <tr>
+            <td>Everyone who ever published anything online, and the annotators</td>
+            <td>The training corpus, contributed without consent or payment. Plus the low-paid workers in Kenya, Venezuela and elsewhere who labelled data and built the content filters that made these systems shippable.</td>
+            <td>The largest and least acknowledged contribution in the whole ledger.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <h3>The verdict</h3>
+      <p><strong>OpenAI is the pioneer of generative AI as a product, not as a technology.</strong> If the question is who invented the machinery, the honest answer is a diffuse community of researchers over eighty years, with Google contributing more of the decisive pieces than any other single organisation. If the question is who made it arrive, that is OpenAI, and the credit is real — being right about scaling when your entire field is sceptical is a genuine intellectual achievement, not just a marketing one, and shipping to the public is a decision with real risk attached.</p>
+      <p>The useful framing is that <strong>invention and distribution are different skills, and the second one is what the world experiences.</strong> Xerox PARC invented the graphical interface; Apple and Microsoft delivered it. Nobody remembers PARC. Google is currently living through the same thing with a paper it published in 2017.</p>
+    </div>
+  </div>
+</section>
+
+<section id="takeaways">
+  <div class="wrap">
+    <h2>What to take away</h2>
+    <p class="lede">Five points that survive the details, and that generalise beyond this one technology.</p>
+
+    <ol class="takeaways">
+      <li>
+        <b>Nothing about this was sudden except the distribution</b>
+        <p>Eighty years of research, fifteen years of compute buildout, ten years of the deep learning paradigm, five years of Transformers. The discontinuity in late 2022 was in access, not capability. When you hear that an AI capability "appeared overnight," the correct response is to ask how long it had been sitting in a paper.</p>
+      </li>
+      <li>
+        <b>The unlocks were mostly economic, not scientific</b>
+        <p>Cheap parallel compute, free training data via self-supervision, a parallelisable architecture, a predictable return curve, and falling inference cost. Four of those five are about cost and scale rather than about a new idea. Progress in this field has been bought at least as much as it has been discovered.</p>
+      </li>
+      <li>
+        <b>The last mile is where the value was created</b>
+        <p>A 1.3-billion-parameter model tuned on human feedback beat a 175-billion-parameter model that wasn't. The gap between a capable system and a usable one was worth more than a hundredfold increase in raw scale. Applies directly to anything you are building: the model is rarely the hard part.</p>
+      </li>
+      <li>
+        <b>Incumbency is a real handicap here</b>
+        <p>Google had the technology, the talent, the data and the compute, and lost the market anyway — because it had a profitable business to protect and a brand that could be damaged. Careful institutions under-ship. That is worth remembering both as a warning and as a reason the caution had some merit.</p>
+      </li>
+      <li>
+        <b>Watch the overhang, not the headlines</b>
+        <p>The most predictable thing about the next few years is that some capability which already exists in a paper or an internal demo will suddenly become universal because somebody removes the friction. The forecasting question is not what will be invented. It is what already works and is still too awkward, expensive, or reputationally risky to put in front of people.</p>
+      </li>
+    </ol>
+
+    <p class="pull">Invention makes the headlines. Distribution makes the history.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h3>Notes and sources</h3>
+    <p>Assembled from primary papers and contemporary reporting: Krizhevsky, Sutskever &amp; Hinton on ImageNet classification (2012); Vaswani et al., "Attention Is All You Need" (2017); Christiano et al. on deep reinforcement learning from human preferences (2017); Radford et al. on generative pretraining (2018); Kaplan et al. on scaling laws (2020); Brown et al. on GPT-3 (2020); Ho et al. on denoising diffusion (2020); Ouyang et al. on InstructGPT (2022); Hoffmann et al. on compute-optimal training, "Chinchilla" (2022). Contemporary reporting on Google's decision not to release Meena and LaMDA drawn from Slate, CNBC and Business Insider coverage from December 2022 onward, and from accounts by former Google staff including Noam Shazeer and Gaurav Nemade.</p>
+    <p>Adoption figures: ChatGPT reached one million users in five days and roughly one hundred million within two months of its 30 November 2022 launch. OpenAI confirmed 900 million weekly active users in February 2026; reporting since then places the figure at or near one billion, though these later numbers vary by source and should be treated as approximate.</p>
+    <p>Dates for research papers refer to first public release, which sometimes precedes formal publication by months. Where sources disagree on precise dates, the earlier public appearance has been used.</p>
+    <p>Prepared 18 September 2026.</p>
+  </div>
+</footer>
+
 <script>
 (function(){
-  "use strict";
-  var ITER=600000;
-  var msg=document.getElementById('msg'), bar=document.getElementById('bar'),
-      go=document.getElementById('go'), pw=document.getElementById('pw');
-
-  function say(t,cls){ msg.className='msg'+(cls?' '+cls:''); msg.textContent=t; }
-
-  function b64(s){
-    var bin=atob(s), n=bin.length, out=new Uint8Array(n);
-    for(var i=0;i<n;i++) out[i]=bin.charCodeAt(i);
-    return out;
-  }
-
-  async function inflate(bytes){
-    if(typeof DecompressionStream==='undefined')
-      throw new Error('This browser is too old to open the page. Try a current Chrome, Safari, Firefox or Edge.');
-    var ds=new DecompressionStream('gzip');
-    var stream=new Blob([bytes]).stream().pipeThrough(ds);
-    return new Response(stream).text();
-  }
-
-  async function unlock(pass){
-    if(!window.crypto||!window.crypto.subtle)
-      throw new Error('Secure decryption is unavailable here. Open this file over https:// or directly from disk.');
-
-    var raw=b64(document.getElementById('d').textContent.trim());
-    var salt=raw.slice(0,16), iv=raw.slice(16,28), body=raw.slice(28);
-
-    var base=await crypto.subtle.importKey('raw', new TextEncoder().encode(pass),
-      'PBKDF2', false, ['deriveKey']);
-    var key=await crypto.subtle.deriveKey(
-      { name:'PBKDF2', salt:salt, iterations:ITER, hash:'SHA-256' },
-      base, { name:'AES-GCM', length:256 }, false, ['decrypt']);
-
-    var plain=await crypto.subtle.decrypt({ name:'AES-GCM', iv:iv }, key, body);
-    return inflate(new Uint8Array(plain));
-  }
-
-  document.getElementById('f').addEventListener('submit', async function(e){
-    e.preventDefault();
-    var pass=pw.value;
-    if(!pass){ say('Enter the passphrase.','err'); pw.focus(); return; }
-
-    go.disabled=true; pw.disabled=true; bar.classList.add('on');
-    say('Deriving the key\u2026');
-    await new Promise(function(r){ setTimeout(r,30); });
-
-    try{
-      var html=await unlock(pass);
-      say('Unlocked.','ok');
-      pass=null; pw.value='';
-      setTimeout(function(){
-        document.open();
-        document.write(html);
-        document.close();
-      }, 140);
-    }catch(err){
-      bar.classList.remove('on');
-      go.disabled=false; pw.disabled=false;
-      var m=(err && err.message) || '';
-      if(/too old|unavailable/i.test(m)) say(m,'err');
-      else say('That passphrase does not open this file.','err');
-      pw.value=''; pw.focus();
-    }
+  var buttons = document.querySelectorAll('.filters button');
+  var items = document.querySelectorAll('#tl li');
+  if(!buttons.length || !items.length) return;
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var f = btn.getAttribute('data-f');
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      items.forEach(function(li){
+        if(f === 'all' || li.getAttribute('data-track') === f){ li.removeAttribute('hidden'); }
+        else { li.setAttribute('hidden',''); }
+      });
+    });
   });
-
-  pw.focus();
 })();
 </script>
+
 </body>
 </html>

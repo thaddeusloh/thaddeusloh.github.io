@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Utopia — book overview &amp; summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1EFF6;
+  --paper-2:#E7E4EF;
+  --ink:#1F1C31;
+  --ink-soft:#575072;
+  --rule:#CFC9DE;
+  --violet:#5B3FA8;
+  --gold:#9A7318;
+  --card:#F8F7FB;
+  --measure:39rem;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#15122100;
+    --paper:#151221;
+    --paper-2:#100E1A;
+    --ink:#E9E6F2;
+    --ink-soft:#A49CC0;
+    --rule:#332C4A;
+    --violet:#A48BF0;
+    --gold:#D9B45C;
+    --card:#1D1930;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Karla,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:Fraunces,Georgia,"Times New Roman",serif;font-variation-settings:'SOFT' 40,'WONK' 1;}
+a{color:inherit;text-decoration-color:var(--violet);text-underline-offset:3px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:3px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--rule);background:var(--paper-2);
+  padding:clamp(2.5rem,7vw,5.5rem) 1.25rem clamp(2.2rem,4vw,3.5rem)}
+.rosette{position:absolute;right:-14vw;top:-22vw;width:64vw;height:64vw;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 20deg,
+    rgba(91,63,168,.20), rgba(154,115,24,.16), rgba(91,63,168,.06),
+    rgba(154,115,24,.18), rgba(91,63,168,.20), rgba(154,115,24,.08), rgba(91,63,168,.20));
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 32%, transparent 72%);
+  mask-image:radial-gradient(circle at 50% 50%, #000 32%, transparent 72%);
+  opacity:.9}
+.hero-inner{position:relative;max-width:52rem;margin:0 auto}
+.kicker{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin:0 0 1.1rem}
+h1{font-weight:700;font-size:clamp(2.7rem,9.5vw,5.4rem);line-height:.95;letter-spacing:-.03em;margin:0}
+h1 .sub{display:block;font-family:Karla;font-weight:500;font-size:clamp(1rem,3vw,1.45rem);letter-spacing:0;
+  color:var(--ink-soft);margin-top:.85rem;line-height:1.25}
+.premise{margin:2.4rem 0 0;max-width:33rem;border-top:3px solid var(--violet);padding-top:1.3rem}
+.premise p{margin:0 0 .85rem;font-size:1.2rem;line-height:1.5}
+.premise .ans{margin:0;font-weight:700;font-size:1rem;color:var(--violet);line-height:1.5}
+.meta-row{display:flex;flex-wrap:wrap;gap:.45rem 2rem;margin-top:2.3rem;font-size:.83rem;color:var(--ink-soft)}
+.meta-row b{color:var(--ink)}
+
+/* nav */
+nav.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.toc ul{display:flex;gap:1.3rem;overflow-x:auto;list-style:none;margin:0 auto;padding:.7rem 1.25rem;max-width:64rem}
+.toc a{font-size:.82rem;font-weight:500;white-space:nowrap;text-decoration:none;color:var(--ink-soft);
+  padding-bottom:2px;border-bottom:2px solid transparent}
+.toc a.on{color:var(--ink);border-bottom-color:var(--gold)}
+
+main{max-width:52rem;margin:0 auto;padding:0 1.25rem 5rem}
+section{padding:3.4rem 0 .5rem;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+h2{font-weight:700;font-size:clamp(1.55rem,4.6vw,2.2rem);letter-spacing:-.02em;line-height:1.08;margin:0 0 1.4rem;max-width:24ch}
+h3{font-weight:600;font-size:1.08rem;margin:2rem 0 .5rem}
+p{max-width:var(--measure)}
+.lede{font-size:1.09rem;color:var(--ink-soft)}
+ul.plain{max-width:var(--measure);padding-left:1.1rem;margin:.6rem 0 1.2rem}
+ul.plain li{margin:.5rem 0}
+.note{font-size:.9rem;color:var(--ink-soft);max-width:var(--measure)}
+
+/* two-state comparison */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:var(--measure);margin:1.6rem 0 1.4rem}
+.pair div{border:1px solid var(--rule);background:var(--card);padding:1rem 1.1rem}
+.pair h4{margin:0 0 .35rem;font-size:.95rem;font-family:Fraunces;font-weight:600;color:var(--violet)}
+.pair p{margin:0;font-size:.96rem}
+@media(max-width:560px){.pair{grid-template-columns:1fr}}
+
+/* week */
+.day{padding:2.2rem 0;border-top:1px solid var(--rule)}
+.day:first-of-type{border-top:none}
+.dayname{font-family:Fraunces;font-weight:700;font-size:1.9rem;letter-spacing:-.025em;line-height:1;margin:0 0 .15rem}
+.daytag{font-size:.78rem;font-weight:700;color:var(--gold);margin:0 0 .9rem}
+.day p,.day ul{max-width:34.5rem}
+.moves{list-style:none;padding:0;margin:.9rem 0 0;border-left:2px solid var(--rule)}
+.moves li{padding:.1rem 0 .1rem .85rem;margin:.4rem 0;font-size:.97rem}
+.moves b{font-weight:700}
+.carry{margin-top:1rem;font-size:.92rem;line-height:1.5;border-top:1px dotted var(--rule);padding-top:.7rem;max-width:34.5rem}
+.carry span{color:var(--violet);font-weight:700}
+
+/* ladder */
+.ladder{max-width:var(--measure);margin:1.4rem 0 0;counter-reset:rung}
+.ladder details{border-top:1px solid var(--rule);padding:.15rem 0}
+.ladder details:last-child{border-bottom:1px solid var(--rule)}
+.ladder summary{cursor:pointer;list-style:none;padding:.85rem 0;font-weight:700;font-size:.99rem;display:flex;gap:.8rem;align-items:baseline}
+.ladder summary::-webkit-details-marker{display:none}
+.ladder summary::before{counter-increment:rung;content:counter(rung);font-family:Fraunces;color:var(--gold);font-size:.9rem;min-width:1.1rem}
+.ladder summary::after{content:'+';margin-left:auto;color:var(--violet);font-weight:400;font-size:1.2rem;line-height:1}
+.ladder details[open] summary::after{content:'–'}
+.ladder p{margin:0 0 .95rem 1.9rem;font-size:.96rem;color:var(--ink-soft);max-width:32rem}
+
+/* glossary */
+dl.gloss{max-width:var(--measure);margin:1.2rem 0 0}
+dl.gloss dt{font-family:Fraunces;font-weight:600;font-size:.99rem;margin-top:1.15rem;color:var(--violet)}
+dl.gloss dd{margin:.2rem 0 0}
+
+/* facts */
+.facts{list-style:none;padding:0;margin:1rem 0 0;max-width:var(--measure)}
+.facts li{padding:.85rem 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:6rem 1fr;gap:1rem}
+.facts li:last-child{border-bottom:1px solid var(--rule)}
+.facts .tag{font-weight:700;font-size:.82rem;color:var(--gold);line-height:1.45}
+.facts p{margin:0;font-size:.97rem}
+@media(max-width:560px){.facts li{grid-template-columns:1fr;gap:.1rem}}
+
+blockquote.pull{margin:2rem 0;padding:0 0 0 1.2rem;border-left:3px solid var(--gold);max-width:34rem;
+  font-family:Fraunces;font-size:1.1rem;line-height:1.45}
+footer{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 4rem;border-top:1px solid var(--rule);font-size:.86rem;color:var(--ink-soft)}
+footer p{max-width:var(--measure)}
+.totop{font-weight:700;font-size:.82rem;text-decoration:none;color:var(--violet)}
+@media print{nav.toc,.rosette{display:none}body{background:#fff;color:#000;font-size:11pt}
+  .day{page-break-inside:avoid}.ladder details{ }}
+</style>
+</head>
+<body id="top">
+
+<header class="hero">
+  <div class="rosette" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="kicker">Book overview &amp; summary</p>
+    <h1>Deep Utopia
+      <span class="sub">Life and Meaning in a Solved World — Nick Bostrom (2024)</span>
+    </h1>
+    <div class="premise">
+      <p>Suppose the AI transition goes <i>well</i>. No catastrophe, no tyranny, no scarcity. Machines can do everything you might do, better — including the things you do for fun. What is left for you?</p>
+      <p class="ans">Bostrom calls this the problem of utopia: the problem we get after we have solved all the other problems.</p>
+    </div>
+    <div class="meta-row">
+      <span><b>Published</b> 27 March 2024, Ideapress</span>
+      <span><b>Length</b> ~527 pages</span>
+      <span><b>Form</b> Six lectures, Monday to Saturday</span>
+      <span><b>Companion to</b> Superintelligence (2014)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#terms">Key terms</a></li>
+    <li><a href="#week">The week, day by day</a></li>
+    <li><a href="#ladder">The anti-cheating ladder</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curios">Interesting facts</a></li>
+    <li><a href="#critics">The pushback</a></li>
+    <li><a href="#practice">Where it bites</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#discuss">Discussion</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<section id="argument">
+  <h2>The whole book in one page</h2>
+  <p class="lede">Bostrom's previous famous book asked what happens if AI goes badly. This one assumes it goes as well as it possibly could — and then asks whether we would have any idea what to do with ourselves.</p>
+
+  <p>The setting is what he calls <b>technological maturity</b>: a condition in which our control over nature is close to the physical maximum. Matter rearranges on request. Bodies and minds are editable. Nothing needs building, curing, or discovering, because it can all be done instantly and better by something that isn't you. He is explicit that this is not a forecast. It is a thought experiment run at extreme settings — a philosophical particle accelerator, in his phrase — used to find out which of our values are fundamental and which were only ever scaffolding.</p>
+
+  <p>The crux is a distinction almost everyone misses. Most debate about automation concerns what he calls <b>shallow redundancy</b>: jobs disappear, and people need something to do. That, he thinks, is the easy version. It has been handled before by aristocrats, retirees, students and monastics, and it mostly calls for a culture that takes leisure seriously.</p>
+
+  <div class="pair">
+    <div><h4>Shallow redundancy</h4><p>Machines do the paid work. You still have hobbies, projects, self-improvement, people to help. The problem is social and cultural.</p></div>
+    <div><h4>Deep redundancy</h4><p>Machines do the unpaid work too — better. Your exercise, study, cooking, even your parenting make outcomes <i>worse</i> than leaving it to them. The problem is existential.</p></div>
+  </div>
+
+  <p>Deep redundancy is the book's real subject, and it is uncomfortable because so many things we treat as intrinsically worthwhile turn out to be instrumental once you look. Shopping is partly the pleasure of finding the right thing — pointless if a system already knows what you want. Exercise is a means to health you could simply be given. Learning is acquisition of knowledge that could be written directly into you. Even parenting, on his hardest case, could be done better by something designed for it, so doing it yourself would be a small harm you inflict on your child for your own sense of purpose. He calls the resulting condition <b>post-instrumental</b>: nothing you do is <i>needed</i>.</p>
+
+  <p>The rest of the book is an inventory of what might still be worth having. Pleasure in a broad sense — not tawdry wireheading but engineered states of appreciation, awe and contentment without the usual aftertaste. Autotelic activity, done for its own sake. Artificial purpose, in the way that a footballer accepts silly rules in order to have a challenge worth meeting. Social entanglement: things that cannot be outsourced because their whole point is that <i>you</i> did them — a gift you made, a promise you kept, a rite you observed, a dead grandmother's wish you honoured.</p>
+
+  <p>And a persistent worry runs alongside: would such a life be boring? Bostrom separates <b>boredom</b>, a mental state that could trivially be engineered away, from <b>boringness</b>, an objective property. He argues we systematically overvalue interestingness because we confuse lives that are good to live with lives that are good to read about. A perfect life makes a terrible novel. That is a fact about novels.</p>
+</section>
+
+<section id="terms">
+  <h2>The vocabulary you need</h2>
+  <dl class="gloss">
+    <dt>Technological maturity</dt>
+    <dd>A condition in which the available capabilities afford control over nature close to the maximum achievable in the fullness of time. Not omnipotence — physics still binds — but the practical ceiling.</dd>
+
+    <dt>Plasticity</dt>
+    <dd>The power to have matter arrange itself into any preferred local configuration on request. It is power over <i>nature</i>, never over other agents, whose preferences still conflict with yours.</dd>
+
+    <dt>Autopotency</dt>
+    <dd>Plasticity turned inward: the ability to edit your own body, mind, moods and desires. It is what makes the book's questions sharp — if you can want anything, wanting becomes a design choice rather than a given.</dd>
+
+    <dt>Post-instrumentality</dt>
+    <dd>The state in which human effort serves no practical purpose, because anything worth doing can be done better by something else.</dd>
+
+    <dt>Shallow vs deep redundancy</dt>
+    <dd>Redundancy at work versus redundancy at everything, leisure included. The first is an economic problem; the second is a problem about what a person is for.</dd>
+
+    <dt>Autotelic activity</dt>
+    <dd>Something done for its own sake rather than for an outcome. Genuinely autotelic activities turn out to be rarer than people assume — most hobbies smuggle in an instrumental payoff.</dd>
+
+    <dt>Artificial purpose</dt>
+    <dd>Constraints adopted voluntarily to generate challenge, the way a sport's rules forbid the easy route to the goal. In a solved world these could be manufactured deliberately.</dd>
+
+    <dt>Interestingness (and its scale-dependence)</dt>
+    <dd>How much novelty and significance something carries — which changes depending on the scale you measure at. The same change can increase diversity locally while reducing it globally.</dd>
+
+    <dt>Living kaleidoscope</dt>
+    <dd>His image for a mature civilisation that no longer grows: fixed rules and bounded parameters producing endlessly recombining patterns. Sameness at one level, inexhaustible richness at another.</dd>
+
+    <dt>Utopia-free zones</dt>
+    <dd>Mentioned only in passing, but the book's most provocative idea: regions where the safety net is switched off, so that risk, effort and failure are real again.</dd>
+  </dl>
+</section>
+
+<section id="week">
+  <h2>The week, day by day</h2>
+  <p class="lede">The book is a series of lectures delivered by a fictionalised Bostrom over six days, interrupted by students, a blackout, a fire alarm and a meddling dean. Handouts, assigned readings and a frame story about three friends who gatecrash the lectures are woven through.</p>
+
+  <div class="day">
+    <p class="daytag">Front matter</p>
+    <h3 class="dayname">Preface</h3>
+    <p>Sets the terms. Bostrom concedes the topic sounds frivolous — we are, as he puts it, in no imminent danger of running out of woe — and defends it anyway: extreme hypotheticals are a way of testing what our values actually rest on. He also flags that the book's central concern is not the post-work problem everyone discusses, but the deeper one behind it.</p>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture one</p>
+    <h3 class="dayname">Monday</h3>
+    <p>The economics of a world of machines, and whether abundance really arrives. He starts from the argument that the rich already show us what post-work life looks like, then complicates it: needs keep expanding, new niceties keep appearing, and Keynes's famous prediction of a fifteen-hour week never landed despite the growth that was supposed to deliver it.</p>
+    <ul class="moves">
+      <li><b>Perfect vs imperfect automation.</b> A simple three-factor model of what happens to wages and work when machines substitute for labour completely rather than partially.</li>
+      <li><b>The Malthusian trap.</b> Population can grow exponentially; resources, even with space settlement bounded by light speed, can grow at best polynomially. Abundance per person is therefore not guaranteed by technology alone.</li>
+      <li><b>Different timescales.</b> Things that look like permanent escape from scarcity may be temporary disequilibria on a longer view.</li>
+      <li><b>Feodor the Fox.</b> The first instalment of an allegorical fable, assigned as homework, about woodland animals trying to work out how to make the world better.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> material abundance is a coordination achievement, not an automatic consequence of capability.</div>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture two</p>
+    <h3 class="dayname">Tuesday</h3>
+    <p>The most load-bearing lecture: what a "solved world" actually means, and what remains impossible inside it. This is where technological maturity, plasticity and autopotency get defined, and where the limits are mapped.</p>
+    <ul class="moves">
+      <li><b>Cosmic endowment.</b> How much of the universe is reachable at all. On current physics, the answer is finite — and shrinking.</li>
+      <li><b>Prudential barriers.</b> Some capabilities may be permanently off-limits because the experiment that would prove them safe is itself the dangerous one.</li>
+      <li><b>Axiological contours.</b> Limits that come from our values rather than from physics. Positional goods like status stay scarce by definition; so, arguably, does novelty — you get one first kiss.</li>
+      <li><b>What machines can't do for you.</b> A first pass at the category that will matter most later: tasks whose value depends on the identity of the doer.</li>
+      <li><b>Coordination.</b> Getting to any of this requires governance and wisdom, not just power. Bostrom says so clearly, then sets it aside — the book is about the destination, not the route.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> even a solved world has a shape; the interesting questions live at its edges.</div>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture three</p>
+    <h3 class="dayname">Wednesday</h3>
+    <p>Full unemployment — the shallow problem, taken seriously and then dispatched. He walks through the old pessimism that people freed from work will simply brawl, overeat, drink and sleep late, and answers it with the historical templates of <i>otium</i>: the leisure cultures of aristocrats, monastics, students, retirees. None is a representative sample, which is the point — there is no single default for what humans do with unstructured time.</p>
+    <ul class="moves">
+      <li><b>Leisure culture as an achievement.</b> Schooling currently produces workers. A post-work society would need institutions that produce people skilled at enjoying life, and status that isn't tied to economic contribution.</li>
+      <li><b>Cultural asymmetries.</b> The Protestant work ethic against traditions built on non-attachment — under which manufacturing new desires just to have something to strive for looks perverse.</li>
+      <li><b>The greyhound and the lure.</b> The book's cover question. The dog catches the mechanical hare. Now what?</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the post-work problem is real but tractable. The next one isn't.</div>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture four</p>
+    <h3 class="dayname">Thursday</h3>
+    <p>Deep redundancy arrives, and with it the book's actual subject. The argument works by taking activities that seem obviously worth doing for their own sake and showing how much instrumental value they were quietly carrying. Exercise, shopping, study and craft all fall, one after another, to a world where the outcome can simply be supplied.</p>
+    <ul class="moves">
+      <li><b>The parenting case.</b> The hardest one, and he does not flinch: longer lives shrink the share spent raising children, most of parenting is chores, and superior caregivers would make DIY parenting a small cost imposed on your child.</li>
+      <li><b>From redundancy to harm.</b> The sting is not that your effort is unnecessary but that it can become counterproductive — purpose collapses faster than enjoyment does.</li>
+      <li><b>Handouts.</b> Extended technical footnotes, including a long one on whether knowledge could be written into a brain directly, which is what makes learning-for-its-own-sake vulnerable.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> most of what we call purpose is instrumental value wearing a disguise.</div>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture five</p>
+    <h3 class="dayname">Friday</h3>
+    <p>The inventory of what might survive. Pleasure comes first, and Bostrom asks readers not to sneer at it: our disgust at wireheading is calibrated on cheap, self-defeating versions. A broad positive hedonic tone, free of hangover and self-contempt, could carry an enormous amount — days composed like small works of art that accumulate into something larger.</p>
+    <ul class="moves">
+      <li><b>Capacity over content.</b> To make a world more beautiful you need better appreciation more than more art. The same duck's beak is inexhaustible to a sufficiently sensitive observer, and useless to a guard dog in a gallery.</li>
+      <li><b>Boredom vs boringness.</b> The first is a mental state and can be engineered away; the second is an objective judgement, and we weight it too heavily because we confuse good lives with good stories.</li>
+      <li><b>Interestingness is scale-relative.</b> His two-cities example shows that mixing populations can raise diversity locally while lowering it regionally — so "will it all be samey?" has no scale-free answer.</li>
+      <li><b>The suffering caveat.</b> He pauses to state plainly that because the lectures are about utopia rather than dystopia, they say little about suffering — and that reducing it, especially extreme suffering, should remain a criterion of the very highest importance.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> renewable values beat intense ones over long timescales. The ten-thousandth cup of tea still works.</div>
+  </div>
+
+  <div class="day">
+    <p class="daytag">Lecture six</p>
+    <h3 class="dayname">Saturday</h3>
+    <p>Meaning, as distinct from pleasure and purpose. He engages the philosophical literature on meaning in life, including Thaddeus Metz's account, and works through what could anchor it when nothing needs doing: an encompassing transcendental purpose, religious observance, commitments to particular people, obligations to the dead. Nietzsche and Camus get their turn alongside a decabillionaire's gigayacht.</p>
+    <ul class="moves">
+      <li><b>Significance reconsidered.</b> Most people today make little measurable difference to the world and nonetheless have good lives. Bostrom goes further and suggests we might be better off <i>less</i> significant — less responsibility, less opportunity to cause harm.</li>
+      <li><b>The gamble.</b> A closing thought experiment: what probability of instant death would you accept for a chance at the best possible life? Your answer reveals how much you actually think utopia is worth.</li>
+      <li><b>No tidy conclusion.</b> The lecture series runs out of time rather than arriving. Reviewers have noted this; whether it is a failure or the honest ending is a matter of taste.</li>
+    </ul>
+    <div class="carry"><span>Carry forward:</span> the question is left standing on purpose — the book is a survey of possible answers, not a verdict.</div>
+  </div>
+</section>
+
+<section id="ladder">
+  <h2>The anti-cheating ladder</h2>
+  <p class="lede">The clearest way to hold the book's argument in your head. Each rung is a stricter standard for what would count as a life not merely pleasant but legitimately lived — and each has an answer, until the answers run out.</p>
+
+  <div class="ladder">
+    <details>
+      <summary>"I just don't want to be miserable."</summary>
+      <p>Solved, and cheaply. Engineered bliss without the tawdriness of drugs — states combining the joy of a birth, the thrill of a discovery and the rapture of a mystic, varied endlessly. Bostrom asks us not to dismiss this out of hand, since our revulsion is calibrated on bad approximations.</p>
+    </details>
+    <details>
+      <summary>"But that's wireheading. I want to actually appreciate something."</summary>
+      <p>Also available. You can be enhanced into a superb appreciator and spend centuries with art, music and the elegance of already-discovered science. Scholars do a modest version of this today and nobody calls their lives empty.</p>
+    </details>
+    <details>
+      <summary>"I want effort, difficulty, the chance of failing."</summary>
+      <p>Games and sports, broadly defined. You can be teleported to the summit of Everest, but everyone already agrees that's cheating — which shows that voluntarily accepted constraints generate real challenge even when shortcuts exist.</p>
+    </details>
+    <details>
+      <summary>"I want my effort to make a difference to someone."</summary>
+      <p>Arrangeable, though the mechanisms start to look contrived: mutual pledges and competitions where people agree that outcomes matter to them, so that your effort genuinely affects how others fare. A community's attachment to its team is the everyday version.</p>
+    </details>
+    <details>
+      <summary>"I want a difference that nobody arranged for my benefit."</summary>
+      <p>Narrower, but not empty. Some acts cannot be outsourced because their value is bound to the doer: keeping your own promise, making a gift yourself, observing a rite, honouring an ancestor's wish. A robot cannot fast for you.</p>
+    </details>
+    <details>
+      <summary>"I want a unique, significant, world-changing contribution."</summary>
+      <p>Probably unavailable — and Bostrom's reply is to question the demand. Very few people have this now, and their lives are not thereby worthless. He suggests we may already carry more significance than is good for us.</p>
+    </details>
+  </div>
+</section>
+
+<section id="facts">
+  <h2>Key facts and figures</h2>
+  <ul class="facts">
+    <li><span class="tag">2024</span><p>Published on 27 March by Ideapress, ten years after <i>Superintelligence</i>. Around 527 pages, with roughly 460 of them lecture.</p></li>
+    <li><span class="tag">Six days</span><p>Monday through Saturday, each a lecture, with handouts, assigned readings, and a frame narrative about three friends who attend and then argue about it at the baths.</p></li>
+    <li><span class="tag">The definition</span><p>Technological maturity: capabilities affording control over nature close to the maximum achievable in the fullness of time. Everything in the book follows from taking that seriously.</p></li>
+    <li><span class="tag">Two redundancies</span><p>Shallow (no jobs) and deep (no point to anything you might do instead). The second is the book's contribution.</p></li>
+    <li><span class="tag">Three limits</span><p>Even at maturity: cosmological limits on what is reachable, prudential limits on what is safe to try, and axiological limits set by our own values — status and novelty stay scarce.</p></li>
+    <li><span class="tag">Malthus</span><p>His central economic caution: populations can grow exponentially while resources, even across settled space, grow polynomially at best. Abundance requires coordination, not just capability.</p></li>
+    <li><span class="tag">~50 pages</span><p>The length of <i>Feodor the Fox</i>, an allegorical fable about woodland animals trying to improve the world, scattered through the book as homework.</p></li>
+    <li><span class="tag">ThermoRex</span><p>The second embedded story: the world's richest man leaves his fortune to a foundation for the benefit of his space heater, whose trustees must work out what a heater's interests could possibly be — so they give it a mind.</p></li>
+    <li><span class="tag">Three students</span><p>Tessius, Kelvin and Firafix, the friends whose conversations bookend the lectures and voice the objections Bostrom wants raised.</p></li>
+    <li><span class="tag">Page 427</span><p>Where, by one reviewer's count, the lectures simply run out of time without resolving the question they were convened to answer.</p></li>
+    <li><span class="tag">Not a forecast</span><p>Bostrom repeatedly stresses this. He calls deep utopia a philosophical particle accelerator: a way to see which values survive extreme conditions, not a prediction that we will get there.</p></li>
+  </ul>
+</section>
+
+<section id="curios">
+  <h2>Interesting things about the book</h2>
+  <ul class="plain">
+    <li><b>It is the optimistic sequel nobody expected.</b> The man who made existential risk a mainstream concern wrote 500 pages on what to do if everything goes right — partly, readers suspect, to stop his earlier work from being the only thing shaping the debate.</li>
+    <li><b>The form is genuinely strange.</b> Dense analytic philosophy wrapped in a campus comedy, with fables, fire alarms and a dean cutting a lecture short. Reviewers have compared it to Plato's dialogues and to a philosopher who stopped pretending to be normal.</li>
+    <li><b>There are jokes hidden in the furniture.</b> The lecture hall is the Philip Morris Auditorium, later the Exxon Auditorium, later the Enron Auditorium — a running gag about tainted naming rights that few readers miss the point of.</li>
+    <li><b>Real philosophers appear in disguise.</b> Several attendees are thinly veiled versions of actual people in Bostrom's orbit, and at least one name is a well-known philosopher's spelled backwards.</li>
+    <li><b>The space heater story is the best thing in it.</b> The gradual uplifting of ThermoRex from appliance to something like a god, and the closing question of whether it should have been allowed to refuse, does more philosophical work than several chapters.</li>
+    <li><b>Elon Musk's cover blurb is one word.</b> "Yeah." It sits alongside considerably longer praise from <i>The Economist</i>, Russ Roberts and Erik Brynjolfsson.</li>
+    <li><b>The institute closed the same year.</b> Oxford's Future of Humanity Institute, which Bostrom founded and directed, shut down in 2024 — the year the book appeared.</li>
+    <li><b>It never shows you utopia.</b> The most common complaint, and a fair one: for a book full of original short fiction, none of the stories is set in the world it spends 500 pages describing.</li>
+  </ul>
+</section>
+
+<section id="critics">
+  <h2>The pushback</h2>
+  <ul class="plain">
+    <li><b>It surveys rather than concludes.</b> Robin Hanson's objection: on each big question Bostrom catalogues possible answers instead of committing to one, then the lectures run out of time. Readers hoping for a position get a map of positions.</li>
+    <li><b>The proposed solutions may not survive their own premises.</b> Scott Alexander's line of attack: if biology and training are perfectly understood, sport stops being a contest; if a superintelligence can settle the religious question, worship stops being faith. The two holdouts Bostrom leans on look fragile under the conditions he stipulates.</li>
+    <li><b>The hard part is assumed away.</b> Governance, coordination and wisdom are named as prerequisites and then set aside. Since those are exactly what stands between us and any of this, some readers find the whole exercise weightless.</li>
+    <li><b>The form fights the content.</b> Academic reviewers have noted the absence of a proper conclusion, the difficulty of tracking the argument across handouts and fables, and the number of pages spent distinguishing terms most readers would have accepted as synonyms.</li>
+    <li><b>Why should we care now?</b> The most common civilian objection. Bostrom answers it in the opening pages, but plenty of readers finish unconvinced that deep redundancy is a problem worth 500 pages while shallow ones remain unsolved.</li>
+    <li><b>Not everyone wants the maximum.</b> A quieter criticism worth naming: many people are satisficers about their own lives. A vision built on maximal flourishing simply doesn't grip them, and reducing suffering — which needs nothing like technological maturity — matters more.</li>
+  </ul>
+</section>
+
+<section id="practice">
+  <h2>Where the argument bites in practice</h2>
+  <p>You do not have to believe any of this is coming for the analytic move to be useful. Three things transfer directly:</p>
+  <ul class="plain">
+    <li><b>Run the instrumental test on anything you're automating.</b> For each part of a task, ask whether people value the outcome or the doing. Automate the first and you deliver value; automate the second and you quietly remove the reason someone got up in the morning, while the metrics look fine.</li>
+    <li><b>Expect deep redundancy to arrive unevenly and early in some places.</b> Wherever a system is already better than the practitioner, the purpose problem shows up long before the job disappears — the person is still employed and no longer needed, which is a distinct and worse condition.</li>
+    <li><b>Design for adopted constraints.</b> Artificial purpose is not a trick; it is how sport, craft and ritual have always worked. Systems that leave people a hard part to own, deliberately, hold attention better than ones that smooth everything away.</li>
+  </ul>
+</section>
+
+<section id="takeaway">
+  <h2>The takeaway</h2>
+  <p>The book's real finding is not about the future at all. It is that our values are more instrumental than we think. Put a person in a world where nothing needs doing and most of what they would have described as meaningful evaporates — not because it was fake, but because it was always partly a means to something else. Strip the ends away and the activities go with them. That is a discovery about us now, available without any AI at all.</p>
+
+  <p>What survives the test is a short and slightly humbling list. Pleasure, understood broadly enough to include awe and contentment rather than just thrills. The capacity to appreciate, which matters more than the supply of things to appreciate. Activity done for its own sake. Challenges accepted voluntarily because a challenge is worth having. And the small set of acts whose value lies in the fact that a particular person performed them — a promise kept, a gift made, a rite observed, a memory honoured. Bostrom thinks that is probably enough. He does not prove it.</p>
+
+  <p>The most bracing turn is his treatment of significance. We assume a good life requires mattering, and the prospect of not mattering is what makes a solved world frightening. His reply is that almost nobody measurably matters now, and their lives are fine — and that being responsible for large outcomes may be a burden we are not well suited to carry. If he is right, the utopia problem is partly a vanity problem.</p>
+
+  <p>Read it, then, not as a prediction but as an audit. The question it hands you is one you can answer today: of the things you do, how many would you still do if they made no difference whatsoever?</p>
+</section>
+
+<section id="discuss">
+  <h2>Questions worth arguing about</h2>
+  <ul class="plain">
+    <li>Is deep redundancy really coming, or is the space of things worth doing open-ended enough that new purposes keep appearing as old ones are automated?</li>
+    <li>If your pleasure, your sense of meaning and your appreciation can all be adjusted at will, in what sense are they still <i>yours</i>?</li>
+    <li>Bostrom distinguishes good lives from good stories and sides with good lives. Is anything lost in that trade?</li>
+    <li>Would you enter a utopia-free zone — genuine risk, genuine failure, no rescue — and should it be permitted?</li>
+    <li>Is artificial purpose a genuine solution or a sophisticated form of pretending? Does the distinction survive scrutiny?</li>
+    <li>Given that he sets aside governance and coordination, how much of the book's optimism is doing work it hasn't earned?</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>A reader's overview of <i>Deep Utopia: Life and Meaning in a Solved World</i> by Nick Bostrom (Ideapress, 2024). Summarised and paraphrased throughout — no passages are reproduced from the book. Day-level themes reflect the lecture sequence; the book's own section titles are far more numerous than those noted here.</p>
+  <p style="margin-top:1.2rem"><a class="totop" href="#top">Back to top</a></p>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function sync(){
+    var y = window.scrollY + 130, current = 0;
+    sections.forEach(function(s,i){ if(s && s.offsetTop <= y) current = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i === current); });
+  }
+  window.addEventListener('scroll', sync, {passive:true});
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+</body>
+</html>

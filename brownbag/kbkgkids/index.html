@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Board Full of String</title>
+<meta name="description" content="A very simple explanation of knowledge bases, knowledge graphs and the helpers that use them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#0B1610; --soil:#0F1D15; --panel:#13271C; --panel2:#183021;
+  --line:#25442F; --line-soft:#1C3525;
+  --gold:#D9A441; --mint:#8FBFA0; --rust:#C4703F; --violet:#9A8FC4; --sky:#6FA3B8;
+  --parch:#E8EFE6; --muted:#98B0A1; --dim:#6B8877;
+  --serif:'Newsreader',Georgia,serif;
+  --display:'Fraunces','Newsreader',Georgia,serif;
+  --mono:'Space Grotesk',ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--parch);font-family:var(--serif);
+  font-size:21px;line-height:1.72;font-weight:300;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;
+  background:radial-gradient(900px 620px at 84% -10%,rgba(217,164,65,.08),transparent 62%),
+             radial-gradient(760px 540px at 4% 40%,rgba(143,191,160,.055),transparent 60%)}
+.wrap{position:relative;z-index:1}
+h1,h2{font-family:var(--display);font-weight:300;line-height:1.1;letter-spacing:-.022em;margin:0}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-variation-settings:"SOFT" 0,"WONK" 1}
+p{margin:0 0 1.1em}
+strong{font-weight:500;color:#fff}
+em{font-style:italic;color:var(--mint)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(217,164,65,.3)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+.shell{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4.5vw,48px)}
+.col{max-width:34ch;max-width:min(34em,100%)}
+section{padding:clamp(60px,9vw,118px) 0;border-top:1px solid var(--line-soft)}
+.big{font-size:clamp(1.15rem,2.2vw,1.42rem);color:var(--muted);line-height:1.62;max-width:min(30em,100%)}
+.grown{margin:30px 0;border-left:2px solid var(--violet);padding:2px 0 2px 22px;
+  font-size:.86em;color:var(--muted);line-height:1.62}
+.grown b{font-family:var(--mono);font-size:.78rem;color:var(--violet);display:block;
+  margin-bottom:6px;font-weight:500}
+.hero{position:relative;min-height:min(94vh,780px);display:flex;align-items:center;overflow:hidden;
+  padding:clamp(72px,10vh,120px) 0}
+#heroCv{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.hero .shell{position:relative;z-index:2}
+h1{font-size:clamp(2.7rem,9vw,6rem);letter-spacing:-.035em;line-height:.95;max-width:11ch;
+  font-variation-settings:"SOFT" 0,"WONK" 1}
+h1 .g{color:var(--gold)}
+.hero p{margin-top:28px;max-width:min(26em,100%);color:var(--muted)}
+.kicker{font-family:var(--mono);font-size:.76rem;color:var(--dim);letter-spacing:.14em;margin-bottom:24px}
+.demo{margin:40px 0;background:var(--soil);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.demo-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--line-soft);background:var(--panel)}
+.demo-t{font-family:var(--mono);font-size:.8rem;color:var(--mint)}
+.demo-b{padding:clamp(16px,2.6vw,26px)}
+.demo-note{padding:15px 20px;border-top:1px solid var(--line-soft);background:rgba(19,39,28,.45);
+  font-size:.82em;color:var(--muted);line-height:1.62}
+.ctl{font-family:var(--mono);font-size:.78rem;color:var(--parch);background:var(--panel2);
+  border:1px solid var(--line);border-radius:4px;padding:8px 14px;cursor:pointer;transition:.16s}
+.ctl:hover{border-color:var(--mint);color:var(--mint)}
+.ctl.on{background:var(--gold);color:#14100a;border-color:var(--gold);font-weight:500}
+.ctls{display:flex;gap:8px;flex-wrap:wrap}
+.srow{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.srow input[type=range]{flex:1;min-width:120px;accent-color:var(--gold);height:3px}
+.srow output{flex:none;min-width:88px;text-align:right;color:var(--gold)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;
+  padding:4px 10px;border-radius:20px;border:1px solid var(--line);color:var(--muted);background:rgba(11,22,16,.8)}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:34px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 24px}
+.card h3{font-family:var(--mono);font-size:.82rem;font-weight:500;margin:0 0 12px}
+.card p{font-size:.86em;color:var(--muted);margin:0;line-height:1.62}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{max-width:100%}
+footer{border-top:1px solid var(--line-soft);padding:44px 0 68px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body><div class="wrap">
+
+<header class="hero">
+  <canvas id="heroCv" aria-hidden="true"></canvas>
+  <div class="shell">
+    <div class="kicker">A very simple explainer</div>
+    <h1>A board full of <span class="g">string</span></h1>
+    <p>How computers remember things, why some of what they remember goes stale,
+    and how they follow a piece of string to find an answer.</p>
+  </div>
+</header>
+
+<main class="shell">
+
+<section id="two">
+  <div class="col">
+    <h2>Two ways to remember</h2>
+    <p class="big" style="margin-top:26px">Imagine you want to remember everything about your neighbourhood.
+    You could do it in two ways, and they are not the same.</p>
+  </div>
+
+  <div class="cards">
+    <div class="card" style="border-color:rgba(217,164,65,.4)">
+      <h3 style="color:var(--gold)">A big box of notes</h3>
+      <p>You write a note about everything that happens and drop it in a box. When you want to know something,
+      you dig through the box for notes that sound like your question.<br><br>
+      This works well. But every note sits on its own. Nothing in the box knows that the note about Mia and the
+      note about the library are about the same afternoon.</p>
+    </div>
+    <div class="card" style="border-color:rgba(143,191,160,.4)">
+      <h3 style="color:var(--mint)">A board with pins and string</h3>
+      <p>You put a pin in a board for every person, every place and every thing. Then you tie a string between
+      two pins whenever they go together, and you write on the string <em>why</em>.<br><br>
+      Now you can start at one pin and walk along the strings to somewhere else. The answer is in the walk.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>Both are useful, and most of the time the box is enough. If you ask <strong>"what happened at the
+    library on Tuesday?"</strong>, the box has a note that says so. Digging works.</p>
+    <p>But now ask something harder. <strong>"Who might like the new dinosaur book?"</strong> There is no note
+    in the box that says that. Nobody ever wrote it down, because it never happened yet. You have to
+    <em>work it out</em> by starting at the book, walking to dinosaurs, and then walking to whoever likes
+    dinosaurs.</p>
+    <p>The box can only give back what someone already wrote. The board can give back things nobody wrote,
+    because the answer was hiding in how the strings join up.</p>
+    <div class="grown">
+      <b>What grown-ups call these</b>
+      The box of notes is a <em>knowledge base</em>. The board of pins and string is a <em>knowledge graph</em>.
+      Most useful systems keep both, because each one is good at what the other is bad at.
+    </div>
+  </div>
+</section>
+
+<section id="board">
+  <div class="col">
+    <h2>Have a go</h2>
+    <p class="big" style="margin-top:26px">Here is a small board. Every pin is a person, a thing someone likes,
+    a book or a place. Drag the pins around. Tap one to start there.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-bar">
+      <span class="demo-t">the board</span>
+      <div class="ctls" id="boardCtls"></div>
+    </div>
+    <div class="demo-b" style="padding:0">
+      <div style="position:relative;border-bottom:1px solid var(--line-soft)">
+        <canvas id="boardCv" style="width:100%;height:420px;display:block;touch-action:none"></canvas>
+        <div id="legend" style="position:absolute;left:14px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap;
+          max-width:calc(100% - 28px)"></div>
+      </div>
+      <div style="padding:20px 22px" id="boardOut"></div>
+    </div>
+    <div class="demo-note">Notice that the board never just hands you an answer. It hands you a
+    <em>little story</em>: this, then this, then this. That is the whole reason people like boards. You can
+    always see why.</div>
+  </div>
+</section>
+
+<section id="old">
+  <div class="col">
+    <h2>Some strings get old</h2>
+    <p class="big" style="margin-top:26px">Not everything you tie onto the board stays true.</p>
+    <p style="margin-top:22px">If Leo borrowed a book <strong>yesterday</strong>, that string is fresh. It tells
+    you a lot about what Leo is into right now.</p>
+    <p>If Leo borrowed a book <strong>two years ago</strong>, the string is still there. It is still true that it
+    happened. But it does not tell you much about Leo today. He might not even remember it.</p>
+    <p>So old strings should go faint. Not cut, just faint. You still want to be able to look back and see what
+    the board said last year, so you never snip anything off. You just let the old ones fade when you are
+    working out what matters now.</p>
+    <p>And here is the bit people get wrong. Different kinds of string go faint at <em>different speeds</em>.
+    "Leo clicked on this" goes faint in a couple of weeks. "Leo is Sam's brother" never goes faint at all.
+    If you fade everything at the same speed, you will forget the things that were meant to last.</p>
+    <div class="grown">
+      <b>What grown-ups call this</b>
+      Letting old connections count for less is <em>temporal decay</em>. The trick is not the fading itself,
+      it is deciding how fast each kind of thing should fade.
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-bar">
+      <span class="demo-t">wind the clock forward</span>
+      <span class="chip" id="oldChip">today</span>
+    </div>
+    <div class="demo-b">
+      <div class="srow" style="margin-bottom:6px">
+        <label for="clock" style="flex:none">how long ago</label>
+        <input type="range" id="clock" min="0" max="730" value="0" step="5">
+        <output id="clockOut">today</output>
+      </div>
+      <div class="scroll-x" style="margin-top:14px">
+        <svg id="fadeSvg" viewBox="0 0 820 220" width="820" height="220" role="img"
+          aria-label="Four kinds of connection fading at different speeds as time passes"></svg>
+      </div>
+      <div id="fadeOut" style="margin-top:12px;font-size:.84em;color:var(--muted);line-height:1.64;min-height:3.4em"></div>
+    </div>
+    <div class="demo-note">Drag the slider and watch the bars. The top one forgets almost immediately. The
+    bottom one barely moves. Same board, same day, completely different idea of what still counts.</div>
+  </div>
+</section>
+<section id="near">
+  <div class="col">
+    <h2>Putting things on a map</h2>
+    <p class="big" style="margin-top:26px">Computers are not good at words. They are very good at numbers.
+    So they cheat.</p>
+    <p style="margin-top:22px">They give every single thing a spot on a big invisible map, and they put things
+    that go together <em>close to each other</em>. Then "what is like this?" becomes the easiest question in the
+    world. You just look at what is nearby.</p>
+    <p>But here is the surprise. There is more than one way to decide what "close" means, and you get a
+    completely different map each time.</p>
+    <p>Make the map from <strong>what things say</strong>, and the cake book lands next to the bread book,
+    because they use the same words. Make the map from <strong>who touches them</strong>, and the cake book
+    lands next to Ada, because Ada is the only one who ever borrows it.</p>
+    <p>Neither map is the right one. They are answers to different questions. Look at only one and you will
+    miss half of what is going on.</p>
+    <div class="grown">
+      <b>What grown-ups call this</b>
+      A spot on one of these maps is an <em>embedding</em>. There are several kinds, they live on separate maps,
+      and you cannot measure a distance between two things that are on different maps.
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-bar">
+      <span class="demo-t">the same six things, two maps</span>
+      <span class="chip">hover a dot</span>
+    </div>
+    <div class="demo-b">
+      <div class="scroll-x"><svg id="mapsSvg" viewBox="0 0 820 280" width="820" height="280" role="img"
+        aria-label="Two maps showing the same six items positioned differently"></svg></div>
+      <div id="mapsOut" style="margin-top:14px;font-size:.84em;color:var(--muted);line-height:1.64;min-height:3.4em"></div>
+    </div>
+    <div class="demo-note">Watch one dot jump between the two maps. If it moves a long way, that is the
+    interesting part — it means the two maps disagree about who its friends are.</div>
+  </div>
+</section>
+
+<section id="missing">
+  <div class="col">
+    <h2>When the string isn't there</h2>
+    <p class="big" style="margin-top:26px">Every board has holes in it. Somebody forgot to tie a string, or
+    nobody had noticed yet that two things went together.</p>
+    <p style="margin-top:22px">This causes a very particular kind of trouble. If you walk the board looking for
+    an answer and the string is missing, you do not get a wrong answer. You get <strong>nothing at all</strong>,
+    and nothing looks exactly the same as "there is no answer."</p>
+    <p>That is worse than being wrong, because nobody notices. The board goes quiet and everyone assumes it had
+    nothing to say.</p>
+    <p>So you keep the box of notes underneath, as a safety net. Digging through notes always gives you
+    <em>something</em>. It might be a bit off, but it is never silent.</p>
+    <p>One rule matters a lot here. When an answer comes from walking the strings, you can show the little
+    story of how you got there. When it comes from digging through the box, you cannot. So you must always
+    remember which way you found a thing, and never let a dug-up answer pretend it walked.</p>
+  </div>
+</section>
+
+<section id="guess">
+  <div class="col">
+    <h2>Guessing a string that isn't there</h2>
+    <p class="big" style="margin-top:26px">Once you have looked at enough of the board, you start to notice
+    patterns.</p>
+    <p style="margin-top:22px">Everyone who likes space also borrows the moon book. Everyone who visits the
+    bakery also likes baking. After a while you can look at a pin with a missing string and make a pretty good
+    guess about where that string ought to go.</p>
+    <p>Computers can do this too, and they are surprisingly good at it. They can suggest a string that nobody
+    ever tied.</p>
+    <p>But a guess is a guess. It has no little story behind it. If somebody asks "why did you say that?", the
+    honest answer is <strong>"because it felt about right"</strong>, and that is not good enough when the answer
+    matters.</p>
+    <p>So the sensible thing is to let the guess <em>suggest</em>, and then go looking for a real path on the
+    board that backs it up. If you find one, lovely, show the path. If you don't, either say out loud that it
+    was only a hunch, or don't say it at all.</p>
+    <div class="grown">
+      <b>Two more things to know</b>
+      A guesser only knows the pins it has already seen. Add a brand new person to the board this morning and
+      the guesser has nothing to say about them until it has had another look at everything. And a guesser is a
+      photograph — it remembers the board as it was, not as it is.
+    </div>
+  </div>
+</section>
+
+<section id="ripple">
+  <div class="col">
+    <h2>Dropping a stone in a pond</h2>
+    <p class="big" style="margin-top:26px">Here is another way to use a board, and it is the prettiest one.</p>
+    <p style="margin-top:22px">Start at everything one person has ever done. Drop a stone on each of those pins
+    at the same time. Let the ripples spread outward along the strings.</p>
+    <p>Where two ripples cross, that spot gets a bigger wave. That is the whole idea. If something is reachable
+    from <em>several</em> different things you already know about a person, it is probably a better answer than
+    something reachable from only one.</p>
+    <p>Ripples get weaker the further they travel, so things a long way off barely register. That is right.
+    Nearly everything is connected to nearly everything if you walk far enough, and most of those connections
+    mean nothing.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-bar">
+      <span class="demo-t">ripples spreading from what we already know</span>
+      <div class="ctls">
+        <button class="ctl on" data-r="1">one step out</button>
+        <button class="ctl" data-r="2">two steps</button>
+        <button class="ctl" data-r="3">three steps</button>
+      </div>
+    </div>
+    <div class="demo-b">
+      <div class="scroll-x"><svg id="rippleSvg" viewBox="0 0 820 300" width="820" height="300" role="img"
+        aria-label="Ripples spreading outward from two starting points, meeting in the middle"></svg></div>
+      <div id="rippleOut" style="margin-top:12px;font-size:.84em;color:var(--muted);line-height:1.64"></div>
+    </div>
+    <div class="demo-note">Go out far enough and everything is reachable, which means "reachable" stops meaning
+    anything. Knowing when to stop is most of the skill.</div>
+  </div>
+</section>
+
+<section id="three">
+  <div class="col">
+    <h2>Three ways of looking, at once</h2>
+    <p class="big" style="margin-top:26px">So now there are three ways to find something, and each one is bad
+    at exactly what the others are good at.</p>
+  </div>
+
+  <div class="cards">
+    <div class="card" style="border-color:rgba(217,164,65,.4)">
+      <h3 style="color:var(--gold)">Walk the strings</h3>
+      <p>Always comes with a little story you can show someone. Goes completely silent whenever a string is
+      missing, without telling you that's what happened.</p>
+    </div>
+    <div class="card" style="border-color:rgba(143,191,160,.4)">
+      <h3 style="color:var(--mint)">Dig through the notes</h3>
+      <p>Never comes back empty, and works on things that arrived five minutes ago. Can never tell you why it
+      picked what it picked.</p>
+    </div>
+    <div class="card" style="border-color:rgba(154,143,196,.4)">
+      <h3 style="color:var(--violet)">Guess from patterns</h3>
+      <p>Reaches things nobody ever wrote down or tied up. Has no reason behind it, and does not know about
+      anything new.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>The trick is not to pick one. The trick is to run all three, put everything they found into one pile,
+    and then sort the pile carefully — remembering, for each thing in it, which of the three found it.</p>
+    <p>That last bit is the part everyone skips, and it is the important one. A thing found by walking can show
+    its story. A thing found by guessing cannot. If you let them get muddled in the pile, a hunch walks out
+    the door wearing an explanation it never earned.</p>
+    <div class="grown">
+      <b>What grown-ups call this</b>
+      Using the board to decide what gets looked at, instead of only digging through the box, is called
+      <em>GraphRAG</em>. All the interesting arguments about it are arguments about how to sort the pile.
+    </div>
+  </div>
+</section>
+<section id="helpers">
+  <div class="col">
+    <h2>Lots of helpers, one board</h2>
+    <p class="big" style="margin-top:26px">Now imagine you do not have one clever helper. You have several,
+    and each one is only good at a single job.</p>
+    <p style="margin-top:22px">One helper is good at reading new things and pinning them up. One is good at
+    walking the strings to find people. One is good at checking whether an idea is actually allowed. One is good
+    at writing the whole thing up nicely at the end.</p>
+    <p>They pass work along to each other, like people in a kitchen. And they all look at the same board.</p>
+    <p>Which leads to the one thing that really matters here, and it is not about computers at all.</p>
+    <p><strong>They have to agree on what the words mean.</strong> If one helper thinks "friend" means anyone
+    you have ever met, and another thinks it means someone you see every week, they will be perfectly polite to
+    each other and produce complete nonsense. Passing messages around is easy. Agreeing what the messages
+    <em>mean</em> is the hard part, and the board is where that agreement lives.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-bar">
+      <span class="demo-t">four helpers, one board, one person deciding</span>
+      <div class="ctls">
+        <button class="ctl on" data-h="all">all of them</button>
+        <button class="ctl" data-h="walk">follow one job</button>
+      </div>
+    </div>
+    <div class="demo-b" style="padding:0">
+      <div class="scroll-x"><svg id="helpSvg" viewBox="0 0 860 420" width="860" height="420" role="img"
+        aria-labelledby="hT hD">
+        <title id="hT">Four helpers above one shared board</title>
+        <desc id="hD">Four helpers sit in a row and pass work sideways to each other. Each one has a line going
+        down to the same shared board underneath. A person sits above them and makes the final decision. A strip
+        down the left side holds the agreed meanings of words, which both the helpers and the board rely on.</desc>
+      </svg></div>
+      <div id="helpOut" style="padding:18px 22px;border-top:1px solid var(--line-soft);font-size:.86em;
+        line-height:1.68;min-height:4.4em"></div>
+    </div>
+    <div class="demo-note">The person at the top is not decoration. Somebody has to be able to say no, and
+    whatever they decide should go back onto the board so that next time is a bit better.</div>
+  </div>
+
+  <div class="col">
+    <div class="grown">
+      <b>What grown-ups call this</b>
+      Helpers handing work sideways to other helpers is <em>agent-to-agent</em>. A helper reaching down to look
+      something up is <em>tool use</em>. The agreed list of what all the words mean is an <em>ontology</em>, and
+      it is boring, and it is the thing that decides whether any of the rest of it works.
+    </div>
+  </div>
+</section>
+
+<section id="end">
+  <div class="col">
+    <h2>The whole thing in six lines</h2>
+    <p class="big" style="margin-top:26px">If you remember nothing else.</p>
+    <div style="margin-top:28px;font-size:.94em;line-height:1.78">
+      <p>A box of notes gives you back what somebody wrote down.</p>
+      <p>A board of string gives you back things nobody wrote down, because the answer was in the joins.</p>
+      <p>Old strings should go faint, and different kinds should fade at different speeds.</p>
+      <p>Three ways of finding things, all running at once, beats any one of them — as long as you remember
+      which one found what.</p>
+      <p>A guess with no story behind it is fine, right up until somebody asks why.</p>
+      <p>And the hardest part was never the board. It was getting everyone to agree what the words meant.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="shell">
+    <p style="font-family:var(--mono);font-size:.74rem;color:var(--dim);max-width:min(54em,100%);
+      line-height:1.9;margin:0">
+      The board on this page is real. The pins push each other apart, the strings pull them together, and the
+      fading is worked out as you drag the slider. Everything else here is a neighbourhood that does not exist.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C={gold:'#D9A441',mint:'#8FBFA0',rust:'#C4703F',violet:'#9A8FC4',sky:'#6FA3B8',
+  parch:'#E8EFE6',muted:'#98B0A1',dim:'#6B8877',line:'#25442F',panel:'#13271C'};
+const TY={
+  Person:{c:C.gold,s:'circle',r:10}, Likes:{c:C.mint,s:'triangle',r:8},
+  Book:{c:C.sky,s:'square',r:8},     Place:{c:C.violet,s:'diamond',r:8}
+};
+const RN=[['mia','Person','Mia'],['sam','Person','Sam'],['ada','Person','Ada'],['leo','Person','Leo'],
+ ['dino','Likes','dinosaurs'],['space','Likes','space'],['bake','Likes','baking'],['paint','Likes','painting'],
+ ['b1','Book','Big Book of Dinosaurs'],['b2','Book','Moon Map'],['b3','Book','Cake Days'],['b4','Book','Paint a Sky'],
+ ['lib','Place','the library'],['park','Place','the park'],['shop','Place','the bakery']];
+const RL=[['mia','likes','dino',60],['mia','likes','paint',40],['mia','borrowed','b1',9],['mia','goes to','lib',5],
+ ['sam','likes','space',120],['sam','borrowed','b2',14],['sam','goes to','lib',12],['sam','friends with','mia',700],
+ ['ada','likes','bake',200],['ada','borrowed','b3',30],['ada','goes to','shop',3],['ada','friends with','mia',500],
+ ['leo','likes','dino',90],['leo','likes','space',75],['leo','borrowed','b2',400],['leo','goes to','park',8],
+ ['leo','friends with','sam',600],
+ ['b1','is about','dino',999],['b2','is about','space',999],['b3','is about','bake',999],['b4','is about','paint',999],
+ ['lib','has','b1',999],['lib','has','b2',999],['lib','has','b3',999],['lib','has','b4',999]];
+const FADE={'borrowed':30,'goes to':21,'likes':400,'friends with':4000,'is about':1e9,'has':1e9};
+
+const nodes=RN.map(([id,type,label])=>({id,type,label,x:0,y:0,vx:0,vy:0}));
+const byId=new Map(nodes.map(n=>[n.id,n]));
+const links=RL.map(([s,rel,t,d])=>({a:s,b:t,rel,days:d,s:byId.get(s),t:byId.get(t)}));
+const adj=new Map(nodes.map(n=>[n.id,[]]));
+links.forEach(e=>{adj.get(e.a).push({to:e.b,rel:e.rel,e});adj.get(e.b).push({to:e.a,rel:e.rel,e});});
+const fade=(rel,days,now)=>{const hl=FADE[rel]; if(hl>1e8)return 1;
+  return Math.max(0.04,Math.exp(-Math.log(2)/hl*(days+now)));};
+
+function fit(cv){const dpr=Math.min(devicePixelRatio||1,2),r=cv.getBoundingClientRect();
+  const w=Math.max(1,Math.round(r.width)),h=Math.max(1,Math.round(r.height));
+  if(cv.width!==w*dpr||cv.height!==h*dpr){cv.width=w*dpr;cv.height=h*dpr;}
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return{ctx,w,h};}
+function shape(ctx,n,r,fill,alpha){ctx.globalAlpha=alpha;ctx.fillStyle=fill;ctx.beginPath();
+  const s=TY[n.type].s;
+  if(s==='circle')ctx.arc(n.x,n.y,r,0,7);
+  else if(s==='square')ctx.rect(n.x-r*.88,n.y-r*.88,r*1.76,r*1.76);
+  else if(s==='diamond'){ctx.moveTo(n.x,n.y-r*1.15);ctx.lineTo(n.x+r*1.05,n.y);ctx.lineTo(n.x,n.y+r*1.15);ctx.lineTo(n.x-r*1.05,n.y);ctx.closePath();}
+  else{ctx.moveTo(n.x,n.y-r*1.2);ctx.lineTo(n.x+r*1.1,n.y+r*.8);ctx.lineTo(n.x-r*1.1,n.y+r*.8);ctx.closePath();}
+  ctx.fill();ctx.globalAlpha=1;}
+function sim(ns,ls,W,H,o){o=Object.assign({q:-1600,d:82,c:.011,damp:.85,k:.04},o||{});
+  ns.forEach((n,i)=>{const a=i/ns.length*6.283;n.x=W/2+Math.cos(a)*Math.min(W,H)*.33;
+    n.y=H/2+Math.sin(a)*Math.min(W,H)*.33;n.vx=n.vy=0;});
+  return(w,h)=>{W=w||W;H=h||H;
+    for(let i=0;i<ns.length;i++)for(let j=i+1;j<ns.length;j++){const a=ns[i],b=ns[j];
+      let dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2<1){d2=1;dx=Math.random()-.5;dy=Math.random()-.5;}
+      const d=Math.sqrt(d2),f=o.q/d2,fx=f*dx/d,fy=f*dy/d;a.vx+=fx;a.vy+=fy;b.vx-=fx;b.vy-=fy;}
+    for(const l of ls){const a=l.s,b=l.t;if(!a||!b)continue;
+      const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.01,f=(d-o.d)*o.k,fx=f*dx/d,fy=f*dy/d;
+      a.vx+=fx;a.vy+=fy;b.vx-=fx;b.vy-=fy;}
+    for(const n of ns){if(n.fix){n.vx=n.vy=0;continue;}
+      n.vx+=(W/2-n.x)*o.c;n.vy+=(H/2-n.y)*o.c;n.vx*=o.damp;n.vy*=o.damp;
+      n.x+=Math.max(-12,Math.min(12,n.vx));n.y+=Math.max(-12,Math.min(12,n.vy));
+      n.x=Math.max(30,Math.min(W-30,n.x));n.y=Math.max(28,Math.min(H-28,n.y));}};}
+
+/* hero */
+(function(){const cv=$('#heroCv');if(!cv)return;
+  const N=RN.map(([id,type,label])=>({id,type,label,x:0,y:0,vx:0,vy:0})),M=new Map(N.map(n=>[n.id,n]));
+  const L=RL.map(([a,r,b])=>({s:M.get(a),t:M.get(b)}));
+  let f=fit(cv),tick=sim(N,L,f.w,f.h,{q:-2800,d:126,c:.007}),fr=0;
+  (function draw(){const g=fit(cv),ctx=g.ctx;
+    if(!RM||fr<200)tick(g.w,g.h);fr++;ctx.clearRect(0,0,g.w,g.h);ctx.lineWidth=1;
+    for(const l of L){const gr=ctx.createLinearGradient(l.s.x,l.s.y,l.t.x,l.t.y);
+      gr.addColorStop(0,'rgba(143,191,160,.15)');gr.addColorStop(1,'rgba(217,164,65,.11)');
+      ctx.strokeStyle=gr;ctx.beginPath();ctx.moveTo(l.s.x,l.s.y);ctx.lineTo(l.t.x,l.t.y);ctx.stroke();}
+    for(const n of N){const T=TY[n.type];shape(ctx,n,T.r*.9,T.c,.32);shape(ctx,n,T.r*.32,T.c,.6);}
+    requestAnimationFrame(draw);})();
+  addEventListener('resize',()=>{fr=0},{passive:true});})();
+
+/* board */
+(function(){const cv=$('#boardCv');if(!cv)return;
+  const WHY=[
+    {id:'book',name:'which book for whom?',path:['Person','likes','Likes','is about','Book'],
+     say:p=>`<b>${lab(p[0])}</b> likes <b>${lab(p[1])}</b>, and <b>${lab(p[2])}</b> is about ${lab(p[1])}.`},
+    {id:'alike',name:'who is a bit alike?',path:['Person','likes','Likes','likes','Person'],
+     say:p=>`<b>${lab(p[0])}</b> and <b>${lab(p[2])}</b> both like <b>${lab(p[1])}</b>.`}];
+  const lab=id=>byId.get(id).label;
+  let seed='mia',why=WHY[0],lit=new Set(),litE=new Set(),hov=null,settle=0;
+  const key=(a,b)=>a<b?a+'|'+b:b+'|'+a;
+  $('#boardCtls').innerHTML=WHY.map((w,i)=>`<button class="ctl${i?'':' on'}" data-w="${w.id}">${w.name}</button>`).join('');
+  $('#legend').innerHTML=Object.keys(TY).map(t=>{const T=TY[t];let s;
+    if(T.s==='circle')s='<circle cx="6" cy="6" r="4.6" fill="'+T.c+'"/>';
+    else if(T.s==='square')s='<rect x="2" y="2" width="8" height="8" fill="'+T.c+'"/>';
+    else if(T.s==='diamond')s='<path d="M6 1 L11 6 L6 11 L1 6 Z" fill="'+T.c+'"/>';
+    else s='<path d="M6 1 L11 10.4 L1 10.4 Z" fill="'+T.c+'"/>';
+    const n={Person:'people',Likes:'things they like',Book:'books',Place:'places'}[t];
+    return `<span class="chip"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">${s}</svg>${n}</span>`;}).join('');
+  function walk(){
+    let fr=[[seed]];
+    for(let i=1;i<why.path.length;i+=2){const rel=why.path[i],want=why.path[i+1],nx=[];
+      for(const p of fr)for(const e of adj.get(p[p.length-1]))
+        if(e.rel===rel&&byId.get(e.to).type===want&&!p.includes(e.to))nx.push(p.concat(e.to));
+      fr=nx;if(!fr.length)break;}
+    return fr;}
+  function upd(){
+    const sn=byId.get(seed),ps=walk();
+    lit=new Set([seed]);litE=new Set();
+    ps.slice(0,6).forEach(p=>{p.forEach(n=>lit.add(n));
+      for(let i=0;i<p.length-1;i++)litE.add(key(p[i],p[i+1]));});
+    if(sn.type!=='Person'){$('#boardOut').innerHTML=
+      `<span style="color:${C.rust}">Nothing to walk from here.</span> This question starts at a person, and
+       <b>${sn.label}</b> is not one. Tap a gold circle instead — and notice that the board didn't warn you,
+       it just went quiet.`;return;}
+    if(!ps.length){$('#boardOut').innerHTML=
+      `<span style="color:${C.rust}">No paths from ${sn.label}.</span> There is nothing wrong. There just
+       isn't a route. This is exactly the silence that catches people out.`;return;}
+    $('#boardOut').innerHTML=ps.slice(0,5).map(p=>
+      `<div style="margin-bottom:9px;display:flex;gap:11px;font-size:.85em;line-height:1.6">
+        <span style="color:${C.gold};flex:none">→</span>
+        <span style="color:${C.muted}">${why.say(p)}</span></div>`).join('')+
+      `<div style="margin-top:14px;font-family:var(--mono);font-size:.72rem;color:${C.dim}">
+        ${ps.length} little ${ps.length===1?'story':'stories'} found by walking from ${sn.label}</div>`;}
+  let f=fit(cv),tick=sim(nodes,links,f.w,f.h,{q:-1700,d:84,c:.011});
+  (function draw(){const g=fit(cv),ctx=g.ctx;if(settle<520){tick(g.w,g.h);settle++;}
+    ctx.clearRect(0,0,g.w,g.h);
+    for(const l of links){const on=litE.has(key(l.a,l.b));
+      ctx.strokeStyle=on?'rgba(217,164,65,.9)':'rgba(143,191,160,.14)';ctx.lineWidth=on?2.2:1;
+      ctx.beginPath();ctx.moveTo(l.s.x,l.s.y);ctx.lineTo(l.t.x,l.t.y);ctx.stroke();
+      if(on){const mx=(l.s.x+l.t.x)/2,my=(l.s.y+l.t.y)/2;
+        ctx.font='500 10px "Space Grotesk",monospace';const w=ctx.measureText(l.rel).width;
+        ctx.fillStyle='rgba(11,22,16,.88)';ctx.fillRect(mx-w/2-4,my-7,w+8,14);
+        ctx.fillStyle=C.gold;ctx.textAlign='center';ctx.fillText(l.rel,mx,my+3.5);}}
+    for(const n of nodes){const T=TY[n.type],on=lit.has(n.id),sd=n.id===seed;
+      shape(ctx,n,T.r*(sd?1.45:on?1.15:1),T.c,on?1:.24);
+      if(sd){ctx.strokeStyle=C.gold;ctx.lineWidth=1.4;ctx.globalAlpha=.75;
+        ctx.beginPath();ctx.arc(n.x,n.y,T.r*2.3,0,7);ctx.stroke();ctx.globalAlpha=1;}
+      if(on||hov===n.id){ctx.font='500 11px "Space Grotesk",monospace';ctx.textAlign='center';
+        const w=ctx.measureText(n.label).width;ctx.fillStyle='rgba(11,22,16,.78)';
+        ctx.fillRect(n.x-w/2-4,n.y+T.r+3,w+8,14);
+        ctx.fillStyle=sd?C.gold:on?C.parch:C.muted;ctx.fillText(n.label,n.x,n.y+T.r+14);}}
+    requestAnimationFrame(draw);})();
+  function at(ev){const r=cv.getBoundingClientRect(),px=ev.clientX-r.left,py=ev.clientY-r.top;
+    let best=null,bd=1e9;for(const n of nodes){const d=Math.hypot(n.x-px,n.y-py);if(d<bd){bd=d;best=n;}}
+    return{n:bd<22?best:null,px,py};}
+  let drag=null,moved=false;
+  cv.addEventListener('pointerdown',e=>{const a=at(e);if(a.n){drag=a.n;drag.fix=true;moved=false;
+    cv.setPointerCapture(e.pointerId);}});
+  cv.addEventListener('pointermove',e=>{const a=at(e);hov=a.n?a.n.id:null;
+    cv.style.cursor=a.n?'pointer':'default';
+    if(drag){drag.x=a.px;drag.y=a.py;moved=true;settle=Math.min(settle,400);}});
+  cv.addEventListener('pointerup',()=>{if(drag){drag.fix=false;if(!moved){seed=drag.id;upd();}drag=null;}});
+  cv.addEventListener('pointerleave',()=>{if(drag){drag.fix=false;drag=null;}hov=null;});
+  $$('[data-w]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-w]').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    why=WHY.find(w=>w.id===b.dataset.w);upd();}));
+  upd();})();
+/* fading bars */
+(function(){const svg=$('#fadeSvg');if(!svg)return;
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);
+    if(x!=null)e.textContent=x;return e;};
+  const ROWS=[
+    {n:'"Leo went to the park"',hl:21,c:C.rust,why:'where somebody happened to be'},
+    {n:'"Leo borrowed this book"',hl:30,c:C.gold,why:'one thing they did once'},
+    {n:'"Leo likes dinosaurs"',hl:400,c:C.mint,why:'something about who they are'},
+    {n:'"Leo is Sam\u2019s brother"',hl:1e9,c:C.violet,why:'never stops being true'}];
+  function draw(){
+    const d=+$('#clock').value;
+    const txt=d===0?'today':d<32?d+' days later':d<365?Math.round(d/30)+' months later':
+      (d/365).toFixed(1).replace('.0','')+' years later';
+    $('#clockOut').textContent=txt;$('#oldChip').textContent=txt;
+    svg.innerHTML='';
+    ROWS.forEach((r,i)=>{
+      const y=26+i*48,w=r.hl>1e8?1:Math.exp(-Math.log(2)/r.hl*d);
+      svg.appendChild(el('text',{x:0,y:y+4,fill:C.parch,'font-family':'Space Grotesk','font-size':'12'},r.n));
+      svg.appendChild(el('rect',{x:300,y:y-9,width:420,height:18,rx:4,fill:'#08110C',stroke:C.line}));
+      svg.appendChild(el('rect',{x:300,y:y-9,width:Math.max(2,420*w),height:18,rx:4,fill:r.c,
+        'fill-opacity':.25+w*.7}));
+      svg.appendChild(el('text',{x:736,y:y+4,fill:w>.5?r.c:w>.15?C.muted:C.dim,
+        'font-family':'Space Grotesk','font-size':'11'},
+        w>.85?'still counts':w>.4?'counts a bit':w>.12?'nearly gone':'gone'));
+      svg.appendChild(el('text',{x:0,y:y+19,fill:C.dim,'font-family':'Space Grotesk','font-size':'9.5'},r.why));
+    });
+    const av=ROWS.slice(0,2).map(r=>Math.exp(-Math.log(2)/r.hl*d));
+    $('#fadeOut').innerHTML = d===0
+      ? 'Everything is fresh, so everything counts. Now drag the slider and watch them come apart.'
+      : av[0]<.12 && d<200
+      ? 'The top two have almost vanished already, and the bottom two have barely moved. That gap is the whole point. A single fading speed for everything would have thrown away the two things worth keeping.'
+      : 'Notice the bottom bar has not moved at all. Some things are simply facts, and a system that lets facts fade will eventually forget who someone is.';
+  }
+  $('#clock').addEventListener('input',draw);draw();})();
+
+/* two maps */
+(function(){const svg=$('#mapsSvg');if(!svg)return;
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);
+    if(x!=null)e.textContent=x;return e;};
+  const IT=[
+    {n:'Cake Days',t:'Book',words:[.18,.30],who:[.76,.70],
+     s:'Sits with the other food books when you go by words. Jumps right across to sit beside Ada when you go by who borrows it, because Ada is the only one who ever does.'},
+    {n:'Big Book of Dinosaurs',t:'Book',words:[.74,.22],who:[.24,.30],
+     s:'On its own in the words map, because nothing else talks about dinosaurs. In the who map it has company, because two different people keep coming back to it.'},
+    {n:'Moon Map',t:'Book',words:[.80,.62],who:[.30,.20],
+     s:'Nowhere near the dinosaur book in words. Right next to it in who, because the same two people touch both.'},
+    {n:'Ada',t:'Person',words:[.46,.82],who:[.82,.56],
+     s:'People barely fit on a words map at all. The who map is the only one where a person really has a place.'},
+    {n:'Mia',t:'Person',words:[.50,.76],who:[.22,.62],
+     s:'Sitting right on top of Ada in the words map, and miles away in the who map. Trust only the words map and you would have called them the same sort of person.'},
+    {n:'the bakery',t:'Place',words:[.24,.60],who:[.86,.84],
+     s:'Close to the food books when you go by words, which feels sensible. In the who map it is pulled over to Ada, which is the same fact seen from a different angle.'}];
+  const P=[{k:'words',x:10,l:'by what things say'},{k:'who',x:430,l:'by who touches them'}];
+  const W=380,H=190,Y=48;
+  function draw(hi){svg.innerHTML='';
+    P.forEach(p=>{
+      svg.appendChild(el('text',{x:p.x,y:22,fill:C.mint,'font-family':'Space Grotesk','font-size':'12'},p.l));
+      svg.appendChild(el('rect',{x:p.x,y:Y,width:W,height:H,rx:6,fill:'#08110C',stroke:C.line}));
+      IT.forEach(it=>{const[u,v]=it[p.k],cx=p.x+16+u*(W-32),cy=Y+14+v*(H-28);
+        const on=!hi||hi===it.n,c=TY[it.t].c;
+        const g=el('g',{tabindex:'0',style:'cursor:pointer','data-n':it.n});
+        if(hi===it.n)g.appendChild(el('circle',{cx,cy,r:13,fill:'none',stroke:c,'stroke-width':1,opacity:.55}));
+        g.appendChild(el('circle',{cx,cy,r:hi===it.n?7:5.4,fill:c,opacity:on?.95:.16}));
+        g.appendChild(el('circle',{cx,cy,r:15,fill:'transparent'}));
+        g.appendChild(el('title',{},it.n));
+        if(hi===it.n)g.appendChild(el('text',{x:cx,y:cy-18,'text-anchor':'middle',fill:c,
+          'font-family':'Space Grotesk','font-size':'10.5'},it.n));
+        svg.appendChild(g);});});
+    svg.querySelectorAll('[data-n]').forEach(g=>{
+      const go=()=>{draw(g.dataset.n);
+        $('#mapsOut').innerHTML='<b style="color:'+C.parch+'">'+g.dataset.n+'</b> — '+
+          IT.find(i=>i.n===g.dataset.n).s;};
+      g.addEventListener('mouseenter',go);g.addEventListener('focus',go);});}
+  const DEF='Hover any dot to see where the same thing lands on the other map.';
+  $('#mapsOut').innerHTML=DEF;
+  svg.addEventListener('mouseleave',()=>{draw(null);$('#mapsOut').innerHTML=DEF;});
+  draw(null);})();
+
+/* ripples */
+(function(){const svg=$('#rippleSvg');if(!svg)return;
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);
+    if(x!=null)e.textContent=x;return e;};
+  const START=['Leo likes dinosaurs','Leo likes space'];
+  const R=[
+    [{n:'the dinosaur book',w:.9,f:0},{n:'the moon map',w:.85,f:1},{n:'Mia',w:.55,f:0},{n:'Sam',w:.5,f:1}],
+    [{n:'the library',w:.8,f:0},{n:'painting',w:.3,f:2},{n:'baking',w:.2,f:3},{n:'the park',w:.35,f:2}],
+    [{n:'Paint a Sky',w:.25,f:0},{n:'Cake Days',w:.15,f:2},{n:'Ada',w:.12,f:2},{n:'the bakery',w:.08,f:3}]];
+  let hop=1;
+  function draw(){svg.innerHTML='';
+    const cx=104,cy=150;
+    for(let k=hop;k>=1;k--)svg.appendChild(el('circle',{cx,cy,r:52+k*78,fill:'none',
+      stroke:'rgba(143,191,160,'+(0.2-k*0.042)+')','stroke-dasharray':'2 6'}));
+    START.forEach((s,i)=>{const y=cy-26+i*52;
+      svg.appendChild(el('rect',{x:6,y:y-17,width:186,height:34,rx:5,fill:C.panel,stroke:C.gold}));
+      svg.appendChild(el('text',{x:99,y:y+4,'text-anchor':'middle',fill:C.parch,
+        'font-family':'Space Grotesk','font-size':'11'},s));});
+    svg.appendChild(el('text',{x:99,y:38,'text-anchor':'middle',fill:C.gold,
+      'font-family':'Space Grotesk','font-size':'10.5'},'what we already know'));
+    R.slice(0,hop).forEach((col,ci)=>{const x=236+ci*200;
+      svg.appendChild(el('text',{x:x+80,y:38,'text-anchor':'middle',fill:C.mint,
+        'font-family':'Space Grotesk','font-size':'10.5'},['one step','two steps','three steps'][ci]));
+      col.forEach((n,i)=>{const y=64+i*56;
+        svg.appendChild(el('rect',{x,y,width:160,height:40,rx:5,fill:C.panel,stroke:C.mint,
+          'stroke-opacity':.25+n.w*.7}));
+        svg.appendChild(el('text',{x:x+10,y:y+18,fill:C.parch,'font-family':'Space Grotesk','font-size':'10.5'},n.n));
+        svg.appendChild(el('rect',{x:x+10,y:y+25,width:110,height:4,rx:2,fill:C.line}));
+        svg.appendChild(el('rect',{x:x+10,y:y+25,width:110*n.w,height:4,rx:2,fill:C.gold}));
+        const px=ci===0?192:236+(ci-1)*200+160, py=ci===0?cy-26+(n.f%2)*52:64+n.f*56+20;
+        svg.appendChild(el('path',{d:`M${px} ${py} C ${px+24} ${py}, ${x-24} ${y+20}, ${x} ${y+20}`,
+          fill:'none',stroke:'rgba(143,191,160,'+(0.18+n.w*.6)+')','stroke-width':.8+n.w*2.4}));});});
+    $('#rippleOut').innerHTML = hop===1
+      ? 'One step out and everything found is obviously about Leo. Strong waves, short journey, easy to trust.'
+      : hop===2
+      ? 'Two steps out and the library shows up with a big wave, because <em>both</em> starting points lead there. That is two ripples meeting. Baking shows up too, with a tiny wave, reached by one long thread.'
+      : 'Three steps out and almost everything on the board has been touched, most of it faintly. Ada is in the list now, and she has nothing to do with Leo. This is what going too far looks like.';}
+  $$('[data-r]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-r]').forEach(x=>x.classList.remove('on'));b.classList.add('on');hop=+b.dataset.r;draw();}));
+  draw();})();
+
+/* helpers */
+(function(){const svg=$('#helpSvg');if(!svg)return;
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);
+    if(x!=null)e.textContent=x;return e;};
+  const H=[
+    {id:'read',x:78,n:'the reader',s:'pins up new things',
+     d:'Reads whatever is new and puts it on the board. It is the only one allowed to pin things up, so if something goes on wrong, everyone knows who to ask.'},
+    {id:'find',x:268,n:'the finder',s:'walks the strings',
+     d:'Starts somewhere and follows strings until it gets somewhere useful. It always hands back the little story of how it got there, not just the answer.'},
+    {id:'check',x:458,n:'the checker',s:'says yes or no',
+     d:'Looks at an idea and decides whether it is actually allowed. This is the helper that has to be able to say no, and it has to be able to say exactly why.'},
+    {id:'write',x:648,n:'the writer',s:'puts it together',
+     d:'Takes what the others found and writes it up for a person to read. It owns nothing of its own on the board, on purpose — a helper with its own private notes is where disagreements quietly get buried.'}];
+  let sel=null,mode='all',step=0,timer=null;
+  const STEPS=[['read','Morning. The reader spots something new and pins it up.'],
+    ['find','The finder walks out from the new pin and comes back with three little stories.'],
+    ['check','The checker looks at each one and throws two of them out before any person sees them.'],
+    ['write','The writer turns what is left into something readable, and keeps the stories attached.'],
+    ['human','A person reads it and decides. Whatever they decide goes back on the board.']];
+  function draw(){svg.innerHTML='';
+    const defs=el('defs',{});[['a1',C.mint],['a2',C.gold],['a3','#3E6249']].forEach(([i,c])=>{
+      const m=el('marker',{id:i,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto'});
+      m.appendChild(el('path',{d:'M0 0 L10 5 L0 10 z',fill:c}));defs.appendChild(m);});
+    svg.appendChild(defs);
+    const act=mode==='walk'?STEPS[step][0]:sel;
+    svg.appendChild(el('rect',{x:8,y:36,width:48,height:352,rx:6,fill:'#101F17',stroke:C.violet,'stroke-dasharray':'4 3'}));
+    const sp=el('text',{x:32,y:212,'text-anchor':'middle',fill:C.violet,'font-family':'Space Grotesk',
+      'font-size':'11',transform:'rotate(-90 32 212)'});sp.textContent='what the words mean';svg.appendChild(sp);
+    const hOn=act==='human';
+    svg.appendChild(el('rect',{x:648,y:12,width:196,height:46,rx:6,fill:C.panel,
+      stroke:hOn?C.gold:C.line,'stroke-width':hOn?1.8:1,opacity:!act||hOn?1:.3}));
+    svg.appendChild(el('text',{x:746,y:33,'text-anchor':'middle',fill:hOn?C.gold:C.parch,
+      'font-family':'Space Grotesk','font-size':'11',opacity:!act||hOn?1:.3},'a person decides'));
+    svg.appendChild(el('text',{x:746,y:49,'text-anchor':'middle',fill:C.dim,
+      'font-family':'Space Grotesk','font-size':'9',opacity:!act||hOn?1:.3},'and can say no'));
+    svg.appendChild(el('path',{d:'M746 126 V 62',fill:'none',stroke:hOn?C.gold:'#3E6249',
+      'stroke-width':1.4,'marker-end':hOn?'url(#a2)':'url(#a3)'}));
+    svg.appendChild(el('line',{x1:78,y1:128,x2:844,y2:128,stroke:C.gold,'stroke-width':2,opacity:.45}));
+    svg.appendChild(el('text',{x:82,y:120,fill:C.gold,'font-family':'Space Grotesk','font-size':'10'},
+      'helpers pass work sideways \u2014 none of them can reach into another one'));
+    H.forEach(h=>{const on=!act||act===h.id;
+      const g=el('g',{style:'cursor:pointer',opacity:on?1:.28});
+      g.appendChild(el('line',{x1:h.x+82,y1:128,x2:h.x+82,y2:146,stroke:C.gold,'stroke-width':1.5,opacity:.55}));
+      g.appendChild(el('rect',{x:h.x,y:146,width:164,height:66,rx:6,fill:C.panel,
+        stroke:act===h.id?C.gold:C.line,'stroke-width':act===h.id?1.8:1}));
+      g.appendChild(el('text',{x:h.x+82,y:174,'text-anchor':'middle',fill:act===h.id?C.gold:C.parch,
+        'font-family':'Space Grotesk','font-size':'11.5'},h.n));
+      g.appendChild(el('text',{x:h.x+82,y:192,'text-anchor':'middle',fill:C.muted,
+        'font-family':'Space Grotesk','font-size':'9.5'},h.s));
+      g.addEventListener('click',()=>{mode='all';clearInterval(timer);timer=null;
+        $$('[data-h]').forEach(x=>x.classList.toggle('on',x.dataset.h==='all'));
+        sel=sel===h.id?null:h.id;draw();});
+      svg.appendChild(g);
+      svg.appendChild(el('path',{d:`M${h.x+82} 212 C ${h.x+82} 248, 430 258, 430 292`,fill:'none',
+        stroke:act===h.id?C.mint:'#2C5540','stroke-width':act===h.id?1.8:1,'stroke-dasharray':'4 3',
+        opacity:on?.85:.15,'marker-end':'url(#a1)'}));});
+    svg.appendChild(el('text',{x:78,y:256,fill:C.mint,'font-family':'Space Grotesk','font-size':'10'},
+      'and each one looks things up on the same board'));
+    svg.appendChild(el('rect',{x:78,y:292,width:766,height:92,rx:8,fill:C.panel,stroke:C.gold,'stroke-opacity':.5}));
+    svg.appendChild(el('text',{x:461,y:322,'text-anchor':'middle',fill:C.gold,
+      'font-family':'Space Grotesk','font-size':'12'},'ONE SHARED BOARD'));
+    ['the pins, the strings and the box of notes underneath',
+     'everyone reads the same one, so everyone means the same thing']
+      .forEach((t,i)=>svg.appendChild(el('text',{x:461,y:346+i*19,'text-anchor':'middle',fill:C.muted,
+        'font-family':'Space Grotesk','font-size':'10'},t)));
+    if(mode==='walk'&&step>0&&step<4){const f=H[step-1],t=H[step];
+      svg.appendChild(el('path',{d:`M${f.x+130} 128 H ${t.x+34}`,fill:'none',stroke:C.gold,
+        'stroke-width':2.4,'marker-end':'url(#a2)'}));}
+    out();}
+  function out(){
+    if(mode==='walk'){$('#helpOut').innerHTML=
+      '<div style="display:flex;gap:5px;margin-bottom:10px">'+STEPS.map((s,i)=>
+      `<span style="flex:1;height:3px;border-radius:2px;background:${i<=step?C.gold:C.line}"></span>`).join('')+
+      '</div>'+STEPS[step][1];return;}
+    if(!sel){$('#helpOut').innerHTML='Four helpers in a row. They hand work sideways to each other, and each '+
+      'one looks things up on the same board underneath. The strip down the side is the agreed list of what '+
+      'the words mean, which both the helpers and the board depend on. '+
+      '<span style="color:'+C.dim+'">Tap a helper.</span>';return;}
+    const h=H.find(x=>x.id===sel);
+    $('#helpOut').innerHTML='<b style="color:'+C.gold+'">'+h.n+'</b> — '+h.d;}
+  $$('[data-h]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-h]').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    mode=b.dataset.h;sel=null;clearInterval(timer);timer=null;
+    if(mode==='walk'){step=0;draw();timer=setInterval(()=>{step=(step+1)%STEPS.length;draw();},RM?4400:3000);}
+    else draw();}));
+  draw();})();
+})();
+</script>
+</div></body></html>

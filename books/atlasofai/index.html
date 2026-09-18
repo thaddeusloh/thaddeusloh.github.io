@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas of AI — Kate Crawford — reader's guide</title>
+<meta name="description" content="Chapter-by-chapter breakdown, key facts and takeaways from Kate Crawford's Atlas of AI: Power, Politics, and the Planetary Costs of Artificial Intelligence (2021).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#191410;
+    --panel:#221C17;
+    --panel-2:#2A231C;
+    --fg:#EDE6DC;
+    --dim:#A2968A;
+    --dimmer:#786D62;
+    --rule:rgba(237,230,220,.14);
+    --rule-2:rgba(237,230,220,.07);
+    --mineral:#8FC2C0;
+    --mineral-soft:rgba(143,194,192,.12);
+    --measure:70ch;
+    --display:"Bitter",Georgia,"Times New Roman",serif;
+    --body:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.7;font-weight:400}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  p{max-width:var(--measure)}
+  strong{font-weight:600}
+  a{color:var(--mineral);text-decoration:none;border-bottom:1px solid rgba(143,194,192,.3)}
+  a:hover{border-bottom-color:var(--mineral)}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--mineral);outline-offset:3px}
+
+  nav.bar{position:sticky;top:0;z-index:30;background:rgba(25,20,16,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+  nav.bar ul{display:flex;gap:20px;flex-wrap:wrap;list-style:none;margin:0 auto;padding:12px 24px;max-width:1040px;font-size:13.5px}
+  nav.bar a{color:var(--dim);border:0}
+  nav.bar a:hover{color:var(--mineral)}
+
+  /* hero */
+  header.hero{padding:74px 0 58px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-size:13px;color:var(--dim);margin:0 0 22px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,9.5vw,102px);line-height:.94;letter-spacing:-.035em;margin:0 0 12px}
+  .sub{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(17px,2.5vw,25px);color:var(--dim);margin:0 0 30px;max-width:26ch;line-height:1.3}
+  .stake{font-size:clamp(18px,2.2vw,23px);line-height:1.5;max-width:42ch;margin:0 0 36px}
+  .stake b{color:var(--mineral);font-weight:600}
+
+  .specs{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);margin-bottom:48px}
+  .specs div{padding:14px 26px 14px 0;margin-right:26px;border-right:1px solid var(--rule);font-size:12.5px;color:var(--dim)}
+  .specs div:last-child{border-right:0}
+  .specs b{display:block;color:var(--fg);font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em}
+
+  /* altitude figure */
+  .alt{margin:0;border:1px solid var(--rule);background:var(--panel);padding:26px 24px 22px}
+  .alt-title{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em;margin:0 0 4px}
+  .alt-sub{font-size:13.5px;color:var(--dim);margin:0 0 24px;max-width:58ch}
+  .layer{display:grid;grid-template-columns:92px 22px 1fr;gap:0 14px;align-items:start;position:relative}
+  .layer .h{font-size:12px;color:var(--dimmer);text-align:right;padding-top:14px;line-height:1.3}
+  .layer .axis{position:relative}
+  .layer .axis::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:1px;background:var(--rule)}
+  .layer:first-of-type .axis::before{top:18px}
+  .layer:last-of-type .axis::before{bottom:calc(100% - 18px)}
+  .layer .dot{position:absolute;left:5.5px;top:16px;width:11px;height:11px;border-radius:50%;background:var(--panel);border:1px solid var(--dim)}
+  .layer.mark .dot{background:var(--mineral);border-color:var(--mineral)}
+  .layer .body{padding:10px 0 12px}
+  .layer .cn{font-family:var(--display);font-weight:700;font-size:15.5px;letter-spacing:-.02em;margin:0 0 3px}
+  .layer.mark .cn{color:var(--mineral)}
+  .layer .site{font-size:13.5px;color:var(--dim);margin:0;line-height:1.45;max-width:52ch}
+  .alt figcaption{font-size:14px;color:var(--dim);margin-top:18px;line-height:1.55;max-width:62ch;border-top:1px solid var(--rule-2);padding-top:16px}
+
+  /* sections */
+  section{padding:68px 0;border-bottom:1px solid var(--rule)}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,4.4vw,44px);line-height:1.08;letter-spacing:-.035em;margin:0 0 10px;max-width:20ch}
+  .lede{font-size:18.5px;color:var(--dim);margin:0 0 34px;max-width:62ch;line-height:1.55}
+  h3{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:-.025em;margin:40px 0 12px}
+
+  /* chapters */
+  .ch{border-top:1px solid var(--rule);padding:30px 0}
+  .ch:first-of-type{border-top:2px solid var(--mineral)}
+  .ch-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .ch-n{font-family:var(--display);font-weight:800;font-size:15px;color:var(--mineral);letter-spacing:.03em}
+  .ch h4{font-family:var(--display);font-weight:700;font-size:27px;letter-spacing:-.03em;margin:0;line-height:1.1}
+  .ch .pp{font-size:12.5px;color:var(--dimmer)}
+  .ch .terr{font-size:13.5px;color:var(--dim);margin:0 0 14px;max-width:60ch}
+  .ch p.b{margin:0 0 12px;font-size:16.5px;color:#D6CCC0}
+  .ch .claim{font-size:15.5px;color:var(--mineral);margin:14px 0 0;padding-left:15px;border-left:2px solid var(--mineral-soft);max-width:60ch;line-height:1.5}
+  .ch .claim em{font-style:normal;color:var(--fg);font-weight:600}
+
+  /* facts */
+  .facts{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2)}
+  @media(min-width:640px){.facts{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:960px){.facts{grid-template-columns:repeat(4,1fr)}}
+  .fact{background:var(--bg);padding:20px 22px}
+  .fact b{display:block;font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.035em;color:var(--mineral);margin-bottom:5px;line-height:1.1}
+  .fact span{display:block;font-size:14.5px;line-height:1.5;color:#D6CCC0}
+
+  ul.list{padding-left:22px;max-width:var(--measure)}
+  ul.list li{margin-bottom:15px}
+
+  .cols{display:grid;gap:32px}
+  @media(min-width:860px){.cols{grid-template-columns:1fr 1fr;gap:46px}}
+  .cols h3{margin-top:0}
+  .col-a{border-top:2px solid var(--mineral);padding-top:18px}
+  .col-b{border-top:2px solid var(--dimmer);padding-top:18px}
+  .cols ul{padding-left:20px;margin:0}
+  .cols li{margin-bottom:14px;font-size:16px;color:#D6CCC0}
+
+  .takeaway{border:1px solid var(--rule);padding:32px 34px;background:var(--panel);margin-top:6px}
+  .takeaway ol{padding-left:22px;margin:0;max-width:64ch}
+  .takeaway li{margin-bottom:20px;font-size:17.5px}
+  .takeaway li:last-child{margin-bottom:0}
+  .takeaway li b{font-family:var(--display);font-weight:700;font-size:18px;display:block;letter-spacing:-.025em;margin-bottom:3px}
+
+  .pull{font-family:var(--display);font-weight:700;font-size:clamp(21px,3vw,30px);line-height:1.28;letter-spacing:-.035em;
+    max-width:24ch;margin:46px 0 0;padding-left:22px;border-left:3px solid var(--mineral)}
+
+  details{border-top:1px solid var(--rule-2);padding:15px 0}
+  details summary{cursor:pointer;font-size:16.5px;font-weight:500;list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+  ";color:var(--mineral)}
+  details[open] summary::before{content:"–  "}
+  details p{margin:11px 0 0;font-size:16.5px;color:#D6CCC0}
+
+  .shelf{display:grid;gap:1px;background:var(--rule-2);border:1px solid var(--rule-2);margin-top:14px}
+  @media(min-width:760px){.shelf{grid-template-columns:repeat(3,1fr)}}
+  .shelf div{background:var(--bg);padding:22px 24px}
+  .shelf h4{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.025em;margin:0 0 3px}
+  .shelf .by{font-size:12.5px;color:var(--dim);margin:0 0 10px}
+  .shelf p{margin:0;font-size:15.5px;line-height:1.55;color:#D6CCC0}
+
+  footer{padding:50px 0 76px;font-size:14.5px;color:var(--dim)}
+  footer p{max-width:72ch;line-height:1.6}
+  footer a{color:var(--dim);border-bottom-color:var(--rule-2)}
+
+  @media print{
+    :root{--bg:#fff;--panel:#fff;--panel-2:#fff;--fg:#191410;--dim:#5A5048;--dimmer:#7A6F64;
+      --rule:rgba(25,20,16,.2);--rule-2:rgba(25,20,16,.1);--mineral:#1E6260;--mineral-soft:rgba(30,98,96,.1)}
+    body{background:#fff;font-size:10.5pt}
+    nav.bar{display:none}
+    section{padding:22px 0}
+    .ch,.fact,.layer{page-break-inside:avoid}
+    a{color:var(--fg);border:0}
+  }
+</style>
+</head>
+<body>
+
+<nav class="bar" aria-label="Sections">
+  <ul>
+    <li><a href="#argument">The argument</a></li>
+    <li><a href="#structure">Structure</a></li>
+    <li><a href="#chapters">Chapter by chapter</a></li>
+    <li><a href="#facts">Key facts</a></li>
+    <li><a href="#curious">Worth knowing</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+    <li><a href="#now">How it reads now</a></li>
+    <li><a href="#criticism">Criticism</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Reader's guide — Kate Crawford — Yale University Press, April 2021</p>
+    <h1>Atlas of AI</h1>
+    <p class="sub">Power, Politics, and the Planetary Costs of Artificial Intelligence</p>
+    <p class="stake">Crawford's opening claim is deliberately flat and deliberately provocative: <b>artificial intelligence is neither artificial nor intelligent.</b> It is made of minerals, energy, human labour and other people's data, and it is best understood not as a technology but as a way of concentrating power.</p>
+
+    <div class="specs">
+      <div><b>6 chapters</b>Plus introduction, conclusion, coda</div>
+      <div><b>336 pages</b>Yale University Press</div>
+      <div><b>Five years</b>Of field research across continents</div>
+      <div><b>An atlas</b>Each chapter a different terrain</div>
+    </div>
+
+    <figure class="alt">
+      <p class="alt-title">The book as an atlas, read by altitude</p>
+      <p class="alt-sub">Crawford structures the book as a set of map plates, each one a different layer of the same system. Read in order, it climbs from the mineral seam under a salt flat to satellites in orbit — and the argument gets more political the higher it goes.</p>
+
+      <div class="layer">
+        <div class="h">Orbit</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">Coda — Space</p>
+          <p class="site">Billionaire space ventures. The extractive logic leaving the planet altogether.</p>
+        </div>
+      </div>
+      <div class="layer mark">
+        <div class="h">The system</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">Conclusion — Power</p>
+          <p class="site">Where the six terrains are assembled into one argument about domination.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="h">The border</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">6 — State</p>
+          <p class="site">Military research, intelligence agencies, police departments, immigration enforcement.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="h">The face</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">5 — Affect</p>
+          <p class="site">Emotion recognition, from a disputed psychology of universal expressions to airport checkpoints.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="h">The taxonomy</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">4 — Classification</p>
+          <p class="site">ImageNet's categories, and what happens when a label becomes an instruction.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="h">The network</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">3 — Data</p>
+          <p class="site">Mugshot archives, scraped photographs, and the end of consent as an operating assumption.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="h">The floor</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">2 — Labor</p>
+          <p class="site">Warehouse aisles, crowdwork platforms, and the management of human time.</p>
+        </div>
+      </div>
+      <div class="layer mark">
+        <div class="h">Underground</div>
+        <div class="axis"><span class="dot"></span></div>
+        <div class="body">
+          <p class="cn">1 — Earth</p>
+          <p class="site">Lithium brine in Nevada, rare earths in Inner Mongolia, and the energy that runs the whole thing.</p>
+        </div>
+      </div>
+
+      <figcaption>An atlas is not a neutral object — it decides what is worth mapping. Crawford means the title as an argument about method: to understand AI you have to visit the places it depends on, and almost none of them look like a computer.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="argument">
+  <div class="wrap">
+    <h2>The argument</h2>
+    <p class="lede">Kate Crawford is a research professor at USC Annenberg, was a senior principal researcher at Microsoft Research, and co-founded the AI Now Institute. She wrote this as a critic of the industry while working inside it, which shapes both its access and its limits.</p>
+
+    <p>The book opens with Clever Hans — the horse in early twentieth-century Berlin that appeared to do arithmetic by tapping its hoof, and was in fact reading unconscious cues from the people asking the questions. Crawford uses the story as the governing parable for everything that follows. A system that looks autonomous, examined closely, turns out to depend on human input nobody was counting.</p>
+
+    <p>From there she makes four connected claims. <strong>AI is not artificial:</strong> it is built out of lithium, cobalt, rare earths, water, electricity and shipping, and every training run has a physical location and a bill. <strong>AI is not intelligent:</strong> it is statistical pattern-matching on human-produced material, and calling it a mind imports assumptions that do most of the rhetorical work. <strong>AI is an extractive industry:</strong> the same logic that pulls minerals out of the ground pulls data out of populations and effort out of workers, and it does all three without asking.</p>
+
+    <p>And the fourth claim, which is the one the book actually exists to make: <strong>AI is a registry of power.</strong> Its purpose, in practice, is to classify people and allocate outcomes — who is hired, who is policed, who is admitted, who is flagged. Crawford's conclusion is that questions framed as technical are almost always political questions wearing technical clothing, and that fixing the maths will not fix them.</p>
+
+    <p>What distinguishes the book from the broader AI-ethics literature is its refusal of the ethics frame itself. Crawford argues that "bias" and "fairness" are the industry's preferred vocabulary precisely because they imply the problem is a calibration error rather than a question about whether a system should exist. Her preferred question is not <em>how do we make this fair</em> but <em>who benefits from this being built at all</em>.</p>
+
+    <p class="pull">Every dataset is an argument about the world. Most of them were never debated.</p>
+  </div>
+</section>
+
+<section id="structure">
+  <div class="wrap">
+    <h2>How the book is built</h2>
+    <p class="lede">Six chapters, an introduction, a conclusion and a coda. Each chapter is a terrain and each opens with Crawford physically somewhere — a mine, a warehouse, an archive, a museum, a border facility.</p>
+
+    <p>The structure is spatial rather than chronological, and that is the whole conceit. Instead of telling the story of AI forward in time, Crawford takes a cross-section through it: the mineral layer, the labour layer, the data layer, the classification layer, the perceptual layer, the state layer. Each is a map plate of the same object, drawn at a different depth.</p>
+
+    <p>The chapters get progressively more political. Chapter 1 is materialist reporting almost anyone would accept. By chapter 6 she is arguing about state violence, and the conclusion is an explicit political programme. If the later chapters feel like a different book from the earlier ones, that is by design — she is building consent to the method before deploying it on contested ground.</p>
+
+    <p>One thing to know before starting: this is an academic book written for a general audience, not a work of narrative journalism. There are no protagonists and very little plot. The pleasure is in the connections — Charles Babbage and Amazon's warehouse scanners, nineteenth-century skull measurement and a face dataset, imperial time standardisation and Google's clock infrastructure.</p>
+  </div>
+</section>
+
+<section id="chapters">
+  <div class="wrap">
+    <h2>Chapter by chapter</h2>
+    <p class="lede">Nine units in total. Summaries are thematic — written from the book's arguments rather than its text — with the central claim of each drawn out.</p>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">INTRO</span><h4>Introduction</h4><span class="pp">p. 1</span></div>
+      <p class="terr">Terrain: the framing</p>
+      <p class="b">Opens with Clever Hans, then dismantles the analogy between human minds and machine systems. Crawford argues that treating AI as disembodied intelligence conceals everything that actually makes it work — the bodies, the minerals, the institutions, the money. She sets out the book's method: to study AI you have to go to the places it depends on, which are mostly not in Silicon Valley.</p>
+      <p class="claim"><em>Central claim:</em> the word "artificial" is doing enormous concealing work, and so is "intelligence".</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">01</span><h4>Earth</h4><span class="pp">p. 23</span></div>
+      <p class="terr">Terrain: lithium brine in Nevada, rare earths in Inner Mongolia, container ports, data centres</p>
+      <p class="b">The material layer. Crawford visits Clayton Valley in Nevada, where lithium is pumped from beneath a salt flat, and traces the mineral supply chain that ends in a phone. She covers the rare earth extraction that produces enormous volumes of toxic tailings, the energy and water consumption of computation, and the logistics networks that hold it all together. The chapter's rhetorical target is the word "cloud" — a metaphor chosen, she argues, to make an industrial system sound like weather.</p>
+      <p class="claim"><em>Central claim:</em> computation is a planetary-scale extractive industry, and its environmental cost is not an externality to be optimised but a defining feature of how it works.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">02</span><h4>Labor</h4><span class="pp">p. 53</span></div>
+      <p class="terr">Terrain: Amazon fulfilment centres, Mechanical Turk, the history of factory management</p>
+      <p class="b">The human layer that automation was supposed to eliminate. Crawford documents warehouse work under algorithmic supervision, where the system sets the pace and measures the gaps, and crowdwork platforms where people perform tasks piece by piece for cents. She threads this through Charles Babbage on the division of mental labour, Bentham's panopticon, and Taylor and Ford on the management of time — arguing that AI is the latest instalment in a two-century project of breaking work into measurable fragments. A long section on Google's time infrastructure links the coordination of machine clocks to the older imperial project of standardising time.</p>
+      <p class="claim"><em>Central claim:</em> AI does not remove human labour. It relocates it, fragments it, and makes it invisible — and the invisibility is what allows the system to be described as automatic.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">03</span><h4>Data</h4><span class="pp">p. 89</span></div>
+      <p class="terr">Terrain: government archives, benchmark datasets, the open web</p>
+      <p class="b">How machine learning acquired its raw material. Crawford traces the shift from carefully constructed research datasets to mass collection: mugshot archives held by the National Institute of Standards and Technology, images of people who never consented and in many cases are dead, faces scraped from the web at scale. She calls this a capture of the commons, and describes how the extraction came to be morally reframed inside the industry as neutral, inevitable and even beneficial. A section on "ground truth" argues that the term is a misnomer — what gets treated as truth in a training set is a set of decisions somebody made.</p>
+      <p class="claim"><em>Central claim:</em> consent stopped being an operating assumption somewhere around the point that data became abundant, and nothing replaced it.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">04</span><h4>Classification</h4><span class="pp">p. 123</span></div>
+      <p class="terr">Terrain: ImageNet's taxonomy, the history of racial and craniometric measurement</p>
+      <p class="b">The chapter most directly drawn from Crawford's own research. She audits the category structure of ImageNet — built on the WordNet lexical database — and shows what happens when a hierarchy designed for language becomes a hierarchy for sorting photographs of people: gender treated as a biological binary, a long tail of categories that are insulting, incoherent or simply bizarre. She connects this to nineteenth-century physiognomy and skull measurement, where classifying bodies was itself the instrument of hierarchy, and covers Amazon's abandoned hiring tool as a case where a model learned the discrimination in its training record and reproduced it efficiently.</p>
+      <p class="claim"><em>Central claim:</em> bias is not a defect in an otherwise neutral system. Classification is an exercise of power, and choosing the categories is the political act — debiasing the model afterwards leaves that act untouched.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">05</span><h4>Affect</h4><span class="pp">p. 151</span></div>
+      <p class="terr">Terrain: mid-century psychology fieldwork, then airports, classrooms and job interviews</p>
+      <p class="b">The most self-contained chapter and, for many readers, the most alarming. Crawford traces emotion recognition back to Paul Ekman's claim that a small set of emotions are universal and legible from facial expression — a claim resting substantially on fieldwork in the highlands of Papua New Guinea using posed photographs and forced-choice questions, and contested by psychologists ever since, notably in work led by Lisa Feldman Barrett. She then shows that this disputed theory has been encoded into commercial products that assess job candidates, monitor students and flag travellers. She notes the long history of military and intelligence funding behind the research.</p>
+      <p class="claim"><em>Central claim:</em> a scientifically contested theory has been hardened into infrastructure, and once it is infrastructure the dispute stops mattering to the people it is used on.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">06</span><h4>State</h4><span class="pp">p. 181</span></div>
+      <p class="terr">Terrain: defence research, intelligence agencies, police departments, immigration enforcement</p>
+      <p class="b">Crawford traces the pipeline by which capabilities developed for war reach domestic populations: funded by defence agencies, refined for intelligence work, then sold to police forces and civil government at a discount. She covers the surveillance apparatus revealed in the Snowden disclosures, the contractors who sit between the state and the tech sector, and the use of these systems in immigration enforcement. Her broader point is that the public-private boundary is not a boundary — the state is simultaneously the industry's biggest customer, its largest historical funder, and the body notionally regulating it.</p>
+      <p class="claim"><em>Central claim:</em> AI extends state capacity, and the capacity it extends most efficiently is the capacity to watch, sort and exclude.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">CONCL</span><h4>Power</h4><span class="pp">p. 211</span></div>
+      <p class="terr">Terrain: the whole system, assembled</p>
+      <p class="b">The synthesis, and the book's argumentative peak. Crawford assembles the six terrains into a single claim: AI functions as a registry of power, and the recurring pattern is that costs fall on people with the least ability to refuse while benefits accrue to those who already have the most. She rejects "ethics" and "fairness" as adequate responses, on the grounds that they accept the system's existence as given and negotiate only its parameters. What she proposes instead is a politics of refusal — connecting AI critique to labour organising, climate justice, racial justice and data protection, and treating the question of whether to build something as a live one.</p>
+      <p class="claim"><em>Central claim:</em> the useful question is not how to make these systems fair, but who gets to decide they should exist.</p>
+    </div>
+
+    <div class="ch">
+      <div class="ch-head"><span class="ch-n">CODA</span><h4>Space</h4><span class="pp">p. 229</span></div>
+      <p class="terr">Terrain: orbit, and the asteroid-mining imagination</p>
+      <p class="b">A short closing essay on the billionaire space ventures and the fantasy of unlimited off-world resources. Crawford reads the enthusiasm for asteroid mining and Mars settlement as the extractive logic of chapter 1 projected outward — a way of declaring that the planetary limits documented in the rest of the book need not be confronted, because there is more somewhere else. It also functions as a comment on who gets to leave.</p>
+      <p class="claim"><em>Central claim:</em> the escape fantasy is the same extraction story, told at a higher altitude, and it ends the atlas exactly where it should.</p>
+    </div>
+  </div>
+</section>
+
+<section id="facts">
+  <div class="wrap">
+    <h2>Key facts</h2>
+    <p class="lede">Context and provenance worth carrying.</p>
+
+    <div class="facts">
+      <div class="fact"><b>April 2021</b><span>Published by Yale University Press, nineteen months before ChatGPT.</span></div>
+      <div class="fact"><b>6+3</b><span>Six chapters, plus an introduction, a conclusion titled Power, and a coda titled Space.</span></div>
+      <div class="fact"><b>5 years</b><span>Of research and field visits, across mines, warehouses, archives, museums and enforcement facilities.</span></div>
+      <div class="fact"><b>AI Now</b><span>Crawford co-founded the AI Now Institute in 2017, one of the first research centres dedicated to AI's social implications.</span></div>
+      <div class="fact"><b>MoMA</b><span>Her earlier map with Vladan Joler, Anatomy of an AI System, entered the Museum of Modern Art's collection.</span></div>
+      <div class="fact"><b>~600,000</b><span>Images reportedly removed from ImageNet's person categories after her audit with Trevor Paglen.</span></div>
+      <div class="fact"><b>Inside</b><span>Written while she was a senior principal researcher at Microsoft Research — a critic of the industry, employed by it.</span></div>
+      <div class="fact"><b>EU AI Act</b><span>Later prohibited emotion recognition in workplaces and schools, matching chapter 5's argument almost exactly.</span></div>
+    </div>
+
+    <h3>The episodes the book turns on</h3>
+    <ul class="list">
+      <li><strong>Clever Hans.</strong> The horse that appeared to do arithmetic and was reading its questioners. Crawford's frame for every system whose apparent autonomy rests on unacknowledged human input — which, by her reading, is all of them.</li>
+      <li><strong>Clayton Valley, Nevada.</strong> Lithium pumped from brine beneath a salt flat. The chapter opens here so that the rest of the book cannot be read as being about software.</li>
+      <li><strong>The Amazon warehouse floor.</strong> Work paced, measured and disciplined by a system, with the gaps between tasks treated as a defect to be eliminated. Crawford's case that automation intensifies human labour rather than replacing it.</li>
+      <li><strong>The NIST mugshot archives.</strong> Photographs of arrested people, many long dead, repurposed as benchmark data for facial recognition. Nobody involved consented, and consent was never considered.</li>
+      <li><strong>ImageNet's person categories.</strong> A taxonomy borrowed from a lexical database and applied to photographs of human beings, producing categories that range from arbitrary to abusive. Her audit led to a large-scale deletion.</li>
+      <li><strong>Ekman in Papua New Guinea.</strong> The fieldwork underpinning the claim that emotional expression is universal, conducted with posed photographs and forced-choice questions, now embedded in commercial systems that judge job candidates.</li>
+      <li><strong>Amazon's hiring model.</strong> A recruiting tool trained on the company's own hiring history that learned to penalise signals associated with women, and was scrapped. The cleanest illustration of the classification argument.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="curious">
+  <div class="wrap">
+    <h2>Worth knowing</h2>
+    <p class="lede">The details that stick, and the context that changes how you read it.</p>
+
+    <ul class="list">
+      <li><strong>The book grew out of an artwork.</strong> Anatomy of an AI System, made with Vladan Joler in 2018, is a single enormous diagram tracing everything required to make an Amazon Echo respond — from mineral extraction through labour and data to disposal. It hangs in museums. The book is that diagram expanded into prose, which explains why it is organised spatially rather than chronologically.</li>
+      <li><strong>The title is an argument.</strong> Crawford is explicit that an atlas is a political object: someone decided what to include, at what scale, with which borders. Calling the book an atlas is a claim about method, not a decorative flourish.</li>
+      <li><strong>She wrote it from inside Microsoft.</strong> A sustained critique of the industry, produced by someone employed at one of its largest firms. Read it as either a sign of genuine internal tolerance for criticism or as a limit on how far the critique goes — reasonable people take both positions.</li>
+      <li><strong>Her audit changed a dataset.</strong> Excavating AI, with Trevor Paglen, examined the person categories in ImageNet and demonstrated what was in them. Hundreds of thousands of images were subsequently removed. One of the few cases where a critical humanities project directly altered technical infrastructure.</li>
+      <li><strong>"Neither artificial nor intelligent" is a definitional move, and she knows it.</strong> It is doing rhetorical work rather than making an empirical claim — an attempt to take the framing back from an industry that chose the word "intelligence" for a reason.</li>
+      <li><strong>The Clever Hans story has a second edge.</strong> The horse was not a fraud. Its trainer genuinely believed it could count. The parable is about self-deception among builders, not only deception of the public.</li>
+      <li><strong>Chapter 2's real subject is time.</strong> Not wages — the measurement and compression of human time, running from factory clocks through Taylor's stopwatch to the millisecond coordination of distributed systems. It is the most original argument in the book and the least discussed.</li>
+      <li><strong>Published just before everything it describes got much larger.</strong> Nineteen months later, generative AI arrived and scaled every mechanism in the book by orders of magnitude. Very few critical works have been overtaken by events so quickly in a direction so favourable to their argument.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="takeaway">
+  <div class="wrap">
+    <h2>The takeaway</h2>
+    <p class="lede">Five points that survive the detail.</p>
+
+    <div class="takeaway">
+      <ol>
+        <li><b>AI has a physical address, several of them.</b> The single most useful habit the book instils is asking where a system actually is — which minerals, which energy, whose labour, whose data, which jurisdiction. The abstraction of "the cloud" is not an accident of language; it is a design choice that makes the question hard to ask.</li>
+        <li><b>The labour did not disappear. It moved.</b> Every apparently autonomous system rests on human work that has been fragmented, relocated and priced down until it stops looking like work. When someone describes a process as automated, the productive question is who is doing the part that isn't.</li>
+        <li><b>Classification is the political act.</b> Deciding what categories exist, and what goes in them, determines the outcome long before any model is trained. Debiasing a model leaves the taxonomy intact. This is the book's most transferable idea and it applies to any system that sorts people.</li>
+        <li><b>Contested science becomes infrastructure, and then stops being contested.</b> Emotion recognition is the case study, but the pattern generalises: once a disputed theory is embedded in a product deployed at scale, the academic disagreement becomes irrelevant to the person it is being used on.</li>
+        <li><b>"Is it fair?" is the wrong first question.</b> Crawford's core move is to insist that fairness debates presuppose the system should exist. The prior question — who decided to build this, who benefits, who bears the cost, and could they refuse — is the one the industry's preferred vocabulary is designed not to ask.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="now">
+  <div class="wrap">
+    <h2>How it reads now</h2>
+    <p class="lede">Published April 2021, before foundation models, before the capital supercycle, before any of this was a mainstream conversation. It has aged unusually well in its framework and unusually badly in its scale.</p>
+
+    <div class="cols">
+      <div class="col-a">
+        <h3>What was vindicated</h3>
+        <ul>
+          <li><strong>The environmental argument went mainstream.</strong> In 2021 the energy and water cost of computation was a niche concern. It is now a constraint on national grids and a standing item in corporate reporting.</li>
+          <li><strong>The hidden labour argument became documented fact.</strong> Reporting on annotation and content-moderation work in Kenya, Venezuela, the Philippines and elsewhere has confirmed chapter 2 in detail, and human feedback training has made that labour structurally essential rather than incidental.</li>
+          <li><strong>Consent became the central legal question.</strong> The scraping practices she describes as an end of consent are now the subject of major litigation and regulation worldwide, and of the copyright disputes running through every jurisdiction.</li>
+          <li><strong>Emotion recognition got regulated.</strong> The EU AI Act prohibits it in workplaces and educational settings. A book chapter turning into statute within three years is rare.</li>
+          <li><strong>The frame became the template.</strong> Karen Hao's <em>Empire of AI</em> is, structurally, Atlas of AI executed as narrative journalism. Crawford built the analytical scaffolding that a lot of later criticism stands on.</li>
+        </ul>
+      </div>
+      <div class="col-b">
+        <h3>What has dated</h3>
+        <ul>
+          <li><strong>Every number is too small.</strong> The scale of compute, data, energy and capital has grown by orders of magnitude. Her figures illustrate a mechanism accurately and understate the magnitude badly.</li>
+          <li><strong>The capability scepticism.</strong> "Neither artificial nor intelligent" was a fair corrective to 2021's hype. After three years of systems that do genuinely useful and surprising work, insisting the intelligence question is purely rhetorical reads as avoiding it rather than answering it.</li>
+          <li><strong>The systems she chose as representative.</strong> The book's examples are classifiers — hiring screens, facial recognition, risk scores. Generative systems raise overlapping but not identical problems, and the classification frame does not cover all of them.</li>
+          <li><strong>The remedy remains thin.</strong> A politics of refusal is a stance rather than a mechanism, and the intervening years have seen the debate move toward specific instruments — disclosure rules, liability, compute thresholds, competition enforcement — that the book does not engage with.</li>
+          <li><strong>The absent actor.</strong> Written largely about American and European systems, with little on China's, at a point when that omission mattered less than it does now.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:32px">The fair summary: <strong>read it for the method, not the measurements.</strong> Its lasting contribution is a way of looking — follow the minerals, follow the labour, follow the categories — that works on systems Crawford never saw.</p>
+  </div>
+</section>
+
+<section id="criticism">
+  <div class="wrap">
+    <h2>Criticism and counterpoints</h2>
+    <p class="lede">The book is polemical by design, and the standard objections are worth having in hand.</p>
+
+    <details open>
+      <summary>It diagnoses and does not prescribe</summary>
+      <p>The most common complaint, including from sympathetic readers. Six chapters of forensic critique arrive at a conclusion calling for solidarity between movements and a politics of refusal — which is a direction rather than a plan. Crawford would say that demanding solutions is itself a way of narrowing the conversation to what is implementable within the existing arrangement. That is a real argument, and it is also a comfortable position for a critic to occupy.</p>
+    </details>
+
+    <details>
+      <summary>Selection of the worst cases</summary>
+      <p>Emotion recognition in job interviews, predictive policing, immigration enforcement. These are chosen because they are indefensible, and they are treated as representative of the field. A reader could accept every word of chapter 5 and still think the book has not engaged with machine learning in medical imaging, logistics, translation, accessibility or materials science. The absence of any serious accounting of benefits is a choice, and it makes the book easier to dismiss than it needs to be.</p>
+    </details>
+
+    <details>
+      <summary>The comparison baseline is missing</summary>
+      <p>When Crawford shows an automated hiring system reproducing discrimination, the implicit alternative is a fair process. The actual alternative is human hiring, which is also biased, harder to audit and impossible to inspect. This does not excuse the systems, but a critique that never states the counterfactual leaves its strongest objection unanswered. Critics have made this point about the affect chapter in particular.</p>
+    </details>
+
+    <details>
+      <summary>"Neither artificial nor intelligent" is a definition, not a finding</summary>
+      <p>The line is memorable and it settles by stipulation a question that is genuinely open. It was a useful corrective against 2021's anthropomorphic marketing. As a standing position it has worn less well, and it sits awkwardly with the book's own alarm about how much these systems can do.</p>
+    </details>
+
+    <details>
+      <summary>Repetition and register</summary>
+      <p>Several reviewers found the writing repetitive and the theoretical apparatus heavier than the argument required. The structure means each chapter re-establishes the extraction frame from a new angle, which is rigorous and can also feel like being told the same thing six times. Chapters 4 and 5 are the strongest; chapter 6 is the one that most divides readers along political lines.</p>
+    </details>
+
+    <details>
+      <summary>What almost nobody disputes</summary>
+      <p>The research and the reframing. Even critics grant that the materialist turn — insisting that AI is made of rock, water, electricity and underpaid human attention — permanently changed how the subject is discussed. The vocabulary of extraction, hidden labour and the politics of classification entered mainstream debate substantially through this book.</p>
+    </details>
+
+    <h3>Where it sits on the shelf</h3>
+    <div class="shelf">
+      <div>
+        <h4>Empire of AI</h4>
+        <p class="by">Karen Hao, 2025</p>
+        <p>The successor, and the clearest illustration of Crawford's influence. Same analytical frame — extraction, hidden labour, planetary cost — executed as narrative reporting with named people and places, and applied to the generative era.</p>
+      </div>
+      <div>
+        <h4>Chip War</h4>
+        <p class="by">Chris Miller, 2022</p>
+        <p>The material layer of chapter 1, told as geopolitics rather than critique. Where Crawford sees an extractive industry, Miller sees a strategic supply chain. Reading them together is a useful stress test of both.</p>
+      </div>
+      <div>
+        <h4>Weapons of Math Destruction</h4>
+        <p class="by">Cathy O'Neil, 2016</p>
+        <p>The predecessor on classification and scoring, written from inside quantitative finance. Narrower, more concrete, and a good on-ramp if Crawford's theoretical register is heavy going.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Atlas of AI: Power, Politics, and the Planetary Costs of Artificial Intelligence</strong> — Kate Crawford. Yale University Press, April 2021. 336 pages. ISBN 978-0300209570. A paperback edition followed in 2022.</p>
+    <p>This guide paraphrases and analyses the book. It contains no text from it and is not a substitute for reading it. Chapter titles and page numbers are taken from the published table of contents; the summaries are written from the book's arguments as described in reviews, academic responses and the secondary literature, and may differ in emphasis or detail from the text itself. Figures such as the scale of the ImageNet deletion are drawn from reporting on Crawford's related research rather than from the book — check against the sources before citing anything here.</p>
+    <p>Prepared 18 September 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>
