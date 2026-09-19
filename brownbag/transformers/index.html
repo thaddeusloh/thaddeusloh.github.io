@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Attention, and everything downstream of it</title>
+<meta name="description" content="Self-attention, the Transformer, softmax, Q/K/V, BERT, mixture-of-experts, and the corpus underneath — in two registers: full depth, or explained for a child.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bark:#06120E;
+  --moss:#0B1F17;
+  --moss-2:#102B20;
+  --line:rgba(159,216,184,.16);
+  --line-2:rgba(159,216,184,.30);
+  --sage:#9FD8B8;
+  --sage-dim:#6F9D86;
+  --gold:#E0A93F;
+  --gold-dim:#8A6B2A;
+  --paper:#ECF2EA;
+  --mute:#94AC9E;
+  --rust:#D9795A;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --display:"Fraunces",Georgia,serif;
+  --sans:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --maxw:70ch;
+  --wide:940px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:96px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;
+  background:var(--bark);
+  color:var(--paper);
+  font-family:var(--serif);
+  font-optical-sizing:auto;
+  font-size:1.0625rem;
+  line-height:1.72;
+  padding-bottom:calc(4rem + env(safe-area-inset-bottom,0px));
+  background-image:radial-gradient(1200px 600px at 78% -8%,rgba(159,216,184,.09),transparent 60%),radial-gradient(900px 500px at 5% 12%,rgba(224,169,63,.06),transparent 60%);
+  background-attachment:fixed;
+}
+img,svg{max-width:100%}
+a{color:var(--sage);text-decoration-color:rgba(159,216,184,.4);text-underline-offset:3px}
+a:hover{color:var(--gold);text-decoration-color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:3px}
+
+/* ---------- mode switching ---------- */
+[data-v]{display:none}
+body.v-full [data-v="full"]{display:revert}
+body.v-kid [data-v="kid"]{display:revert}
+
+/* ---------- shell ---------- */
+.bar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(6,18,14,.86);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:calc(.6rem + env(safe-area-inset-top,0px)) 1.1rem .6rem;
+}
+.bar-in{max-width:var(--wide);margin:0 auto;display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:.01em;color:var(--paper);margin:0}
+.brand span{color:var(--sage-dim);font-family:var(--sans);font-size:.78rem;font-weight:400;display:block;line-height:1.3}
+.switch{display:flex;gap:.25rem;padding:.25rem;border:1px solid var(--line-2);border-radius:999px;background:rgba(11,31,23,.7)}
+.switch button{
+  font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.01em;
+  border:0;border-radius:999px;padding:.4rem .85rem;cursor:pointer;
+  background:transparent;color:var(--mute);transition:background .18s,color .18s;
+}
+.switch button[aria-pressed="true"]{background:var(--sage);color:#06150F}
+.switch button:hover{color:var(--paper)}
+.switch button[aria-pressed="true"]:hover{color:#06150F}
+
+main{max-width:var(--wide);margin:0 auto;padding:0 1.1rem}
+section{padding:3.4rem 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+.prose{max-width:var(--maxw)}
+p{margin:0 0 1.1rem}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.14;letter-spacing:-.012em;margin:0 0 .8rem}
+h1{font-size:clamp(2.3rem,7.5vw,4rem);max-width:16ch}
+h2{font-size:clamp(1.55rem,4.2vw,2.3rem);margin-top:0}
+h3{font-size:clamp(1.12rem,2.6vw,1.35rem);margin:2.2rem 0 .6rem;color:var(--sage)}
+h4{font-family:var(--sans);font-size:.92rem;font-weight:500;margin:1.6rem 0 .5rem;color:var(--gold)}
+.lede{font-size:clamp(1.12rem,2.6vw,1.3rem);color:#D6E3D6;max-width:60ch}
+.kicker{font-family:var(--sans);font-size:.8rem;color:var(--sage-dim);margin:0 0 .9rem}
+.mute{color:var(--mute)}
+strong{color:#FFF6E2;font-weight:600}
+em{color:var(--sage)}
+code,.mono{font-family:var(--sans);font-size:.92em;background:rgba(159,216,184,.09);border:1px solid var(--line);border-radius:5px;padding:.08em .34em;color:#CDE8D8}
+ul,ol{padding-left:1.15rem;margin:0 0 1.2rem}
+li{margin:.4rem 0}
+li::marker{color:var(--sage-dim)}
+.small{font-size:.9rem}
+
+/* ---------- panels ---------- */
+.panel{
+  background:linear-gradient(180deg,rgba(16,43,32,.85),rgba(11,31,23,.65));
+  border:1px solid var(--line-2);border-radius:14px;
+  padding:1.2rem;margin:1.8rem 0;
+}
+.panel h4:first-child{margin-top:0}
+.cap{font-family:var(--sans);font-size:.82rem;color:var(--mute);margin:.8rem 0 0;line-height:1.55}
+.note{border-left:2px solid var(--gold-dim);padding:.1rem 0 .1rem 1rem;margin:1.5rem 0;color:#D8E4D8}
+.note p:last-child{margin-bottom:0}
+.formula{
+  font-family:var(--sans);font-size:1.02rem;color:#DCEFE2;
+  background:rgba(6,18,14,.6);border:1px solid var(--line);border-radius:10px;
+  padding:.9rem 1rem;margin:1.2rem 0;overflow-x:auto;white-space:nowrap;
+}
+.grid2{display:grid;gap:1rem;grid-template-columns:1fr}
+@media(min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
+
+/* ---------- token spotlight ---------- */
+.sent{display:flex;flex-wrap:wrap;gap:.3rem;font-family:var(--sans);font-size:1.02rem;margin:.4rem 0 1rem}
+.tok{
+  border:1px solid var(--line);border-radius:8px;padding:.32rem .55rem;cursor:pointer;
+  background:rgba(159,216,184,.05);color:var(--paper);font:inherit;
+  transition:background .25s,color .25s,border-color .25s,transform .25s;
+}
+.tok:hover{border-color:var(--line-2)}
+.tok.q{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.tok .wt{display:block;font-size:.66rem;color:var(--mute);line-height:1.1;margin-top:.15rem}
+.heads{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 1rem}
+.chip{
+  font-family:var(--sans);font-size:.78rem;border:1px solid var(--line-2);background:transparent;
+  color:var(--mute);border-radius:999px;padding:.3rem .7rem;cursor:pointer;transition:.18s;
+}
+.chip[aria-pressed="true"]{background:rgba(159,216,184,.14);color:var(--sage);border-color:var(--sage-dim)}
+.chip:hover{color:var(--paper)}
+
+/* ---------- sliders / bars ---------- */
+.row{display:flex;align-items:center;gap:.7rem;margin:.45rem 0;font-family:var(--sans);font-size:.84rem}
+.row label{width:4.5rem;color:var(--mute);flex:none}
+input[type=range]{flex:1;accent-color:var(--sage);min-width:0}
+.val{width:3.2rem;text-align:right;color:var(--sage);flex:none}
+.bars{margin-top:1rem}
+.bar-row{display:flex;align-items:center;gap:.6rem;margin:.35rem 0;font-family:var(--sans);font-size:.84rem}
+.bar-row .nm{width:4.5rem;color:var(--mute);flex:none}
+.track{flex:1;height:16px;background:rgba(159,216,184,.08);border-radius:4px;overflow:hidden;min-width:0}
+.fill{height:100%;background:linear-gradient(90deg,var(--sage-dim),var(--sage));border-radius:4px;transition:width .25s}
+.fill.gold{background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
+.pct{width:3.6rem;text-align:right;color:var(--paper);flex:none}
+
+/* ---------- matrices ---------- */
+.mats{display:flex;flex-wrap:wrap;gap:1.1rem;font-family:var(--sans);font-size:.78rem}
+.mat h5{margin:0 0 .35rem;font:500 .78rem var(--sans);color:var(--gold)}
+table.m{border-collapse:collapse}
+table.m td{border:1px solid var(--line);padding:.24rem .42rem;text-align:right;color:#CFE6D8;min-width:3.1rem}
+table.m tr.hi td{background:rgba(224,169,63,.16);color:#FFF1D4;border-color:var(--gold-dim)}
+table.m td.lbl,table.m th{border:0;color:var(--mute);text-align:right;padding-right:.5rem;font-weight:400;font-size:.72rem}
+.steps{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
+.steps button{font-family:var(--sans);font-size:.76rem;border:1px solid var(--line-2);background:transparent;color:var(--mute);border-radius:6px;padding:.3rem .6rem;cursor:pointer}
+.steps button[aria-pressed="true"]{background:var(--sage);color:#06150F;border-color:var(--sage)}
+
+/* ---------- experts ---------- */
+.experts{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:1rem}
+@media(min-width:620px){.experts{grid-template-columns:repeat(4,1fr)}}
+.ex{
+  border:1px solid var(--line);border-radius:10px;padding:.55rem .6rem;font-family:var(--sans);font-size:.76rem;
+  color:var(--mute);background:rgba(6,18,14,.5);transition:.25s;
+}
+.ex.on{border-color:var(--gold);color:#FFF1D4;background:rgba(224,169,63,.12)}
+.ex b{display:block;color:inherit;font-weight:500;font-size:.82rem;margin-bottom:.1rem}
+.ex .w{color:var(--gold)}
+
+/* ---------- timeline ---------- */
+.tl{list-style:none;padding:0;margin:1.5rem 0 0;counter-reset:yr}
+.tl li{display:grid;grid-template-columns:4.4rem 1fr;gap:1rem;padding:1rem 0;border-top:1px solid var(--line)}
+.tl li:first-child{border-top:0}
+.tl .yr{font-family:var(--sans);font-size:.88rem;color:var(--gold);padding-top:.15rem}
+.tl h4{margin:0 0 .25rem;color:var(--paper);font-size:1rem}
+.tl p{margin:0;font-size:.98rem;color:#D3E1D4}
+.tl .ast{display:block;margin-top:.45rem;font-family:var(--sans);font-size:.8rem;color:var(--mute)}
+
+/* ---------- glossary ---------- */
+dl.gl{margin:1.4rem 0 0}
+dl.gl dt{font-family:var(--sans);font-size:.92rem;color:var(--sage);margin-top:1.1rem}
+dl.gl dd{margin:.25rem 0 0;color:#D6E3D6}
+
+.toc{list-style:none;padding:0;margin:1.6rem 0 0;display:grid;gap:.15rem;max-width:34rem}
+.toc a{display:flex;gap:.8rem;padding:.42rem 0;border-bottom:1px solid var(--line);text-decoration:none;font-family:var(--sans);font-size:.88rem;color:var(--mute)}
+.toc a:hover{color:var(--sage)}
+.toc .n{color:var(--gold-dim);width:1.4rem;flex:none}
+.toc span.t{color:var(--paper)}
+.toc a:hover span.t{color:var(--sage)}
+
+footer{max-width:var(--wide);margin:0 auto;padding:2.5rem 1.1rem 0;border-top:1px solid var(--line);font-family:var(--sans);font-size:.82rem;color:var(--mute)}
+footer a{color:var(--sage-dim)}
+.srcs{list-style:none;padding:0;margin:1rem 0 0;display:grid;gap:.5rem}
+.srcs li{line-height:1.5}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="v-full">
+
+<div class="bar">
+  <div class="bar-in">
+    <p class="brand">Attention, and everything downstream<span>Transformers · BERT · softmax · Q/K/V · MoE</span></p>
+    <div class="switch" role="group" aria-label="Reading level">
+      <button id="btn-full" aria-pressed="true">Full depth</button>
+      <button id="btn-kid" aria-pressed="false">Explain it to a kid</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section id="top">
+  <p class="kicker">A brown bag on how machines read</p>
+  <h1>Attention, and everything downstream of it</h1>
+
+  <div data-v="full" class="prose">
+    <p class="lede">Every model you use today — the one summarising your email, the one ranking a client's next-best-action, the one writing code — is a stack of the same block, invented in 2017 and barely changed since. This page pulls that block apart, then walks the family tree that grew out of it.</p>
+  </div>
+  <div data-v="kid" class="prose">
+    <p class="lede">Computers got good at language by learning one clever trick: when they look at a word, they also peek at the other words around it to figure out what it means. This page shows you that trick, and everything people built on top of it.</p>
+  </div>
+
+  <div class="panel" style="margin-top:2rem">
+    <h4 data-v="full">Try it: one sentence, three attention heads</h4>
+    <h4 data-v="kid">Try it: click a word and watch it look around</h4>
+    <p class="small mute" data-v="full" style="margin:.2rem 0 1rem">Pick a word. The highlight shows where that word looks when the model builds its meaning. Switch heads to see that different heads learn different jobs.</p>
+    <p class="small mute" data-v="kid" style="margin:.2rem 0 1rem">Tap a word. The other words light up if that word is thinking about them. The buttons change which kind of thinking you're watching.</p>
+
+    <div class="heads" role="group" aria-label="Attention head">
+      <button class="chip" data-head="0" aria-pressed="true">Head 1 — who is who</button>
+      <button class="chip" data-head="1" aria-pressed="false">Head 2 — next-door words</button>
+      <button class="chip" data-head="2" aria-pressed="false">Head 3 — the gist</button>
+    </div>
+    <div class="sent" id="spot"></div>
+    <p class="cap" id="spot-cap"></p>
+  </div>
+
+  <ol class="toc" style="counter-reset:none">
+    <li><a href="#map"><span class="n">1</span><span class="t">How all of these words fit together</span></a></li>
+    <li><a href="#before"><span class="n">2</span><span class="t">Before attention: word2vec and the bottleneck</span></a></li>
+    <li><a href="#attention"><span class="n">3</span><span class="t">What attention actually is</span></a></li>
+    <li><a href="#softmax"><span class="n">4</span><span class="t">Softmax, the thing that turns scores into shares</span></a></li>
+    <li><a href="#qkv"><span class="n">5</span><span class="t">Q, K, V — and why it's all matmuls</span></a></li>
+    <li><a href="#transformer"><span class="n">6</span><span class="t">The Transformer architecture</span></a></li>
+    <li><a href="#bert"><span class="n">7</span><span class="t">BERT, and what "understanding" means</span></a></li>
+    <li><a href="#moe"><span class="n">8</span><span class="t">Mixture of Experts</span></a></li>
+    <li><a href="#corpus"><span class="n">9</span><span class="t">Corpus, ontology, epistemology</span></a></li>
+    <li><a href="#lineage"><span class="n">10</span><span class="t">Google's decade: word2vec to LaMDA</span></a></li>
+    <li><a href="#glossary"><span class="n">11</span><span class="t">Glossary</span></a></li>
+  </ol>
+</section>
+
+<!-- ============ MAP ============ -->
+<section id="map">
+  <h2><span data-v="full">How all of these words fit together</span><span data-v="kid">The whole thing on one page</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>Most of the vocabulary in this deck sits at one of five levels. Terms feel confusing mainly because people mix levels in a single sentence — comparing a training objective to a chip, or an architecture to a product.</p>
+  </div>
+  <div class="prose" data-v="kid">
+    <p>Think of building a Lego castle. There are bricks, then walls, then rooms, then the castle, then the people who live in it. All the scary words below are just different levels of the same castle.</p>
+  </div>
+
+  <div class="panel">
+    <svg viewBox="0 0 760 470" role="img" aria-label="Five-level stack: data, representation, mechanism, architecture, systems" style="width:100%;height:auto">
+      <defs>
+        <style>
+          .lv{fill:rgba(159,216,184,.06);stroke:rgba(159,216,184,.30)}
+          .lt{font:500 13px "Space Grotesk",sans-serif;fill:#9FD8B8}
+          .bx{fill:rgba(6,18,14,.75);stroke:rgba(159,216,184,.22)}
+          .bt{font:400 12.5px "Space Grotesk",sans-serif;fill:#ECF2EA}
+          .bs{font:400 10.5px "Space Grotesk",sans-serif;fill:#94AC9E}
+          .ar{stroke:rgba(224,169,63,.55);stroke-width:1.4;fill:none;marker-end:url(#ah)}
+        </style>
+        <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="rgba(224,169,63,.7)"/>
+        </marker>
+      </defs>
+
+      <rect class="lv" x="8" y="8" width="744" height="76" rx="10"/>
+      <text class="lt" x="24" y="32">Data</text>
+      <rect class="bx" x="120" y="20" width="180" height="52" rx="8"/>
+      <text class="bt" x="134" y="42">Training corpus</text><text class="bs" x="134" y="60">C4, Wikipedia, BooksCorpus</text>
+      <rect class="bx" x="312" y="20" width="180" height="52" rx="8"/>
+      <text class="bt" x="326" y="42">Tokens</text><text class="bs" x="326" y="60">WordPiece / BPE pieces</text>
+      <rect class="bx" x="504" y="20" width="230" height="52" rx="8"/>
+      <text class="bt" x="518" y="42">Ontology &amp; epistemology</text><text class="bs" x="518" y="60">what's in it, and what that justifies</text>
+
+      <rect class="lv" x="8" y="96" width="744" height="76" rx="10"/>
+      <text class="lt" x="24" y="120">Meaning</text>
+      <rect class="bx" x="120" y="108" width="180" height="52" rx="8"/>
+      <text class="bt" x="134" y="130">Embeddings</text><text class="bs" x="134" y="148">word2vec, 2013</text>
+      <rect class="bx" x="312" y="108" width="180" height="52" rx="8"/>
+      <text class="bt" x="326" y="130">Contextual vectors</text><text class="bs" x="326" y="148">one word, many meanings</text>
+      <rect class="bx" x="504" y="108" width="230" height="52" rx="8"/>
+      <text class="bt" x="518" y="130">Softmax</text><text class="bs" x="518" y="148">scores → shares that sum to 1</text>
+
+      <rect class="lv" x="8" y="184" width="744" height="76" rx="10"/>
+      <text class="lt" x="24" y="208">Mechanism</text>
+      <rect class="bx" x="120" y="196" width="180" height="52" rx="8"/>
+      <text class="bt" x="134" y="218">Attention</text><text class="bs" x="134" y="236">Bahdanau, 2014</text>
+      <rect class="bx" x="312" y="196" width="180" height="52" rx="8"/>
+      <text class="bt" x="326" y="218">Self-attention</text><text class="bs" x="326" y="236">Q · Kᵀ → softmax → V</text>
+      <rect class="bx" x="504" y="196" width="230" height="52" rx="8"/>
+      <text class="bt" x="518" y="218">Multi-head + matmul</text><text class="bs" x="518" y="236">8 views, one big matrix multiply</text>
+
+      <rect class="lv" x="8" y="272" width="744" height="76" rx="10"/>
+      <text class="lt" x="24" y="296">Architecture</text>
+      <rect class="bx" x="120" y="284" width="180" height="52" rx="8"/>
+      <text class="bt" x="134" y="306">Encoder only</text><text class="bs" x="134" y="324">BERT — understanding</text>
+      <rect class="bx" x="312" y="284" width="180" height="52" rx="8"/>
+      <text class="bt" x="326" y="306">Decoder only</text><text class="bs" x="326" y="324">GPT-style — generation</text>
+      <rect class="bx" x="504" y="284" width="230" height="52" rx="8"/>
+      <text class="bt" x="518" y="306">Encoder–decoder</text><text class="bs" x="518" y="324">original Transformer, T5</text>
+
+      <rect class="lv" x="8" y="360" width="744" height="98" rx="10"/>
+      <text class="lt" x="24" y="384">Scale &amp; systems</text>
+      <rect class="bx" x="120" y="372" width="180" height="52" rx="8"/>
+      <text class="bt" x="134" y="394">Mixture of Experts</text><text class="bs" x="134" y="412">more weights, same compute</text>
+      <rect class="bx" x="312" y="372" width="180" height="52" rx="8"/>
+      <text class="bt" x="326" y="394">TPUs</text><text class="bs" x="326" y="412">silicon built for matmul</text>
+      <rect class="bx" x="504" y="372" width="230" height="52" rx="8"/>
+      <text class="bt" x="518" y="394">Assistants</text><text class="bs" x="518" y="412">Meena, LaMDA, and what followed</text>
+
+      <path class="ar" d="M210 72 L210 106"/><path class="ar" d="M402 72 L402 106"/>
+      <path class="ar" d="M210 160 L210 194"/><path class="ar" d="M402 160 L402 194"/><path class="ar" d="M619 160 L619 194"/>
+      <path class="ar" d="M210 248 L210 282"/><path class="ar" d="M402 248 L402 282"/><path class="ar" d="M619 248 L619 282"/>
+      <path class="ar" d="M210 336 L210 370"/><path class="ar" d="M402 336 L402 370"/><path class="ar" d="M619 336 L619 370"/>
+    </svg>
+    <p class="cap" data-v="full">Read it bottom-up when you debug and top-down when you explain. Attention is a <em>mechanism</em>; the Transformer is an <em>architecture</em> that uses it; BERT is a <em>model</em> in that architecture trained with a particular <em>objective</em> on a particular <em>corpus</em>; MoE is a <em>scaling trick</em> applied inside it; TPUs are the <em>hardware</em> it all runs on.</p>
+    <p class="cap" data-v="kid">Bottom layer: the pile of books the computer reads. Middle: the trick it uses to read. Top: the different machines people built out of that trick, and the special computer chips that make them fast.</p>
+  </div>
+
+  <div class="prose" data-v="full">
+    <p>One sentence that keeps the levels straight: <strong>a corpus is turned into tokens, tokens become vectors, vectors are mixed by self-attention inside a Transformer block, a stack of those blocks is a model, the training objective decides what kind of model it is, and MoE and TPUs decide how big and how fast it can get.</strong></p>
+  </div>
+  <div class="prose" data-v="kid">
+    <p>One sentence to remember: <strong>the computer reads a huge pile of writing, turns every word into a list of numbers, lets the words look at each other, and does that over and over until the numbers are smart.</strong></p>
+  </div>
+</section>
+
+<!-- ============ BEFORE ============ -->
+<section id="before">
+  <h2><span data-v="full">Before attention: word2vec and the bottleneck</span><span data-v="kid">What people tried before</span></h2>
+
+  <div class="prose" data-v="full">
+    <h3>word2vec (2013): meaning as geography</h3>
+    <p>A computer can't multiply the word "bank". The first move in any language model is to assign every word a vector — a list of numbers — so arithmetic becomes possible. word2vec, from Tomas Mikolov's team at Google, learned those vectors from a simple game: slide a window across billions of words and either predict the middle word from its neighbours (CBOW) or the neighbours from the middle word (skip-gram).</p>
+      <p>Nobody told it what words mean. The distributional hypothesis does the work: words that appear in the same company end up in the same neighbourhood. The famous consequence is that directions in the space carry meaning — the vector for <em>king</em> minus <em>man</em> plus <em>woman</em> lands near <em>queen</em>.</p>
+    <p>The limitation is fatal for real language: one word, one vector. "Bank" gets a single blurred point somewhere between the river and the mortgage. Context is averaged away before the model ever sees the sentence.</p>
+
+    <h3>seq2seq (2014): the single-vector bottleneck</h3>
+    <p>To translate, Sutskever, Vinyals and Le stacked two LSTMs: one reads the English sentence one word at a time and compresses it into a fixed-length vector; the second unrolls that vector into French. On the WMT-14 English-to-French task this reached a BLEU score of 34.8, beating the phrase-based statistical system it was compared against. The whole English sentence was squeezed into 8,000 real numbers before the French was produced.</p>
+    <p>Two problems, both structural. First, <strong>compression</strong>: a forty-word sentence and a four-word sentence get the same size container. Second, <strong>sequence</strong>: the hidden state at step <code>t</code> depends on step <code>t−1</code>, so training cannot be parallelised along the sentence, and information from word 3 has to survive thirty-seven rounds of overwriting to reach word 40.</p>
+
+    <h3>Bahdanau attention (2014): stop compressing</h3>
+    <p>The fix, from Bahdanau, Cho and Bengio, was to keep every encoder state and let the decoder decide, at each output word, which input positions to look at. That is attention in its original form: a learned, input-dependent weighted average over a set of memories, instead of a single summary vector. Translation quality on long sentences stopped collapsing.</p>
+    <p>Attention was still bolted onto a recurrent network, so the sequential bottleneck remained. The 2017 move was to delete the recurrence and keep only the attention.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <h3>Turning words into numbers</h3>
+    <p>Computers can only do maths, so the first job is to turn every word into a list of numbers — like giving every word an address on a giant map. Words that mean similar things get addresses close together. "Cat" lives near "kitten". "Monday" lives near "Tuesday".</p>
+    <p>The computer works out these addresses by reading enormous amounts of writing and noticing which words hang out with which other words. Nobody explains anything to it. It's like learning that "pizza" and "pineapple" are related because you keep hearing people argue about them together.</p>
+    <p>The problem: a word like "bank" got only ONE address. But "bank" by a river and "bank" with money are totally different things. One address can't be in two places.</p>
+
+    <h3>The squeezed-suitcase problem</h3>
+    <p>To translate English into French, people built two machines. The first machine read the English sentence and squashed the whole thing into one small suitcase of numbers. The second machine opened the suitcase and wrote out the French.</p>
+    <p>It worked for short sentences. But if the sentence was long, everything had to be crammed into the same little suitcase, and things got lost — like trying to pack for a month-long holiday in a lunchbox.</p>
+
+    <h3>The fix: stop packing, start looking</h3>
+    <p>Somebody had a better idea: don't squash the sentence at all. Keep all the words where they are, and let the machine <em>look back</em> at whichever English words it needs while it writes each French word. When it writes "chat", it looks at "cat".</p>
+    <p>That looking-back is called <strong>attention</strong>. It's the single most important idea on this page.</p>
+  </div>
+</section>
+
+<!-- ============ ATTENTION ============ -->
+<section id="attention">
+  <h2><span data-v="full">What attention actually is</span><span data-v="kid">What is attention?</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>Strip the jargon and attention is one operation: <strong>a weighted average, where the weights are computed from the data itself.</strong></p>
+    <p>Everything else is detail about how the weights are computed and what is being averaged. Contrast it with a convolution, where the weights are fixed after training and depend only on position, or a fully-connected layer, where the weights are fixed and depend only on index. In attention, the weights are recomputed for every input — the same model gives "it" a different mixture in every sentence.</p>
+
+    <h3>Self-attention vs cross-attention</h3>
+    <p>The distinction is only about where the things being compared come from.</p>
+    <ul>
+      <li><strong>Cross-attention</strong> — queries come from one sequence, keys and values from another. The decoder looking at the encoder's French-to-English memory. This is the 2014 version.</li>
+      <li><strong>Self-attention</strong> — queries, keys and values all come from the <em>same</em> sequence. Every token in a sentence attends to every token in that same sentence, including itself. This is the 2017 addition, and it is what makes representations contextual.</li>
+    </ul>
+    <p>Self-attention is why "bank" no longer has one vector. In "the river bank flooded", the token for "bank" is built as a mixture that draws heavily on "river" and "flooded". In "the bank raised rates", it draws on "rates". Same parameters, different sentence, different vector. That is the whole mechanism behind contextual embeddings.</p>
+
+    <h3>Three properties worth internalising</h3>
+    <ul>
+      <li><strong>Every position reaches every other position in one step.</strong> In an RNN, the path length between two words is the distance between them; in self-attention it is constant. Long-range dependencies stop decaying.</li>
+      <li><strong>It is order-blind by default.</strong> Shuffle the tokens and self-attention produces the same set of outputs, permuted. Word order has to be injected separately — which is what positional encodings are for.</li>
+      <li><strong>It costs O(n²).</strong> Comparing every token to every other token means the score matrix has n² entries. Doubling the context quadruples the attention cost. Every long-context trick in the last eight years — sparse, linear, sliding-window, FlashAttention, KV caching — is an attack on this line.</li>
+    </ul>
+    <p>The hero demo above is real attention behaviour, hand-authored rather than sampled from a live model: heads genuinely do specialise, and coreference heads that resolve pronouns like "it" back to their antecedents are among the easiest to find in a trained BERT.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>Imagine you're in class and the teacher says a sentence. To understand one word, you look at the other words. That's it. That's attention.</p>
+    <p>Here's the trick: <strong>you don't look at every word equally.</strong> Some words matter a lot, some hardly matter at all. Attention is the computer deciding how much to look at each word — like a spotlight that can be bright on some words and dim on others.</p>
+
+    <h3>Why it's such a big deal</h3>
+    <p>Take the sentence: <em>"The animal didn't cross the street because it was too tired."</em></p>
+    <p>What does "it" mean? You know instantly — the animal. Streets don't get tired. But a computer has to work that out, and the only way is to let the word "it" look at the other words and put most of its spotlight on "animal".</p>
+
+    <h3>Self-attention = words looking at their own sentence</h3>
+    <p>Sometimes the computer is reading one sentence and writing a different one, like translating. Then the words in the new sentence look back at the words in the old sentence.</p>
+    <p>But the really clever version is when the words in a sentence look at <em>each other</em>, in the very same sentence. That's called <strong>self</strong>-attention. Self, because it's looking at itself.</p>
+
+    <h3>The best part</h3>
+    <p>The word "bank" means something different in "the river bank" and "the bank gave me money". Before attention, computers had one meaning for "bank" and got confused. With self-attention, "bank" looks around, sees "river", and becomes river-bank. Sees "money", becomes money-bank. Same word, different meaning, worked out from the neighbours.</p>
+    <p>One catch: attention doesn't know what order the words came in. To the computer, a sentence starts out as a bag of words all jumbled up. So we have to staple a little number onto each word saying "I'm word number 3". That staple is called a <em>positional encoding</em>.</p>
+  </div>
+</section>
+
+<!-- ============ SOFTMAX ============ -->
+<section id="softmax">
+  <h2><span data-v="full">Softmax, the thing that turns scores into shares</span><span data-v="kid">What is softmax?</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>Attention produces a raw score for every pair of tokens: a big positive number means "very relevant", a negative number means "irrelevant". Those scores are unbounded and don't add up to anything. To use them as a weighted average, they must become a probability distribution — all positive, summing to one. Softmax is the standard way to do that.</p>
+    <div class="formula">softmax(z)<sub>i</sub> = e<sup>z<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub></sup></div>
+    <p>Exponentiate every score, then divide by the total. Three consequences matter in practice:</p>
+    <ul>
+      <li><strong>It is soft, not hard.</strong> A hard max would give the top score 100% and everything else 0%, which has zero gradient almost everywhere and can't be trained. Softmax gives the top score most of the weight while keeping every other entry differentiable.</li>
+      <li><strong>It is shift-invariant but not scale-invariant.</strong> Adding a constant to every score changes nothing. Multiplying every score by 4 makes the distribution far sharper. This is why the scaling factor in attention matters, and why temperature works at sampling time.</li>
+      <li><strong>It exaggerates.</strong> Because of the exponential, a score gap of 2 becomes roughly a 7× probability ratio. Small differences in relevance turn into decisive routing.</li>
+    </ul>
+    <p>Softmax appears in at least three places in a modern model: over attention scores (one distribution per query row), over the vocabulary at the output (that's how the next token is chosen), and over experts in an MoE router.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>Say four friends want the last pizza, and you rate how hungry each one is: 5, 3, 3, 1. How do you split the pizza fairly by hunger?</p>
+    <p>Softmax is the recipe for turning any bunch of scores into slices of a pizza. Every slice is bigger than zero, and all the slices add up to exactly one whole pizza.</p>
+    <p>It has one personality quirk: <strong>it's dramatic</strong>. The friend with the highest score doesn't get a slightly bigger slice — they get a much bigger slice. A small lead turns into a big win.</p>
+    <p>There's a dial called <em>temperature</em>. Turn it down and softmax becomes very decisive: the winner takes nearly everything. Turn it up and it becomes wishy-washy: everyone gets nearly the same slice. Move the sliders below and watch.</p>
+  </div>
+
+  <div class="panel">
+    <h4 data-v="full">Softmax lab</h4>
+    <h4 data-v="kid">Pizza-slicing machine</h4>
+    <div id="sm-sliders"></div>
+    <div class="row" style="margin-top:.9rem">
+      <label for="temp">Temp</label>
+      <input type="range" id="temp" min="0.1" max="3" step="0.05" value="1">
+      <span class="val" id="temp-v">1.00</span>
+    </div>
+    <div class="bars" id="sm-bars"></div>
+    <p class="cap" id="sm-cap"></p>
+  </div>
+</section>
+
+<!-- ============ QKV ============ -->
+<section id="qkv">
+  <h2><span data-v="full">Q, K, V — and why it's all matmuls</span><span data-v="kid">Q, K and V: the lost-property office</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>Query, key and value is a retrieval metaphor borrowed from databases, and it survives contact with the maths surprisingly well.</p>
+    <ul>
+      <li><strong>Query (Q)</strong> — what this token is looking for. "I'm a pronoun, I need an antecedent."</li>
+      <li><strong>Key (K)</strong> — what this token advertises about itself. "I'm a singular animate noun."</li>
+      <li><strong>Value (V)</strong> — what this token actually contributes if you decide to look at it. Its payload.</li>
+    </ul>
+    <p>Each token's embedding <code>x</code> is projected three times by three learned matrices: <code>Q = xW<sup>Q</sup></code>, <code>K = xW<sup>K</sup></code>, <code>V = xW<sup>V</sup></code>. Separating them is the point — the criteria for <em>matching</em> are learned independently of the content that gets <em>passed on</em>.</p>
+    <div class="formula">Attention(Q, K, V) = softmax( Q Kᵀ / √d<sub>k</sub> ) V</div>
+    <p>Read it right to left as four steps:</p>
+    <ol>
+      <li><strong>Q Kᵀ</strong> — an (n × d<sub>k</sub>) matrix times a (d<sub>k</sub> × n) matrix gives an n × n grid of relevance scores. Entry (i, j) is the dot product of token i's query with token j's key. Dot product as similarity: aligned vectors score high.</li>
+      <li><strong>÷ √d<sub>k</sub></strong> — with d<sub>k</sub> = 64, dot products of random vectors have standard deviation proportional to √d<sub>k</sub>. Left unscaled, the scores grow with dimension, softmax saturates, and gradients vanish. Dividing by √d<sub>k</sub> keeps the distribution in a trainable range. This single term is why the operation is called <em>scaled</em> dot-product attention.</li>
+      <li><strong>softmax</strong> — applied along each <em>row</em>, so every token gets its own distribution over all tokens.</li>
+      <li><strong>× V</strong> — multiply the n × n weight matrix by the n × d<sub>v</sub> value matrix. Each output row is a weighted blend of every token's value. That blend is the new, context-aware representation.</li>
+    </ol>
+
+    <h3>Why matmul is the whole story</h3>
+    <p>Nothing in that pipeline is a loop over words. It is four matrix multiplications and one exponential. Matrix multiplication is the single operation that modern accelerators do best — thousands of multiply-accumulates per clock, perfectly parallel, memory-friendly. Replacing recurrence with attention converted a sequential problem into a dense linear-algebra problem, and that is the real reason the Transformer won. The architecture was designed for the hardware as much as for the language.</p>
+
+    <h3>Multi-head attention</h3>
+    <p>One set of Q/K/V learns one notion of relevance. The original paper used <strong>h = 8</strong> heads with d<sub>model</sub> = 512, each head working in a 64-dimensional subspace (d<sub>k</sub> = d<sub>v</sub> = d<sub>model</sub>/h). Heads run in parallel, get concatenated, and pass through a final projection W<sup>O</sup>. Total compute is roughly the same as one full-width head, but the model gets eight independent relationship detectors — one might track subject-verb agreement, another coreference, another simple adjacency, as the demo at the top suggests.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>Imagine a lost-property office at school. Every kid there has three things:</p>
+    <ul>
+      <li><strong>A question (Q)</strong> — "I lost a blue water bottle."</li>
+      <li><strong>A label (K)</strong> — what's written on the box they're standing next to: "blue bottles".</li>
+      <li><strong>The actual stuff (V)</strong> — what's inside the box.</li>
+    </ul>
+    <p>To find your thing, you hold your <em>question</em> up against every <em>label</em> and see which ones match. A good match gets a high score. Then softmax turns those scores into slices. Then you take a bit of <em>stuff</em> from every box, but mostly from the box that matched best.</p>
+    <p>That's exactly what happens to every word, all at once, in every sentence. Each word asks a question, every word shows a label, and each word ends up carrying a mixture of everyone's stuff — mostly from the words that matched it.</p>
+    <p>One more thing: the computer doesn't do this one word at a time. It puts all the questions in one big grid of numbers, all the labels in another, and multiplies the grids together in one giant go. Multiplying grids of numbers is the one thing computers are <em>spectacularly</em> fast at. That's the real secret of why this took over the world.</p>
+    <p>And it doesn't just ask one question per word. It asks about eight different questions at once — one about who's doing what, one about which words are next to each other, one about the general vibe. Those are called <strong>heads</strong>.</p>
+  </div>
+
+  <div class="panel">
+    <h4 data-v="full">Walk one self-attention layer, with real numbers</h4>
+    <h4 data-v="kid">Watch the numbers actually happen</h4>
+    <p class="small mute" data-v="full" style="margin:.2rem 0 1rem">Four tokens, d<sub>model</sub> = 4, d<sub>k</sub> = 3. Every figure below is computed live from the same fixed weight matrices — nothing is illustrative. Pick a query token to highlight its row through each step.</p>
+    <p class="small mute" data-v="kid" style="margin:.2rem 0 1rem">Four words, and real sums. Click a word to follow it, then click through the steps to watch it look around and mix.</p>
+
+    <div class="heads" role="group" aria-label="Query token">
+      <button class="chip qtok" data-q="0" aria-pressed="false">the</button>
+      <button class="chip qtok" data-q="1" aria-pressed="false">river</button>
+      <button class="chip qtok" data-q="2" aria-pressed="true">bank</button>
+      <button class="chip qtok" data-q="3" aria-pressed="false">flooded</button>
+    </div>
+    <div class="steps" role="group" aria-label="Step">
+      <button data-step="0" aria-pressed="true">1. Embed</button>
+      <button data-step="1" aria-pressed="false">2. Project to Q, K, V</button>
+      <button data-step="2" aria-pressed="false">3. Q Kᵀ</button>
+      <button data-step="3" aria-pressed="false">4. ÷ √d<sub>k</sub></button>
+      <button data-step="4" aria-pressed="false">5. softmax</button>
+      <button data-step="5" aria-pressed="false">6. × V</button>
+    </div>
+    <div class="mats" id="qkv-mats"></div>
+    <p class="cap" id="qkv-cap"></p>
+  </div>
+</section>
+
+<!-- ============ TRANSFORMER ============ -->
+<section id="transformer">
+  <h2><span data-v="full">The Transformer architecture</span><span data-v="kid">The transformer machine</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>The 2017 paper proposed an architecture based solely on attention, dispensing with recurrence and convolutions entirely, and showed it was both better and more parallelisable: 28.4 BLEU on WMT 2014 English-to-German, more than 2 BLEU above the previous best including ensembles, and 41.8 BLEU on English-to-French after training for three and a half days on eight GPUs — a small fraction of the cost of the models it beat. Eight authors, one title that has become a meme, and a block that has not structurally changed in nine years.</p>
+
+    <h3>What's inside one block</h3>
+    <p>An encoder layer is two sub-layers, each wrapped in a residual connection and layer normalisation:</p>
+    <ol>
+      <li><strong>Multi-head self-attention</strong> — tokens exchange information. This is the only place in the whole model where positions talk to each other.</li>
+      <li><strong>Position-wise feed-forward network</strong> — a two-layer MLP (512 → 2048 → 512 in the base model) applied independently to every position. No mixing across tokens; this is where most of the parameters live, and it is widely read as the model's per-token "knowledge lookup". It is also the layer that MoE replaces.</li>
+    </ol>
+    <p><strong>Residual connections</strong> (<code>x + sublayer(x)</code>) let gradients flow straight through a deep stack; <strong>layer norm</strong> keeps activations in a stable range. Neither is glamorous, and both are load-bearing — stacks this deep don't train without them.</p>
+
+    <h3>The three configurations</h3>
+    <p>The original model was an encoder–decoder: six encoder layers reading the source, six decoder layers writing the target. The decoder has an extra trick — <strong>masked</strong> self-attention, where positions are forbidden from attending to the future, so the model can be trained on all output positions in parallel without cheating — plus a cross-attention sub-layer that reads the encoder's output.</p>
+    <p>Later work split the design into three families, and this split explains most model naming you'll encounter:</p>
+    <ul>
+      <li><strong>Encoder-only</strong> (BERT, RoBERTa, embedding models) — bidirectional, built for classification, extraction, search and ranking. Excellent at understanding, incapable of fluent generation.</li>
+      <li><strong>Decoder-only</strong> (GPT, Claude, Llama, Gemini) — causal, built for generation, and the format that turned out to scale best and absorb every other task via prompting.</li>
+      <li><strong>Encoder–decoder</strong> (original Transformer, T5, translation and summarisation systems) — separate reading and writing stacks, still strong where the input and output are clearly distinct sequences.</li>
+    </ul>
+
+    <h3>Positional encoding</h3>
+    <p>Since attention is permutation-equivariant, position must be added to the input. The original paper used fixed sinusoids of different frequencies, chosen partly because relative offsets become linear functions of the encoding. Modern models mostly use learned or rotary (RoPE) positions instead, but the reason for having them at all is unchanged.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>A transformer is just the attention trick, stacked up like pancakes.</p>
+    <p>One pancake has two parts:</p>
+    <ul>
+      <li><strong>The looking-around part.</strong> All the words peek at each other and swap notes. (That's attention.)</li>
+      <li><strong>The thinking-alone part.</strong> Each word goes off by itself and thinks about what it just learned. No peeking here.</li>
+    </ul>
+    <p>Then you stack another pancake on top, and another, and another — usually somewhere between 6 and 100 of them. Every layer, the words understand the sentence a bit better. The early layers work out grammar-ish things. The later layers work out meaning-ish things.</p>
+    <p>There's also a safety rope on each pancake, so the machine doesn't forget what it already knew: whatever goes in also gets added back to whatever comes out. Boring, but without it the tall stack falls over.</p>
+
+    <h3>Two kinds of transformer</h3>
+    <p><strong>The reader.</strong> It sees the whole sentence at once — left, right, everything. Great for answering "is this email angry?" or "which bit of this is the person's name?". BERT is a reader.</p>
+    <p><strong>The writer.</strong> It's only allowed to look <em>backwards</em>, at words it has already written, so it can guess the next word without cheating by peeking at the answer. ChatGPT and Claude are writers.</p>
+    <p>That's genuinely the main difference. One is allowed to look both ways, the other only behind.</p>
+  </div>
+
+  <div class="panel">
+    <svg viewBox="0 0 700 420" role="img" aria-label="One transformer encoder block" style="width:100%;height:auto">
+      <defs>
+        <style>
+          .box{fill:rgba(6,18,14,.7);stroke:rgba(159,216,184,.3)}
+          .boxg{fill:rgba(224,169,63,.10);stroke:rgba(224,169,63,.45)}
+          .t1{font:500 13px "Space Grotesk",sans-serif;fill:#ECF2EA}
+          .t2{font:400 11px "Space Grotesk",sans-serif;fill:#94AC9E}
+          .fl{stroke:rgba(159,216,184,.5);stroke-width:1.5;fill:none;marker-end:url(#ah2)}
+          .res{stroke:rgba(224,169,63,.5);stroke-width:1.3;fill:none;stroke-dasharray:4 4;marker-end:url(#ah2)}
+        </style>
+        <marker id="ah2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="rgba(159,216,184,.7)"/>
+        </marker>
+      </defs>
+      <rect class="box" x="230" y="366" width="240" height="40" rx="8"/>
+      <text class="t1" x="250" y="384">Token embeddings</text><text class="t2" x="250" y="399">+ positional encoding</text>
+      <path class="fl" d="M350 366 L350 338"/>
+      <rect class="boxg" x="180" y="278" width="340" height="58" rx="8"/>
+      <text class="t1" x="200" y="302">Multi-head self-attention</text>
+      <text class="t2" x="200" y="320">8 heads · softmax(QKᵀ/√d) V · the only cross-token step</text>
+      <path class="fl" d="M350 278 L350 252"/>
+      <rect class="box" x="230" y="212" width="240" height="38" rx="8"/>
+      <text class="t1" x="250" y="236">Add &amp; layer norm</text>
+      <path class="res" d="M230 390 L120 390 L120 231 L228 231"/>
+      <text class="t2" x="46" y="316">residual</text>
+      <path class="fl" d="M350 212 L350 186"/>
+      <rect class="boxg" x="180" y="126" width="340" height="58" rx="8"/>
+      <text class="t1" x="200" y="150">Feed-forward network</text>
+      <text class="t2" x="200" y="168">512 → 2048 → 512, per position · most of the parameters</text>
+      <path class="fl" d="M350 126 L350 100"/>
+      <rect class="box" x="230" y="60" width="240" height="38" rx="8"/>
+      <text class="t1" x="250" y="84">Add &amp; layer norm</text>
+      <path class="res" d="M470 231 L580 231 L580 79 L472 79"/>
+      <text class="t2" x="592" y="160">residual</text>
+      <path class="fl" d="M350 60 L350 34"/>
+      <text class="t2" x="252" y="26">to the next block — stack 6, 12, 24, 96 …</text>
+    </svg>
+    <p class="cap" data-v="full">One encoder block. A decoder block adds masked self-attention at the bottom and a cross-attention sub-layer that reads the encoder stack.</p>
+    <p class="cap" data-v="kid">One pancake: words look around, then each word thinks on its own. The dotted lines are the safety rope.</p>
+  </div>
+</section>
+
+<!-- ============ BERT ============ -->
+<section id="bert">
+  <h2><span data-v="full">BERT, and what "understanding" means</span><span data-v="kid">BERT, the fill-in-the-blanks champion</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>BERT — Bidirectional Encoder Representations from Transformers, Devlin et al., late 2018 — is the encoder half of the Transformer, pre-trained on a fill-in-the-blank game and then fine-tuned for whatever you need. It is the model that made "pre-train once, fine-tune many times" the default recipe in NLP.</p>
+
+    <h3>The problem it solved</h3>
+    <p>A left-to-right language model only sees the prefix. ELMo tried to get both directions by training a forward and a backward model and concatenating them — a shallow compromise. What you actually want is a representation of "bank" that conditions on <em>both</em> "river" before it and "flooded" after it, jointly, in every layer. But you cannot train a bidirectional model on next-word prediction: with full attention, every token can see itself through its neighbours. The model would trivially cheat.</p>
+
+    <h3>Masked language modelling</h3>
+    <p>The fix is to remove the answer from the input. Around 15% of tokens are randomly masked, and the model must predict them from context alone. Of the selected tokens, 80% are replaced with a [MASK] token, 10% with a random word, and 10% are left unchanged — the last two cases exist because [MASK] never appears at fine-tuning time, and the model must not learn to only produce useful representations when it sees one.</p>
+    <p>The second objective was <strong>next sentence prediction</strong>: feed two chunks, half the time genuinely consecutive and half the time a random pair, and classify which. Later work such as RoBERTa cast doubt on whether NSP was necessary at all.</p>
+
+    <h3>The specifications</h3>
+    <ul>
+      <li>BERT-base: 12 layers, hidden size 768, 12 heads, 110M parameters. BERT-large: 24 layers, hidden size 1024, 16 heads, 340M parameters.</li>
+      <li>A 30,000-piece WordPiece vocabulary, so rare words decompose into sub-word pieces rather than falling off a cliff as "unknown".</li>
+      <li>Pre-trained on BooksCorpus (800M words) plus English Wikipedia (2,500M words) — about 3.3 billion words, on a TPU slice for roughly four days.</li>
+      <li>A special [CLS] token at the front, whose final vector is used as the sentence-level representation for classification, and [SEP] to separate segments.</li>
+    </ul>
+
+    <h3>How it actually does NLU</h3>
+    <p>"Understanding" here has a precise, deflationary meaning: BERT converts a sequence of tokens into a sequence of vectors such that a very small amount of supervised training on top can solve a task. The heavy lifting is done once, in pre-training; the task-specific part is often a single linear layer.</p>
+    <ul>
+      <li><strong>Sentence classification</strong> (sentiment, intent, complaint routing) — linear layer on the [CLS] vector.</li>
+      <li><strong>Token classification</strong> (named entities, PII detection) — linear layer on each token's vector.</li>
+      <li><strong>Sentence pairs</strong> (does A entail B? is this query relevant to that passage?) — both segments go in together, so attention can compare them token by token.</li>
+      <li><strong>Extractive QA</strong> (SQuAD) — predict a start and an end position in the passage. Note it <em>selects</em> an answer span; it does not compose one.</li>
+    </ul>
+    <p>What BERT cannot do is generate fluent text — masked prediction of isolated tokens is not a generative objective. That is the trade: bidirectional context buys comprehension and costs generation. Encoder models remain the right tool for classification, entity extraction, reranking and embedding-based retrieval, and the modern embedding models behind most RAG pipelines are direct descendants. Google described applying BERT to Search in 2019, and versions of it have been quietly running production NLP ever since, at a fraction of an LLM's inference cost.</p>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>BERT is a computer that got really, really good at one game: <strong>fill in the blank</strong>.</p>
+    <p>You take a sentence, cover up about one word in seven with a sticker, and ask BERT to guess what's underneath. Do this a few billion times with every book and encyclopedia page you can find, and something surprising happens: to get good at guessing the missing word, BERT has to work out grammar, facts, and what words mean.</p>
+    <p>It's a bit like how you can finish someone's sentence. "I'm so hungry I could eat a ___." You know. And you only know because you've heard a lot of sentences.</p>
+
+    <h3>Why covering the word matters</h3>
+    <p>Here's the sneaky bit. BERT is allowed to look at the whole sentence — the words before AND after the blank. That's what makes it so good. But you have to actually hide the word first, otherwise it would just look at the answer. Which is cheating.</p>
+
+    <h3>What BERT is for</h3>
+    <p>BERT doesn't write stories. It reads. Once it's learned to fill in blanks, you can give it a small extra job and it picks it up almost instantly:</p>
+    <ul>
+      <li>Is this message happy or angry?</li>
+      <li>Which words in this sentence are people's names?</li>
+      <li>Do these two sentences mean the same thing?</li>
+      <li>Which sentence in this page answers my question?</li>
+    </ul>
+    <p>So: BERT is the reader in the class. ChatGPT is the storyteller. Both learned from the same trick.</p>
+  </div>
+
+  <div class="panel">
+    <h4 data-v="full">Masked language modelling, and context doing the work</h4>
+    <h4 data-v="kid">Guess what's under the sticker</h4>
+    <div class="heads" role="group" aria-label="Sentence">
+      <button class="chip mlm" data-s="0" aria-pressed="true">Sentence A</button>
+      <button class="chip mlm" data-s="1" aria-pressed="false">Sentence B</button>
+    </div>
+    <p style="font-family:var(--sans);font-size:1.05rem;margin:.2rem 0 1rem" id="mlm-sent"></p>
+    <button class="chip" id="mlm-go" style="margin-bottom:.4rem">Reveal the guesses</button>
+    <div class="bars" id="mlm-bars"></div>
+    <p class="cap" id="mlm-cap"></p>
+  </div>
+</section>
+
+<!-- ============ MOE ============ -->
+<section id="moe">
+  <h2><span data-v="full">Mixture of Experts</span><span data-v="kid">Mixture of Experts: asking the right teacher</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>A dense model runs every parameter for every token. Translating "the" costs exactly as much as deriving a proof. That's obviously wasteful, and MoE is the standard fix: replace the feed-forward sub-layer with a bank of N parallel FFNs — the <em>experts</em> — plus a small <em>router</em> that sends each token to only the best one or two.</p>
+    <p>The router is itself a tiny learned layer producing a softmax over experts. Take the top-k, normalise their weights, run only those experts, and blend their outputs. Total parameters go up enormously; compute per token stays roughly flat. This is the "sparsely activated" trade.</p>
+
+    <h3>The lineage</h3>
+    <ul>
+      <li>Shazeer et al., 2017, applied a sparsely-gated MoE layer to LSTMs and showed large translation quality gains by increasing capacity dramatically while barely increasing computation.</li>
+      <li>GShard (2020) brought MoE into the Transformer for multilingual translation, scaling past 600 billion parameters with automatic sharding across 2,048 TPUs, routing each token to its top two experts.</li>
+      <li>The Switch Transformer (2021) simplified routing to a single expert per token, reached 1.6 trillion parameters, and pre-trained up to seven times faster than the dense T5 baseline at equal compute.</li>
+      <li>Today it is standard in frontier models. Mixtral 8×7B made it mainstream in open weights; DeepSeek-V3 pushed to fine-grained routing with many small experts and a higher top-k.</li>
+    </ul>
+
+    <h3>The parts that bite</h3>
+    <ul>
+      <li><strong>Load balancing.</strong> Left alone, routers collapse: a few experts win everything and the rest never train. Every MoE system adds an auxiliary balancing loss, and usually a per-expert capacity limit after which tokens are simply dropped through the residual path.</li>
+      <li><strong>Memory, not FLOPs.</strong> Sparsity saves computation, not storage. All 1.6T parameters still have to live somewhere and be reachable. MoE is a compute-efficiency technique that makes your memory and interconnect problem worse.</li>
+      <li><strong>Communication.</strong> Experts are sharded across devices, so routing means all-to-all traffic every layer. This is why MoE grew up inside Google on TPU pods with high-bandwidth interconnect.</li>
+      <li><strong>"Experts" are not domains.</strong> A router doesn't learn a "legal expert" and a "maths expert". Learned specialisation is real but low-level and often token- or syntax-shaped. Don't sell it to stakeholders as a panel of subject-matter advisers.</li>
+    </ul>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <p>Imagine a school where, instead of one teacher who has to know absolutely everything, there are eight teachers who are each brilliant at one thing.</p>
+    <p>When a question comes in, a helper at the door reads it and sends it to the one or two teachers most likely to know. The maths question goes to the maths teacher. Nobody wakes up the other six.</p>
+    <p>That's Mixture of Experts. The school is enormous — eight times more brains — but answering a question is just as quick as before, because only one or two teachers ever get up.</p>
+    <p>Two things can go wrong, and both happen in real life. One teacher gets every single question and burns out while the others sit doing nothing — so you have to make rules to spread the questions around. And even though only two teachers work at a time, you still need a school building big enough for all eight.</p>
+  </div>
+
+  <div class="panel">
+    <h4 data-v="full">Routing, top-2 of 8</h4>
+    <h4 data-v="kid">Send the question to the right teachers</h4>
+    <p class="small mute" style="margin:.2rem 0 .8rem" data-v="full">Click a token. The router scores all eight experts, keeps the top two, and only those two FFNs run.</p>
+    <p class="small mute" style="margin:.2rem 0 .8rem" data-v="kid">Click something. Watch the door-helper pick two teachers out of eight.</p>
+    <div class="heads" id="moe-toks" role="group" aria-label="Token to route"></div>
+    <div class="experts" id="moe-ex"></div>
+    <p class="cap" id="moe-cap"></p>
+  </div>
+</section>
+
+<!-- ============ CORPUS ============ -->
+<section id="corpus">
+  <h2><span data-v="full">Corpus, ontology, epistemology</span><span data-v="kid">What the computer read, and whether to believe it</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>These three words sit at the bottom of the stack, and they are the ones that matter most in a regulated business — because they decide not what the model <em>can</em> say, but what its output is <em>worth</em>.</p>
+
+    <h3>Training corpus — what was read</h3>
+    <p>The corpus is the body of text a model learns from. Scale went up fast: BERT used BooksCorpus plus English Wikipedia, about 3.3 billion words; T5 introduced C4, roughly 750GB of English text filtered from the public Common Crawl, with heuristics to keep natural language and drop boilerplate, plus heavy deduplication; Meena was trained on 40 billion words — 341GB of filtered public social-media conversation.</p>
+    <p>Every corpus decision is an editorial decision. What gets crawled, what gets filtered, what gets deduplicated, which languages are included, what date the snapshot was taken — all of it is baked irreversibly into the weights. C4's cleaning process has been criticised for systemic bias: filters intended to remove offensive text also removed large amounts of legitimate content, disproportionately from minority dialects and communities. There is no neutral corpus. There is only a corpus whose choices you have documented or haven't.</p>
+
+    <h3>Ontology — what exists, and how it's carved up</h3>
+    <p>In philosophy, ontology is the study of what there is. In information systems it is concrete and practical: an explicit, formal specification of the entities in a domain, their attributes, and the relationships among them. A bank's ontology says that a <em>client</em> holds an <em>account</em>, that an account holds <em>positions</em>, that a position references an <em>instrument</em>, that an instrument has an <em>asset class</em>, and that "suitability" is a relation between a client's risk profile and a product's risk rating. Taxonomies, RDF/OWL knowledge graphs, and your golden-source data model are all ontology work.</p>
+    <p>Here is the tension worth naming in any AI strategy conversation. A language model has no explicit ontology. It has an <em>implicit</em> one, induced from co-occurrence statistics and encoded in the geometry of its representations. That implicit ontology is astonishingly rich, covers the long tail, and requires no maintenance — and it is unauditable, unstable across versions, and cannot be corrected by editing a row. An explicit ontology is rigid, expensive and incomplete — and it is inspectable, governable, and lets you say exactly why a product was ruled out. Serious systems use both: the model for language and generalisation, the ontology for the facts and rules you must be able to defend.</p>
+
+    <h3>Epistemology — what justifies believing it</h3>
+    <p>Epistemology is the theory of knowledge: what distinguishes a belief that happens to be true from one that is <em>known</em>. Classically the extra ingredient is justification — a reason, a source, a method that reliably tracks the truth.</p>
+    <p>This is precisely what a language model lacks by construction. Its training objective rewards plausibility, not truth. Nothing in the loss function references the world; it references the corpus. A hallucination is not a malfunction — it is the same mechanism as a correct answer, applied where the statistical pattern and the facts diverge. The model cannot tell those cases apart, because it has no access to the difference.</p>
+    <p>Which gives you the practical agenda for anything client-facing:</p>
+    <ul>
+      <li><strong>Justification has to come from the architecture, not the model.</strong> Retrieval, citation, tool calls against a golden source, and constrained generation are all ways of importing justification the model cannot generate.</li>
+      <li><strong>Provenance beats fluency.</strong> An answer that names its source can be checked by a human and defended to a regulator. A better-written answer that can't is a liability, and reads more convincing — which makes it worse, not better.</li>
+      <li><strong>Evaluation is an epistemic instrument.</strong> Your eval set encodes what you are prepared to count as correct. If you haven't written it down, you don't have a standard, you have a vibe.</li>
+      <li><strong>Know the corpus boundary.</strong> A model's knowledge has a date and a distribution. Anything outside it — today's prices, this client's holdings, last week's policy — must arrive at inference time or not at all.</li>
+    </ul>
+  </div>
+
+  <div class="prose" data-v="kid">
+    <h3>The pile of books</h3>
+    <p>Before a computer can talk, somebody has to give it something to read. That giant pile of writing is called the <strong>training corpus</strong>. It's usually millions of web pages, books and encyclopedia articles.</p>
+    <p>Here's the thing to remember: the computer only knows what was in the pile. If something wasn't in the pile, it doesn't know it. If the pile was full of mistakes, it learned the mistakes. And somebody had to choose what went in the pile — which means somebody's choices are inside the computer forever.</p>
+
+    <h3>Sorting the world into boxes</h3>
+    <p><strong>Ontology</strong> is a fancy word for deciding what kinds of things exist and how they're organised. Like sorting your Lego: these are wheels, these are windows, these are little people. A zoo does it too: mammals here, birds there, reptiles over there.</p>
+    <p>People can write these boxes down in a big neat list. The computer never does — it just notices that some words hang around together and builds its own messy, invisible sorting in its head. It's often very good. But you can't open it up and check it, and you can't fix one box without changing everything.</p>
+
+    <h3>How do you know it's true?</h3>
+    <p><strong>Epistemology</strong> is the question: how do you <em>know</em> that? Not "is it true" — "what's your reason for saying it?"</p>
+    <p>This is the most important thing about AI, and it's a bit unsettling. The computer was never trained to say true things. It was trained to say things that <em>sound like</em> the writing it read. Most of the time, what sounds right IS right — that's why it works at all. But when they come apart, the computer has absolutely no idea. It says the wrong thing in exactly the same confident voice.</p>
+    <p>So the rule is simple: if it matters, don't ask the computer to remember. Make it go and look, and make it show you where it looked.</p>
+  </div>
+</section>
+
+<!-- ============ LINEAGE ============ -->
+<section id="lineage">
+  <h2><span data-v="full">Google's decade: word2vec to LaMDA</span><span data-v="kid">Who invented all this</span></h2>
+
+  <div class="prose" data-v="full">
+    <p>An unusual amount of the modern stack came out of one company in one decade — the representation, the architecture, the understanding model, the unified training framework, the sparsity trick, the chips, and a working conversational assistant, years before ChatGPT. It's a useful case study in the difference between inventing a capability and shipping a product.</p>
+  </div>
+  <div class="prose" data-v="kid">
+    <p>Almost all of the ideas on this page came out of one company — Google — over about ten years. Including a chatbot that worked years before the famous ones. They just didn't let anyone use it.</p>
+  </div>
+
+  <ol class="tl">
+    <li>
+      <span class="yr">2013</span>
+      <div>
+        <h4>word2vec</h4>
+        <p data-v="full">Mikolov and colleagues turn words into dense vectors learned from context windows. Meaning becomes geometry, and every later model inherits the idea that a token is a point in space.</p>
+        <p data-v="kid">Every word gets its own address on a giant map, and words that mean similar things live near each other.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2014</span>
+      <div>
+        <h4>Sequence-to-sequence</h4>
+        <p data-v="full">Sutskever, Vinyals and Le map one sequence to another with two LSTMs. 34.8 BLEU on WMT-14 English-to-French, ahead of the phrase-based system it was compared against. The encoder–decoder shape of everything that follows is set here — as is the bottleneck that attention would remove.</p>
+        <p data-v="kid">A machine reads English, squashes it into a small suitcase of numbers, and another machine unpacks it into French.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2015</span>
+      <div>
+        <h4>TPUs in production</h4>
+        <p data-v="full">The first TPU is deployed in Google's data centres in 2015 — inference only, including the AlphaGo matches — and revealed publicly at Google I/O in May 2016, with the technical paper at ISCA in 2017. A 256×256 systolic array, 15–30× the performance and 30–80× the performance-per-watt of contemporary CPUs and GPUs. Silicon shaped around matrix multiplication, two years before the architecture that would need it most.</p>
+        <p data-v="kid">Google built its own special computer chip that does one thing — multiplying huge grids of numbers — unbelievably fast. That's exactly the sum that attention needs.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2015</span>
+      <div>
+        <h4>Foundational diffusion work</h4>
+        <p data-v="full">Sohl-Dickstein, Weiss, Maheswaranathan and Ganguli introduce diffusion probabilistic models: systematically destroy structure in data with a forward noising process, then learn the reverse process that restores it. Largely ignored for five years, it is now the basis of image, video and audio generation.</p>
+        <p class="ast" data-v="full">Asterisk worth keeping: the 2015 paper's authors were at Stanford and Berkeley, not Google. Sohl-Dickstein went on to Google Brain, and Google later produced major diffusion systems (Imagen and successors), but the founding paper is not a Google paper. The 2020 DDPM work that made diffusion practical came out of Berkeley. "Google's foundational diffusion work" is a reasonable shorthand for the people, not the institution.</p>
+        <p data-v="kid">Somebody worked out how to make pictures by starting with pure static, like an untuned TV, and cleaning it up bit by bit until a picture appears. That's how AI image generators work.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2017</span>
+      <div>
+        <h4>The Transformer</h4>
+        <p data-v="full">Eight authors, one architecture based solely on attention, no recurrence, no convolution — better quality, far more parallelisable, 28.4 BLEU English-to-German and 41.8 English-to-French. Also 2017: Shazeer's sparsely-gated mixture-of-experts layer, the other half of how models would later scale.</p>
+        <p data-v="kid">The big one. They threw away everything except the looking-around trick, and it worked better than what came before AND trained much faster.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2018</span>
+      <div>
+        <h4>BERT</h4>
+        <p data-v="full">The encoder half plus masked language modelling, state of the art across eleven benchmarks, open-sourced, and immediately the base layer of production NLP everywhere. It establishes pre-train-then-fine-tune as the dominant paradigm.</p>
+        <p data-v="kid">The fill-in-the-blank champion. Google gave it away free, and suddenly everyone's computers got much better at reading.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2019–20</span>
+      <div>
+        <h4>T5 and C4</h4>
+        <p data-v="full">T5 reframes every NLP problem as text-in, text-out — including classification, where the model literally emits the label word — so one model, one loss and one set of hyper-parameters cover every task. Sizes run from 60 million to 11 billion parameters, pre-trained on roughly a trillion tokens from C4, about 750GB of cleaned English web text. The task-as-text framing is the direct ancestor of prompting.</p>
+        <p data-v="kid">Instead of building a different machine for every job, they made one machine where every job is just "here's some words, give me back some words".</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2020</span>
+      <div>
+        <h4>Meena</h4>
+        <p data-v="full">A 2.6-billion-parameter conversational model trained end-to-end on 341GB of filtered public social-media conversation, 40 billion words, evaluated with a purpose-built human metric — Sensibleness and Specificity Average — where it scored 79% against a human baseline of 86%. A working open-domain chatbot, nearly three years before ChatGPT.</p>
+        <p data-v="kid">A chatbot that could chat about anything and even make (bad) jokes. Almost three years before the famous one. Hardly anyone got to try it.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2021</span>
+      <div>
+        <h4>LaMDA, and Switch</h4>
+        <p data-v="full">Meena, scaled up, was renamed LaMDA and announced at Google I/O in May 2021 — a dialogue model with access to external tools including a calculator, a clock and a translation system, making it one of the first dual-process chatbots. The same year, Switch Transformers reached 1.6 trillion parameters with single-expert routing.</p>
+        <p data-v="kid">The chatbot got bigger, got a new name, and even learned to use a calculator when it needed one.</p>
+      </div>
+    </li>
+    <li>
+      <span class="yr">2022–</span>
+      <div>
+        <h4>Why someone else shipped it</h4>
+        <p data-v="full">The capability existed; the product didn't. Google Brain researchers repeatedly sought to release Meena and then LaMDA publicly, including into Assistant, and leadership refused on safety and fairness grounds — which led the two LaMDA leads, Daniel De Freitas and Noam Shazeer, to leave the company. What arrived later was not a better architecture but a different package: instruction tuning and RLHF to make a raw language model take orders and behave, a chat interface anyone could open, and an institutional willingness to release something imperfect. The lesson generalises past AI — a capability held back for defensible reasons is still a capability someone else will define the category with.</p>
+        <p data-v="kid">Google had the chatbot first but decided it wasn't safe enough to share. Someone else shared theirs, everyone tried it, and that's the one the world remembers.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <h2><span data-v="full">Glossary</span><span data-v="kid">All the words in one line each</span></h2>
+
+  <dl class="gl" data-v="full">
+    <dt>Token</dt><dd>The unit a model actually processes — usually a sub-word piece, not a whole word. "Unhappiness" might be three tokens.</dd>
+    <dt>Embedding</dt><dd>The vector a token is turned into. Static in word2vec; contextual after a Transformer layer.</dd>
+    <dt>Attention</dt><dd>A weighted average over a set of vectors, where the weights are computed from the data itself.</dd>
+    <dt>Self-attention</dt><dd>Attention where queries, keys and values all come from the same sequence.</dd>
+    <dt>Query, key, value</dt><dd>Three learned projections of each token: what it's looking for, what it advertises, what it contributes.</dd>
+    <dt>Matmul</dt><dd>Matrix multiplication. The operation attention reduces to, and the one accelerators are built around.</dd>
+    <dt>Softmax</dt><dd>Exponentiate and normalise, turning arbitrary scores into a probability distribution that sums to one.</dd>
+    <dt>Scaled dot-product attention</dt><dd>softmax(QKᵀ/√d<sub>k</sub>)V. The √d<sub>k</sub> keeps softmax out of its saturated regions.</dd>
+    <dt>Multi-head attention</dt><dd>Several attention operations in parallel subspaces, concatenated. Eight heads in the original paper.</dd>
+    <dt>Positional encoding</dt><dd>Position information added to embeddings, because attention alone is order-blind.</dd>
+    <dt>Residual connection</dt><dd>Adding a sub-layer's input to its output, so gradients can reach the bottom of a deep stack.</dd>
+    <dt>Layer normalisation</dt><dd>Rescaling activations within a layer to keep training stable.</dd>
+    <dt>Feed-forward network</dt><dd>The per-position MLP inside each block. Most of a dense model's parameters; the layer MoE replaces.</dd>
+    <dt>Encoder / decoder</dt><dd>Reading stack / writing stack. Encoder-only sees both directions; decoder-only is masked to the past.</dd>
+    <dt>Causal masking</dt><dd>Blocking attention to future positions so a generative model can't see the answer during training.</dd>
+    <dt>BERT</dt><dd>Encoder-only Transformer pre-trained by masked language modelling, then fine-tuned. Built for understanding, not generation.</dd>
+    <dt>Masked language modelling</dt><dd>Hide ~15% of tokens, predict them from surrounding context. The objective that makes bidirectional training possible.</dd>
+    <dt>Fine-tuning</dt><dd>Taking a pre-trained model and continuing training on a small labelled task set, usually with a small new head.</dd>
+    <dt>Mixture of Experts</dt><dd>Many parallel FFNs plus a router that activates only a few per token. More parameters, similar compute.</dd>
+    <dt>Router / top-k</dt><dd>The small layer that scores experts, and the number of them that actually run.</dd>
+    <dt>Training corpus</dt><dd>The text a model learned from. Its coverage, filters and cut-off date are properties of the model.</dd>
+    <dt>Ontology</dt><dd>An explicit specification of what entities exist in a domain and how they relate. Models have only an implicit one.</dd>
+    <dt>Epistemology</dt><dd>What justifies a belief. Models optimise plausibility, so justification must be supplied by the surrounding system.</dd>
+    <dt>TPU</dt><dd>Google's matrix-multiplication accelerator. Systolic array, built for exactly the operation attention needs.</dd>
+  </dl>
+
+  <dl class="gl" data-v="kid">
+    <dt>Token</dt><dd>A small piece of a word. Computers chop words up before reading them.</dd>
+    <dt>Embedding</dt><dd>A word's address on a giant map of meaning.</dd>
+    <dt>Attention</dt><dd>Looking at the other words to work out what this word means.</dd>
+    <dt>Self-attention</dt><dd>Words in one sentence looking at each other.</dd>
+    <dt>Query, key, value</dt><dd>Your question, the label on the box, and the stuff inside the box.</dd>
+    <dt>Matmul</dt><dd>Multiplying two big grids of numbers. Computers love this.</dd>
+    <dt>Softmax</dt><dd>Turning scores into slices of one pizza. A little dramatic.</dd>
+    <dt>Head</dt><dd>One kind of looking-around. Machines do about eight kinds at once.</dd>
+    <dt>Positional encoding</dt><dd>A sticker on each word saying which place it's in, because otherwise the computer can't tell.</dd>
+    <dt>Transformer</dt><dd>Lots of looking-around layers stacked like pancakes.</dd>
+    <dt>Encoder / decoder</dt><dd>The reader and the writer. The reader looks both ways; the writer only looks behind.</dd>
+    <dt>BERT</dt><dd>The fill-in-the-blank champion. Brilliant at reading, doesn't write stories.</dd>
+    <dt>Fine-tuning</dt><dd>Teaching a computer that already knows lots of stuff one new small job.</dd>
+    <dt>Mixture of Experts</dt><dd>Eight teachers, and a helper at the door who picks the right two.</dd>
+    <dt>Training corpus</dt><dd>The giant pile of writing the computer read.</dd>
+    <dt>Ontology</dt><dd>Deciding what kinds of things exist and sorting them into boxes.</dd>
+    <dt>Epistemology</dt><dd>Asking "how do you know that?"</dd>
+    <dt>TPU</dt><dd>A special chip built for one sum, done billions of times.</dd>
+  </dl>
+</section>
+
+</main>
+
+<footer>
+  <p data-v="full">Figures in this page are drawn from the original papers; the interactive attention, masking and routing demos are hand-authored illustrations of real behaviour rather than live model output, and are labelled as such. The Q/K/V walkthrough computes its numbers live from fixed weights.</p>
+  <p data-v="kid">The little demos on this page are pretend examples made to show you how the real thing behaves. The numbers in the Q/K/V one are real sums, done right here.</p>
+  <h4>Primary sources</h4>
+  <ul class="srcs">
+    <li>Vaswani et al., <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> (NeurIPS 2017)</li>
+    <li>Devlin et al., <a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers</a> (NAACL 2019)</li>
+    <li>Mikolov et al., <a href="https://arxiv.org/abs/1301.3781">Efficient Estimation of Word Representations in Vector Space</a> (2013)</li>
+    <li>Sutskever, Vinyals &amp; Le, <a href="https://arxiv.org/abs/1409.3215">Sequence to Sequence Learning with Neural Networks</a> (NIPS 2014)</li>
+    <li>Bahdanau, Cho &amp; Bengio, <a href="https://arxiv.org/abs/1409.0473">Neural Machine Translation by Jointly Learning to Align and Translate</a> (2014)</li>
+    <li>Raffel et al., <a href="https://arxiv.org/abs/1910.10683">Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</a> (T5, 2019)</li>
+    <li>Shazeer et al., <a href="https://arxiv.org/abs/1701.06538">Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer</a> (2017)</li>
+    <li>Lepikhin et al., <a href="https://arxiv.org/abs/2006.16668">GShard</a> (2020) · Fedus, Zoph &amp; Shazeer, <a href="https://arxiv.org/abs/2101.03961">Switch Transformers</a> (2021)</li>
+    <li>Sohl-Dickstein et al., <a href="https://arxiv.org/abs/1503.03585">Deep Unsupervised Learning using Nonequilibrium Thermodynamics</a> (ICML 2015)</li>
+    <li>Adiwardana et al., <a href="https://arxiv.org/abs/2001.09977">Towards a Human-like Open-Domain Chatbot</a> (Meena, 2020) · Thoppilan et al., <a href="https://arxiv.org/abs/2201.08239">LaMDA</a> (2022)</li>
+    <li>Jouppi et al., <a href="https://arxiv.org/abs/1704.04760">In-Datacenter Performance Analysis of a Tensor Processing Unit</a> (ISCA 2017)</li>
+  </ul>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- mode switch ---------------- */
+  var bf=document.getElementById("btn-full"), bk=document.getElementById("btn-kid");
+  function setMode(m){
+    document.body.className = (m==="kid") ? "v-kid" : "v-full";
+    bf.setAttribute("aria-pressed", m==="kid"?"false":"true");
+    bk.setAttribute("aria-pressed", m==="kid"?"true":"false");
+    try{ localStorage.setItem("aiexp-mode", m); }catch(e){}
+    renderSpot(); renderSoftmax(); renderQKV(); renderMLM(false); renderMoE();
+  }
+  bf.addEventListener("click",function(){setMode("full");});
+  bk.addEventListener("click",function(){setMode("kid");});
+  var saved=null; try{ saved=localStorage.getItem("aiexp-mode"); }catch(e){}
+
+  function kid(){ return document.body.classList.contains("v-kid"); }
+
+  /* ---------------- 1. attention spotlight ---------------- */
+  var TOKENS=["The","animal","didn't","cross","the","street","because","it","was","too","tired"];
+  var CONTENT=[0,1,0,1,0,1,0,0,0,0,1];
+  var OVERRIDE=[
+    { 7:{1:.58,5:.10,10:.12,7:.10}, 10:{1:.44,7:.24,10:.14}, 3:{1:.30,5:.34,3:.16}, 5:{3:.32,5:.24,1:.10} },
+    {},
+    {}
+  ];
+  var head=0, qsel=7, userTouched=false;
+
+  function weights(h,q){
+    var w=new Array(TOKENS.length), i;
+    if(h===0){
+      var ov=OVERRIDE[0][q];
+      for(i=0;i<w.length;i++) w[i]= (i===q)?0.18:0.04;
+      if(ov){ for(var k in ov){ w[+k]=ov[k]; } }
+    } else if(h===1){
+      for(i=0;i<w.length;i++){
+        var d=Math.abs(i-q);
+        w[i]= d===0?0.30: d===1?0.26: d===2?0.09: 0.02;
+      }
+    } else {
+      for(i=0;i<w.length;i++) w[i]= CONTENT[i]?0.22:0.05;
+      w[q]+=0.08;
+    }
+    var s=0; for(i=0;i<w.length;i++) s+=w[i];
+    for(i=0;i<w.length;i++) w[i]/=s;
+    return w;
+  }
+  var CAPS=[
+    ["This head resolves reference. Ask it about <b>it</b> and most of the weight lands on <b>animal</b> — which is exactly the information a pronoun needs and cannot get from its own embedding.",
+     "This one works out <b>who</b> the sentence is talking about. Click <b>it</b> and watch \u201canimal\u201d light up. That\u2019s the computer figuring out that \u201cit\u201d means the animal."],
+    ["A positional head. Weight concentrates on immediate neighbours regardless of meaning — cheap, local structure that other heads can build on.",
+     "This one just looks at the words right next door. Boring, but useful — like reading with your finger under the line."],
+    ["A content head. Function words are ignored and weight spreads across the nouns and verbs — a rough gist of what the sentence is about.",
+     "This one skips the little words like \u201cthe\u201d and \u201cwas\u201d, and looks at the words that carry the meaning. It\u2019s getting the gist."]
+  ];
+
+  function renderSpot(){
+    var host=document.getElementById("spot"); if(!host) return;
+    var w=weights(head,qsel), max=Math.max.apply(null,w);
+    host.innerHTML="";
+    TOKENS.forEach(function(t,i){
+      var b=document.createElement("button");
+      b.className="tok"+(i===qsel?" q":"");
+      b.type="button";
+      var a=w[i]/max;
+      if(i!==qsel){
+        b.style.background="rgba(159,216,184,"+(0.04+a*0.42).toFixed(3)+")";
+        b.style.color = a>0.55 ? "#06150F" : "var(--paper)";
+      }
+      b.innerHTML=t+'<span class="wt" style="color:'+(a>0.55?"rgba(6,21,15,.65)":"var(--mute)")+'">'+(w[i]*100).toFixed(0)+'%</span>';
+      b.setAttribute("aria-label",t+", attention "+(w[i]*100).toFixed(0)+" percent");
+      b.addEventListener("click",function(){ userTouched=true; qsel=i; renderSpot(); });
+      host.appendChild(b);
+    });
+    document.getElementById("spot-cap").innerHTML =
+      (kid()?"Looking from the word <b>"+TOKENS[qsel]+"</b>. ":"Query token: <b>"+TOKENS[qsel]+"</b>. ")
+      + CAPS[head][kid()?1:0];
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".chip[data-head]"),function(c){
+    c.addEventListener("click",function(){
+      userTouched=true; head=+c.getAttribute("data-head");
+      Array.prototype.forEach.call(document.querySelectorAll(".chip[data-head]"),function(o){
+        o.setAttribute("aria-pressed", o===c ? "true":"false");
+      });
+      renderSpot();
+    });
+  });
+
+  /* ---------------- 2. softmax lab ---------------- */
+  var SM_NAMES=["river","bank","rates","the"];
+  var SM_KID=["Ada","Ben","Cleo","Dev"];
+  var logits=[3.0,1.2,0.4,-1.0], temp=1;
+
+  (function buildSliders(){
+    var host=document.getElementById("sm-sliders");
+    logits.forEach(function(v,i){
+      var row=document.createElement("div"); row.className="row";
+      var lab=document.createElement("label"); lab.id="sml"+i; lab.setAttribute("for","sm"+i);
+      var inp=document.createElement("input");
+      inp.type="range"; inp.id="sm"+i; inp.min="-5"; inp.max="5"; inp.step="0.1"; inp.value=v;
+      var val=document.createElement("span"); val.className="val"; val.id="smv"+i;
+      inp.addEventListener("input",function(){ logits[i]=parseFloat(inp.value); renderSoftmax(); });
+      row.appendChild(lab); row.appendChild(inp); row.appendChild(val);
+      host.appendChild(row);
+    });
+  })();
+  document.getElementById("temp").addEventListener("input",function(e){
+    temp=parseFloat(e.target.value); renderSoftmax();
+  });
+
+  function softmax(z,t){
+    var m=Math.max.apply(null,z), e=z.map(function(v){return Math.exp((v-m)/t);});
+    var s=e.reduce(function(a,b){return a+b;},0);
+    return e.map(function(v){return v/s;});
+  }
+  function renderSoftmax(){
+    var names = kid()?SM_KID:SM_NAMES;
+    var p=softmax(logits,temp);
+    logits.forEach(function(v,i){
+      var l=document.getElementById("sml"+i); if(l) l.textContent=names[i];
+      var vv=document.getElementById("smv"+i); if(vv) vv.textContent=v.toFixed(1);
+    });
+    document.getElementById("temp-v").textContent=temp.toFixed(2);
+    var host=document.getElementById("sm-bars"); host.innerHTML="";
+    var top=p.indexOf(Math.max.apply(null,p));
+    p.forEach(function(v,i){
+      var r=document.createElement("div"); r.className="bar-row";
+      r.innerHTML='<span class="nm">'+names[i]+'</span><span class="track"><span class="fill'+(i===top?" gold":"")+'" style="width:'+(v*100).toFixed(1)+'%"></span></span><span class="pct">'+(v*100).toFixed(1)+'%</span>';
+      host.appendChild(r);
+    });
+    var lo=Math.max.apply(null,p);
+    document.getElementById("sm-cap").innerHTML = kid()
+      ? "The biggest score gets "+(lo*100).toFixed(0)+"% of the pizza. Try sliding one score up just a little — the slice grows a <i>lot</i>. Now drag Temp to the left: the winner takes almost everything. Drag it right and everyone gets nearly the same."
+      : "Scores are unbounded; the output always sums to 100%. Low temperature sharpens toward a hard max, high temperature flattens toward uniform. Note that adding the same constant to all four sliders leaves the output identical — softmax is shift-invariant, which is also why implementations subtract the max for numerical stability.";
+  }
+
+  /* ---------------- 3. Q/K/V walkthrough ---------------- */
+  var QT=["the","river","bank","flooded"];
+  var E=[[0.0,0.0,0.2,0.0],[1.8,0.0,1.2,0.0],[0.6,1.0,1.4,0.0],[1.6,0.0,0.0,1.5]];
+  var WQ=[[1.0,0.0,0.2],[0.0,1.0,0.1],[0.3,0.3,0.6],[0.0,0.0,0.2]];
+  var WK=[[1.1,0.0,0.0],[0.0,1.1,0.0],[0.1,0.1,0.2],[0.0,0.0,1.2]];
+  var WV=[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.2,0.2,0.1],[0.0,0.0,1.0]];
+  var qrow=2, step=0;
+
+  function mm(A,B){
+    var out=[],i,j,k;
+    for(i=0;i<A.length;i++){ out[i]=[];
+      for(j=0;j<B[0].length;j++){ var s=0; for(k=0;k<B.length;k++) s+=A[i][k]*B[k][j]; out[i][j]=s; }
+    } return out;
+  }
+  function T(A){ return A[0].map(function(_,j){ return A.map(function(r){ return r[j]; }); }); }
+  var Q=mm(E,WQ), K=mm(E,WK), V=mm(E,WV);
+  var S=mm(Q,T(K));
+  var DK=Math.sqrt(3);
+  var Ss=S.map(function(r){ return r.map(function(v){ return v/DK; }); });
+  var A=Ss.map(function(r){ return softmax(r,1); });
+  var OUT=mm(A,V);
+
+  function tbl(title,M,cols,hi){
+    var h='<div class="mat"><h5>'+title+'</h5><table class="m"><tr><td class="lbl"></td>';
+    cols.forEach(function(c){ h+='<td class="lbl">'+c+'</td>'; });
+    h+='</tr>';
+    M.forEach(function(row,i){
+      h+='<tr'+(hi&&i===qrow?' class="hi"':'')+'><td class="lbl">'+QT[i]+'</td>';
+      row.forEach(function(v){ h+='<td>'+v.toFixed(2)+'</td>'; });
+      h+='</tr>';
+    });
+    return h+'</table></div>';
+  }
+  var QKV_CAPS=[
+    ["Each token starts as a 4-number embedding — here the dimensions are hand-labelled so you can read them, which real models never give you. \u201cBank\u201d starts money-dominant (1.00 money against 0.60 water), because that is its average sense across a corpus. It is identical in every sentence.",
+     "Every word starts as four numbers. \u201cBank\u201d starts out leaning towards <i>money</i>, because that\u2019s what the word usually means. It has no idea there\u2019s a river in this sentence yet."],
+    ["Three learned matrices project each embedding into a question (Q), a label (K) and a payload (V), each 3-dimensional. The projections are independent, so what a token matches on is learned separately from what it passes along.",
+     "Each word now has three things: a question, a label, and some stuff to hand over."],
+    ["Every query is dotted with every key: a 4×4 grid of raw relevance. Row i column j reads \u201chow much should token i care about token j\u201d. Note it is not symmetric.",
+     "Now every word holds its question next to every label and scores how well they match. Sixteen scores, because four words times four words."],
+    ["Divided by √3. With real models (d\u2096 = 64) this matters enormously: unscaled scores grow with dimension, push softmax into its flat regions and kill the gradient.",
+     "The scores get shrunk a bit so they don\u2019t get out of hand. Big numbers make the next step go crazy."],
+    ["Softmax along each row; every row sums to 1. Read the \u201cbank\u201d row: roughly 44% on <b>flooded</b>, 27% on itself, 23% on <b>river</b>, 5% on <b>the</b>. Note the \u201cthe\u201d row is almost flat — a function word carries nothing to match on, so it has no preference. Both facts fall straight out of the arithmetic.",
+     "Slice the pizza. Look at the <b>bank</b> row: most of its pizza goes to \u201cflooded\u201d and \u201criver\u201d, and almost none to \u201cthe\u201d. The \u201cthe\u201d row is all equal slices, because \u201cthe\u201d doesn\u2019t really care about anything."],
+    ["Multiply the weights by V. Compare the two tables: \u201cbank\u201d went in as <b>money 1.28 / water 0.88</b> and comes out as <b>water 1.42 / money 0.41</b>. One layer of attention has moved the token from the money region of the space into the water region, using nothing but its neighbours. That is contextual embedding, and it is the entire reason BERT works. Stack this twelve times and you have BERT-base.",
+     "Now each word mixes everyone\u2019s stuff together using its slice sizes. Look what happened to <b>bank</b>: it went in leaning towards <i>money</i> and came out leaning towards <i>water</i>. The sentence changed what the word means. That\u2019s the whole trick — that\u2019s the thing this entire page is about."]
+  ];
+
+  function renderQKV(){
+    var host=document.getElementById("qkv-mats"); if(!host) return;
+    var d3=["water","money","event"], d4=["water","money","noun","verb"], h="";
+    if(step===0) h=tbl("Embeddings  x",E,d4,true);
+    else if(step===1) h=tbl("Q = x·Wq",Q,d3,true)+tbl("K = x·Wk",K,d3,false)+tbl("V = x·Wv",V,d3,false);
+    else if(step===2) h=tbl("Q·Kᵀ  (raw scores)",S,QT,true);
+    else if(step===3) h=tbl("Q·Kᵀ / √3",Ss,QT,true);
+    else if(step===4) h=tbl("softmax by row  (attention weights)",A,QT,true);
+    else h=tbl("A·V  (new vectors)",OUT,d3,true)+tbl("V  (for comparison)",V,d3,false);
+    host.innerHTML=h;
+    document.getElementById("qkv-cap").innerHTML=QKV_CAPS[step][kid()?1:0];
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".chip.qtok"),function(c){
+    c.addEventListener("click",function(){
+      qrow=+c.getAttribute("data-q");
+      Array.prototype.forEach.call(document.querySelectorAll(".chip.qtok"),function(o){
+        o.setAttribute("aria-pressed", o===c?"true":"false");
+      });
+      renderQKV();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".steps button"),function(b){
+    b.addEventListener("click",function(){
+      step=+b.getAttribute("data-step");
+      Array.prototype.forEach.call(document.querySelectorAll(".steps button"),function(o){
+        o.setAttribute("aria-pressed", o===b?"true":"false");
+      });
+      renderQKV();
+    });
+  });
+
+  /* ---------------- 4. BERT masked demo ---------------- */
+  var MLM=[
+    { s:"I went to the [MASK] to deposit my paycheck.",
+      g:[["bank",0.81],["office",0.07],["atm",0.06],["store",0.03],["counter",0.03]] },
+    { s:"We sat on the [MASK] and watched the river go by.",
+      g:[["bank",0.44],["shore",0.21],["grass",0.13],["dock",0.12],["rocks",0.10]] }
+  ];
+  var msel=0, mshown=false;
+  function renderMLM(show){
+    if(typeof show==="boolean") mshown=show;
+    var el=document.getElementById("mlm-sent"); if(!el) return;
+    el.innerHTML=MLM[msel].s.replace("[MASK]",'<span style="color:var(--gold);border-bottom:2px dotted var(--gold)">'+(mshown?MLM[msel].g[0][0]:"[MASK]")+'</span>');
+    var host=document.getElementById("mlm-bars"); host.innerHTML="";
+    document.getElementById("mlm-go").textContent = kid()
+      ? (mshown?"Hide again":"Peek under the sticker")
+      : (mshown?"Re-mask":"Reveal the guesses");
+    if(mshown){
+      MLM[msel].g.forEach(function(g,i){
+        var r=document.createElement("div"); r.className="bar-row";
+        r.innerHTML='<span class="nm">'+g[0]+'</span><span class="track"><span class="fill'+(i===0?" gold":"")+'" style="width:'+(g[1]*100).toFixed(0)+'%"></span></span><span class="pct">'+(g[1]*100).toFixed(0)+'%</span>';
+        host.appendChild(r);
+      });
+    }
+    document.getElementById("mlm-cap").innerHTML = kid()
+      ? "Both sentences are missing the same word — <b>bank</b> — but for totally different reasons. The computer works out which one from the words around it. In sentence B it isn\u2019t even sure; \u201cshore\u201d would have been fine too."
+      : "Illustrative distributions, not live model output. The same surface form wins in both sentences for entirely different reasons, and the second is far less peaked — genuine ambiguity shows up as a flatter distribution. This is the whole of bidirectional context: the token after the blank (\u201cdeposit\u201d, \u201criver\u201d) is doing as much work as the tokens before it, which a left-to-right model cannot use.";
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".chip.mlm"),function(c){
+    c.addEventListener("click",function(){
+      msel=+c.getAttribute("data-s"); mshown=false;
+      Array.prototype.forEach.call(document.querySelectorAll(".chip.mlm"),function(o){
+        o.setAttribute("aria-pressed", o===c?"true":"false");
+      });
+      renderMLM(false);
+    });
+  });
+  document.getElementById("mlm-go").addEventListener("click",function(){ renderMLM(!mshown); });
+
+  /* ---------------- 5. MoE router ---------------- */
+  var EXPERTS=[
+    {f:"Expert 1",k:"Teacher 1"},{f:"Expert 2",k:"Teacher 2"},
+    {f:"Expert 3",k:"Teacher 3"},{f:"Expert 4",k:"Teacher 4"},
+    {f:"Expert 5",k:"Teacher 5"},{f:"Expert 6",k:"Teacher 6"},
+    {f:"Expert 7",k:"Teacher 7"},{f:"Expert 8",k:"Teacher 8"}
+  ];
+  var MOE=[
+    {t:"mortgage",  r:[[2,.62],[6,.24]], f:"Finance-ish vocabulary clusters onto two experts and stays there across contexts.", k:"Money words go to these two."},
+    {t:"def foo():",r:[[0,.71],[4,.18]], f:"Code tokens route almost deterministically — the clearest specialisation you can see in a trained router.", k:"Computer-code bits go to the code teachers."},
+    {t:"∫ dx",      r:[[4,.55],[0,.29]], f:"Maths shares an expert with code, which is a recurring and slightly unhelpful pattern in real routers.", k:"Maths shares a teacher with code. They get on well."},
+    {t:"今日は",     r:[[7,.66],[3,.20]], f:"Non-Latin script routes by writing system before it routes by meaning.", k:"Different alphabets get their own teacher."},
+    {t:"the",       r:[[3,.38],[1,.33]], f:"Common function words split almost evenly — nothing to specialise on, so the balancing loss dominates.", k:"Tiny boring words don\u2019t need a specialist, so they get shared out."}
+  ];
+  var msel2=0;
+  (function buildMoe(){
+    var host=document.getElementById("moe-toks");
+    MOE.forEach(function(m,i){
+      var b=document.createElement("button");
+      b.className="chip"; b.type="button"; b.textContent=m.t;
+      b.setAttribute("aria-pressed", i===0?"true":"false");
+      b.addEventListener("click",function(){
+        msel2=i;
+        Array.prototype.forEach.call(host.children,function(o){ o.setAttribute("aria-pressed", o===b?"true":"false"); });
+        renderMoE();
+      });
+      host.appendChild(b);
+    });
+  })();
+  function renderMoE(){
+    var host=document.getElementById("moe-ex"); if(!host) return;
+    var m=MOE[msel2], on={};
+    m.r.forEach(function(p){ on[p[0]]=p[1]; });
+    host.innerHTML="";
+    EXPERTS.forEach(function(e,i){
+      var d=document.createElement("div");
+      d.className="ex"+(on[i]!==undefined?" on":"");
+      d.innerHTML='<b>'+(kid()?e.k:e.f)+'</b>'+(on[i]!==undefined
+        ? '<span class="w">'+(kid()?"picked · ":"gate ")+(on[i]*100).toFixed(0)+'%</span>'
+        : (kid()?"asleep":"not activated"));
+      host.appendChild(d);
+    });
+    document.getElementById("moe-cap").innerHTML = kid()
+      ? m.k+" Six teachers stayed asleep, so answering was just as fast as a small school — but the school knows four times more."
+      : m.f+" Two of eight experts ran: the model holds 8× the feed-forward parameters but spends roughly 2/8 of the compute. Gate values come from a softmax over the router's scores, then get renormalised over the top-k.";
+  }
+
+  /* ---------------- init ---------------- */
+  setMode(saved==="kid" ? "kid" : "full");
+
+  /* one orchestrated page-load moment: walk the spotlight once */
+  if(!window.matchMedia || !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var seq=[1,5,7], n=0;
+    var iv=setInterval(function(){
+      if(userTouched||n>=seq.length){ clearInterval(iv); return; }
+      qsel=seq[n++]; renderSpot();
+    },900);
+  }
+})();
+</script>
+</body>
+</html>
